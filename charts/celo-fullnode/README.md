@@ -2,7 +2,7 @@
 
 Helm chart for deploying a Celo fullnode. More info at https://docs.celo.org
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
 
 - [celo-fullnode](#celo-fullnode)
   - [Chart requirements](#chart-requirements)
@@ -22,8 +22,8 @@ Helm chart for deploying a Celo fullnode. More info at https://docs.celo.org
 
 Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode repository automatically every commit to `master` branch.
 Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
-This pricess is configured using GitHub Actions in the [.github/workflows/chart-release.yaml](../../.github/workflows/chart-release.yaml)
-and [.github/workflows/pr-helm-lint.yaml](../../.github/workflows/helm-lint.yaml) files.
+This pricess is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
+and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 
 ## Relevant values
 
