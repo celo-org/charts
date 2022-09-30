@@ -2,29 +2,19 @@ name: Helm Charts Lint
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - jcortejoso/celo-fullnode-chart-refactor # testing
-    paths:
-      - 'packages/helm-charts/celo-fullnode/templates'
-      - 'packages/helm-charts/celo-fullnode/Chart.yaml'
-      - 'packages/helm-charts/celo-fullnode/values.yaml'
-      - 'packages/helm-charts/common/templates'
-      - 'packages/helm-charts/common/Chart.yaml'
-      - 'packages/helm-charts/common/values.yaml'
   pull_request:
     branches:
       - master
     paths:
-      # - 'packages/helm-charts/**/templates/**'
-      # - 'packages/helm-charts/**/values.yaml'
-      # - 'packages/helm-charts/**/Chart.yaml'
-      - 'packages/helm-charts/celo-fullnode/templates'
-      - 'packages/helm-charts/celo-fullnode/Chart.yaml'
-      - 'packages/helm-charts/celo-fullnode/values.yaml'
-      - 'packages/helm-charts/common/templates'
-      - 'packages/helm-charts/common/Chart.yaml'
-      - 'packages/helm-charts/common/values.yaml'
+      # - 'charts/**/templates/**'
+      # - 'charts/**/values.yaml'
+      # - 'charts/**/Chart.yaml'
+      - 'charts/celo-fullnode/templates'
+      - 'charts/celo-fullnode/Chart.yaml'
+      - 'charts/celo-fullnode/values.yaml'
+      - 'charts/common/templates'
+      - 'charts/common/Chart.yaml'
+      - 'charts/common/values.yaml'
 
 env:
   HELM_VERSION: "v3.9.4"
@@ -62,15 +52,15 @@ jobs:
 
       - name: "Dump updated Helm Charts folders and validate semantic versioning"
         run: |
-          echo "${{ steps.updated_files.outputs.all }}" | tr "," "\n" | grep 'packages/helm-charts/' | sed 's#^packages/helm-charts/##' | sed 's#/.*$##' | sort | uniq > changed_charts
+          echo "${{ steps.updated_files.outputs.all }}" | tr "," "\n" | grep 'charts/' | sed 's#^charts/##' | sed 's#/.*$##' | sort | uniq > changed_charts
           if test "$(wc -c < changed_charts)" -gt 2; then
             while read chart; do
               # Get Chart version in the current PR branch
-              version=$(awk -F\: '/^version:/ {print $(NF)}' packages/helm-charts/${chart}/Chart.yaml|tr -d " ")
+              version=$(awk -F\: '/^version:/ {print $(NF)}' charts/${chart}/Chart.yaml|tr -d " ")
 
               # Get Chart version in master branch if the chart exists
-              if [[ -f master/packages/helm-charts/${chart}/Chart.yaml ]]; then
-                version_master=$(awk -F\: '/^version:/ {print $(NF)}' master/packages/helm-charts/${chart}/Chart.yaml|tr -d " ")
+              if [[ -f master/charts/${chart}/Chart.yaml ]]; then
+                version_master=$(awk -F\: '/^version:/ {print $(NF)}' master/charts/${chart}/Chart.yaml|tr -d " ")
 
                 # Calculate valid next versions
                 major_master=$(echo ${version_master}| awk -F. '{print $1}')
@@ -87,7 +77,7 @@ jobs:
                 set -e
 
                 if [ ${rc} -ne 0 ]; then
-                  echo "Version specified in packages/helm-charts/${chart}/Chart.yaml is ${version}, which does not follow semantic versioning."
+                  echo "Version specified in charts/${chart}/Chart.yaml is ${version}, which does not follow semantic versioning."
                   echo "It must be a valid next semantic version. For this case, valid semantic versions are:"
                   echo ""
                   echo "- Next valid patch: ${patch_master_next}"
@@ -108,11 +98,11 @@ jobs:
         run: |
           if test "$(wc -c < changed_charts)" -gt 2; then
             while read chart; do
-              if [ -d ./packages/helm-charts/${chart} ]; then
-                helm dependency update --skip-refresh ./packages/helm-charts/${chart}
-                helm lint "./packages/helm-charts/${chart}/" || false
+              if [ -d ./charts/${chart} ]; then
+                helm dependency update --skip-refresh ./charts/${chart}
+                helm lint "./charts/${chart}/" || false
               else
-                echo "Skipping packages/helm-charts/${chart} as it seems it has been deleted."
+                echo "Skipping charts/${chart} as it seems it has been deleted."
               fi
             done <<EOF
               $(cat changed_charts)
