@@ -48,8 +48,8 @@ genesis:
   # -- Base64 encoded genesis file if `useGenesisFileBase64` is set to true
   genesisFileBase64: ""
 
-# -- Celotool image. This image is used to derivate the private keys from the mnemonic. This is just internally used by cLabs and
-# not required to be used for running nodes
+# -- Celotool image. This image is used to derivate the private keys from the mnemonic.
+# This is just internally used by cLabs and not required to be used for running nodes
 celotool:
   image:
     repository: gcr.io/celo-testnet/celo-monorepo
