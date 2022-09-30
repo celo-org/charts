@@ -3,7 +3,7 @@ name: Release Helm Chart
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       # Run if any of the following files are changed
       - 'charts/**/templates/**'

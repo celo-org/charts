@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
     branches:
-      - master
+      - main
     paths:
       # Run if any of the following files are changed
       - 'charts/**/templates/**'
