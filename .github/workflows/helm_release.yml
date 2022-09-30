@@ -5,12 +5,10 @@ on:
     branches:
       - master
     paths:
-      - 'charts/celo-fullnode/templates'
-      - 'charts/celo-fullnode/Chart.yaml'
-      - 'charts/celo-fullnode/values.yaml'
-      - 'charts/common/templates'
-      - 'charts/common/Chart.yaml'
-      - 'charts/common/values.yaml'
+      # Run if any of the following files are changed
+      - 'charts/**/templates/**'
+      - 'charts/**/values.yaml'
+      - 'charts/**/Chart.yaml'
 
 env:
   HELM_VERSION: "v3.9.4"
