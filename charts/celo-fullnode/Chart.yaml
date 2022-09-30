@@ -5,8 +5,24 @@ type: application
 home: https://celo.org
 icon: https://pbs.twimg.com/profile_images/1493309659599486986/5ETdHxeE_400x400.jpg
 name: celo-fullnode
+sources:
+  - https://celo.org
+  - https://docs.celo.org
+  - https://clabs.co
+  - https://github.com/celo-org
+keywords:
+  - Celo
+  - Blockchain
+  - Fullnode
+  - Validator
+  - Ethereum
+  - Proof-of-Stake
 version: 0.2.0
 dependencies:
   - name: common
-    repository: oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci
+    repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
     version: 0.2.0
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
