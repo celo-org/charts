@@ -112,7 +112,7 @@ jobs:
             while read chart; do
               if [ -d ./charts/${chart} ]; then
                 # Only template 'application' charts (libraries cannot be templated)
-                if [ cat "./charts/${chart}/" | grep -E '^type' | grep 'application' ]; then
+                if cat "./charts/${chart}/" | grep -E '^type' | grep 'application'; then
                   helm template "./charts/${chart}/" -f "./charts/${chart}/values.yaml"
                   # Check against K8s API
                   helm template "./charts/${chart}/" -f "./charts/${chart}/values.yaml" --validate
