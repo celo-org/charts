@@ -89,13 +89,32 @@ jobs:
           EOF
           fi
 
-      - name: "Helm Lint"
+      - name: "Linting charts"
         run: |
           if test "$(wc -c < changed_charts)" -gt 2; then
             while read chart; do
               if [ -d ./charts/${chart} ]; then
                 helm dependency update --skip-refresh ./charts/${chart}
                 helm lint "./charts/${chart}/" || false
+              else
+                echo "Skipping charts/${chart} as it seems it has been deleted."
+              fi
+            done <<EOF
+              $(cat changed_charts)
+          EOF
+          fi
+
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.3.0
+
+      - name: "Templatint charts"
+        run: |
+          if test "$(wc -c < changed_charts)" -gt 2; then
+            while read chart; do
+              if [ -d ./charts/${chart} ]; then
+                helm template "./charts/${chart}/" -f "./charts/${chart}/values.yaml"
+                # Check against K8s API
+                helm template "./charts/${chart}/" -f "./charts/${chart}/values.yaml" --validate
               else
                 echo "Skipping charts/${chart} as it seems it has been deleted."
               fi
