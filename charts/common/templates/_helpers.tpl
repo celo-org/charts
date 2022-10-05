@@ -551,8 +551,8 @@ prometheus.io/port: "{{ $pprof.port | default 6060 }}"
     mountPath: /root/.celo
   resources:
     requests:
-      cpu: "2"
-      memory: 4Gi
+      cpu: "1"
+      memory: 2Gi
 {{- end -}}
 
 {{- /* Needs a serviceAccountName in the pod with permissions to access gstorage */ -}}
