@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "common.fullname" . }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.geth.persistence.size | quote }}
+  storageClassName: {{ .Values.geth.persistence.storageClassName }}
+  volumeMode: Filesystem

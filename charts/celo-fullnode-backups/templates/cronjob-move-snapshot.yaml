@@ -1,0 +1,82 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ template "common.fullname" . }}
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+            - args:
+              - |
+                set -euo pipefail
+
+                # yamllint disable rule:line-length
+                job_namespace="{{ .Release.Namespace }}" # Namespace origin for the snapshot (must exist)
+                namespace_destination="{{ .Values.snapshot.copy_process.namespace_copy_to }}" # Namespace destination for the snapshot
+                name_referece_detination="{{ .Values.snapshot.copy_process.volumeSnapshot_name_copy_to }}" # Name for the volumeSnapshot destination for the snapshot
+
+                # Get the reference for existing(origin) snapshot
+                latest_snapshot=$(kubectl get volumesnapshot -n $job_namespace | grep {{ template "common.fullname" . }} | grep true | tail -n1 | cut -f1 -d' ')
+                snapshot_content=$(kubectl get volumesnapshot "$latest_snapshot" -o yaml -n $job_namespace | grep boundVolumeSnapshotContentName | cut -f2 -d':' | tr -d ' ')
+                snapshot_handle=$(kubectl get volumesnapshotcontents "$snapshot_content" -o yaml -n $job_namespace | grep snapshotHandle | cut -f2 -d':' | tr -d ' ')
+
+                ## Delete old VolumeSnapshotContent & VolumeSnapshot in `{{ .Values.snapshot.copy_process.namespace_copy_to }}` namespace
+                kubectl delete volumesnapshot -n $namespace_destination $name_referece_detination
+                kubectl delete volumesnapshotcontent $name_referece_detination
+
+                cat <<EOF | kubectl apply -f -
+                apiVersion: snapshot.storage.k8s.io/v1
+                kind: VolumeSnapshotContent
+                metadata:
+                  name: $name_referece_detination
+                spec:
+                  deletionPolicy: Retain
+                  driver: pd.csi.storage.gke.io
+                  source:
+                    snapshotHandle: $snapshot_handle
+                  volumeSnapshotClassName: {{ .Values.snapshot.volumeSnapshotClassName }}
+                  volumeSnapshotRef:
+                    name: $name_referece_detination
+                    namespace: $namespace_destination
+                EOF
+
+                cat <<EOF | kubectl apply -f -
+                apiVersion: snapshot.storage.k8s.io/v1
+                kind: VolumeSnapshot
+                metadata:
+                  name: $name_referece_detination
+                  namespace: $namespace_destination
+                spec:
+                  source:
+                    volumeSnapshotContentName: $name_referece_detination
+                EOF
+                # yamllint enable rule:line-length
+              command:
+              - /bin/bash
+              - -c
+              image: bitnami/kubectl:latest
+              imagePullPolicy: Always
+              name: kubectl
+              resources:
+                requests:
+                  cpu: "0.25"
+                  memory: 500Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          restartPolicy: OnFailure
+          serviceAccountName: move-snapshot
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+  schedule: {{ .Values.snapshot.sync_schedule | quote }}
+  successfulJobsHistoryLimit: 3
+  suspend: false

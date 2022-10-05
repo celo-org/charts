@@ -1,0 +1,12 @@
+apiVersion: gemini.fairwinds.com/v1beta1
+kind: SnapshotGroup
+metadata:
+  name: {{ template "common.fullname" . }}
+spec:
+  persistentVolumeClaim:
+    claimName: {{ template "common.fullname" . }}
+  schedule:
+    {{- toYaml .Values.snapshot.snapshot_schedule | nindent 4 }}
+  template:
+    spec:
+      volumeSnapshotClassName: {{ .Values.snapshot.volumeSnapshotClassName }}
