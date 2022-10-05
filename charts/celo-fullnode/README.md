@@ -2,7 +2,7 @@
 
 Helm chart for deploying a Celo fullnode. More info at https://docs.celo.org
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
 
 - [celo-fullnode](#celo-fullnode)
   - [Chart requirements](#chart-requirements)
@@ -35,7 +35,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.2.0" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.3.0" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -77,6 +77,7 @@ helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo 
 | geth.autoscaling.minReplicas | int | `1` | Minimum number of replicas |
 | geth.create_network_endpoint_group | bool | `false` | Use GPC's `cloud.google.com/neg` annotations to configure NEG for the RPC/WS services |
 | geth.expose_rpc_externally | bool | `false` | Expose RPC port externally in the individual replica services |
+| geth.extra_flags | string | `"--txpool.nolocals"` | Geth's extra flags options (as string) |
 | geth.gcmode | string | `"full"` | Blockchain garbage collection mode. Valid values are: full and archive |
 | geth.image | object | `{"imagePullPolicy":"IfNotPresent","repository":"us.gcr.io/celo-testnet/geth","tag":"master"}` | Image for the celo-blockchain statefulset |
 | geth.in_memory_discovery_table | bool | `false` | Enable blockchain option `--use-in-memory-discovery-table` |
