@@ -13,4 +13,6 @@ config:
 kind: KongPlugin
 metadata:
   name: forno-rate-limit
+  labels:
+    app: {{ $.Release.Name }}
 plugin: rate-limiting

@@ -10,4 +10,6 @@ config:
 kind: KongPlugin
 metadata:
   name: forno-auth
+  labels:
+    app: {{ $.Release.Name }}
 plugin: key-auth

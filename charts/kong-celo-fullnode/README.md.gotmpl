@@ -6,11 +6,8 @@
 - [kong-celo-fullnode](#kong-celo-fullnode)
   - [Chart requirements](#chart-requirements)
   - [Chart releases](#chart-releases)
-  - [More relevant values](#more-relevant-values)
-  - [Ingress setup](#ingress-setup)
   - [Basic chart operation](#basic-chart-operation)
   - [Values](#values)
-  - [Chart Potential Improvements](#chart-potential-improvements)
 
 ## Chart requirements
 
@@ -24,18 +21,12 @@ Just remind yourself to bump the version of the chart in the [Chart.yaml](./Char
 This pricess is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
 and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 
-## Relevant values
-
-TODO
-
 ## Basic chart operation
 
 The chart is a wrapper over the [celo-fullnode](../celo-fullnode) chart, adding kong's plugins and clients to rate limit different users.
 
+## Values
+
 {{ template "chart.valuesSection" . }}
-
-## Chart Potential Improvements
-
-TODO
 
 {{ template "helm-docs.versionFooter" . }}. To regenerate run `helm-docs` command at this folder.

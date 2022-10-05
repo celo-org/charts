@@ -8,6 +8,8 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: kong
   name: {{ . }}
+  labels:
+    app: {{ $.Release.Name }}
 username: {{ . }}
 ---
 {{- end }}
