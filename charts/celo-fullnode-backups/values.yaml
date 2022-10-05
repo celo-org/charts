@@ -1,0 +1,40 @@
+geth:
+  # -- Extra flags to pass to celo-blockchain
+  additional_flags: ''
+  # -- gcmode for celo-blockchain. Possible values are `full` and `archive`
+  gcmode: full
+  # -- resources for the celo-blockchain statefulset
+  resources:
+    requests:
+      memory: "8Gi"
+      cpu: "3"
+    limits: {}
+  persistence:
+    # -- Size of the persistent volume claim for the celo-blockchain statefulset. It will be used as the source for the snapshot (so snapshot size)
+    size: 100Gi
+    # -- Storage class for the persistent volume claim for the celo-blockchain statefulset.
+    storageClassName: premium-rwo
+
+snapshot:
+  # -- VolumeSnapshotClassName. Requires [gce-pd-csi-driver](https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/gce-pd-csi-driver) to be installed.
+  volumeSnapshotClassName: gce-snaptshot
+  copy_process:
+    namespace_copy_to: rc1
+    # -- Name for the volumeSnapshot and volumeSnapshotContent that the "move" process will create
+    volumeSnapshot_name_copy_to: forno-snapshot
+  sync_schedule: "0/20 * * * *"
+  move_schedule: "10/20 * * * *"
+  snapshot_schedule:
+    - every: "20 minutes"
+      keep: 2
+    - every: "1 days"
+      keep: 1
+  schedule:
+    - every: "20 minutes"
+      keep: 2
+    - every: "1 days"
+      keep: 1
+
+# -- Source: [FairwindsOps/gemini](https://github.com/FairwindsOps/gemini)
+gemini:
+  enabled: false

@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ template "common.fullname" . }}
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - args:
+            - |
+              set -euo pipefail
+              ADDITIONAL_FLAGS='{{ .Values.geth.additional_flags }}'
+              ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --exitwhensynced"
+
+              exec geth \
+                --light.serve 0 \
+                --light.maxpeers 0 \
+                --maxpeers 200 \
+                --nousb \
+                --syncmode=full \
+                --gcmode={{ .Values.geth.gcmode }} \
+                --consoleformat=json \
+                --consoleoutput=stdout \
+                --verbosity=2 \
+                --txlookuplimit 0 \
+                ${ADDITIONAL_FLAGS}
+            command:
+            - /bin/sh
+            - -c
+            image: us.gcr.io/celo-org/geth:mainnet
+            imagePullPolicy: Always
+            name: geth
+            resources:
+              {{- toYaml .Values.geth.resources | nindent 14 }}
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+            volumeMounts:
+            - mountPath: /root/.celo
+              name: data
+          restartPolicy: OnFailure
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          volumes:
+          - name: data
+            persistentVolumeClaim:
+              claimName: {{ template "common.fullname" . }}
+  schedule: {{ .Values.sync_schedule | quote }}
+  successfulJobsHistoryLimit: 3
+  suspend: false
