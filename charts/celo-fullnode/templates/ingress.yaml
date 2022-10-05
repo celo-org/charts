@@ -1,30 +1,23 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "common.fullname" . -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}-rpc-ing
+  name: {{ template "common.fullname" $ }}-rpc-ing
   labels:
-{{ include "common.standard.labels" .  | indent 4 }}
+    {{- include "common.standard.labels" $ | nindent 4 }}
     component: celo-fullnode-rpc-traffic-ing
-{{- if .Values.ingress.annotations }}
+  {{- if .Values.ingress.annotations }}
   annotations:
-{{- range $key, $value := .Values.ingress.annotations }}
+    {{- range $key, $value := .Values.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
-{{- end }}
-{{- end }}
+    {{- end }}
+  {{- end }}
 spec:
   ingressClassName: {{ default "nginx" .Values.ingress.ingressClassName }}
   {{- if .Values.ingress.tls }}
   tls:
-  {{- range .Values.ingress.tls }}
-    - hosts:
-      {{- range .hosts }}
-      - {{ . }}
-      {{- end }}
-      secretName: {{ .secretName }}
+    {{- toYaml .Values.ingress.tls | nindent 4 }}
   {{- end }}
-{{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
     - host: {{ . }}
@@ -34,7 +27,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ $fullName }}-rpc
+                name: {{ template "common.fullname" $ }}-rpc
                 port: rpc
   {{- end }}
 {{- end }}
