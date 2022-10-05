@@ -28,6 +28,7 @@ spec:
             backend:
               service:
                 name: {{ template "common.fullname" $ }}-rpc
-                port: rpc
+                port: 
+                  name: rpc
   {{- end }}
 {{- end }}
