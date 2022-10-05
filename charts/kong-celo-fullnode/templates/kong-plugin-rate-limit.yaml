@@ -1,0 +1,16 @@
+apiVersion: configuration.konghq.com/v1
+config:
+  fault_tolerant: true
+  hide_client_headers: false
+  hour: 100
+  minute: 1
+  policy: redis
+  redis_host: redis-master
+  redis_password: {{ .Values.redisPassword }}
+  redis_ssl: false
+  redis_ssl_verify: false
+  second: 1
+kind: KongPlugin
+metadata:
+  name: forno-rate-limit
+plugin: rate-limiting

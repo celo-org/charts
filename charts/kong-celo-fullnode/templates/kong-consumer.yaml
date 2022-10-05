@@ -1,0 +1,13 @@
+{{ range .Values.consumers }}
+apiVersion: configuration.konghq.com/v1
+credentials:
+- {{ . }}-apikey
+custom_id: {{ . }}
+kind: KongConsumer
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: kong
+  name: {{ . }}
+username: {{ . }}
+---
+{{- end }}

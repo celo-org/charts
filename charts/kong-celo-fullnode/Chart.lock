@@ -1,0 +1,9 @@
+dependencies:
+- name: celo-fullnode
+  repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
+  version: 0.3.0
+- name: common
+  repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
+  version: 0.2.0
+digest: sha256:8d0e4a5dc1d8ec88d33d98d90be7445265a02dfc07690672babc0a918c8ae057
+generated: "2022-10-05T09:57:45.577368+02:00"
