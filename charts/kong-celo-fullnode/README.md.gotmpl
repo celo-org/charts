@@ -1,0 +1,41 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+- [kong-celo-fullnode](#kong-celo-fullnode)
+  - [Chart requirements](#chart-requirements)
+  - [Chart releases](#chart-releases)
+  - [More relevant values](#more-relevant-values)
+  - [Ingress setup](#ingress-setup)
+  - [Basic chart operation](#basic-chart-operation)
+  - [Values](#values)
+  - [Chart Potential Improvements](#chart-potential-improvements)
+
+## Chart requirements
+
+- Tested with Kubernetes 1.24
+- Tested with Helm v3.9.4
+
+## Chart releases
+
+Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/kong-celo-fullnode repository automatically every commit to `master` branch.
+Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
+This pricess is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
+and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
+
+## Relevant values
+
+TODO
+
+## Basic chart operation
+
+The chart is a wrapper over the [celo-fullnode](../celo-fullnode) chart, adding kong's plugins and clients to rate limit different users.
+
+{{ template "chart.valuesSection" . }}
+
+## Chart Potential Improvements
+
+TODO
+
+{{ template "helm-docs.versionFooter" . }}. To regenerate run `helm-docs` command at this folder.

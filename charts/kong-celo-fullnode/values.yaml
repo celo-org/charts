@@ -1,0 +1,58 @@
+# -- List of consumers to create in Kong (each consumer is a different client with different credentials)
+consumers:
+  - odis
+  - mento
+  - foundation
+# -- Redis password. Redis is used for storing rate limit counters
+redisPassword: changeme
+
+# -- Check values at [celo-fullnode chart](../celo-fullnode/README.md)
+celo-fullnode:
+  replicaCount: 2
+  gcp: true
+  genesis:
+    network: rc1
+    networkId: 42220
+  geth:
+    flags: --txpool.nolocals
+    gcmode: full
+    syncmode: full
+    image:
+      imagePullPolicy: IfNotPresent
+      repository: us.gcr.io/celo-org/geth
+      tag: 1.6.0
+    public_ip_per_node: []
+    resources:
+      requests:
+        cpu: "4"
+        memory: 8Gi
+    verbosity: 2
+    ws_port: 8545
+  ingress:
+    enabled: true
+    tls:
+      - hosts:
+        - forno.celo-testnet.org
+        secretName: forno.celo-testnet.org-tls
+    hosts:
+      - forno.celo-testnet.org
+    ingressClassName: kong
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      konghq.com/plugins: forno-rate-limit, forno-auth
+      konghq.com/strip-path: "true"
+      kubernetes.io/tls-acme: "true"
+  metrics: true
+  pprof:
+    enabled: true
+    path: /debug/metrics/prometheus
+    port: 6060
+  storage:
+    accessModes: ReadWriteOnce
+    enable: true
+    size: 100Gi
+    storageClass: premium-rwo # SSD Filestore
+    snapshot:
+      enabled: false
+      kind: VolumeSnapshot
+      name: forno-snapshot
