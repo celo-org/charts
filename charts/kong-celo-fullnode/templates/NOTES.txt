@@ -11,7 +11,7 @@ To check the status of the pods, please run:
 
   $ kubectl get pods -l "app={{ .Chart.Name }}" -n {{ .Release.Namespace }}
 
-{{- if .Values.celo-fullnode.ingress.enabled }}
+{{- if .Values.celo_fullnode.ingress.enabled }}
 To check the status of the ingress, please run:
 
   $ kubectl get ingress -l "app={{ .Chart.Name }}" -n {{ .Release.Namespace }}

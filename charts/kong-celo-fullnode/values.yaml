@@ -7,7 +7,7 @@ consumers:
 redisPassword: changeme
 
 # -- Check values at [celo-fullnode chart](../celo-fullnode/README.md)
-celo-fullnode:
+celo_fullnode:
   replicaCount: 2
   gcp: true
   genesis:
@@ -56,3 +56,4 @@ celo-fullnode:
       enabled: false
       kind: VolumeSnapshot
       name: forno-snapshot
+

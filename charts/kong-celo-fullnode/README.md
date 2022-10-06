@@ -17,7 +17,7 @@ Chart wrapper over celo-fullnode chart to adapt to Forno. It requires a Kong con
 
 ## Chart releases
 
-Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/kong-celo-fullnode repository automatically every commit to `master` branch.
+Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/kong-celo-fullnode repository automatically every commit to `main` branch.
 Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
 This pricess is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
 and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
@@ -28,11 +28,9 @@ The chart is a wrapper over the [celo-fullnode](../celo-fullnode) chart, adding 
 
 ## Values
 
-## Values
-
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| celo-fullnode | object | `{"gcp":true,"genesis":{"network":"rc1","networkId":42220},"geth":{"flags":"--txpool.nolocals","gcmode":"full","image":{"imagePullPolicy":"IfNotPresent","repository":"us.gcr.io/celo-org/geth","tag":"1.6.0"},"public_ip_per_node":[],"resources":{"requests":{"cpu":"4","memory":"8Gi"}},"syncmode":"full","verbosity":2,"ws_port":8545},"ingress":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-prod","konghq.com/plugins":"forno-rate-limit, forno-auth","konghq.com/strip-path":"true","kubernetes.io/tls-acme":"true"},"enabled":true,"hosts":["forno.celo-testnet.org"],"ingressClassName":"kong","tls":[{"hosts":["forno.celo-testnet.org"],"secretName":"forno.celo-testnet.org-tls"}]},"metrics":true,"pprof":{"enabled":true,"path":"/debug/metrics/prometheus","port":6060},"replicaCount":2,"storage":{"accessModes":"ReadWriteOnce","enable":true,"size":"100Gi","snapshot":{"enabled":false,"kind":"VolumeSnapshot","name":"forno-snapshot"},"storageClass":"premium-rwo"}}` | Check values at [celo-fullnode chart](../celo-fullnode/README.md) |
+| celo_fullnode | object | `{"gcp":true,"genesis":{"network":"rc1","networkId":42220},"geth":{"flags":"--txpool.nolocals","gcmode":"full","image":{"imagePullPolicy":"IfNotPresent","repository":"us.gcr.io/celo-org/geth","tag":"1.6.0"},"public_ip_per_node":[],"resources":{"requests":{"cpu":"4","memory":"8Gi"}},"syncmode":"full","verbosity":2,"ws_port":8545},"ingress":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-prod","konghq.com/plugins":"forno-rate-limit, forno-auth","konghq.com/strip-path":"true","kubernetes.io/tls-acme":"true"},"enabled":true,"hosts":["forno.celo-testnet.org"],"ingressClassName":"kong","tls":[{"hosts":["forno.celo-testnet.org"],"secretName":"forno.celo-testnet.org-tls"}]},"metrics":true,"pprof":{"enabled":true,"path":"/debug/metrics/prometheus","port":6060},"replicaCount":2,"storage":{"accessModes":"ReadWriteOnce","enable":true,"size":"100Gi","snapshot":{"enabled":false,"kind":"VolumeSnapshot","name":"forno-snapshot"},"storageClass":"premium-rwo"}}` | Check values at [celo-fullnode chart](../celo-fullnode/README.md) |
 | consumers | list | `["odis","mento","foundation"]` | List of consumers to create in Kong (each consumer is a different client with different credentials) |
 | redisPassword | string | `"changeme"` | Redis password. Redis is used for storing rate limit counters |
 
