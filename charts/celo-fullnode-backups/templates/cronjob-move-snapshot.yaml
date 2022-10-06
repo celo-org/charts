@@ -1,3 +1,4 @@
+{{- if .Values.snapshot.copy_process.enabled -}}
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -80,3 +81,4 @@ spec:
   schedule: {{ .Values.snapshot.sync_schedule | quote }}
   successfulJobsHistoryLimit: 3
   suspend: false
+{{- end }}

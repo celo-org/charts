@@ -1,0 +1,61 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+- [celo-fullnode-backups](#celo-fullnode-backups)
+  - [Chart requirements](#chart-requirements)
+  - [Important notes](#important-notes)
+  - [Chart releases](#chart-releases)
+  - [Basic chart operation](#basic-chart-operation)
+  - [Values](#values)
+
+## Chart requirements
+
+- Tested with Kubernetes 1.23
+- Tested with Helm v3.9.4
+- CSI Driver support for snapshots
+
+## Important notes
+
+- This chart can be used to deploy a CronJob and schedeuled backups of a Celo fullnode. Backups are volumeSnapshots.
+- Only tested with GKE. Feauture `Compute Engine persistent disk CSI Driver` must be enabled. See [here](https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/gce-pd-csi-driver) for more information.
+- It may work with other cloud providers / CSI drivers as far as they support PVC snapshots, but this is not tested.
+- The chart can copy the snapshot reference from the origin namespace to a target namespace. This is useful because it is not possible to reference an snapshot from a different namespace. The target namespace must exist before the backup is executed. The snapshot in the cloud is not duplicated, only the reference in Kubernetes is duplicated.
+
+## Chart releases
+
+Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode-backups repository automatically every commit to `main` branch.
+Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
+This pricess is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
+and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
+
+## Basic chart operation
+
+To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet` in namespace `celo` using `values-mainnet-node.yaml` custom values:
+
+```bash
+# Select the chart release to use
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode-backups --version={{ template "chart.version" . }}" # Use remote chart and specific version
+CHART_RELEASE="./" # Use this local folder
+
+# (Only for local chart) Sync helm dependencies
+helm dependency update
+
+# (Optional) Render the chart template to check the templates
+helm template celo-mainnet-fullnode --create-namespace -f values-mainnet-node.yaml --namespace=celo --output-dir=/tmp "$CHART_RELEASE"
+
+# Installing the chart
+helm install celo-mainnet-fullnode --create-namespace -f values-mainnet-node.yaml --namespace=celo "$CHART_RELEASE"
+
+# (Optional) Check a diff when upgrading the chart
+# Using https://github.com/databus23/helm-diff
+helm diff -C5 upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo "$CHART_RELEASE"
+
+# Upgrade the chart
+helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo "$CHART_RELEASE"
+```
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}. To regenerate run `helm-docs` command at this folder.
