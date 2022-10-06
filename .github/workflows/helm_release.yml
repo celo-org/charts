@@ -73,7 +73,7 @@ jobs:
           while read chart; do
             helm dependency update --skip-refresh ./charts/${chart} 
             helm package -u charts/${chart}/
-            helm push ./${chart}-*.tgz oci://us-west1-docker.pkg.dev/devopsrew/clabs-public-oci
+            helm push ./${chart}-*.tgz oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
           done <<EOF
             $(cat changed_charts)
           EOF
