@@ -1,0 +1,68 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "clean-pvcs.fullname" . }}
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with .Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels:
+            {{- include "clean-pvcs.selectorLabels" . | nindent 12 }}
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          serviceAccountName: {{ include "clean-pvcs.serviceAccountName" . }}
+          containers:
+          - name: kubectl
+            securityContext:
+              {{- toYaml .Values.securityContext | nindent 14 }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            resources:
+              {{- toYaml .Values.resources | nindent 14 }}
+            command:
+            - /bin/bash
+            - -c
+            args:
+              - |
+                EXISTING_PVCS=$(kubectl get pvc -o go-template --template '{{`{{`}}range .items{{`}}`}}{{`{{`}}.metadata.name{{`}}`}} {{`{{`}}.metadata.creationTimestamp{{`}}`}}{{`{{`}}"\n"{{`}}`}}{{`{{`}}end{{`}}`}}' | awk '$2 <= "'$(date -d'{{ .Values.cronjob.older }}' -Ins --utc | sed 's/+0000/Z/')'" { print $1 }')
+
+                USED_PVCS=$(kubectl get pods -o=json | jq -r '.items[].spec | select( has ("volumes") ).volumes[] | select( has ("persistentVolumeClaim") ).persistentVolumeClaim.claimName')
+
+                for i in $EXISTING_PVCS
+                do
+                  if [[ ! " ${USED_PVCS[*]} " =~ " ${i} " ]]
+                  then
+                    kubectl delete pvc $i
+                  fi
+                done
+
+                exit 0
+          restartPolicy: OnFailure
+          terminationGracePeriodSeconds: 30
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+              {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+              {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+              {{- toYaml . | nindent 8 }}
+          {{- end }}
+  schedule: {{ .Values.cronjob.schedule }}
+  successfulJobsHistoryLimit: 3
+  suspend: false

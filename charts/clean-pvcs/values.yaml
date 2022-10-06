@@ -1,0 +1,66 @@
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use. If not set a name is generated using the fullname template
+  name: ""
+
+image:
+  # -- Image repository
+  repository: bitnami/kubectl
+  # -- Image pullpolicy
+  pullPolicy: IfNotPresent
+  # -- Image tag
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+cronjob:
+  # -- Cronjob schedule
+  schedule: "0 1 * * *"
+  # -- Delete PVCs older than (GNU date style)
+  older: "now-4 hours"
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+# -- Custom pod annotations
+podAnnotations: {}
+
+# -- Custom pod security context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Custom container security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# -- Container resources
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes pod affinity
+affinity: {}
