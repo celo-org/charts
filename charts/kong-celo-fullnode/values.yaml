@@ -56,4 +56,3 @@ celo_fullnode:
       enabled: false
       kind: VolumeSnapshot
       name: forno-snapshot
-
