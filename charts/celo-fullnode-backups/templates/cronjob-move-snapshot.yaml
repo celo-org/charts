@@ -3,7 +3,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ template "common.fullname" . }}
+  name: {{ template "common.fullname" . }}-move
 spec:
   concurrencyPolicy: Allow
   failedJobsHistoryLimit: 1
