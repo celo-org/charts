@@ -5,7 +5,7 @@ kind: CronJob
 metadata:
   name: {{ template "common.fullname" . }}-move
 spec:
-  concurrencyPolicy: Allow
+  concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 1
   jobTemplate:
     metadata:
