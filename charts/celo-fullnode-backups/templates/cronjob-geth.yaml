@@ -53,6 +53,6 @@ spec:
           - name: data
             persistentVolumeClaim:
               claimName: {{ template "common.fullname" . }}
-  schedule: {{ .Values.sync_schedule | quote }}
+  schedule: {{ .Values.snapshot.sync_schedule | quote }}
   successfulJobsHistoryLimit: 3
   suspend: false
