@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ template "common.fullname" . }}
+  name: {{ template "common.fullname" . }}-move
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "common.fullname" . }}
+  name: {{ template "common.fullname" . }}-move
 rules:
 - apiGroups:
   - snapshot.storage.k8s.io
@@ -26,12 +26,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "common.fullname" . }}
+  name: {{ template "common.fullname" . }}-move
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "common.fullname" . }}
+  name: {{ template "common.fullname" . }}-move
 subjects:
 - kind: ServiceAccount
-  name: {{ template "common.fullname" . }}
+  name: {{ template "common.fullname" . }}-move
   namespace: {{ .Release.Namespace }}

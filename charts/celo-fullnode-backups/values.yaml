@@ -29,15 +29,10 @@ snapshot:
     namespace_copy_to: rc1
     # -- Name for the volumeSnapshot and volumeSnapshotContent that the "move" process will create
     volumeSnapshot_name_copy_to: forno-snapshot
-  sync_schedule: "0/20 * * * *"
-  move_schedule: "10/20 * * * *"
+  sync_schedule: "0/60 * * * *"
+  move_schedule: "30/60 * * * *"
   snapshot_schedule:
-    - every: "20 minutes"
-      keep: 2
-    - every: "1 days"
-      keep: 1
-  schedule:
-    - every: "20 minutes"
+    - every: "60 minutes"
       keep: 2
     - every: "1 days"
       keep: 1

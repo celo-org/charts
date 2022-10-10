@@ -74,7 +74,7 @@ spec:
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
           restartPolicy: OnFailure
-          serviceAccountName: move-snapshot
+          serviceAccountName: {{ template "common.fullname" . }}-move
           schedulerName: default-scheduler
           securityContext: {}
           terminationGracePeriodSeconds: 30
