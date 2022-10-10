@@ -9,7 +9,7 @@ config:
   run_on_preflight: true
 kind: KongPlugin
 metadata:
-  name: {{ $.Release.Name }}-forno-auth
+  name: {{ $.Release.Name }}-auth
   labels:
     app: {{ $.Release.Name }}
 plugin: key-auth
