@@ -9,7 +9,7 @@ config:
   run_on_preflight: true
 kind: KongPlugin
 metadata:
-  name: forno-auth
+  name: {{ $.Release.Name }}-forno-auth
   labels:
     app: {{ $.Release.Name }}
-plugin: {{ $.Release.Name }}-key-auth
+plugin: key-auth
