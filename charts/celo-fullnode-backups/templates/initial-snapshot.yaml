@@ -1,0 +1,23 @@
+{{- if .Values.geth.initial_snapshot.enabled | default false -}}
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotContent
+metadata:
+  name: {{ template "common.fullname" . }}-initial
+spec:
+  deletionPolicy: Retain
+  driver: pd.csi.storage.gke.io
+  source:
+    snapshotHandle: {{ .Values.geth.initial_snapshot.snapshotHandleReference }}
+  volumeSnapshotClassName: {{ .Values.snapshot.volumeSnapshotClassName}}
+  volumeSnapshotRef:
+    name: {{ template "common.fullname" . }}-initial
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: {{ template "common.fullname" . }}-initial
+spec:
+  source:
+    volumeSnapshotContentName: {{ template "common.fullname" . }}-initial
+{{- end }}
