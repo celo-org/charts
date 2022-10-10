@@ -31,8 +31,8 @@ spec:
                 snapshot_handle=$(kubectl get volumesnapshotcontents "$snapshot_content" -o yaml -n $job_namespace | grep snapshotHandle | cut -f2 -d':' | tr -d ' ')
 
                 ## Delete old VolumeSnapshotContent & VolumeSnapshot in `{{ .Values.snapshot.copy_process.namespace_copy_to }}` namespace
-                kubectl delete volumesnapshot -n $namespace_destination $name_referece_detination
-                kubectl delete volumesnapshotcontent $name_referece_detination
+                kubectl delete volumesnapshot -n $namespace_destination $name_referece_detination || true
+                kubectl delete volumesnapshotcontent $name_referece_detination || true
 
                 cat <<EOF | kubectl apply -f -
                 apiVersion: snapshot.storage.k8s.io/v1
