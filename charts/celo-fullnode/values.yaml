@@ -1,6 +1,6 @@
 ---
 # -- Number of celo-blockchain statefulset replicas
-replicaCount: 2
+replicaCount: 1
 # -- Override default name format. Use false to use default name format, or a string to override
 fullnameOverride: false
 
