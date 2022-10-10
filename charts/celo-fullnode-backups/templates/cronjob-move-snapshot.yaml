@@ -27,8 +27,8 @@ spec:
 
                 # Get the reference for existing(origin) snapshot
                 latest_snapshot=$(kubectl get volumesnapshot -n $job_namespace | grep {{ template "common.fullname" . }} | grep true | tail -n1 | cut -f1 -d' ')
-                snapshot_content=$(kubectl get volumesnapshot "$latest_snapshot" -o yaml -n $job_namespace | grep boundVolumeSnapshotContentName | cut -f2 -d':' | tr -d ' ')
-                snapshot_handle=$(kubectl get volumesnapshotcontents "$snapshot_content" -o yaml -n $job_namespace | grep snapshotHandle | cut -f2 -d':' | tr -d ' ')
+                snapshot_content=$(kubectl get volumesnapshot "$latest_snapshot" -n $job_namespace -o jsonpath='{.spec.source.volumeSnapshotContentName}')
+                snapshot_handle=$(kubectl get volumesnapshotcontents "$snapshot_content" -o jsonpath='{.spec.source.snapshotHandle}')
 
                 ## Delete old VolumeSnapshotContent & VolumeSnapshot in `{{ .Values.snapshot.copy_process.namespace_copy_to }}` namespace
                 kubectl delete volumesnapshot -n $namespace_destination $name_referece_detination || true
