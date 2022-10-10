@@ -1,7 +1,7 @@
 {{ range .Values.consumers }}
 apiVersion: configuration.konghq.com/v1
 credentials:
-- {{ . }}-apikey
+- {{ $.Release.Name }}-{{ . }}-apikey
 custom_id: {{ $.Release.Name }}-{{ . }}
 kind: KongConsumer
 metadata:
