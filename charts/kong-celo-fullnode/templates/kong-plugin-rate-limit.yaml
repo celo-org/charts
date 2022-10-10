@@ -12,7 +12,7 @@ config:
   second: 1
 kind: KongPlugin
 metadata:
-  name: forno-rate-limit
+  name: {{ $.Release.Name }}-rate-limit
   labels:
     app: {{ $.Release.Name }}
 plugin: rate-limiting

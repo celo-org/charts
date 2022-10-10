@@ -2,7 +2,7 @@
 apiVersion: configuration.konghq.com/v1
 credentials:
 - {{ . }}-apikey
-custom_id: {{ . }}
+custom_id: {{ $.Release.Name }}-{{ . }}
 kind: KongConsumer
 metadata:
   annotations:
@@ -10,6 +10,6 @@ metadata:
   name: {{ . }}
   labels:
     app: {{ $.Release.Name }}
-username: {{ . }}
+username: {{ $.Release.Name }}-{{ . }}
 ---
 {{- end }}

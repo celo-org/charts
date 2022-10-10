@@ -30,7 +30,7 @@ celo_fullnode:
     verbosity: 2
     ws_port: 8545
   ingress:
-    enabled: true
+    enabled: false
     tls:
       - hosts:
         - forno.celo-testnet.org
