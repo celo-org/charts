@@ -113,6 +113,7 @@ jobs:
 
       - name: "Templating charts"
         run: |
+          echo "${{ join(steps.updated_files.outputs.all) }}"
           if test "$(wc -c < changed_charts)" -gt 2; then
             while read chart; do
               if [ -d ./charts/${chart} ]; then
