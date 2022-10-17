@@ -107,7 +107,7 @@ jobs:
         uses: helm/kind-action@v1.3.0
 
       - name: Install dependencies CRDs
-        if: contains(steps.updated_files.outputs.all, 'charts/kong-celo-fullnode/**')
+        if: contains(join(steps.updated_files.outputs.all), 'charts/kong-celo-fullnode/**')
         run: |
           kubectl apply -f https://raw.githubusercontent.com/Kong/kong-operator/main/helm-charts/kong/crds/custom-resource-definitions.yaml
 
