@@ -67,24 +67,150 @@ Focus on designing a chart's values.yaml file.
    3. Each resource definition should be in its own template file.
    4. Template file names should reflect the resource kind in the name. e.g. `foo-po.yaml`, `bar-svc.yaml` using abbreviations of Kubernetes Resource Types (if they exist):
 
-   | Abbreviation | Full name               |
-   | ------------ | ----------------------- |
-   | svc          | service                 |
-   | deploy       | deployment              |
-   | cm           | configmap               |
-   | secret       | secret                  |
-   | ds           | daemonset               |
-   | rc           | replicationcontroller   |
-   | petset       | petset                  |
-   | po           | pod                     |
-   | hpa          | horizontalpodautoscaler |
-   | ing          | ingress                 |
-   | job          | job                     |
-   | limit        | limitrange              |
-   | ns           | namespace               |
-   | pv           | persistentvolume        |
-   | pvc          | persistentvolumeclaim   |
-   | sa           | serviceaccount          |
+      | Abbreviation | Full name               |
+      | ------------ | ----------------------- |
+      | svc          | service                 |
+      | deploy       | deployment              |
+      | cm           | configmap               |
+      | secret       | secret                  |
+      | ds           | daemonset               |
+      | rc           | replicationcontroller   |
+      | petset       | petset                  |
+      | po           | pod                     |
+      | hpa          | horizontalpodautoscaler |
+      | ing          | ingress                 |
+      | job          | job                     |
+      | limit        | limitrange              |
+      | ns           | namespace               |
+      | pv           | persistentvolume        |
+      | pvc          | persistentvolumeclaim   |
+      | sa           | serviceaccount          |
+
+2. All defined template (templates created inside a `{{ define }}` directive) names should be namespaced because they are  globally accessible.
+
+    Correct:
+
+    ```go
+    {{- define "nginx.fullname" }}
+    {{/* ... */}}
+    {{ end -}}
+    ```
+
+    Incorrect:
+
+    ```go
+    {{- define "fullname" -}}
+    {{/* ... */}}
+    {{ end -}}
+    ```
+
+3. Templates should be indented using two spaces (never tabs).
+
+4. Template directives should have whitespace after the opening braces and before the closing braces:
+
+    Correct:
+
+    ```go
+    {{ .foo }}
+    {{ print "foo" }}
+    {{- print "bar" -}}
+    ```
+
+    Incorrect:
+
+    ```go
+    {{.foo}}
+    {{print "foo"}}
+    {{-print "bar"-}}
+    ```
+
+5. Chomp whitespace where possible:
+
+    ```go
+    foo:
+      {{- range .Values.items }}
+      {{ . }}
+      {{ end -}}
+    ```
+
+6. Blocks (such as control structures) may be indented to indicate flow of the template code.
+
+    ```go
+    {{ if $foo -}}
+      {{- with .Bar }}Hello{{ end -}}
+    {{- end -}}
+    ```
+
+    > :warning: Since YAML is a whitespace-oriented language, it is often not possible for code indentation to follow that convention.
+
+7. Keep the amount of whitespace in generated templates to a minimum. In particular, numerous blank lines should not appear adjacent to each other. But occasional empty lines (particularly between logical sections) is fine.
+
+    Best:
+
+    ```go
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: example
+      labels:
+        first: first
+        second: second
+    ```
+
+    Okay:
+
+    ```go
+    apiVersion: batch/v1
+    kind: Job
+
+    metadata:
+      name: example
+
+      labels:
+        first: first
+        second: second
+    ```
+
+    Avoid:
+
+    ```go
+    apiVersion: batch/v1
+    kind: Job
+
+    metadata:
+      name: example
+
+
+
+
+
+      labels:
+        first: first
+
+        second: second
+    ```
+
+8. Comments
+
+    YAML comments:
+
+    ```yaml
+    # This is a comment
+    type: sprocket
+    ```
+
+    Template Comments:
+
+    ```go
+    {{- /*
+    This is a comment.
+    */}}
+    type: frobnitz
+    ```
+
+9. YAML is a superset of JSON. In some cases, using a JSON syntax can be more readable than other YAML representations. Using JSON for increased legibility is good. However, JSON syntax should not be used for representing more complex constructs.
+
+    When dealing with pure JSON embedded inside of YAML (such as init container configuration), it is of course appropriate to use the JSON format.
 
 ## References
 
