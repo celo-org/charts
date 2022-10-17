@@ -1,5 +1,6 @@
 {{ range $index, $e := until (int .Values.replicaCount ) }}
 {{ range $protocolIndex, $protocol := $.Values.geth.service_protocols }}
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -41,25 +42,5 @@ spec:
 {{- end }}
   selector:
     statefulset.kubernetes.io/pod-name: {{ template "common.fullname" $ }}-{{ $index }}
----
 {{ end }}
 {{ end }}
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ template "common.fullname" . }}-rpc
-  labels:
-{{ include "common.standard.labels" .  | indent 4 }}
-    component: celo-fullnode-rpc-traffic
-  annotations:
-{{ if .Values.geth.create_network_endpoint_group }}
-    cloud.google.com/neg: '{"exposed_ports": {"8545":{},"8546":{}}}'
-{{ end }}
-spec:
-  type: ClusterIP
-  sessionAffinity: {{ default "None" .Values.geth.service_session_affinity }}
-  ports:
-{{ include "celo-fullnode.rpc-ports" . | indent 4 }}
-  selector:
-{{ include "common.standard.labels" .  | indent 4 }}
-    component: celo-fullnode
