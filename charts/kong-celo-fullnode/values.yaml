@@ -65,3 +65,35 @@ celo_fullnode:
       enabled: false
       kind: VolumeSnapshot
       name: forno-snapshot
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 5
+      metrics:
+      - resource:
+          name: cpu
+          target:
+            averageUtilization: 85
+            type: Utilization
+        type: Resource
+      behavior:
+        scaleDown:
+          policies:
+          - periodSeconds: 60
+            type: Pods
+            value: 2
+          - periodSeconds: 60
+            type: Percent
+            value: 25
+          selectPolicy: Max
+          stabilizationWindowSeconds: 1800
+        scaleUp:
+          policies:
+          - periodSeconds: 15
+            type: Pods
+            value: 2
+          - periodSeconds: 15
+            type: Percent
+            value: 25
+          selectPolicy: Max
+          stabilizationWindowSeconds: 600
