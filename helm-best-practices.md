@@ -8,6 +8,11 @@
   - [General](#general)
   - [Values](#values)
   - [Templates](#templates)
+  - [Dependencies](#dependencies)
+  - [Labels And Annotations](#labels-and-annotations)
+  - [Pods and PodTemplates](#pods-and-podtemplates)
+  - [Custom Resource Definitions](#custom-resource-definitions)
+  - [Role-Based Access Control](#role-based-access-control)
   - [References](#references)
 
 ---
@@ -212,7 +217,135 @@ Focus on designing a chart's values.yaml file.
 
     When dealing with pure JSON embedded inside of YAML (such as init container configuration), it is of course appropriate to use the JSON format.
 
+## Dependencies
+
+1. Use version ranges instead of pinning to an exact version. The suggested default is to use a patch-level version match:
+
+    ```yaml
+    version: ~1.2.3
+    ```
+
+    The following provides a pre-release as well as patch-level matching:
+
+    ```yaml
+    version: ~1.2.3-0
+    ```
+
+2. Where possible, use `https://` repository URLs, followed by `http://` URLs.
+
+3. Conditions or tags should be added to any dependencies that are optional.
+
+    The preferred form of a condition is:
+
+    ```yaml
+    condition: somechart.enabled
+    ```
+
+    When multiple subcharts (dependencies) together provide an optional or swappable feature, those charts should share the same tags. For example, if both nginx and memcached together provide performance optimizations for the main app in the chart, and are required to both be present when that feature is enabled, then they should both have a tags section like this:
+
+    ```yaml
+    tags:
+      - webaccelerator
+    ```
+
+## Labels And Annotations
+
+1. An item of metadata should be a **label** under the following conditions:
+
+    - It is used by Kubernetes to identify this resource
+    - It is useful to expose to operators for the purpose of querying the system.
+
+2. If an item of metadata is not used for querying, it should be set as an **annotation** instead.
+
+3. Helm hooks are always annotations.
+
+4. The following table defines common labels that Helm charts use. Helm itself never requires that a particular label be present. REC are recommended, and should be placed onto a chart for global consistency. OPT are optional More information on the Kubernetes labels, prefixed with `app.kubernetes.io`, is available in the [Kubernetes documentation](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/).
+
+    | Name | Status | Description |
+    |------|--------|-------------|
+    |`app.kubernetes.io/name` |	REC	| This should be the app name, reflecting the entire app. Usually `{{ template "name" . }}` is used for this. This is used by many Kubernetes manifests, and is not Helm-specific. |
+    | `helm.sh/chart` |	REC |	This should be the chart name and version: `{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}`. |
+    | `app.kubernetes.io/managed-by` |	REC |	This should always be set to `{{ .Release.Service }}`. It is for finding all things managed by Helm. |
+    | `app.kubernetes.io/instance` |	REC |	This should be the `{{ .Release.Name }}`. It aids in differentiating between different instances of the same application. |
+    | `app.kubernetes.io/version` |	OPT |	The version of the app and can be set to `{{ .Chart.AppVersion }}`. |
+    | `app.kubernetes.io/component` |	OPT	| This is a common label for marking the different roles that pieces may play in an application. For example, `app.kubernetes.io/component: frontend`. |
+    | `app.kubernetes.io/part-of` |	OPT	| When multiple charts or pieces of software are used together to make one application. For example, application software and a database to produce a website. This can be set to the top level application being supported. |
+
+## Pods and PodTemplates
+
+1. A container image should use a fixed tag or the SHA of the image. It should not use the tags latest, head, canary, or other tags that are designed to be "floating".
+
+    Images may be defined in the values.yaml file to make it easy to swap out images.
+
+    ```yaml
+    image: {{ .Values.redisImage | quote }}
+    ```
+
+    An image and a tag may be defined in values.yaml as two separate fields:
+
+    ```yaml
+    image: "{{ .Values.redisImage }}:{{ .Values.redisTag }}"
+    ```
+
+2. Set the `imagePullPolicy` to `IfNotPresent` by default.
+
+3. All `PodTemplate` sections should specify a selector.
+
+## Custom Resource Definitions
+
+When working with Custom Resource Definitions (CRDs), it is important to distinguish two different pieces:
+
+- There is a declaration of a CRD. This is the YAML file that has the kind `CustomResourceDefinition`.
+- Then there are resources that use the CRD. Say a CRD defines `foo.example.com/v1`. Any resource that has `apiVersion: example.com/v1` and `kind Foo` is a resource that uses the CRD.
+
+1. The declaration must be registered before any resources of that CRDs kind(s) can be used. And the registration process sometimes takes a few seconds. There are 2 methods:
+
+    1. Method 1: Let helm Do It For You: Put CRDs in a special directory called `crds`. These CRDs are **not templated**, but will be installed by default when running a `helm install` for the chart. If the CRD already exists, it will be skipped with a warning. If you wish to skip the CRD installation step, you can pass the `--skip-crds flag`.
+
+        Caveats:
+          - There is no support for upgrading or deleting CRDs using Helm.
+          - The `--dry-run` flag of `helm install` and `helm upgrade` is not currently supported for CRD.
+
+    2. Method 2: Separate Charts: Put the CRD definition in one chart, and then put any resources that use that CRD in another chart. **In this method, each chart must be installed separately.**
+
+## Role-Based Access Control
+
+1. RBAC and ServiceAccount configuration should happen under separate keys as they are separate things.
+
+    ```yaml
+    rbac:
+      # Specifies whether RBAC resources should be created
+      create: true
+
+    serviceAccount:
+      # Specifies whether a ServiceAccount should be created
+      create: true
+      # The name of the ServiceAccount to use.
+      # If not set and create is true, a name is generated using the fullname template
+      name:
+    ```
+
+2. RBAC Resources Should be Created by Default. That is, `rbac.create` should be a boolean value controlling whether RBAC resources are created. The default should be `true`.
+
+3. `serviceAccount.name` should be set to the name of the `ServiceAccount` to be used by access-controlled resources created by the chart. If `serviceAccount.create` is `true`, then a `ServiceAccount` with this name should be created. If the name is not set, then a name is generated using the `fullname` template, If `serviceAccount.create` is `false`, then it should not be created, but it should still be associated with the same resources so that manually-created RBAC resources created later that reference it will function correctly. If `serviceAccount`.create is `false` and the name is not specified, then the default `ServiceAccount` is used.
+
+    The following helper template should be used for the ServiceAccount.
+
+    ```go
+    {{/*
+    Create the name of the service account to use
+    */}}
+    {{- define "mychart.serviceAccountName" -}}
+    {{- if .Values.serviceAccount.create -}}
+        {{ default (include "mychart.fullname" .) .Values.serviceAccount.name }}
+    {{- else -}}
+        {{ default "default" .Values.serviceAccount.name }}
+    {{- end -}}
+    {{- end -}}
+    ```
+
 ## References
 
 - [helm.sh Chart Best Practices Guide](https://helm.sh/docs/chart_best_practices/)
+- [Kubernetes Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/)
 - [Honestbee - Helm Chart Conventions](https://gist.github.com/so0k/f927a4b60003cedd101a0911757c605a)
