@@ -21,6 +21,8 @@
 
 Collect considered best practices for creating charts. This guide focus primarily on best practices for charts that may be publicly deployed. Many charts are for internal-use only, and authors of such charts may find that their internal interests override suggestions here.
 
+An example of a formatted Helm chart `foo` created with `helm create foo` can be found in folder [`docs/examples/foo`](examples/foo/).
+
 ## General
 
 1. Chart names must be lower case letters and numbers. Words may be separated with dashes (-). Neither uppercase letters nor underscores can be used in chart names. Dots should not be used in chart names.

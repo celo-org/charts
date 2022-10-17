@@ -8,3 +8,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/c
 
 - [celo-fullnode](./charts/celo-fullnode/README.md) - Deploy Celo Network nodes with different configurations (archive nodes, light nodes, etc.)
 - [common](./charts/common/README.md) - Common library with Celo validators and full nodes helper functions and templates
+
+## Helm charts best practices
+
+A list of best practices when writing Helm charts can be found if the [`docs/` folder](docs/helm-best-practices.md).
