@@ -6,6 +6,14 @@ consumers:
 # -- Redis password. Redis is used for storing rate limit counters
 redisPassword: changeme
 
+rate_limit:
+  # -- Number of requests per hour allowed for each consumer
+  hour: 100000
+  # -- Number of requests per minute allowed for each consumer
+  # minute: 3000
+  # -- Number of requests per second allowed for each consumer
+  # second: 100
+
 # -- Check values at [celo-fullnode chart](../celo-fullnode/README.md)
 celo_fullnode:
   replicaCount: 2

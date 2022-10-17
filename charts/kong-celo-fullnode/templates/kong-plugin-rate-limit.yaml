@@ -2,14 +2,20 @@ apiVersion: configuration.konghq.com/v1
 config:
   fault_tolerant: true
   hide_client_headers: false
-  hour: 100
-  minute: 1
+  {{- if .Values.rate_limit.hour }}
+  hour: {{ .Values.rate_limit.hour }}
+  {{- end }}
+  {{- if .Values.rate_limit.minute }}
+  minute: {{ .Values.rate_limit.minute }}
+  {{- end }}
+  {{- if .Values.rate_limit.second }}
+  minute: {{ .Values.rate_limit.second }}
+  {{- end }}
   policy: redis
   redis_host: redis-master
   redis_password: {{ .Values.redisPassword }}
   redis_ssl: false
   redis_ssl_verify: false
-  second: 1
 kind: KongPlugin
 metadata:
   name: {{ $.Release.Name }}-rate-limit
