@@ -22,7 +22,7 @@
 
 ## Goal
 
-Collect considered best practices for creating charts. This guide focus primarily on best practices for charts that may be publicly deployed. Many charts are for internal-use only, and authors of such charts may find that their internal interests override suggestions here.
+Collect considered best practices for creating charts. This guide focuses primarily on best practices for charts that may be publicly deployed. Many charts are for internal-use only, and authors of such charts may find that their internal interests override suggestions here.
 
 An example of a formatted Helm chart `foo` created with `helm create foo` can be found in folder [`docs/examples/foo`](examples/foo/).
 
@@ -130,6 +130,8 @@ Focus on designing a chart's values.yaml file.
    1. **TODO:** Evaluate [`helm-docs`](https://github.com/norwoodj/helm-docs) and its automation.
 
 ## Templates
+
+Helm chart templates are basically Go templates. A developer's guide for chart templates can be found [here](https://helm.sh/docs/chart_template_guide/).
 
 1. The `templates/` directory should be structured as follows:
    1. Template files should have the extension `.yaml` if they produce YAML output. The extension `.tpl` may be used for template files that produce no formatted content.
@@ -297,7 +299,7 @@ Focus on designing a chart's values.yaml file.
     version: ~1.2.3-0
     ```
 
-2. Where possible, use `https://` repository URLs, followed by `http://` URLs.
+2. Where possible, use `oci://` or `https://` repository URLs, followed by `http://` URLs.
 3. Conditions or tags should be added to any dependencies that are optional.
     The preferred form of a condition is:
 
@@ -313,6 +315,12 @@ Focus on designing a chart's values.yaml file.
     ```
 
 ## Labels And Annotations
+
+Please note, [GKE cluster labels](https://cloud.google.com/kubernetes-engine/docs/how-to/creating-managing-labels) and [Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) are not the same.
+GKE cluster labels are arbitrary metadata attached to the cloud resources (GKE cluster, nodes, GCP disks) used to track usage and billing information.
+Kubernetes labels are key/value pairs that are attached to Kubernetes objects (e.g. pods).
+Kubernetes uses labels internally to associate cluster components and resources (at Kubernetes level, not cloud resources) with one another and manage resource lifecycles.
+For this reason, GKE cluster labels (cloud resources) are not propagated to Kubernetes objects (workloads). These best practices only affect Kubernetes labels that are applied through Helm.
 
 1. An item of metadata should be a **label** under the following conditions:
     - It is used by Kubernetes to identify this resource
