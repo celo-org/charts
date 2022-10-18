@@ -14,4 +14,4 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/c
 
 ## Helm charts best practices
 
-A list of best practices when writing Helm charts can be found if the [`docs/` folder](docs/helm-best-practices.md).
+A list of best practices when writing Helm charts can be found in the [`docs/` folder](docs/helm-best-practices.md).
