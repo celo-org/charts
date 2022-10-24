@@ -1,24 +1,27 @@
+{{- if .Values.rate_limit.enabled -}}
 apiVersion: configuration.konghq.com/v1
 config:
   fault_tolerant: true
   hide_client_headers: false
-  {{- if .Values.rate_limit.hour }}
-  hour: {{ .Values.rate_limit.hour }}
+  {{- if .Values.rate_limit.limits.hour }}
+  hour: {{ .Values.rate_limit.limits.hour }}
   {{- end }}
-  {{- if .Values.rate_limit.minute }}
-  minute: {{ .Values.rate_limit.minute }}
+  {{- if .Values.rate_limit.limits.minute }}
+  minute: {{ .Values.rate_limit.limits.minute }}
   {{- end }}
-  {{- if .Values.rate_limit.second }}
-  minute: {{ .Values.rate_limit.second }}
+  {{- if .Values.rate_limit.limits.second }}
+  minute: {{ .Values.rate_limit.limits.second }}
   {{- end }}
   policy: redis
   redis_host: redis-master
   redis_password: {{ .Values.redisPassword }}
   redis_ssl: false
   redis_ssl_verify: false
+  limit_by: {{ .Values.rate_limit.limit_by }}
 kind: KongPlugin
 metadata:
   name: {{ $.Release.Name }}-rate-limit
   labels:
     app: {{ $.Release.Name }}
 plugin: rate-limiting
+{{- end }}

@@ -1,3 +1,7 @@
+---
+auth:
+  # -- Enable auth plugin
+  enabled: true
 # -- List of consumers to create in Kong (each consumer is a different client with different credentials)
 consumers:
   - odis
@@ -7,12 +11,18 @@ consumers:
 redisPassword: changeme
 
 rate_limit:
-  # -- Number of requests per hour allowed for each consumer
-  hour: 100000
-  # -- Number of requests per minute allowed for each consumer
-  # minute: 3000
-  # -- Number of requests per second allowed for each consumer
-  # second: 100
+  # -- Enable rate limit plugin
+  enabled: true
+  # -- The entity that will be used when aggregating the limits
+  limit_by: consumer
+  # -- Rate limit configuration for each client
+  limits:
+    # -- Number of requests per hour allowed for each consumer
+    hour: 100000
+    # -- Number of requests per minute allowed for each consumer
+    # minute: 3000
+    # -- Number of requests per second allowed for each consumer
+    # second: 100
 
 # -- Check values at [celo-fullnode chart](../celo-fullnode/README.md)
 celo_fullnode:
