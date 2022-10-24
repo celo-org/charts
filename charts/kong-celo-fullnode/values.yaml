@@ -1,6 +1,6 @@
 ---
 auth:
-  # -- Enable auth plugin
+  # -- Enable auth plugin. Remind to change celo_fullnode.ingress.annotations.konghq.com/plugins to reflect the changes
   enabled: true
 # -- List of consumers to create in Kong (each consumer is a different client with different credentials)
 consumers:
@@ -11,7 +11,7 @@ consumers:
 redisPassword: changeme
 
 rate_limit:
-  # -- Enable rate limit plugin
+  # -- Enable rate limit plugin. Remind to change celo_fullnode.ingress.annotations.konghq.com/plugins to reflect the changes
   enabled: true
   # -- The entity that will be used when aggregating the limits
   limit_by: consumer
