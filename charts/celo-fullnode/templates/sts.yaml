@@ -10,6 +10,8 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: data
+      annotations:
+        {{- toYaml .Values.storage.annotations | nindent 8 }}
     spec:
       storageClassName: {{ .Values.storage.storageClass }}
       accessModes: [ "{{ .Values.storage.accessModes }}" ]
