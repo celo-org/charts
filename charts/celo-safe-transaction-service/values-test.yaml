@@ -13,6 +13,7 @@ resources:
 env:
   djangoSecretKey: test
   ethereumNodeUrl: https://alfajores-forno.celo-testnet.org
+  ethL2Network: "0"
 
 indexerWorker:
   replicaCount: 2

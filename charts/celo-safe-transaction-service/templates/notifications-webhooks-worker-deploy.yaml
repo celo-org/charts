@@ -45,7 +45,7 @@ spec:
             - name: ETHEREUM_TRACING_NODE_URL
               value: {{ .Values.env.ethereumNodeUrl }}
             - name: ETH_L2_NETWORK
-              value: "1"
+              value: {{ .Values.env.ethL2Network }}
             - name: REDIS_URL
               value: redis://:{{ .Values.global.redis.password }}@{{ .Release.Name }}-redis-master:6379/0
             - name: DJANGO_SETTINGS_MODULE
