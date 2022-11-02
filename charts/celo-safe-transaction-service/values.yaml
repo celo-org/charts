@@ -26,8 +26,6 @@ imagePullSecrets: []
 env:
   # -- Ethereum Node enviromental variable
   ethereumNodeUrl: https://forno.celo.org
-  # -- Ethereum L2 Neywork
-  ethL2Network: "0"
   # -- Django Secret Key
   djangoSecretKey: ""
 

@@ -37,7 +37,6 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | affinity | object | `{}` | Kubernetes pod affinity |
 | contractsTokenWorker | object | `{}` | Contracts-token-worker especific values. Has priority over common values. |
 | env.djangoSecretKey | string | `""` | Django Secret Key |
-| env.ethL2Network | string | `"0"` | Ethereum L2 Neywork |
 | env.ethereumNodeUrl | string | `"https://forno.celo.org"` | Ethereum Node enviromental variable |
 | flower | object | `{"ingress":{"annotations":{},"className":"nginx","enabled":false,"hosts":[],"tls":[]},"service":{"port":5555,"type":"ClusterIP"}}` | Flower especific values. Has priority over common values. |
 | flower.ingress.annotations | object | `{}` | Flower custom Ingress annotations  |
