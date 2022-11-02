@@ -1,0 +1,89 @@
+image:
+  repository: us-central1-docker.pkg.dev/clabs-gnosis-safe/images/safe-transaction-service
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "celo-safe"
+
+resources:
+  limits:
+    cpu: 150m
+  requests:
+    memory: 264Mi
+
+env:
+  djangoSecretKey: test
+  ethereumNodeUrl: https://alfajores-forno.celo-testnet.org
+
+indexerWorker:
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+contractsTokenWorker: {}
+
+notificationsWebhooksWorker: {}
+
+scheduler: {}
+
+flower:
+  service:
+    port: 5555
+  ingress:
+    enabled: true
+    className: test
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: flower-alfajores-tx-svc.test
+        paths:
+        - path: /
+
+    tls:
+    - secretName: flower-alfajores-tx-svc-staging-tls
+      hosts:
+        - flower-alfajores-tx-svc.test
+
+web:
+  service:
+    port: 80
+  ingress:
+    enabled: true
+    className: test
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: alfajores-tx-svc.test
+        paths:
+        - path: /
+
+    tls:
+    - secretName: alfajores-tx-svc-staging-tls
+      hosts:
+        - alfajores-tx-svc.test
+
+postgresql:
+  image:
+    tag: "13.8.0"
+
+redis:
+  image:
+    tag: "6.2.7"
+  replica:
+    replicaCount: 1
+
+rabbitmq:
+  auth:
+    password: test
+
+global:
+  postgresql:
+    auth:
+      postgresPassword: test
+      database: "database"
+  redis:
+    password: test
