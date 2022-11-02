@@ -33,13 +33,13 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| env.configServiceUri | string | `""` | URI of the safe-config-service. Normally the safe-config-service Kubernetes svc. |
-| env.exchangeApiKey | string | `""` | Key for exchange API |
-| env.rocketSecretKey | string | `""` | Secret key for Rocket |
-| env.txAuthToken | string | `""` | Transaction Service Auth Token |
-| env.webhookToken | string | `""` | Token for the webhook |
+| env.configServiceUri | string | `"http://safe-config-service"` | URI of the safe-config-service. Normally the safe-config-service Kubernetes svc. |
+| env.exchangeApiKey | string | `"test"` | Key for exchange API |
+| env.rocketSecretKey | string | `"test"` | Secret key for Rocket |
+| env.txAuthToken | string | `"test"` | Transaction Service Auth Token |
+| env.webhookToken | string | `"test"` | Token for the webhook |
 | fullnameOverride | string | `""` | Chart full name override |
-| global.redis.password | string | `""` | Redis depencency chart password |
+| global.redis.password | string | `"test"` | Redis depencency chart password |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"us-central1-docker.pkg.dev/clabs-gnosis-safe/safe-client-gateway"` | Image repository |
 | image.tag | string | `"d0539e5645f2d6fd6498817f64d7a10d7bde96a1"` | Image tag Overrides the image tag whose default is the chart appVersion. |

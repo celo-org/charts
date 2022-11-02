@@ -37,9 +37,9 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | env.debug | string | `"false"` | Debug log level |
 | env.gUnicornWebReload | string | `"false"` | gUnicorn web reload |
 | env.rootLogLevel | string | `"INFO"` | Root Log Level |
-| env.secretKey | string | `""` | Secret key for safe-config-service |
+| env.secretKey | string | `"test"` | Secret key for safe-config-service |
 | fullnameOverride | string | `""` | Chart full name override |
-| global.postgresql.auth.postgresPassword | string | `""` | Postgresql dependency chart password |
+| global.postgresql.auth.postgresPassword | string | `"test"` | Postgresql dependency chart password |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"us-central1-docker.pkg.dev/clabs-gnosis-safe/charts/safe-config-service"` | Image repository |
 | image.tag | string | `"celo-safe"` | Image tag |

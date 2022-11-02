@@ -183,18 +183,18 @@ redis:
 rabbitmq:
   auth:
     # -- RabbitMQ depencency chart password
-    password: ""
+    password: "test"
 
 global:
   redis:
     # -- Redis depencency chart password
-    password: ""
+    password: "test"
   postgresql:
     auth:
       # -- Postgresql depencency chart database for storing data
       database: ""
       # -- Postgresql depencency chart password
-      postgresPassword: ""
+      postgresPassword: "test"
     service:
       ports:
         # -- Postgresql depencency chart service port

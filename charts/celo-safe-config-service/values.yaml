@@ -123,7 +123,7 @@ env:
   # -- CSRF Trusted Origin
   csrfTrustedOrigins: "http://*,https://*"
   # -- Secret key for safe-config-service
-  secretKey: ""
+  secretKey: "test"
 
 postgresql:
   image:
@@ -134,4 +134,4 @@ global:
   postgresql:
     auth:
       # -- Postgresql dependency chart password
-      postgresPassword: ""
+      postgresPassword: "test"

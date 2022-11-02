@@ -48,9 +48,9 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | flower.service.type | string | `"ClusterIP"` | Flower Kubernetes Service Type |
 | fullnameOverride | string | `""` | Chart full name override |
 | global.postgresql.auth.database | string | `""` | Postgresql depencency chart database for storing data |
-| global.postgresql.auth.postgresPassword | string | `""` | Postgresql depencency chart password |
+| global.postgresql.auth.postgresPassword | string | `"test"` | Postgresql depencency chart password |
 | global.postgresql.service.ports.postgresql | int | `5432` | Postgresql depencency chart service port |
-| global.redis.password | string | `""` | Redis depencency chart password |
+| global.redis.password | string | `"test"` | Redis depencency chart password |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"us-central1-docker.pkg.dev/clabs-gnosis-safe/safe-transaction-service"` | Image repository |
 | image.tag | string | `"61ee03ee2f712941c2b319d1cf2240c414a2177c"` | Image tag Please override in terraform via celo-org/infrastructure/terraform-modules/clabs-gnosis-safe-staging/files/transaction-service-values.yaml |
@@ -63,7 +63,7 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | podAnnotations | object | `{}` | Custom pod annotations |
 | podSecurityContext | object | `{}` | Custom pod security context |
 | postgresql.image.tag | string | `"13.8.0"` | Postgresql depencency chart image tag (version) |
-| rabbitmq.auth.password | string | `""` | RabbitMQ depencency chart password |
+| rabbitmq.auth.password | string | `"test"` | RabbitMQ depencency chart password |
 | readinessProbe | object | `{"httpGet":{"path":"/","port":"http"},"timeoutSeconds":60}` | Readiness probe configuration |
 | redis.image.tag | string | `"6.2.7"` | Redis depencency chart image tag (version) |
 | redis.replica.replicaCount | int | `1` | Redis depencency chart replicas |

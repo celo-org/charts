@@ -108,15 +108,15 @@ affinity: {}
 
 env:
   # -- URI of the safe-config-service. Normally the safe-config-service Kubernetes svc.
-  configServiceUri: ""
+  configServiceUri: "http://safe-config-service"
   # -- Token for the webhook
-  webhookToken: ""
+  webhookToken: "test"
   # -- Secret key for Rocket
-  rocketSecretKey: ""
+  rocketSecretKey: "test"
   # -- Key for exchange API
-  exchangeApiKey: ""
+  exchangeApiKey: "test"
   # -- Transaction Service Auth Token
-  txAuthToken: ""
+  txAuthToken: "test"
 
 redis:
   image:
@@ -129,4 +129,4 @@ redis:
 global:
   redis:
     # -- Redis depencency chart password
-    password: ""
+    password: "test"
