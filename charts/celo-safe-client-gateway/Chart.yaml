@@ -1,0 +1,26 @@
+apiVersion: v2
+appVersion: "0.1.0"
+description: Helm chart for deploying Celo Safe Client Gateway
+type: application
+home: https://celo.org
+icon: https://pbs.twimg.com/profile_images/1493309659599486986/5ETdHxeE_400x400.jpg
+name: safe-client-gateway
+sources:
+  - https://celo.org
+  - https://safe.celo.org/#/welcome
+  - https://clabs.co
+  - https://github.com/celo-org/safe-client-gateway
+  - https://gnosis-safe.io/
+keywords:
+  - Celo
+  - Safe
+  - Gateway
+version: 1.0.0
+dependencies:
+- name: redis
+  version: 17.3.7
+  repository: https://charts.bitnami.com/bitnami
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co

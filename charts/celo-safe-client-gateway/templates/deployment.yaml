@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "safe-client-gateway-helm.fullname" . }}
+  labels:
+    {{- include "safe-client-gateway-helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "safe-client-gateway-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "safe-client-gateway-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "safe-client-gateway-helm.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: SCHEME
+              value: http
+            - name: ROCKET_LOG_LEVEL
+              value: normal
+            - name: ROCKET_PORT
+              value: "80"
+            - name: ROCKET_ADDRESS
+              value: "0.0.0.0"
+            - name: ROCKET_SECRET_KEY
+              value: {{ required "Require .Values.env.rocketSecretKey" .Values.env.rocketSecretKey }}
+            - name: RUST_BACKTRACE
+              value: "1"
+            - name: WEBHOOK_TOKEN
+              value: {{ required "Require .Values.env.webhookToken" .Values.env.webhookToken }}
+            - name: INTERNAL_CLIENT_CONNECT_TIMEOUT
+              value: "10000"
+            - name: SAFE_APP_INFO_REQUEST_TIMEOUT
+              value: "10000"
+            - name: CHAIN_INFO_REQUEST_TIMEOUT
+              value: "15000"
+            - name: LOG_ALL_ERROR_RESPONSES
+              value: "true"
+            - name: REDIS_URI
+              value: redis://:{{ .Values.global.redis.password }}@{{ .Release.Name }}-redis-master
+            - name: REDIS_URI_MAINNET
+              value: redis://:{{ .Values.global.redis.password }}@{{ .Release.Name }}-redis-master
+            - name: FEATURE_FLAG_NESTED_DECODING
+              value: "true"
+            - name: FEATURE_FLAG_BALANCES_RATE_IMPLEMENTATION
+              value: "false"
+            - name: FEATURE_PREVIEW_ENDPOINT
+              value: "true"
+            - name: SAFE_APPS_TAGS_FEATURE_ENABLED
+              value: "false"
+            - name: EXCHANGE_API_BASE_URI
+              value: http://api.exchangeratesapi.io/latest
+            - name: EXCHANGE_API_KEY
+              value: {{ required "Require .Values.env.exchangeApiKey" .Values.env.exchangeApiKey }}
+            - name: CONFIG_SERVICE_URI
+              value: {{ required "Require .Values.env.configServiceUri" .Values.env.configServiceUri }}
+            - name: TRANSACTION_SERVICE_AUTH_TOKEN
+              value: {{ required "Require .Values.env.txAuthToken" .Values.env.txAuthToken }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
