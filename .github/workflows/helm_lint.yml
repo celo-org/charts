@@ -93,7 +93,7 @@ jobs:
           if test "$(wc -c < changed_charts)" -gt 2; then
             while read chart; do
               if [ -d ./charts/${chart} ]; then
-                helm dependency update --skip-refresh ./charts/${chart}
+                helm dependency update ./charts/${chart}
                 helm lint "./charts/${chart}/" || false
               else
                 echo "Skipping charts/${chart} as it seems it has been deleted."
