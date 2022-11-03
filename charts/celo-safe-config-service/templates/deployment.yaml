@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "safe-config-service-helm.fullname" . }}
+  labels:
+    {{- include "safe-config-service-helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "safe-config-service-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "safe-config-service-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "safe-config-service-helm.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: DEFAULT_FILE_STORAGE
+              value: django.core.files.storage.FileSystemStorage
+            - name: DOCKER_NGINX_VOLUME_ROOT
+              value: "/static"
+            - name: POSTGRES_HOST
+              value: {{ .Release.Name }}-postgresql
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.global.postgresql.auth.postgresPassword }}
+            - name: SECRET_KEY
+              value: {{ required "Require .Values.env.secretKey" .Values.env.secretKey }}
+            - name: GUNICORN_BIND_SOCKET
+              value: "unix:/static/gunicorn.socket"
+            - name: GUNICORN_BIND_PORT
+              value: "80"
+            - name: DJANGO_ALLOWED_HOSTS
+              value: {{ include "safe-config-service-helm.fullname" . }},{{ range .Values.ingress.hosts }}{{- .host }},{{- end }}.localhost,127.0.0.1,[::1]
+            - name: DEBUG
+              value: {{ .Values.env.debug | quote }}
+            - name: ROOT_LOG_LEVEL
+              value: {{ .Values.env.rootLogLevel | quote }}
+            - name: GUNICORN_WEB_RELOAD
+              value: {{ .Values.env.gUnicornWebReload | quote }}
+            - name: CSRF_TRUSTED_ORIGINS
+              value: {{ .Values.env.csrfTrustedOrigins | quote }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          {{- $svc := include "safe-config-service-helm.fullname" . -}}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /
+              port: http
+              httpHeaders:
+              - name: Host
+                value: {{ $svc }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /
+              port: http
+              httpHeaders:
+              - name: Host
+                value: {{ $svc }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

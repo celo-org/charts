@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flower-{{ include "safe-transaction-service-helm.fullname" . }}
+  labels:
+    {{- include "safe-transaction-service-helm.labels" . | nindent 4 }}
+    app.kubernetes.io/component: flower
+spec:
+  type: {{ .Values.flower.service.type }}
+  ports:
+    - port: {{ .Values.flower.service.port }}
+      targetPort: flower
+      protocol: TCP
+      name: flower
+  selector:
+    {{- include "safe-transaction-service-helm.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: flower

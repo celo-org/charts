@@ -1,0 +1,201 @@
+# Default values for safe-transaction-service-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+# -- Common number of deployment replicas (applied to all deployments)
+replicaCount: 1
+
+image:
+  # -- Image repository
+  repository: us-central1-docker.pkg.dev/clabs-gnosis-safe/safe-transaction-service
+  # -- Image pullpolicy
+  pullPolicy: IfNotPresent
+  # -- Image tag
+  # Please override in terraform via
+  # celo-org/infrastructure/terraform-modules/clabs-gnosis-safe-staging/files/transaction-service-values.yaml
+  tag: "61ee03ee2f712941c2b319d1cf2240c414a2177c"
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+env:
+  # -- Ethereum Node enviromental variable
+  ethereumNodeUrl: https://forno.celo.org
+  # -- Django Secret Key
+  djangoSecretKey: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Custom pod annotations
+podAnnotations: {}
+
+# -- Custom pod security context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Custom container security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# -- Liveness probe configuration
+livenessProbe:
+  timeoutSeconds: 60
+  httpGet:
+    path: /
+    port: http
+
+# -- Readiness probe configuration
+readinessProbe:
+  timeoutSeconds: 60
+  httpGet:
+    path: /
+    port: http
+
+# -- Common container resources (applied to all deployments)
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes pod affinity
+affinity: {}
+
+# -- Indexer-worker deployment especific values. Has priority over common values.
+indexerWorker: {}
+  # replicaCount: 1
+  # resources: {}
+
+# -- Contracts-token-worker especific values. Has priority over common values.
+contractsTokenWorker: {}
+  # replicaCount: 1
+  # resources: {}
+
+# -- Notifications-webhook-worker especific values. Has priority over common values.
+notificationsWebhooksWorker: {}
+  # replicaCount: 1
+  # resources: {}
+
+# -- Scheduler especific values. Has priority over common values.
+scheduler: {}
+  # replicaCount: 1
+  # resources: {}
+
+# -- Flower especific values. Has priority over common values.
+flower:
+  # replicaCount: 1
+  # resources: {}
+  service:
+    # -- Flower Kubernetes Service Type
+    type: ClusterIP
+    # -- Port for flower service
+    port: 5555
+  ingress:
+    # -- Flower Ingress enabled
+    enabled: false
+    # -- Flower Ingress class name
+    className: nginx
+    # -- Flower custom Ingress annotations 
+    annotations: {}
+
+    # -- Flower list of hosts to expose flower component. See values.yaml for an example.
+    hosts: []
+      #  - host: flower-transaction-service.celo-safe.io
+      #    paths:
+      #    - path: /
+
+    # -- Flower TLS secret for exposing flower component with https. See values.yaml for an example.
+    tls: []
+      #  - secretName: flower-transaction-service-secret
+      #    hosts:
+      #      - flower-transaction-service.celo-safe.io
+
+# -- Web especific values. Has priority over common values.
+web:
+  # replicaCount: 1
+  # resources: {}
+  service:
+    # -- Web Kubernetes Service Type
+    type: ClusterIP
+    # -- Port for web service
+    port: 80
+  ingress:
+    # -- Web Ingress enabled
+    enabled: false
+    # -- Web Ingress class name
+    className: nginx
+    # -- Web custom Ingress annotations 
+    annotations: {}
+
+    # -- Web list of hosts to expose web component. See values.yaml for an example.
+    hosts: []
+      #  - host: transaction-service.celo-safe.io
+      #    paths:
+      #    - path: /
+
+    # -- Web TLS secret for exposing web component with https. See values.yaml for an example.
+    tls: []
+      #  - secretName: transaction-service-secret
+      #    hosts:
+      #      - transaction-service.celo-safe.io
+
+postgresql:
+  image:
+    # -- Postgresql depencency chart image tag (version)
+    tag: "13.8.0"
+
+redis:
+  image:
+    # -- Redis depencency chart image tag (version)
+    tag: "6.2.7"
+  replica:
+    # -- Redis depencency chart replicas
+    replicaCount: 1
+
+rabbitmq:
+  auth:
+    # -- RabbitMQ depencency chart password
+    password: "test"
+
+global:
+  redis:
+    # -- Redis depencency chart password
+    password: "test"
+  postgresql:
+    auth:
+      # -- Postgresql depencency chart database for storing data
+      database: ""
+      # -- Postgresql depencency chart password
+      postgresPassword: "test"
+    service:
+      ports:
+        # -- Postgresql depencency chart service port
+        postgresql: 5432
