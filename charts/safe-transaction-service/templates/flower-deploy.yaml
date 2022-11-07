@@ -46,8 +46,6 @@ spec:
               value: "/app/"
             - name: ETHEREUM_NODE_URL
               value: {{ .Values.env.ethereumNodeUrl }}
-            - name: ETHEREUM_TRACING_NODE_URL
-              value: {{ .Values.env.ethereumNodeUrl }}
             - name: REDIS_URL
               value: redis://:{{ .Values.global.redis.password }}@{{ .Release.Name }}-redis-master:6379/0
             - name: DJANGO_SETTINGS_MODULE
