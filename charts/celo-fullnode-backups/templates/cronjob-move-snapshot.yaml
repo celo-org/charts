@@ -26,9 +26,12 @@ spec:
                 name_referece_detination="{{ .Values.snapshot.copy_process.volumeSnapshot_name_copy_to }}" # Name for the volumeSnapshot destination for the snapshot
 
                 # Get the reference for existing(origin) snapshot
-                latest_snapshot=$(kubectl get volumesnapshot -n $job_namespace | grep {{ template "common.fullname" . }} | grep true | tail -n1 | cut -f1 -d' ')
-                snapshot_content=$(kubectl get volumesnapshot "$latest_snapshot" -n $job_namespace -o jsonpath='{.spec.source.volumeSnapshotContentName}')
-                snapshot_handle=$(kubectl get volumesnapshotcontents "$snapshot_content" -o jsonpath='{.spec.source.snapshotHandle}')
+                latest_snapshot=$(kubectl get volumesnapshot -n $job_namespace --sort-by=.status.creationTime | grep mainnet-archive-snapshot | grep true | tail -n1 | cut -f1 -d' ')
+                echo "latest_snapshot=${latest_snapshot}"
+                snapshot_content=$(kubectl get volumesnapshot "$latest_snapshot" -n $job_namespace -o jsonpath='{.status.boundVolumeSnapshotContentName}')
+                echo "snapshot_content=${snapshot_content}"
+                snapshot_handle=$(kubectl get volumesnapshotcontents "$snapshot_content" -o jsonpath='{.status.snapshotHandle}')
+                echo "snapshot_handle=${snapshot_handle}"
 
                 ## Delete old VolumeSnapshotContent & VolumeSnapshot in `{{ .Values.snapshot.copy_process.namespace_copy_to }}` namespace
                 kubectl delete volumesnapshot -n $namespace_destination $name_referece_detination || true
