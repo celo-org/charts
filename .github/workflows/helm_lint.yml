@@ -111,13 +111,6 @@ jobs:
         run: |
           kubectl apply -f https://raw.githubusercontent.com/Kong/kong-operator/main/helm-charts/kong/crds/custom-resource-definitions.yaml
 
-      - name: Install dependencies - Gemini CRDs
-        if: contains(join(steps.updated_files.outputs.all), 'charts/celo-fullnode-backups/')
-        run: |
-          helm repo add fairwinds-stable https://charts.fairwinds.com/stable
-          helm install gemini fairwinds-stable/gemini --namespace gemini --create-namespace
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: "Templating charts"
         run: |
           if test "$(wc -c < changed_charts)" -gt 2; then
