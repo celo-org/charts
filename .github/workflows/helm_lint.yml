@@ -106,10 +106,16 @@ jobs:
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1.3.0
 
-      - name: Install dependencies CRDs
+      - name: Install dependencies - Kong CRDs
         if: contains(join(steps.updated_files.outputs.all), 'charts/kong-celo-fullnode/')
         run: |
           kubectl apply -f https://raw.githubusercontent.com/Kong/kong-operator/main/helm-charts/kong/crds/custom-resource-definitions.yaml
+
+      - name: Install dependencies - Gemini CRDs
+        if: contains(join(steps.updated_files.outputs.all), 'charts/celo-fullnode-backups/')
+        run: |
+          helm repo add fairwinds-stable https://charts.fairwinds.com/stable
+          helm install gemini fairwinds-stable/gemini --namespace gemini --create-namespace
 
       - name: "Templating charts"
         run: |
