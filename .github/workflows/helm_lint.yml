@@ -116,7 +116,8 @@ jobs:
         run: |
           helm repo add fairwinds-stable https://charts.fairwinds.com/stable
           helm install gemini fairwinds-stable/gemini --namespace gemini --create-namespace
-
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: "Templating charts"
         run: |
           if test "$(wc -c < changed_charts)" -gt 2; then
