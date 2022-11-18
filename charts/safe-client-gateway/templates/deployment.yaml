@@ -32,6 +32,26 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            {{- if .Values.env.safeInfoCacheDuration }}
+            - name: SAFE_INFO_CACHE_DURATION
+              value: {{ .Values.env.safeInfoCacheDuration | quote }}
+            {{- end }}
+            {{- if .Values.env.addressInfoCacheDuration }}
+            - name: ADDRESS_INFO_CACHE_DURATION
+              value: {{ .Values.env.addressInfoCacheDuration | quote }}
+            {{- end }}
+            {{- if .Values.env.requestCacheDuration }}
+            - name: REQUEST_CACHE_DURATION
+              value: {{ .Values.env.requestCacheDuration | quote }}
+            {{- end }}
+            {{- if .Values.env.safeAppsCacheDuration }}
+            - name: SAFE_APPS_CACHE_DURATION
+              value: {{ .Values.env.safeAppsCacheDuration | quote }}
+            {{- end }}
+            {{- if .Values.env.txQueuedCacheDuration }}
+            - name: TX_QUEUED_CACHE_DURATION
+              value: {{ .Values.env.txQueuedCacheDuration | quote }}
+            {{- end }}
             - name: SCHEME
               value: http
             - name: ROCKET_LOG_LEVEL

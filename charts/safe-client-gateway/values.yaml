@@ -117,6 +117,16 @@ env:
   exchangeApiKey: "test"
   # -- Transaction Service Auth Token
   txAuthToken: "test"
+  # -- Env. Var SAFE_INFO_CACHE_DURATION. If not set, env. var will not be included in deployment
+  # safeInfoCacheDuration: 1
+  # -- Env. Var ADDRESS_INFO_CACHE_DURATION. If not set, env. var will not be included in deployment
+  # addressInfoCacheDuration: 1
+  # -- Env. Var REQUEST_CACHE_DURATION. If not set, env. var will not be included in deployment
+  # requestCacheDuration: 1
+  # -- Env. Var SAFE_APPS_CACHE_DURATION. If not set, env. var will not be included in deployment
+  # safeAppsCacheDuration: 1
+  # -- Env. Var TX_QUEUED_CACHE_DURATION. If not set, env. var will not be included in deployment
+  # txQueuedCacheDuration: 1
 
 redis:
   image:

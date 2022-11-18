@@ -26,6 +26,11 @@ env:
   rocketSecretKey: test
   exchangeApiKey: test
   txAuthToken: test
+  safeInfoCacheDuration: 5
+  addressInfoCacheDuration: 6
+  requestCacheDuration: 7
+  safeAppsCacheDuration: 8
+  txQueuedCacheDuration: 9
 
 global:
   redis:
