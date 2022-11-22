@@ -29,6 +29,8 @@ env:
   rootLogLevel: "INFO"
   gUnicornWebReload: "false"
   csrfTrustedOrigins: "http://*,https://*"
+  clientGatewayUri: "testing"
+  webhookToken: "http://testing"
 
 postgresql:
   image:

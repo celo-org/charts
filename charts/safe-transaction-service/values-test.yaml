@@ -13,6 +13,8 @@ resources:
 env:
   djangoSecretKey: test
   ethereumNodeUrl: https://alfajores-forno.celo-testnet.org
+  clientGatewayUri: "testing"
+  webhookToken: "http://testing"
 
 indexerWorker:
   replicaCount: 2

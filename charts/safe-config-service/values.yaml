@@ -124,6 +124,10 @@ env:
   csrfTrustedOrigins: "http://*,https://*"
   # -- Secret key for safe-config-service
   secretKey: "test"
+  # -- Client Gateway URL
+  clientGatewayUri: "test"
+  # -- Token for the webhook to flush the cache
+  webhookToken: "test"
 
 postgresql:
   image:
