@@ -56,6 +56,10 @@ spec:
               value: {{ .Values.env.gUnicornWebReload | quote }}
             - name: CSRF_TRUSTED_ORIGINS
               value: {{ .Values.env.csrfTrustedOrigins | quote }}
+            - name: CGW_URL
+              value: {{ required "Require .Values.env.clientGatewayUri" .Values.env.clientGatewayUri }}
+            - name: CGW_FLUSH_TOKEN
+              value: {{ required "Require .Values.env.webhookToken" .Values.env.webhookToken }}
           ports:
             - name: http
               containerPort: 80

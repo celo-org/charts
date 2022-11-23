@@ -28,6 +28,10 @@ env:
   ethereumNodeUrl: https://forno.celo.org
   # -- Django Secret Key
   djangoSecretKey: ""
+  # -- Client Gateway URL
+  clientGatewayUri: "test"
+  # -- Token for the webhook to flush the cache
+  webhookToken: "test"
 
 serviceAccount:
   # -- Specifies whether a service account should be created

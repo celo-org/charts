@@ -52,6 +52,10 @@ spec:
               value: "{{ .Values.env.djangoSecretKey }}"
             - name: CELERY_BROKER_URL
               value: amqp://user:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq/
+            - name: CGW_URL
+              value: {{ required "Require .Values.env.clientGatewayUri" .Values.env.clientGatewayUri }}
+            - name: CGW_FLUSH_TOKEN
+              value: {{ required "Require .Values.env.webhookToken" .Values.env.webhookToken }}
           ports:
             - name: http
               containerPort: 8888
