@@ -1,7 +1,7 @@
 # These owners will be the default owners for everything in
 # the repo. Unless a later match takes precedence,
 # they will be requested for review when someone opens a pull request.
-@celo-org/devopsre
+* @celo-org/devopsre
 
 # Helm Charts for the Celo Safe service.
 # See the following for the application code:
