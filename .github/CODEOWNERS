@@ -8,6 +8,6 @@
 #   - https://github.com/celo-org/safe-client-gateway
 #   - https://github.com/celo-org/safe-config-service
 #   - https://github.com/celo-org/safe-transaction-service
-/charts/safe-client-gateway/ @celo-org/applications
-/charts/safe-config-service/ @celo-org/applications
-/charts/safe-transaction-service/ @celo-org/applications
+/charts/safe-client-gateway/ @celo-org/applications @celo-org/devopsre
+/charts/safe-config-service/ @celo-org/applications @celo-org/devopsre
+/charts/safe-transaction-service/ @celo-org/applications @celo-org/devopsre 
