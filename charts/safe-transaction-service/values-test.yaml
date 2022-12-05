@@ -15,6 +15,7 @@ env:
   ethereumNodeUrl: https://alfajores-forno.celo-testnet.org
   clientGatewayUri: "testing"
   webhookToken: "http://testing"
+  djangoSettingsModule: config.settings.production
 
 indexerWorker:
   replicaCount: 2
