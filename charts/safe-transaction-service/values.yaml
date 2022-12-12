@@ -32,6 +32,8 @@ env:
   clientGatewayUri: "test"
   # -- Token for the webhook to flush the cache
   webhookToken: "test"
+  # -- Django settings module
+  djangoSettingsModule: config.settings.local
 
 serviceAccount:
   # -- Specifies whether a service account should be created
