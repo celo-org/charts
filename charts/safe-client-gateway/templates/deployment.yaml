@@ -85,7 +85,7 @@ spec:
             - name: FEATURE_PREVIEW_ENDPOINT
               value: "true"
             - name: SAFE_APPS_TAGS_FEATURE_ENABLED
-              value: "false"
+              value: "true"
             - name: EXCHANGE_API_BASE_URI
               value: http://api.exchangeratesapi.io/latest
             - name: EXCHANGE_API_KEY
