@@ -1,0 +1,22 @@
+# Default values for eksportisto-monitoring.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  repository: grafana/agent
+  imagePullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+service:
+  port: 80
+
+# Cluster where Eksportisto is deployed - added as an external label.
+cluster: mainnet
+
+# Prometheus remote_write parameters
+remote_write:
+  url: https://prometheus-prod-10-prod-us-central-0.grafana.net/api/prom/push
+  # See Akeyless.
+  basic_auth:
+    username: EKSPORTISTO_PROMETHEUS_USERNAME
+    password: EKSPORTISTO_PROMETHEUS_PASSWORD
