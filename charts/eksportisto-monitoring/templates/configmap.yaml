@@ -1,23 +1,24 @@
+apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: grafana-agent
-apiVersion: v1
+  name: {{ include "eksportisto-monitoring.fullname" . }}
+  labels:
+  {{- include "eksportisto-monitoring.labels" . | nindent 4 }}
 data:
-  # Usernames and password available within Akeyless.
   agent.yaml: |
     metrics:
       wal_directory: /var/lib/agent/wal
       global:
         scrape_interval: 60s
         external_labels:
-          cluster_name: mainnet
+          cluster_name: {{ required "Valid .Values.cluster entry required!" .Values.cluster }}
       configs:
       - name: integrations
         remote_write:
-        - url: https://prometheus-prod-10-prod-us-central-0.grafana.net/api/prom/push
+        - url: {{ .Values.remote_write.url}}
           basic_auth:
-            username: USERNAME
-            password: PASSWORD
+            username: {{ .Values.remote_write.basic_auth.username }}
+            password: {{ .Values.remote_write.basic_auth.password }}
         scrape_configs:
         - job_name: eksportisto-pods
           honor_labels: true
