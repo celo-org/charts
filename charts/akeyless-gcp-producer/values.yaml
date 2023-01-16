@@ -49,7 +49,7 @@ ingress:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
-      host: akeyless-gcp.akeyless.celo-networks-dev.org
+      host: "akeyless-gcp.akeyless.celo-networks-dev.org"
       paths:
       - path: /
 
