@@ -33,6 +33,11 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: AKEYLESS_ACCESS_ID
+              value: {{ required "Require .Values.env.akeylessAccessID" .Values.env.akeylessAccessID }}
+            - name: SECRET_PATH_REGEX
+              value: {{ required "Require .Values.env.secretPathRegex" .Values.env.secretPathRegex }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
