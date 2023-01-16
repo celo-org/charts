@@ -76,7 +76,7 @@ env:
   # -- Akeyless Access ID (for authentication)
   AKEYLESS_ACCESS_ID: "p-smsrwoolrzwo"
   # -- Secret Allowed Path
-  SECRET_PATH_REGEX: "^\/dynamic-secrets\/cloud-user-access\/gcp.*"
+  SECRET_PATH_REGEX: '^\/dynamic-secrets\/cloud-user-access\/gcp.*'
 
 
 autoscaling:
