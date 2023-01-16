@@ -52,10 +52,16 @@ ingress:
   - host: akeyless-gcp.akeyless.celo-networks-dev.org
     paths:
     - path: / 
+      pathType: Prefix
+      backend:
+        service:
+          name: akeyless-gcp-producer
+          port:
+            number: 8080
   tls:
   - secretName: akeyless-gcp-tls
     hosts:
-       - akeyless-gcp.akeyles.celo-networks-dev.org
+       - akeyless-gcp.akeyless.celo-networks-dev.org
 
 
 
