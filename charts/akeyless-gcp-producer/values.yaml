@@ -50,6 +50,8 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
   - host: akeyless-gcp.akeyless.celo-networks-dev.org
+    paths:
+    - path: / 
   tls:
   - secretName: akeyless-gcp-tls
     hosts:
