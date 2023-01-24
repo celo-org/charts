@@ -45,7 +45,7 @@ spec:
 
                 {{- if .Values.cronjob.filter }}
                 # Filter to keep PVCs with string {{ .Values.cronjob.filter }}
-                EXISTING_PVCS=$(echo $EXISTING_PVCS | grep "{{ .Values.cronjob.filter }}")
+                EXISTING_PVCS=$(echo "$EXISTING_PVCS" | grep "{{ .Values.cronjob.filter }}")
                 {{- end }}
                 while IFS= read -r pvc; do
                   if [[ ! " ${USED_PVCS[*]} " =~ ${pvc} ]]; then
