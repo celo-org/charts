@@ -45,7 +45,7 @@ spec:
 
                 while IFS= read -r pvc; do
                   if [[ ! " ${USED_PVCS[*]} " =~ " ${pvc} " ]]; then
-                    echo kubectl delete pvc $pvc
+                    kubectl delete pvc $pvc
                   fi
                 done <<< "$EXISTING_PVCS"
 
