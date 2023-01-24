@@ -44,8 +44,8 @@ spec:
                 USED_PVCS=$(kubectl get pods -o=json | jq -r '.items[].spec | select( has ("volumes") ).volumes[] | select( has ("persistentVolumeClaim") ).persistentVolumeClaim.claimName')
 
                 while IFS= read -r pvc; do
-                  if [[ ! " ${USED_PVCS[*]} " =~ " ${pvc} " ]]; then
-                    kubectl delete pvc $pvc
+                  if [[ ! " ${USED_PVCS[*]} " =~ ${pvc} ]]; then
+                    kubectl delete pvc "$pvc"
                   fi
                 done <<< "$EXISTING_PVCS"
 
