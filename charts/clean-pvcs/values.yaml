@@ -23,6 +23,8 @@ cronjob:
   schedule: "0 1 * * *"
   # -- Enable checking the date
   enable_date: true
+  # -- Filter PVCs with this substring in name
+  filter: ""
   # -- Delete PVCs older than (GNU date style)
   older: "now-4 hours"
 
