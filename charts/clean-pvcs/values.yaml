@@ -25,6 +25,8 @@ cronjob:
   enable_date: true
   # -- Filter PVCs with this substring in name
   filter: ""
+  # -- If enabling "dry-run" mode (do not delete the pvcs and test what would be deleted)
+  dry_run: true
   # -- Delete PVCs older than (GNU date style)
   older: "now-4 hours"
 
