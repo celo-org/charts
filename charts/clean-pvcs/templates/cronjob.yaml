@@ -43,6 +43,10 @@ spec:
                 {{- end }}
                 USED_PVCS=$(kubectl get pods -o=json | jq -r '.items[].spec | select( has ("volumes") ).volumes[] | select( has ("persistentVolumeClaim") ).persistentVolumeClaim.claimName')
 
+                {{- if .Values.cronjob.filter }}
+                # Filter to keep PVCs with string {{ .Values.cronjob.filter }}
+                EXISTING_PVCS=$(echo $EXISTING_PVCS | grep "{{ .Values.cronjob.filter }}")
+                {{- end }}
                 while IFS= read -r pvc; do
                   if [[ ! " ${USED_PVCS[*]} " =~ ${pvc} ]]; then
                     kubectl delete pvc "$pvc"
