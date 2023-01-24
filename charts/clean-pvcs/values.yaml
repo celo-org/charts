@@ -21,6 +21,8 @@ image:
 cronjob:
   # -- Cronjob schedule
   schedule: "0 1 * * *"
+  # -- Enable checking the date
+  enable_date: true
   # -- Delete PVCs older than (GNU date style)
   older: "now-4 hours"
 
