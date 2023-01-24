@@ -49,7 +49,7 @@ spec:
                 {{- end }}
                 while IFS= read -r pvc; do
                   if [[ ! " ${USED_PVCS[*]} " =~ ${pvc} ]]; then
-                    kubectl delete pvc "$pvc"
+                    kubectl delete pvc "$pvc" {{ if .Values.cronjob.dry_run }}--dry-run=server{{ end }}
                   fi
                 done <<< "$EXISTING_PVCS"
 
