@@ -4,7 +4,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "common.fullname" . }}
   labels:
-{{ include "common.standard.labels" .  | indent 4 }}
+    {{- include "common.standard.labels" .  | nindent 4 }}
     component: celo-fullnode
 spec:
   minReplicas: {{ .Values.geth.autoscaling.minReplicas }}
@@ -13,8 +13,12 @@ spec:
     apiVersion: apps/v1
     kind: StatefulSet
     name: {{ template "common.fullname" . }}
+  {{- with .Values.geth.autoscaling.metrics }}
   metrics:
-    {{- toYaml .Values.geth.autoscaling.metrics | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.geth.autoscaling.behavior }}
   behavior:
-    {{- toYaml .Values.geth.autoscaling.behavior | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end -}}
