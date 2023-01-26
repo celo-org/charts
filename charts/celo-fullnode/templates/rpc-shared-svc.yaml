@@ -3,17 +3,17 @@ kind: Service
 metadata:
   name: {{ template "common.fullname" . }}-rpc
   labels:
-{{ include "common.standard.labels" .  | indent 4 }}
+    {{- include "common.standard.labels" .  | nindent 4 }}
     component: celo-fullnode-rpc-traffic
   annotations:
-{{ if .Values.geth.create_network_endpoint_group }}
+    {{- if .Values.geth.create_network_endpoint_group }}
     cloud.google.com/neg: '{"exposed_ports": {"8545":{},"8546":{}}}'
-{{ end }}
+    {{- end }}
 spec:
   type: ClusterIP
   sessionAffinity: {{ default "None" .Values.geth.service_session_affinity }}
   ports:
-{{ include "celo-fullnode.rpc-ports" . | indent 4 }}
+  {{- include "celo-fullnode.rpc-ports" . | nindent 4 }}
   selector:
-{{ include "common.standard.short_labels" .  | indent 4 }}
+    {{- include "common.standard.short_labels" .  | nindent 4 }}
     component: celo-fullnode
