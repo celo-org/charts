@@ -581,9 +581,16 @@ prometheus.io/port: "{{ $pprof.port | default 6060 }}"
      fi
      mkdir -p /root/.celo/celo
      cd /root/.celo/celo
+     {{- if .Values.geth.gstorage_lz4 | default "true" }}
+     apt update && apt install -y lz4
+     curl -L https://storage.googleapis.com/{{ .Values.geth.gstorage_data_bucket }}/chaindata-latest.tar.lz4 --output chaindata.tar.lz4
+     lz4 -dc chaindata.tar.lz4 | tar -xvf -
+     rm -f chaindata.tar.lz4
+     {{- else }}
      curl -L https://storage.googleapis.com/{{ .Values.geth.gstorage_data_bucket }}/chaindata-latest.tar.gz --output chaindata.tar.gz
      tar -xzvf chaindata.tar.gz -C /root/.celo/celo
      rm -f chaindata.tar.gz
+     {{- end }}
   volumeMounts:
   - name: data
     mountPath: /root/.celo
