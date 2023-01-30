@@ -2,7 +2,7 @@
 
 Helm chart with helper templates and functions for Celo nodes. Import into your chart with `dependencies` and use the templates and functions
 
-![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 - [common](#common)
   - [Chart releases](#chart-releases)
@@ -23,7 +23,7 @@ To import this chart into your chart, add the following to your `requirements.ya
 dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci
-    version: 0.2.3
+    version: 0.2.4
 ```
 
 ## Values
@@ -37,6 +37,7 @@ dependencies:
 | genesis.networkId | int | `42220` | Network ID for custom testnet. Not used in case of mainnet, baklava or alfajores |
 | genesis.useGenesisFileBase64 | bool | `false` | Use a custom genesis shared as part of a configmap. Used for custom networks with small genesis files |
 | geth.gcmode | string | `"full"` | Blockchain garbage collection mode. Valid values are: full and archive |
+| geth.gstorage_lz4 | bool | `true` | Use lz4 backups for chain (if enabled) |
 | geth.image | object | `{"imagePullPolicy":"IfNotPresent","repository":"us.gcr.io/celo-testnet/geth","tag":"1b40b25d315bfcd792138e288ea61351d6c44d09"}` | Image for the celo-blockchain statefulset |
 | geth.in_memory_discovery_table | bool | `false` | Enable blockchain option `--use-in-memory-discovery-table` |
 | geth.ping_ip_from_packet | bool | `false` |  |
