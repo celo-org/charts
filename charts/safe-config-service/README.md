@@ -1,8 +1,8 @@
-# celo-safe-config-service
+# safe-config-service
 
 Helm chart for deploying Celo Safe Config Service
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 - [celo-safe-config-service](#celo-safe-config-service)
   - [Chart requirements](#chart-requirements)
@@ -33,11 +33,13 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
+| env.clientGatewayUri | string | `"test"` | Client Gateway URL |
 | env.csrfTrustedOrigins | string | `"http://*,https://*"` | CSRF Trusted Origin |
 | env.debug | string | `"false"` | Debug log level |
 | env.gUnicornWebReload | string | `"false"` | gUnicorn web reload |
 | env.rootLogLevel | string | `"INFO"` | Root Log Level |
 | env.secretKey | string | `"test"` | Secret key for safe-config-service |
+| env.webhookToken | string | `"test"` | Token for the webhook to flush the cache |
 | fullnameOverride | string | `""` | Chart full name override |
 | global.postgresql.auth.postgresPassword | string | `"test"` | Postgresql dependency chart password |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |

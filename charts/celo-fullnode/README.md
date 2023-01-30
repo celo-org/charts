@@ -2,7 +2,7 @@
 
 Helm chart for deploying a Celo fullnode. More info at https://docs.celo.org
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
+![Version: 0.4.4](https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
 
 - [celo-fullnode](#celo-fullnode)
   - [Chart requirements](#chart-requirements)
@@ -19,7 +19,7 @@ Helm chart for deploying a Celo fullnode. More info at https://docs.celo.org
 
 ## Chart releases
 
-Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode repository automatically every commit to `master` branch.
+Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode repository automatically every commit to `main` branch.
 Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
 This pricess is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
 and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
@@ -34,7 +34,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.4.0" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.4.4" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -68,6 +68,7 @@ helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo 
 | genesis.network | string | `"rc1"` | Network name. Valid values are mainnet, rc1 (both for mainnet), baklava or afajores |
 | genesis.networkId | int | `42220` | Network ID for custom testnet. Not used in case of mainnet, baklava or alfajores |
 | genesis.useGenesisFileBase64 | bool | `false` | Use a custom genesis shared as part of a configmap. Used for custom networks with small genesis files |
+| geth.affinity | object | `{"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchExpressions":[{"key":"component","operator":"In","values":["celo-fullnode"]}]},"topologyKey":"failure-domain.beta.kubernetes.io/zone"},"weight":100}]}}` | Pod Affinity # see https://www.verygoodsecurity.com/blog/posts/kubernetes-multi-az-deployments-using-pod-anti-affinity |
 | geth.autoscaling | object | `{"behavior":{"scaleDown":{"policies":[{"periodSeconds":60,"type":"Pods","value":2},{"periodSeconds":60,"type":"Percent","value":25}],"selectPolicy":"Max","stabilizationWindowSeconds":1800},"scaleUp":{"policies":[{"periodSeconds":15,"type":"Pods","value":2},{"periodSeconds":15,"type":"Percent","value":25}],"selectPolicy":"Max","stabilizationWindowSeconds":600}},"enabled":false,"maxReplicas":5,"metrics":[{"resource":{"name":"cpu","target":{"averageUtilization":85,"type":"Utilization"}},"type":"Resource"}],"minReplicas":1}` | HPA configuration for celo-blockchain statefulset. Check official documentation for more info |
 | geth.autoscaling.behavior | object | `{"scaleDown":{"policies":[{"periodSeconds":60,"type":"Pods","value":2},{"periodSeconds":60,"type":"Percent","value":25}],"selectPolicy":"Max","stabilizationWindowSeconds":1800},"scaleUp":{"policies":[{"periodSeconds":15,"type":"Pods","value":2},{"periodSeconds":15,"type":"Percent","value":25}],"selectPolicy":"Max","stabilizationWindowSeconds":600}}` | HPA behavior configuration |
 | geth.autoscaling.enabled | bool | `false` | Enable HPA for celo-blockchain statefulset |
@@ -106,11 +107,10 @@ helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo 
 | pprof | object | `{"enabled":true,"path":"/debug/metrics/prometheus","port":6060}` | Pprof configuration for celo-blockchain |
 | replicaCount | int | `1` | Number of celo-blockchain statefulset replicas |
 | storage.accessModes | string | `"ReadWriteOnce"` | accessMode for the volumes |
+| storage.annotations | object | `{}` | celo-blockchain pvc annotations |
+| storage.dataSource | object | `{"apiGroup":"snapshot.storage.k8s.io","kind":"VolumeSnapshot","name":"forno-snapshot"}` | Include a dataSource in the volumeClaimTemplates |
 | storage.enable | bool | `true` | Enable persistent storage for the celo-blockchain statefulset |
 | storage.size | string | `"20Gi"` | Size of the persistent volume claim for the celo-blockchain statefulset |
-| storage.snapshot.enabled | bool | `false` | Enable the use of a snapshot as a source for the celo-blockchain statefulset. Snapshot resource must exist in the same namepace |
-| storage.snapshot.kind | string | `"VolumeSnapshot"` | Class for the snapshot |
-| storage.snapshot.name | string | `"forno-snapshot"` | Name of the snapshot (must exist in the same namespace) |
 | storage.storageClass | string | `"default"` | Name of the storage class to use for the celo-blockchain statefulset |
 | tolerations | list | `[]` | Tolerations rules to add to `tolerations` field of the statefulset |
 

@@ -55,7 +55,7 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
 | securityContext | object | `{}` | Custom container security context |
-| service.port | int | `80` | Kubernetes Service Type |
+| service.port | int | `8080` | Kubernetes Service Type |
 | service.type | string | `"ClusterIP"` | Kubernetes Service Type |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
