@@ -11,8 +11,7 @@ on:
       - 'charts/**/Chart.yaml'
 
 env:
-  HELM_VERSION: "v3.9.4"
-  GOMPLATE_VERSION: "v3.11.3"
+  HELM_VERSION: "v3.10.1"
 
 jobs:
   helm-lint:
