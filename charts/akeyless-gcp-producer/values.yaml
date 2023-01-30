@@ -51,7 +51,7 @@ service:
   # -- Kubernetes Service Type
   type: ClusterIP
   # -- Kubernetes Service Type
-  port: 8080
+  port: 8081
 
 ingress:
   # -- Ingress enabled
