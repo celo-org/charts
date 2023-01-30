@@ -1,8 +1,8 @@
-# celo-safe-transaction-service
+# safe-transaction-service
 
 Helm chart for deploying Celo Safe Transaction Service
 
-![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 1.1.4](https://img.shields.io/badge/Version-1.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 - [celo-safe-transaction-service](#celo-safe-transaction-service)
   - [Chart requirements](#chart-requirements)
@@ -36,8 +36,11 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
 | contractsTokenWorker | object | `{}` | Contracts-token-worker especific values. Has priority over common values. |
+| env.clientGatewayUri | string | `"test"` | Client Gateway URL |
 | env.djangoSecretKey | string | `""` | Django Secret Key |
+| env.djangoSettingsModule | string | `"config.settings.local"` | Django settings module |
 | env.ethereumNodeUrl | string | `"https://forno.celo.org"` | Ethereum Node enviromental variable |
+| env.webhookToken | string | `"test"` | Token for the webhook to flush the cache |
 | flower | object | `{"ingress":{"annotations":{},"className":"nginx","enabled":false,"hosts":[],"tls":[]},"service":{"port":5555,"type":"ClusterIP"}}` | Flower especific values. Has priority over common values. |
 | flower.ingress.annotations | object | `{}` | Flower custom Ingress annotations  |
 | flower.ingress.className | string | `"nginx"` | Flower Ingress class name |
