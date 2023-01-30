@@ -36,6 +36,8 @@ geth:
   service_type: LoadBalancer
   # -- WS-RPC server listening port
   ws_port: 8546
+  # -- Use lz4 backups for chain (if enabled)
+  gstorage_lz4: true
 
 # -- Blockchain genesis configuration
 genesis:
