@@ -270,7 +270,8 @@ fi
   - name: pprof
     containerPort: {{ .pprof_port }}
   {{- end }}
-  {{- with .Values.geth.resources }}
+  {{- $resources := default .Values.geth.resources .resources -}}
+  {{- with $resources }}
   resources:
     {{- toYaml . | nindent 4 }}
   {{- end }}
