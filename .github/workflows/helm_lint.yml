@@ -42,8 +42,10 @@ jobs:
         id: list-changed
         run: |
           changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          echo $changed
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::true"
+            echo "::set-output name=changed_charts::$changed"
           fi
 
       - name: Run chart-testing (lint)
@@ -109,10 +111,31 @@ jobs:
           echo "Done!"
 
       - name: Install dependencies - Kong CRDs
-        if: steps.list-changed.outputs.changed == 'true'
+        if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'kong-celo-fullnode')
         # contains(join(steps.updated_files.outputs.all), 'charts/kong-celo-fullnode/')
         run: |
           kubectl apply -f https://raw.githubusercontent.com/Kong/kong-operator/main/helm-charts/kong/crds/custom-resource-definitions.yaml
+
+      - name: "Templating charts"
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          while read chart; do
+            if [ -d ./charts/${chart} ]; then
+              # Only template 'application' charts (libraries cannot be templated)
+              if cat "./charts/${chart}/Chart.yaml" | grep -E '^type' | grep 'application'; then
+                helm template "./charts/${chart}/" -f "./charts/${chart}/values.yaml"
+                # Skipping celo-fullnode-backups as kind has not volumesnapshot and gemini cannot be installed
+                if [[ "${chart}" != "celo-fullnode-backups" ]]; then
+                  # Check against K8s API
+                  helm template "./charts/${chart}/" -f "./charts/${chart}/values.yaml" --validate
+                fi
+              fi
+            else
+              echo "Skipping charts/${chart} as it seems it has been deleted."
+            fi
+          done <<EOF
+            $(echo "${{ steps.list-changed.outputs.changed_charts }}")
+          EOF
 
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
