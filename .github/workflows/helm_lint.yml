@@ -44,8 +44,8 @@ jobs:
           changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
           echo $changed
           if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
-            echo "::set-output name=changed_charts::$changed"
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "changed_charts=$changed" >> $GITHUB_OUTPUT
           fi
 
       - name: Run chart-testing (lint)
