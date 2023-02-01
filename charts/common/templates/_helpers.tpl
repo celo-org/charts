@@ -46,7 +46,7 @@ release: {{ .Release.Name }}
 {{- define "common.conditional-init-genesis-container" -}}
 {{- $production_envs := list "mainnet" "rc1" "baklava" "alfajores" -}}
 {{- if not (has .Values.genesis.network $production_envs) }}
-{{ include "common.init-genesis-container" . }}
+{{- include "common.init-genesis-container" . }}
 {{- end }}
 {{- end }}
 
@@ -525,7 +525,7 @@ spec:
 {{- define "common.prometheus-annotations" -}}
 {{- $pprof := .Values.pprof | default dict -}}
 prometheus.io/scrape: "true"
-prometheus.io/path:  "{{ $pprof.path | default "/debug/metrics/prometheus" }}"
+prometheus.io/path: "{{ $pprof.path | default "/debug/metrics/prometheus" }}"
 prometheus.io/port: "{{ $pprof.port | default 6060 }}"
 {{- end }}
 
