@@ -2,7 +2,7 @@
 
 Helm chart for deploying Celo Safe Client Gateway
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 - [celo-safe-client-gateway](#celo-safe-client-gateway)
   - [Chart requirements](#chart-requirements)
@@ -41,12 +41,12 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | fullnameOverride | string | `""` | Chart full name override |
 | global.redis.password | string | `"test"` | Redis depencency chart password |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-central1-docker.pkg.dev/clabs-gnosis-safe/safe-client-gateway"` | Image repository |
-| image.tag | string | `"d0539e5645f2d6fd6498817f64d7a10d7bde96a1"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/clabs-public-images/safe-client-gateway"` | Image repository |
+| image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
-| ingress.annotations | object | `{}` | Custom Ingress annotations  |
+| ingress.annotations | object | `{}` | Custom Ingress annotations |
 | ingress.className | string | `"nginx"` | Ingress class name |
-| ingress.enabled | bool | `true` | Ingress enabled |
+| ingress.enabled | bool | `false` | Ingress enabled |
 | ingress.hosts | list | `[]` | List of hosts to expose safe-client-gateway. See values.yaml for an example. |
 | ingress.tls | list | `[]` | TLS secret for exposing safe-client-gateway with https. See values.yaml for an example. |
 | livenessProbe | object | `{"httpGet":{"path":"/","port":"http"}}` | Liveness probe configuration |
