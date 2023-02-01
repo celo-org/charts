@@ -45,6 +45,8 @@ jobs:
           echo $changed
           if [[ -n "$changed" ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
+            $changed=$(echo $changed | tr '\n' ' ')
+            echo $changed
             echo "changed_charts=$changed" >> $GITHUB_OUTPUT
           fi
 
