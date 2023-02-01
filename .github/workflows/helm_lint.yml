@@ -42,11 +42,9 @@ jobs:
         id: list-changed
         run: |
           changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
-          echo $changed
           if [[ -n "$changed" ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
             changed=$(echo $changed | tr '\n' ' ')
-            echo $changed
             echo "changed_charts=$changed" >> $GITHUB_OUTPUT
           fi
 
@@ -121,7 +119,7 @@ jobs:
       - name: "Templating charts"
         if: steps.list-changed.outputs.changed == 'true'
         run: |
-          while read chart; do
+          for chart in "${{ steps.list-changed.outputs.changed_charts }}"; do
             if [ -d ./${chart} ]; then
               # Only template 'application' charts (libraries cannot be templated)
               if cat "./${chart}/Chart.yaml" | grep -E '^type' | grep 'application'; then
@@ -135,9 +133,7 @@ jobs:
             else
               echo "Skipping ${chart} as it seems it has been deleted."
             fi
-          done <<EOF
-            $(echo "${{ steps.list-changed.outputs.changed_charts }}")
-          EOF
+          done
 
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
