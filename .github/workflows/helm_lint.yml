@@ -122,10 +122,12 @@ jobs:
           for chart in ${{ steps.list-changed.outputs.changed_charts }}; do
             if [ -d ./${chart} ]; then
               # Only template 'application' charts (libraries cannot be templated)
-              if cat "./${chart}/Chart.yaml" | grep -E '^type' | grep 'application'; then
+              if cat "./${chart}/Chart.yaml" | grep -E '^type' | grep 'application' >/dev/null; then
+                echo "Templating ${chart}."
                 helm template "./${chart}/" -f "./${chart}/values.yaml"
                 # Skipping celo-fullnode-backups as kind has not volumesnapshot and gemini cannot be installed
                 if [[ "${chart}" != "charts/celo-fullnode-backups" ]]; then
+                  echo "Validating ${chart} templates."
                   # Check against K8s API
                   helm template "./${chart}/" -f "./${chart}/values.yaml" --validate
                 fi
