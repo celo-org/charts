@@ -231,7 +231,7 @@ fi
       fieldRef:
         fieldPath: status.hostIP
   {{- end }}
-  {{- include  "common.geth-prestop-hook" . | nindent 2 }}
+  {{- include  "common.geth-prestop-hook" . | nindent 2 -}}
   {{/* TODO: make this use IPC */}}
   {{- if .expose }}
   readinessProbe:
