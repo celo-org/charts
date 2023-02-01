@@ -111,7 +111,7 @@ jobs:
           echo "Done!"
 
       - name: Install dependencies - Kong CRDs
-        if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'kong-celo-fullnode')
+        if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/kong-celo-fullnode')
         # contains(join(steps.updated_files.outputs.all), 'charts/kong-celo-fullnode/')
         run: |
           kubectl apply -f https://raw.githubusercontent.com/Kong/kong-operator/main/helm-charts/kong/crds/custom-resource-definitions.yaml

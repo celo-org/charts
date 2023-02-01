@@ -8,7 +8,7 @@ consumers:
   - mento
   - foundation
 # -- Redis password. Redis is used for storing rate limit counters
-redisPassword: changeme
+redisPassword: changeme-test
 
 rate_limit:
   # -- Enable rate limit plugin. Remind to change celo_fullnode.ingress.annotations.konghq.com/plugins to reflect the changes
