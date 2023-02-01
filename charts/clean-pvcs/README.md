@@ -1,6 +1,6 @@
 # clean-pvcs
 
-![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 Delete PVCs not mounted for some time
 
@@ -31,7 +31,7 @@ Delete PVCs not mounted for some time
 | nodeSelector | object | `{}` | Kubernetes node selector |
 | podAnnotations | object | `{}` | Custom pod annotations |
 | podSecurityContext | object | `{}` | Custom pod security context |
-| resources | object | `{"requests":{"cpu":"100m","memory":"128Mi"}}` | Container resources |
+| resources | object | `{}` | Container resources |
 | securityContext | object | `{}` | Custom container security context |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set a name is generated using the fullname template |
