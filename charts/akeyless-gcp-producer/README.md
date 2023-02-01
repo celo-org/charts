@@ -32,7 +32,7 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| autoscaling.enabled | bool | `false` | Enable autoscaling  |
+| autoscaling.enabled | bool | `false` | Enable autoscaling |
 | autoscaling.maxReplicas | int | `3` | Maximum replicas |
 | autoscaling.minReplicas | int | `1` | Minimum replicas |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | CPU target utilization |
@@ -43,7 +43,7 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-gcp-producer"` | Image repository |
 | image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
-| ingress.annotations | object | `{}` | Custom Ingress annotations  |
+| ingress.annotations | object | `{}` | Custom Ingress annotations |
 | ingress.className | string | `"nginx"` | Ingress class name |
 | ingress.enabled | bool | `false` | Ingress enabled |
 | ingress.hosts | list | `[]` | List of hosts to expose safe-client-gateway. See values.yaml for an example. |
@@ -55,7 +55,7 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
 | securityContext | object | `{}` | Custom container security context |
-| service.port | int | `8081` | Kubernetes Service Type |
+| service.port | int | `8080` | Kubernetes Service Type |
 | service.type | string | `"ClusterIP"` | Kubernetes Service Type |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
