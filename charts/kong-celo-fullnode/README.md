@@ -1,43 +1,41 @@
-# kong-celo-fullnode
+# clean-pvcs
 
-Chart wrapper over celo-fullnode chart to adapt to Forno. It requires a Kong controller, kong ingressClass and kong crds installed in the cluster.
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+Delete PVCs not mounted for some time
 
-- [kong-celo-fullnode](#kong-celo-fullnode)
-  - [Chart requirements](#chart-requirements)
-  - [Chart releases](#chart-releases)
-  - [Basic chart operation](#basic-chart-operation)
-  - [Values](#values)
+**Homepage:** <https://celo.org>
 
-## Chart requirements
+## Maintainers
 
-- Tested with Kubernetes 1.24
-- Tested with Helm v3.9.4
-
-## Chart releases
-
-Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/kong-celo-fullnode repository automatically every commit to `main` branch.
-Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
-This pricess is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
-and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
-
-## Basic chart operation
-
-The chart is a wrapper over the [celo-fullnode](../celo-fullnode) chart, adding kong's plugins and clients to rate limit different users.
+| Name | Email | Url |
+| ---- | ------ | --- |
+| cLabs | <devops@clabs.co> | <https://clabs.co> |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| auth.enabled | bool | `true` | Enable auth plugin. Remind to change celo_fullnode.ingress.annotations.konghq.com/plugins to reflect the changes |
-| celo_fullnode | object | `{"gcp":true,"genesis":{"network":"rc1","networkId":42220},"geth":{"flags":"--txpool.nolocals","gcmode":"full","image":{"imagePullPolicy":"IfNotPresent","repository":"us.gcr.io/celo-org/geth","tag":"1.6.0"},"node_keys":[],"public_ip_per_node":[],"resources":{"requests":{"cpu":"4","memory":"8Gi"}},"syncmode":"full","verbosity":2,"ws_port":8545},"ingress":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-prod","konghq.com/plugins":"forno-rate-limit, forno-auth","konghq.com/strip-path":"true","kubernetes.io/tls-acme":"true"},"enabled":false,"hosts":["forno.celo-testnet.org"],"ingressClassName":"kong","tls":[{"hosts":["forno.celo-testnet.org"],"secretName":"forno.celo-testnet.org-tls"}]},"metrics":true,"pprof":{"enabled":true,"path":"/debug/metrics/prometheus","port":6060},"replicaCount":2,"storage":{"accessModes":"ReadWriteOnce","autoscaling":{"behavior":{"scaleDown":{"policies":[{"periodSeconds":60,"type":"Pods","value":2},{"periodSeconds":60,"type":"Percent","value":25}],"selectPolicy":"Max","stabilizationWindowSeconds":1800},"scaleUp":{"policies":[{"periodSeconds":15,"type":"Pods","value":2},{"periodSeconds":15,"type":"Percent","value":25}],"selectPolicy":"Max","stabilizationWindowSeconds":600}},"enabled":false,"maxReplicas":5,"metrics":[{"resource":{"name":"cpu","target":{"averageUtilization":85,"type":"Utilization"}},"type":"Resource"}],"minReplicas":1},"enable":true,"size":"100Gi","snapshot":{"enabled":false,"kind":"VolumeSnapshot","name":"forno-snapshot"},"storageClass":"premium-rwo"}}` | Check values at [celo-fullnode chart](../celo-fullnode/README.md) |
-| consumers | list | `["odis","mento","foundation"]` | List of consumers to create in Kong (each consumer is a different client with different credentials) |
-| rate_limit.enabled | bool | `true` | Enable rate limit plugin. Remind to change celo_fullnode.ingress.annotations.konghq.com/plugins to reflect the changes |
-| rate_limit.limit_by | string | `"consumer"` | The entity that will be used when aggregating the limits |
-| rate_limit.limits | object | `{"hour":100000}` | Rate limit configuration for each client |
-| rate_limit.limits.hour | int | `100000` | Number of requests per hour allowed for each consumer |
-| redisPassword | string | `"changeme"` | Redis password. Redis is used for storing rate limit counters |
+| affinity | object | `{}` | Kubernetes pod affinity |
+| cronjob.dry_run | bool | `true` | If enabling "dry-run" mode (do not delete the pvcs and test what would be deleted) |
+| cronjob.enable_date | bool | `true` | Enable checking the date |
+| cronjob.filter | string | `""` | Filter PVCs with this substring in name |
+| cronjob.older | string | `"now-4 hours"` | Delete PVCs older than (GNU date style) |
+| cronjob.schedule | string | `"0 1 * * *"` | Cronjob schedule |
+| fullnameOverride | string | `""` | Chart full name override |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
+| image.repository | string | `"bitnami/kubectl"` | Image repository |
+| image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| imagePullSecrets | list | `[]` | Image pull secrets |
+| nameOverride | string | `""` | Chart name override |
+| nodeSelector | object | `{}` | Kubernetes node selector |
+| podAnnotations | object | `{}` | Custom pod annotations |
+| podSecurityContext | object | `{}` | Custom pod security context |
+| resources | object | `{}` | Container resources |
+| securityContext | object | `{}` | Custom container security context |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.name | string | `""` | The name of the service account to use. If not set a name is generated using the fullname template |
+| tolerations | list | `[]` | Kubernetes tolerations |
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0). To regenerate run `helm-docs` command at this folder.
+Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)
