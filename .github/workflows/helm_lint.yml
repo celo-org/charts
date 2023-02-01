@@ -119,7 +119,7 @@ jobs:
       - name: "Templating charts"
         if: steps.list-changed.outputs.changed == 'true'
         run: |
-          for chart in "${{ steps.list-changed.outputs.changed_charts }}"; do
+          for chart in ${{ steps.list-changed.outputs.changed_charts }}; do
             if [ -d ./${chart} ]; then
               # Only template 'application' charts (libraries cannot be templated)
               if cat "./${chart}/Chart.yaml" | grep -E '^type' | grep 'application'; then
