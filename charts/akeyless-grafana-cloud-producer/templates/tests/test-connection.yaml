@@ -10,6 +10,6 @@ spec:
   containers:
     - name: wget
       image: busybox
-      command: ['wget']
+      command: ['curl']
       args: ['{{ include "akeyless-grafana-cloud-producer.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never
