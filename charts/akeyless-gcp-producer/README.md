@@ -2,7 +2,7 @@
 
 A Helm chart for Kubernetes
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 - [akeyless-gcp-producer](#akeyless-gcp-producer)
   - [Chart requirements](#chart-requirements)
@@ -32,7 +32,7 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| autoscaling.enabled | bool | `false` | Enable autoscaling  |
+| autoscaling.enabled | bool | `false` | Enable autoscaling |
 | autoscaling.maxReplicas | int | `3` | Maximum replicas |
 | autoscaling.minReplicas | int | `1` | Minimum replicas |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | CPU target utilization |
@@ -43,7 +43,7 @@ and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-gcp-producer"` | Image repository |
 | image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
-| ingress.annotations | object | `{}` | Custom Ingress annotations  |
+| ingress.annotations | object | `{}` | Custom Ingress annotations |
 | ingress.className | string | `"nginx"` | Ingress class name |
 | ingress.enabled | bool | `false` | Ingress enabled |
 | ingress.hosts | list | `[]` | List of hosts to expose safe-client-gateway. See values.yaml for an example. |
