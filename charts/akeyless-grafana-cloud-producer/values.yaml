@@ -89,7 +89,7 @@ resources: {}
 
 env:
   # -- Akeyless Access ID (for authentication)
-  akeylessAccessID: "p-smsrwoolrzwo"
+  akeylessAccessID: test  # "p-smsrwoolrzwo"
   # -- Secret Allowed Path
   secretPathRegex: '^\/dynamic-secrets\/cloud-user-access\/grafana-cloud.*'
 
