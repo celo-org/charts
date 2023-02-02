@@ -8,8 +8,8 @@ metadata:
     "helm.sh/hook": test
 spec:
   containers:
-    - name: wget
+    - name: nc
       image: busybox
-      command: ['curl']
-      args: ['{{ include "akeyless-grafana-cloud-producer.fullname" . }}:{{ .Values.service.port }}']
+      command: ['nc']
+      args: ['-zv', '{{ include "akeyless-grafana-cloud-producer.fullname" . }}', '{{ .Values.service.port }}']
   restartPolicy: Never
