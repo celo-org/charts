@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ template "common.fullname" . }}
   labels:
-    {{- include "common.standard.labels" .  | nindent 4 }}
+    {{- include "common.standard.labels" . | nindent 4 }}
     component: celo-fullnode
 spec:
   {{- if .Values.storage.enable }}
@@ -34,12 +34,12 @@ spec:
   serviceName: {{ template "common.fullname" . }}
   selector:
     matchLabels:
-      {{- include "common.standard.labels" .  | nindent 6 }}
+      {{- include "common.standard.labels" . | nindent 6 }}
       component: celo-fullnode
   template:
     metadata:
       labels:
-        {{- include "common.standard.labels" .  | nindent 8 }}
+        {{- include "common.standard.labels" . | nindent 8 }}
         {{- if .Values.extraPodLabels }}
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
@@ -69,7 +69,7 @@ spec:
         {{- include "common.remove-old-chaindata" . | nindent 8 }}
         {{- include "common.gsutil-sync-data-init-container" . | nindent 8 }}
       {{- end }}
-        {{- include "common.conditional-init-genesis-container" .  | nindent 8 }}
+        {{- include "common.conditional-init-genesis-container" . | nindent 8 }}
       {{- if .Values.geth.node_keys }}
         - name: set-node-key
           image: alpine:3.12

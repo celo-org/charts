@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ template "common.fullname" . }}-rpc
   labels:
-    {{- include "common.standard.labels" .  | nindent 4 }}
+    {{- include "common.standard.labels" . | nindent 4 }}
     component: celo-fullnode-rpc-traffic
   annotations:
     {{- if .Values.geth.create_network_endpoint_group }}
@@ -15,5 +15,5 @@ spec:
   ports:
   {{- include "celo-fullnode.rpc-ports" . | nindent 4 }}
   selector:
-    {{- include "common.standard.short_labels" .  | nindent 4 }}
+    {{- include "common.standard.short_labels" . | nindent 4 }}
     component: celo-fullnode

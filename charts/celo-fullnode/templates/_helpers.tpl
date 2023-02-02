@@ -61,7 +61,7 @@ NAT_FLAG="--nat=extip:${PUBLIC_IP}"
 */}}
 {{- define "celo-fullnode.extra_setup" -}}
 # template .extra_setup
-{{- include  "celo-fullnode.aws-subnet-specific-nat-ip" . }}
+{{- include "celo-fullnode.aws-subnet-specific-nat-ip" . }}
 {{- if .Values.geth.increase_timeouts }}
 ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --http.timeout.read 600 --http.timeout.write 600 --http.timeout.idle 2400"
 {{- end }}
