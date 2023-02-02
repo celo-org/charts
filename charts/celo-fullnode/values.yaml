@@ -47,7 +47,7 @@ storage:
   # -- Enable persistent storage for the celo-blockchain statefulset
   enable: true
   # -- Name of the storage class to use for the celo-blockchain statefulset
-  storageClass: standard
+  storageClass: default
   # -- accessMode for the volumes
   accessModes: ReadWriteOnce
   # -- celo-blockchain pvc annotations
@@ -72,13 +72,12 @@ geth:
     imagePullPolicy: IfNotPresent
   # -- Resources for `geth` container
   resources:
-    requests: {}
-    # requests:
-    #   memory: "8Gi"
-    #   cpu: "3"
+    requests:
+      memory: "8Gi"
+      cpu: "3"
     limits: {}
   # -- Blockchain sync mode. Valid values are: full, lightest, light and fast
-  syncmode: lightest
+  syncmode: full
   # -- Blockchain garbage collection mode. Valid values are: full and archive
   gcmode: full
   # -- Enable blockchain option `--ping-ip-from-packet`
@@ -183,7 +182,7 @@ geth:
         selectPolicy: Max
         stabilizationWindowSeconds: 600
 
-# -- Blockchain genesis configuration parameters
+# -- Blockchain genesis configuration
 genesis:
   # -- Network ID for custom testnet. Not used in case of mainnet, baklava or alfajores
   networkId: 42220
