@@ -59,10 +59,7 @@ storage:
   # -- Size of the persistent volume claim for the celo-blockchain statefulset
   size: 20Gi
   # -- Include a dataSource in the volumeClaimTemplates
-  dataSource:
-    apiGroup: snapshot.storage.k8s.io
-    kind: VolumeSnapshot
-    name: forno-snapshot
+  dataSource: {}
 
 geth:
   # -- Image for the celo-blockchain statefulset
@@ -72,10 +69,9 @@ geth:
     imagePullPolicy: IfNotPresent
   # -- Resources for `geth` container
   resources:
-    requests: {}
-    # requests:
-    #   memory: "8Gi"
-    #   cpu: "3"
+    requests:
+      memory: 500Mi
+      cpu: 0.5
     limits: {}
   # -- Blockchain sync mode. Valid values are: full, lightest, light and fast
   syncmode: lightest
