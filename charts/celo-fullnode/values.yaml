@@ -182,7 +182,7 @@ geth:
         selectPolicy: Max
         stabilizationWindowSeconds: 600
 
-# -- Blockchain genesis configuration
+# -- Blockchain genesis configuration parameters
 genesis:
   # -- Network ID for custom testnet. Not used in case of mainnet, baklava or alfajores
   networkId: 42220
