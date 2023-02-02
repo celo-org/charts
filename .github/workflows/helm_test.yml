@@ -1,4 +1,4 @@
-name: Helm Charts Lint
+name: Helm Charts test and docs
 
 on:
   pull_request:
