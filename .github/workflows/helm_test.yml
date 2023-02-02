@@ -143,7 +143,7 @@ jobs:
 
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct install --target-branch ${{ github.event.repository.default_branch }} --excluded-charts akeyless-gcp-producer,common --chart-repos bitnami=https://charts.bitnami.com/bitnami --debug
+        run: ct install --target-branch ${{ github.event.repository.default_branch }} --excluded-charts akeyless-gcp-producer,common --chart-repos bitnami=https://charts.bitnami.com/bitnami --debug --helm-extra-args "--timeout 15m"
 
   helm-docs:
     runs-on: 'ubuntu-latest'
