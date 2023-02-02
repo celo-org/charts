@@ -47,7 +47,7 @@ storage:
   # -- Enable persistent storage for the celo-blockchain statefulset
   enable: true
   # -- Name of the storage class to use for the celo-blockchain statefulset
-  storageClass: default
+  storageClass: standard
   # -- accessMode for the volumes
   accessModes: ReadWriteOnce
   # -- celo-blockchain pvc annotations
