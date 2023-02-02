@@ -58,14 +58,14 @@ ingress:
   enabled: false
   # -- Ingress class name
   className: nginx
-  # -- Custom Ingress annotations 
+  # -- Custom Ingress annotations
   annotations: {}
-  
+
   # -- List of hosts to expose safe-client-gateway. See values.yaml for an example.
   hosts: []
   # - host: akeyless-grafana-cloud.akeyless.celo-networks-dev.org
   #   paths:
-  #   - path: / 
+  #   - path: /
   #     pathType: Prefix
 
   # -- TLS secret for exposing safe-client-gateway with https. See values.yaml for an example.
@@ -94,7 +94,7 @@ env:
   secretPathRegex: '^\/dynamic-secrets\/cloud-user-access\/grafana-cloud.*'
 
 autoscaling:
-  # -- Enable autoscaling 
+  # -- Enable autoscaling
   enabled: false
   # -- Minimum replicas
   minReplicas: 1
