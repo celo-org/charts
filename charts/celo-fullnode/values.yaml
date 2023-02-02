@@ -72,9 +72,10 @@ geth:
     imagePullPolicy: IfNotPresent
   # -- Resources for `geth` container
   resources:
-    requests:
-      memory: "8Gi"
-      cpu: "3"
+    requests: {}
+    #requests:
+    #  memory: "8Gi"
+    #  cpu: "3"
     limits: {}
   # -- Blockchain sync mode. Valid values are: full, lightest, light and fast
   syncmode: full
