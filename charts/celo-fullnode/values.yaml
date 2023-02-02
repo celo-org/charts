@@ -78,7 +78,7 @@ geth:
     #   cpu: "3"
     limits: {}
   # -- Blockchain sync mode. Valid values are: full, lightest, light and fast
-  syncmode: full
+  syncmode: lightest
   # -- Blockchain garbage collection mode. Valid values are: full and archive
   gcmode: full
   # -- Enable blockchain option `--ping-ip-from-packet`
