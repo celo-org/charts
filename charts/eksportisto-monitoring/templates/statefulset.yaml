@@ -39,7 +39,7 @@ spec:
         - mountPath: /var/lib/agent
           name: agent-wal
         - mountPath: /etc/agent
-          name: {{ .Chart.Name }}
+          name: {{ include "eksportisto-monitoring.fullname" . }}
       serviceAccount: {{ include "eksportisto-monitoring.serviceAccountName" . }}
       volumes:
       - configMap:
