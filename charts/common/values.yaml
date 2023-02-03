@@ -1,5 +1,5 @@
 ---
-# Typically these values will be heritaged from the parent chart
+# Typically these values will be heritaged from the parent chart trigger
 imagePullPolicy: IfNotPresent
 
 geth:
