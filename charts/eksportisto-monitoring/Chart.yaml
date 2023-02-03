@@ -2,7 +2,7 @@ apiVersion: v2
 name: eksportisto-monitoring
 description: A Grafana Agent deployment to send Eksportisto data to the Mento Grafana Cloud instance.
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "v0.24.2"
 maintainers:
   - name: cLabs
