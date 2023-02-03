@@ -1,4 +1,5 @@
 ---
 geth:
+  diskSizeGB: 100
   flags: --alfajores --datadir=/root/.celo
   gstorage_data_bucket: celo-chain-backup/alfajores
