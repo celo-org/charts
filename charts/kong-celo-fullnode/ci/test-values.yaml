@@ -3,10 +3,10 @@
 celo_fullnode:
   replicaCount: 1
   geth:
-    gcmode: lightest
+    syncmode: lightest
     resources:
       requests:
-        cpu: "1"
-        memory: 2Gi
+        cpu: 0.5
+        memory: 1Gi
   storage:
     enable: false

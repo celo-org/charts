@@ -1,11 +1,11 @@
 ---
 replicaCount: 1
 geth:
-  gcmode: lightest
+  syncmode: lightest
   resources:
     requests:
-      cpu: "1"
-      memory: 2Gi
+      cpu: 0.5
+      memory: 1Gi
 storage:
   storageClass: standard
   size: 2Gi
