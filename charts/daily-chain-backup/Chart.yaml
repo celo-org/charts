@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+appVersion: "1.0"
+description: A Helm chart for deploying cron job to
+  periodically run chain backups and upload to GCS
+name: daily-chain-backup
+version: 1.0.0
+home: https://clabs.co
+icon: >
+  https://images.ctfassets.net/ydgnnqrxvkzo/5a6KWgv4sw4Zx023Vr7Ksw/
+  db6cc4aa299a1dea46caeab2926d13d6/mobileGlyph.svg
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co

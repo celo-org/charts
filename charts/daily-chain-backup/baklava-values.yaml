@@ -1,0 +1,5 @@
+---
+geth:
+  diskSizeGB: 100
+  flags: --baklava --datadir=/root/.celo
+  gstorage_data_bucket: celo-chain-backup/baklava
