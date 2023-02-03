@@ -2,7 +2,7 @@
 
 Helm chart with helper templates and functions for Celo nodes. Import into your chart with `dependencies` and use the templates and functions
 
-![Version: 0.2.6](https://img.shields.io/badge/Version-0.2.6-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.2.7](https://img.shields.io/badge/Version-0.2.7-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 - [common](#common)
   - [Chart releases](#chart-releases)
@@ -12,8 +12,8 @@ Helm chart with helper templates and functions for Celo nodes. Import into your 
 
 Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/common repository automatically every commit to `master` branch.
 Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
-This pricess is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
-and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
+This process is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
+and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 
 ## Basic chart operation
 
@@ -23,7 +23,7 @@ To import this chart into your chart, add the following to your `requirements.ya
 dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci
-    version: 0.2.6
+    version: 0.2.7
 ```
 
 ## Values

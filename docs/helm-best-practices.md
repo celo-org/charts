@@ -424,7 +424,7 @@ When working with Custom Resource Definitions (CRDs), it is important to disting
 
 ## Technical
 
-1. Charts must pass the linter ([GitHub Action check](../.github/workflows/helm_lint.yml)).
+1. Charts must pass the linter ([GitHub Action check](../.github/workflows/helm_test.yml)).
 2. Must successfully launch with default values (`helm install`).
     - All pods go to the running state.
     - All services have at least one endpoint.

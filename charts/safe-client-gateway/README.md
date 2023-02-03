@@ -2,7 +2,7 @@
 
 Helm chart for deploying Celo Safe Client Gateway
 
-![Version: 1.1.2](https://img.shields.io/badge/Version-1.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 1.1.3](https://img.shields.io/badge/Version-1.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 - [celo-safe-client-gateway](#celo-safe-client-gateway)
   - [Chart requirements](#chart-requirements)
@@ -26,7 +26,7 @@ Helm chart for deploying Celo Safe Client Gateway
 Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-safe-client-gateway repository automatically every commit to `master` branch.
 Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
 This process is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
-and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
+and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 
 ## Values
 
