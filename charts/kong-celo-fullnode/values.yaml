@@ -70,7 +70,7 @@ celo_fullnode:
     accessModes: ReadWriteOnce
     enable: true
     size: 100Gi
-    storageClass: premium-rwo # SSD Filestore
+    storageClass: premium-rwo  # SSD CSI
     snapshot:
       enabled: false
       kind: VolumeSnapshot

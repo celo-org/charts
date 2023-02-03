@@ -1,0 +1,13 @@
+---
+celo_fullnode:
+  replicaCount: 1
+  geth:
+    service_type: ClusterIP
+    syncmode: lightest
+    resources:
+      requests:
+        cpu: 0.5
+        memory: 1Gi
+  storage:
+    storageClass: standard
+    size: 2Gi
