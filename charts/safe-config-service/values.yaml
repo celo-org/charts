@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- Chart name override
+# -- Chart name override trigger
 nameOverride: ""
 # -- Chart full name override
 fullnameOverride: ""
