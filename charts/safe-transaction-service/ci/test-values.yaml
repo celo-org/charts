@@ -1,3 +1,4 @@
+---
 env:
   djangoSecretKey: test
   ethereumNodeUrl: https://alfajores-forno.celo-testnet.org
