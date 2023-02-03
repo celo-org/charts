@@ -53,7 +53,7 @@ service:
 
 ingress:
   # -- Ingress enabled
-  enabled: true
+  enabled: false
   # -- Ingress class name
   className: nginx
   # -- Custom Ingress annotations
