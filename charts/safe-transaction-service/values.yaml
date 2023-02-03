@@ -129,7 +129,7 @@ flower:
     enabled: false
     # -- Flower Ingress class name
     className: nginx
-    # -- Flower custom Ingress annotations 
+    # -- Flower custom Ingress annotations
     annotations: {}
 
     # -- Flower list of hosts to expose flower component. See values.yaml for an example.
@@ -158,7 +158,7 @@ web:
     enabled: false
     # -- Web Ingress class name
     className: nginx
-    # -- Web custom Ingress annotations 
+    # -- Web custom Ingress annotations
     annotations: {}
 
     # -- Web list of hosts to expose web component. See values.yaml for an example.
