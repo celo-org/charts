@@ -34,7 +34,7 @@ dependencies:
 | geth.diskSizeGB | int | `300` | Size of PVC to create for geth data |
 | geth.gcmode | string | `"full"` | GCmode for celo-blockchain |
 | geth.gstorage_data_bucket | string | `"celo-chain-backup/mainnet"` | GCS bucket to upload chain backups to |
-| geth.image | object | `{"imagePullPolicy":"Always","repository":"us.gcr.io/celo-org/geth","tag":"master"}` | celo-blockchain image to use |
+| geth.image | object | `{"imagePullPolicy":"Always","repository":"us.gcr.io/celo-org/geth","tag":1}` | celo-blockchain image to use |
 | geth.in_memory_discovery_table | bool | `false` | enable use-in-memory-discovery-table celo-blockchain flag |
 | geth.metrics | bool | `true` | Enable metrics options |
 | geth.resources | object | `{"requests":{"cpu":"2","memory":"4Gi"}}` | resources to allocate to geth container |
