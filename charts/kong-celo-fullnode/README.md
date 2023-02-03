@@ -19,8 +19,8 @@ Chart wrapper over celo-fullnode chart to adapt to Forno. It requires a Kong con
 
 Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/kong-celo-fullnode repository automatically every commit to `main` branch.
 Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
-This pricess is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
-and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
+This process is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
+and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 
 ## Basic chart operation
 

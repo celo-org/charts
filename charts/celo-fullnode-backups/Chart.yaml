@@ -3,7 +3,7 @@ appVersion: "1.6.0"
 description: Automate celo-blockchain chain backups using PVC snapshots
 type: application
 home: https://celo.org
-icon: https://pbs.twimg.com/profile_images/1493309659599486986/5ETdHxeE_400x400.jpg
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
 name: celo-fullnode-backups
 sources:
   - https://celo.org

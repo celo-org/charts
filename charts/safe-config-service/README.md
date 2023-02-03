@@ -26,7 +26,7 @@ Helm chart for deploying Celo Safe Config Service
 Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-safe-config-service repository automatically every commit to `master` branch.
 Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
 This process is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
-and [helm_lint.yml](../../.github/workflows/helm_lint.yml) files.
+and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 
 ## Values
 
