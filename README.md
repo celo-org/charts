@@ -36,3 +36,9 @@ This repo uses GitHub Actions to automatically perform the following:
 - For spinning a Kind cluster the [Kind Action](https://github.com/helm/kind-action) is used (based on [kind tool](https://kind.sigs.k8s.io/)).
 - For autogenerating the chart README, a custom workflow based on [helm-docs](https://github.com/norwoodj/helm-docs) is used.
 - For publishing a new chart release to Artifact Registry (project `devops`, URL `oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci`), a custom workflow is used.
+
+## Installing a chart with custom values
+
+The [chart-testing Action](https://github.com/helm/chart-testing-action) allows testing the installation/deletion of a chart using a custom `values.yaml` file. In order to do that, the action allows for a chart to have multiple custom values files matching the glob pattern `*-values.yaml` in a directory named `ci` in the root of the chart's directory. The chart is installed and tested for each of these files.
+
+If no custom values file is present, the chart is installed and tested with defaults.
