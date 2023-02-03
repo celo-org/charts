@@ -15,8 +15,11 @@ geth:
     # -- Storage class for the persistent volume claim for the celo-blockchain statefulset.
     storageClassName: premium-rwo
   initial_snapshot:
+    # -- Enable initial snapshot
     enabled: false
+    # -- Kubernetes kind of the initial snapshot
     kind: VolumeSnapshot
+    # -- Kubernetes handle of the initial snapshot
     snapshotHandleReference: projects/my-project/global/snapshots/snapshot-1234567890
 
 snapshot:
@@ -29,8 +32,11 @@ snapshot:
     namespace_copy_to: rc1
     # -- Name for the volumeSnapshot and volumeSnapshotContent that the "move" process will create
     volumeSnapshot_name_copy_to: forno-snapshot
+  # -- Schedule for the geth sync CronJob
   sync_schedule: "0/60 * * * *"
+  # -- Schedule for the move snapshot CronJob
   move_schedule: "30/60 * * * *"
+  # -- Schedules for the Gemini SnapshotGroup CRD, see [Gemini Schedules](https://github.com/FairwindsOps/gemini#schedules)
   snapshot_schedule:
     - every: "60 minutes"
       keep: 2
