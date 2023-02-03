@@ -2,7 +2,7 @@
 
 Helm chart for deploying Celo Safe Transaction Service
 
-![Version: 1.1.4](https://img.shields.io/badge/Version-1.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 1.1.5](https://img.shields.io/badge/Version-1.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 - [celo-safe-transaction-service](#celo-safe-transaction-service)
   - [Chart requirements](#chart-requirements)
@@ -42,7 +42,7 @@ and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 | env.ethereumNodeUrl | string | `"https://forno.celo.org"` | Ethereum Node enviromental variable |
 | env.webhookToken | string | `"test"` | Token for the webhook to flush the cache |
 | flower | object | `{"ingress":{"annotations":{},"className":"nginx","enabled":false,"hosts":[],"tls":[]},"service":{"port":5555,"type":"ClusterIP"}}` | Flower especific values. Has priority over common values. |
-| flower.ingress.annotations | object | `{}` | Flower custom Ingress annotations  |
+| flower.ingress.annotations | object | `{}` | Flower custom Ingress annotations |
 | flower.ingress.className | string | `"nginx"` | Flower Ingress class name |
 | flower.ingress.enabled | bool | `false` | Flower Ingress enabled |
 | flower.ingress.hosts | list | `[]` | Flower list of hosts to expose flower component. See values.yaml for an example. |
@@ -55,12 +55,12 @@ and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 | global.postgresql.service.ports.postgresql | int | `5432` | Postgresql depencency chart service port |
 | global.redis.password | string | `"test"` | Redis depencency chart password |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-central1-docker.pkg.dev/clabs-gnosis-safe/safe-transaction-service"` | Image repository |
-| image.tag | string | `"61ee03ee2f712941c2b319d1cf2240c414a2177c"` | Image tag Please override in terraform via celo-org/infrastructure/terraform-modules/clabs-gnosis-safe-staging/files/transaction-service-values.yaml |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/clabs-public-images/safe-transaction-service"` | Image repository |
+| image.tag | string | `"latest"` | Image tag Please override in terraform via celo-org/infrastructure/terraform-modules/clabs-gnosis-safe-staging/files/transaction-service-values.yaml |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | indexerWorker | object | `{}` | Indexer-worker deployment especific values. Has priority over common values. |
 | livenessProbe | object | `{"httpGet":{"path":"/","port":"http"},"timeoutSeconds":60}` | Liveness probe configuration |
-| nameOverride | string | `""` | Chart name override |
+| nameOverride | string | `""` | Chart name override trigger |
 | nodeSelector | object | `{}` | Kubernetes node selector |
 | notificationsWebhooksWorker | object | `{}` | Notifications-webhook-worker especific values. Has priority over common values. |
 | podAnnotations | object | `{}` | Custom pod annotations |
@@ -79,7 +79,7 @@ and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | tolerations | list | `[]` | Kubernetes tolerations |
 | web | object | `{"ingress":{"annotations":{},"className":"nginx","enabled":false,"hosts":[],"tls":[]},"service":{"port":80,"type":"ClusterIP"}}` | Web especific values. Has priority over common values. |
-| web.ingress.annotations | object | `{}` | Web custom Ingress annotations  |
+| web.ingress.annotations | object | `{}` | Web custom Ingress annotations |
 | web.ingress.className | string | `"nginx"` | Web Ingress class name |
 | web.ingress.enabled | bool | `false` | Web Ingress enabled |
 | web.ingress.hosts | list | `[]` | Web list of hosts to expose web component. See values.yaml for an example. |

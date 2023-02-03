@@ -2,7 +2,7 @@
 
 Helm chart for deploying Celo Safe Config Service
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 - [celo-safe-config-service](#celo-safe-config-service)
   - [Chart requirements](#chart-requirements)
@@ -43,16 +43,16 @@ and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 | fullnameOverride | string | `""` | Chart full name override |
 | global.postgresql.auth.postgresPassword | string | `"test"` | Postgresql dependency chart password |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-central1-docker.pkg.dev/clabs-gnosis-safe/charts/safe-config-service"` | Image repository |
-| image.tag | string | `"celo-safe"` | Image tag |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/clabs-public-images/safe-config-service"` | Image repository |
+| image.tag | string | `"latest"` | Image tag |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Custom Ingress annotations |
 | ingress.className | string | `"nginx"` | Ingress class name |
-| ingress.enabled | bool | `true` | Ingress enabled |
+| ingress.enabled | bool | `false` | Ingress enabled |
 | ingress.hosts | list | `[]` | List of hosts to expose safe-config-service. See values.yaml for an example. |
 | ingress.tls | list | `[]` | TLS secret for exposing safe-config-service with https. See values.yaml for an example. |
 | livenessProbe | object | `{"timeoutSeconds":30}` | Liveness probe configuration |
-| nameOverride | string | `""` | Chart name override |
+| nameOverride | string | `""` | Chart name override trigger |
 | nodeSelector | object | `{}` | Kubernetes node selector |
 | podAnnotations | object | `{}` | Custom pod annotations |
 | podSecurityContext | object | `{}` | Custom pod security context |
