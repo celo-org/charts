@@ -12,11 +12,11 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: us-central1-docker.pkg.dev/clabs-gnosis-safe/charts/safe-config-service
+  repository: us-west1-docker.pkg.dev/devopsre/clabs-public-images/safe-config-service
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag
-  tag: celo-safe
+  tag: latest
 
 # -- Image pull secrets
 imagePullSecrets: []
