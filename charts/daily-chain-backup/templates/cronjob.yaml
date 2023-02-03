@@ -1,0 +1,97 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ template "common.fullname" . }}-daily-chain-backup
+spec:
+  schedule: "40 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: {{ template "common.fullname" . }}-gcloud-storage-access
+          restartPolicy: OnFailure
+          initContainers:
+          - name: geth
+            image: {{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}
+            imagePullPolicy: {{ .Values.geth.image.imagePullPolicy }}
+            {{- with .Values.geth.resources }}
+            resources:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              set -euo pipefail
+              ADDITIONAL_FLAGS='{{ .Values.geth.flags | default "" }}'
+              ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --exitwhensynced"
+
+              {{- if .Values.geth.in_memory_discovery_table_flag | default false }}
+              ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --use-in-memory-discovery-table"
+              {{ end -}}
+              {{- if .Values.geth.metrics | default false }}
+              ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --metrics"
+              {{- end }}
+              {{- if .Values.geth.pprof | default false }}
+              ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --pprof --pprof.port {{ .pprof_port | default "6060" }} --pprof.addr 0.0.0.0"
+              {{- end }}
+
+              exec geth \
+                --light.serve {{ .Values.geth.light_serve | default 0 }} \
+                --light.maxpeers {{ .Values.geth.light_maxpeers | default 0 }} \
+                --maxpeers {{ .Values.geth.maxpeers | default 200 }} \
+                --nousb \
+                --syncmode={{ .Values.geth.syncmode }} \
+                --gcmode={{ .Values.geth.gcmode }} \
+                --consoleformat=json \
+                --consoleoutput=stdout \
+                --verbosity={{ .Values.geth.verbosity }} \
+                --vmodule={{ .Values.geth.vmodule }} \
+                ${ADDITIONAL_FLAGS}
+            volumeMounts:
+              - name: data
+                mountPath: /root/.celo
+          containers:
+          - name: gsutil-save-data
+            image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
+            imagePullPolicy: Always
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+                [ ! -d /root/.celo/celo/chaindata ] && exit 0
+                upload_file() {
+                  ext=$1
+                  d=$(date +%F)
+                  gsutil -m cp chaindata.tar.$ext gs://{{ .Values.geth.gstorage_data_bucket }}/chaindata-"$d".tar.$ext
+                  gsutil -m cp gs://{{ .Values.geth.gstorage_data_bucket }}/chaindata-"$d".tar.$ext gs://{{ .Values.geth.gstorage_data_bucket }}/chaindata-latest.tar.$ext
+                  rm -f chaindata.tar.$ext
+                }
+                cd /root/.celo/celo
+                {{- if .Values.formats.use_zstd }}
+                ext="zst"
+                apt update && apt install -y zstd
+                ZSTD_CLEVEL=1 tar --zstd -cf chaindata.tar.$ext chaindata/
+                upload_file $ext
+                {{- end -}}
+                {{- if .Values.formats.use_lz4 }}
+                ext="lz4"
+                apt update && apt install -y lz4
+                tar cvf - chaindata/ | lz4 > chaindata.tar.$ext
+                upload_file $ext
+                {{- end -}}
+                {{- if .Values.formats.use_gzip }}
+                ext="gz"
+                tar cvzf chaindata.tar.$ext chaindata/
+                upload_file $ext
+                {{- end }}
+            volumeMounts:
+            - name: data
+              mountPath: /root/.celo
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: {{ template "common.fullname" . }}-data
