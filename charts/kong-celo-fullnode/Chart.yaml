@@ -9,11 +9,11 @@ type: application
 dependencies:
 - name: celo-fullnode
   repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
-  version: "0.4.0"
+  version: "~0.4.0"
   alias: celo_fullnode
 - name: common
   repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
-  version: "0.2.0"
+  version: "~0.2.0"
 maintainers:
   - name: cLabs
     email: devops@clabs.co
