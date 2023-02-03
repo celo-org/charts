@@ -1,4 +1,4 @@
-# -- Chart name override
+# -- Chart name override trigger
 nameOverride: ""
 # -- Chart full name override
 fullnameOverride: ""
