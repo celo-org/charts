@@ -1,0 +1,42 @@
+---
+geth:
+  # -- Size of PVC to create for geth data
+  diskSizeGB: 300
+  # -- celo-blockchain image to use
+  image:
+    repository: us.gcr.io/celo-org/geth
+    tag: 1
+    imagePullPolicy: Always
+  # -- enable use-in-memory-discovery-table celo-blockchain flag
+  in_memory_discovery_table: false
+  # -- resources to allocate to geth container
+  resources:
+    requests:
+      memory: "4Gi"
+      cpu: "2"
+  # -- GCS bucket to upload chain backups to
+  gstorage_data_bucket: "celo-chain-backup/mainnet"
+  # -- Verbosity level for celo-blockchain
+  verbosity: 2
+  # -- Custom log level for celo-blockchain
+  vmodule: ""
+  # -- Syncmode for celo-blockchain
+  syncmode: "full"
+  # -- GCmode for celo-blockchain
+  gcmode: "full"
+  # -- Enable metrics options
+  metrics: true
+
+
+# -- Which format enable to compress. Multiple can be enabled at the same time.
+formats:
+  use_zstd: true
+  use_lz4: false
+  use_gzip: false
+
+# -- GCP Service Account to use for uploading chain backups (using workload identity)
+serviceAccount: chaindata-upload@celo-testnet.iam.gserviceaccount.com
+
+# -- Enable profiling options
+pprof:
+  enabled: false

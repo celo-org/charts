@@ -3,27 +3,27 @@
 
 {{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
 
-- [akeyless-gcp-producer](#akeyless-gcp-producer)
-  - [Chart requirements](#chart-requirements)
-    - [Required sub-charts](#required-sub-charts)
+- [daily-chain-backup](#daily-chain-backup)
   - [Chart releases](#chart-releases)
-  - [Values](#values)
-
-## Chart requirements
-
-- Tested with Kubernetes 1.24
-- Tested with Helm v3.10.1
-
-### Required sub-charts
-
-{{ template "chart.requirementsTable" . }}
+  - [Basic chart operation](#basic-chart-operation)
 
 ## Chart releases
 
-Chart is released to oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci/akeyless-gcp-producer repository automatically every commit to `main` branch.
+Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/daily-chain-backup repository automatically every commit to `master` branch.
 Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
 This process is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
 and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
+
+## Basic chart operation
+
+To import this chart into your chart, add the following to your `requirements.yaml` file:
+
+```yaml
+dependencies:
+  - name: daily-chain-backup
+    repository: oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci
+    version: {{ template "chart.version" . }}
+```
 
 {{ template "chart.valuesSection" . }}
 
