@@ -1,0 +1,12 @@
+---
+# -- Check values at [celo-fullnode chart](../celo-fullnode/README.md)
+celo_fullnode:
+  replicaCount: 1
+  geth:
+    gcmode: lightest
+    resources:
+      requests:
+        cpu: "1"
+        memory: 2Gi
+  storage:
+    enable: false
