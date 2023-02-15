@@ -126,7 +126,7 @@ fi
     # Taking local ip for natting (probably this means pod cannot have incomming connection from external LAN peers)
     set +u
     if [[ -z $NAT_IP ]]; then
-      if [[ -f /root/.celo/ipAddress]]; then
+      if [[ -f /root/.celo/ipAddress ]]; then
         NAT_IP=$(cat /root/.celo/ipAddress)
       else
         NAT_IP=$(hostname -i)
