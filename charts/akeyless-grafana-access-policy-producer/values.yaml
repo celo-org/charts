@@ -61,7 +61,7 @@ ingress:
 
   # -- TLS secret for exposing safe-client-gateway with https. See values.yaml for an example.
   tls: []
-  # - secretName: akeyless-grafana-access-policy-tls
+  # - secretName: akeyless-grafana-access-policy-producer-tls
   #   hosts:
   #      - akeyless-grafana-access-policy.akeyless.celo-networks-dev.org
 
