@@ -1,0 +1,182 @@
+name: Helm Charts test and docs
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      # Run if any of the following files are changed
+      - 'charts/**/templates/**'
+      - 'charts/**/values.yaml'
+      - 'charts/**/Chart.yaml'
+      - 'charts/**/README.md.gotmpl'
+
+jobs:
+
+  helm-test:
+    runs-on: 'ubuntu-latest'
+
+    env:
+      HELM_VERSION: "v3.10.1"
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: "Checkout current PR"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "Install Helm"
+        uses: azure/setup-helm@v1
+        with:
+          version: "${{ env.HELM_VERSION }}"
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          check-latest: true
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.3.1
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            changed=$(echo $changed | tr '\n' ' ')
+            echo "changed_charts=$changed" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run chart-testing (lint)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --target-branch ${{ github.event.repository.default_branch }}
+
+      - name: Create kind cluster
+        if: steps.list-changed.outputs.changed == 'true'
+        uses: helm/kind-action@v1.4.0
+
+      - name: 'Authenticate to Google Cloud'
+        if: steps.list-changed.outputs.changed == 'true'
+        uses: 'google-github-actions/auth@ceee102ec2387dd9e844e01b530ccd4ec87ce955' # v0.8.0
+        with:
+          workload_identity_provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-charts/providers/github-by-repos
+          service_account: 'pull-helm-charts@devopsre.iam.gserviceaccount.com'
+
+      - name: 'Set up Cloud SDK'
+        if: steps.list-changed.outputs.changed == 'true'
+        uses: 'google-github-actions/setup-gcloud@v0'
+
+      - name: "Login to Artifact Registry"
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          set -o errexit
+
+          # desired cluster name; default is "kind"
+          KIND_CLUSTER_NAME="chart-testing"
+          
+          # create a temp file for the docker config
+          echo "Creating temporary docker client config directory ..."
+          DOCKER_CONFIG=$(mktemp -d)
+          export DOCKER_CONFIG
+          trap 'echo "Removing ${DOCKER_CONFIG}/*" && rm -rf ${DOCKER_CONFIG:?}' EXIT
+          
+          echo "Creating a temporary config.json"
+          # This is to force the omission of credsStore, which is automatically
+          # created on supported system. With credsStore missing, "docker login"
+          # will store the password in the config.json file.
+          # https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+          cat <<EOF >"${DOCKER_CONFIG}/config.json"
+          {
+           "auths": { "gcr.io": {} }
+          }
+          EOF
+          # login to gcr in DOCKER_CONFIG using an access token
+          # https://cloud.google.com/container-registry/docs/advanced-authentication#access_token
+          echo "Logging in to GCR in temporary docker client config directory ..."
+          gcloud auth application-default print-access-token | \
+            docker login -u oauth2accesstoken --password-stdin https://us-west1-docker.pkg.dev
+          
+          # setup credentials on each node
+          echo "Moving credentials to kind cluster name='${KIND_CLUSTER_NAME}' nodes ..."
+          for node in $(kind get nodes --name "${KIND_CLUSTER_NAME}"); do
+            # the -oname format is kind/name (so node/name) we just want name
+            node_name=${node#node/}
+            # copy the config to where kubelet will look
+            docker cp "${DOCKER_CONFIG}/config.json" "${node_name}:/var/lib/kubelet/config.json"
+            # restart kubelet to pick up the config
+            docker exec "${node_name}" systemctl restart kubelet.service
+          done
+          
+          echo "Done!"
+
+      - name: Install dependencies - Kong CRDs
+        if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/kong-celo-fullnode')
+        # contains(join(steps.updated_files.outputs.all), 'charts/kong-celo-fullnode/')
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/Kong/kong-operator/main/helm-charts/kong/crds/custom-resource-definitions.yaml
+
+      - name: "Templating charts"
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          for chart in ${{ steps.list-changed.outputs.changed_charts }}; do
+            if [ -d ./${chart} ]; then
+              # Only template 'application' charts (libraries cannot be templated)
+              if cat "./${chart}/Chart.yaml" | grep -E '^type' | grep 'application' >/dev/null; then
+                echo "Templating ${chart}."
+                helm template "./${chart}/" -f "./${chart}/values.yaml"
+                # Skipping celo-fullnode-backups as kind has not volumesnapshot and gemini cannot be installed
+                if [[ "${chart}" != "charts/celo-fullnode-backups" ]]; then
+                  echo "Validating ${chart} templates."
+                  # Check against K8s API
+                  helm template "./${chart}/" -f "./${chart}/values.yaml" --validate
+                fi
+              fi
+            else
+              echo "Skipping ${chart} as it seems it has been deleted."
+            fi
+          done
+
+      - name: Run chart-testing (install)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: >
+          ct install
+          --target-branch ${{ github.event.repository.default_branch }}
+          --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup 
+          --chart-repos bitnami=https://charts.bitnami.com/bitnami
+
+  helm-docs:
+    runs-on: 'ubuntu-latest'
+
+    needs: 'helm-test'
+
+    env:
+      HELM_DOCS_VERSION: "1.11.0"
+
+    permissions:
+      contents: 'write'
+
+    steps:
+      - name: 'Checkout current PR'
+        uses: actions/checkout@v2
+
+      - name: 'install helm-docs'
+        run: |
+          cd /tmp
+          wget https://github.com/norwoodj/helm-docs/releases/download/v${{env.HELM_DOCS_VERSION}}/helm-docs_${{env.HELM_DOCS_VERSION}}_Linux_x86_64.tar.gz
+          tar -xvf helm-docs_${{env.HELM_DOCS_VERSION}}_Linux_x86_64.tar.gz
+          sudo mv helm-docs /usr/local/sbin
+
+      - name: 'Run helm-docs in chaged charts'
+        run: |
+          helm-docs 
+
+      - name: "Commit updated README.md to the branch if changed"
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: '[Automatic] - Update chart README.md'
+          file_pattern: 'charts/**/README.md'

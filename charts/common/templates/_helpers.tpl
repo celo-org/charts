@@ -3,8 +3,8 @@
 Expand the name of the chart.
 */}}
 {{- define "common.name" -}}
-{{- default $.Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
+{{- default $.Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
 
 {{/*
 Create a default fully qualified app name.
@@ -12,46 +12,46 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "common.fullname" -}}
-{{- if .Values.fullnameOverride -}}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
 {{- $name := "" -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+{{- end }}
 
 {{- define "common.chart" -}}
-{{- printf "%s-%s" $.Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
+{{- printf "%s-%s" $.Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end }}
 
 {{- define "common.app" -}}
-{{- default $.Chart.Name .Values.appOverride | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
+{{- default $.Chart.Name .Values.appOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
 
 {{- define "common.standard.labels" -}}
 {{- include "common.standard.short_labels" . }}
 chart: {{ template "common.chart" . }}
 heritage: {{ .Release.Service }}
-{{- end -}}
+{{- end }}
 
 {{- define "common.standard.short_labels" -}}
 app: {{ template "common.app" . }}
 release: {{ .Release.Name }}
-{{- end -}}
+{{- end }}
 
 {{- define "common.conditional-init-genesis-container" -}}
 {{- $production_envs := list "mainnet" "rc1" "baklava" "alfajores" -}}
-{{- if not (has .Values.genesis.network $production_envs) -}}
-{{ include "common.init-genesis-container" . }}
-{{- end -}}
-{{- end -}}
+{{- if not (has .Values.genesis.network $production_envs) }}
+{{- include "common.init-genesis-container" . }}
+{{- end }}
+{{- end }}
 
 {{- define "common.init-genesis-container" -}}
-{{- $network := ternary "rc1" .Values.genesis.network ( eq .Values.genesis.network "mainnet" ) -}}
+{{- $network := ternary "rc1" .Values.genesis.network ( eq .Values.genesis.network "mainnet" ) }}
 - name: init-genesis
   image: {{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}
   imagePullPolicy: {{ .Values.geth.image.imagePullPolicy }}
@@ -79,8 +79,8 @@ release: {{ .Release.Name }}
   {{- if eq (default .Values.genesis.useGenesisFileBase64 "false") "true" }}
   - name: config
     mountPath: /var/geth
-  {{ end -}}
-{{- end -}}
+  {{- end }}
+{{- end }}
 
 {{- define "common.import-geth-account-container" -}}
 - name: import-geth-account
@@ -97,7 +97,7 @@ release: {{ .Release.Name }}
   - name: account
     mountPath: "/root/.celo/account"
     readOnly: true
-{{- end -}}
+{{- end }}
 
 {{- define "common.bootnode-flag-script" -}}
 if [[ "{{ .Values.genesis.network }}" == "alfajores" || "{{ .Values.genesis.network }}" == "baklava" ]]; then
@@ -126,7 +126,7 @@ fi
     # Taking local ip for natting (probably this means pod cannot have incomming connection from external LAN peers)
     set +u
     if [[ -z $NAT_IP ]]; then
-      if [[ -f /root/.celo/ipAddress]]; then
+      if [[ -f /root/.celo/ipAddress ]]; then
         NAT_IP=$(cat /root/.celo/ipAddress)
       else
         NAT_IP=$(hostname -i)
@@ -196,17 +196,17 @@ fi
 
     exec geth \
       --port $PORT \
-    {{- $mainnet_envs := list "mainnet" "rc1" -}}
-    {{- if not (has .Values.genesis.network $mainnet_envs) }}
+      {{- $mainnet_envs := list "mainnet" "rc1" -}}
+      {{- if not (has .Values.genesis.network $mainnet_envs) }}
       $BOOTNODE_FLAG \
-    {{- end }}
-      --light.serve={{- if kindIs "invalid" .light_serve -}}90{{- else -}}{{- .light_serve -}}{{- end }} \
-      --light.maxpeers={{- if kindIs "invalid" .light_maxpeers -}}1000{{- else -}}{{- .light_maxpeers -}}{{- end }} \
-      --maxpeers={{- if kindIs "invalid" .maxpeers -}}1200{{- else -}}{{- .maxpeers -}}{{- end }} \
+      {{- end }}
+      --light.serve={{ if kindIs "invalid" .light_serve }}90{{ else }}{{ .light_serve }}{{ end }} \
+      --light.maxpeers={{ if kindIs "invalid" .light_maxpeers }}1000{{ else }}{{ .light_maxpeers }}{{ end }} \
+      --maxpeers={{ if kindIs "invalid" .maxpeers }}1200{{ else }}{{ .maxpeers }}{{ end }} \
       --nousb \
       --syncmode={{ .syncmode | default .Values.geth.syncmode }} \
       --gcmode={{ .gcmode | default .Values.geth.gcmode }} \
-      --rpc.gascap={{- printf "%v" (default (int .Values.geth.rpc_gascap) (int .rcp_gascap)) }} \
+      --rpc.gascap={{ printf "%v" (default (int .Values.geth.rpc_gascap) (int .rcp_gascap)) }} \
       ${NAT_FLAG} \
       --consoleformat=json \
       --consoleoutput=stdout \
@@ -225,66 +225,69 @@ fi
     valueFrom:
       fieldRef:
         fieldPath: metadata.name
-{{- if .Values.aws }}
+  {{- if .Values.aws }}
   - name: HOST_IP
     valueFrom:
       fieldRef:
         fieldPath: status.hostIP
-{{- end }}
-{{ include  "common.geth-prestop-hook" . | indent 2 -}}
-{{/* TODO: make this use IPC */}}
-{{- if .expose }}
+  {{- end }}
+  {{- include  "common.geth-prestop-hook" . | nindent 2 -}}
+  {{/* TODO: make this use IPC */}}
+  {{- if .expose }}
   readinessProbe:
     exec:
       command:
       - /bin/sh
       - "-c"
       - |
-{{ include "common.node-health-check" (dict "maxpeers" .maxpeers "light_maxpeers" .light_maxpeers ) | indent 8 }}
+        {{- include "common.node-health-check" (dict "maxpeers" .maxpeers "light_maxpeers" .light_maxpeers ) | nindent 8 }}
     initialDelaySeconds: 20
     periodSeconds: 10
-{{- end }}
+  {{- end }}
   ports:
-{{- if .ports }}
-{{- range $index, $port := .ports }}
+  {{- if .ports }}
+  {{- range $index, $port := .ports }}
   - name: discovery-{{ $port }}
     containerPort: {{ $port }}
     protocol: UDP
   - name: ethereum-{{ $port }}
     containerPort: {{ $port }}
-{{- end }}
-{{- else }}
+  {{- end }}
+  {{- else }}
   - name: discovery
     containerPort: 30303
     protocol: UDP
   - name: ethereum
     containerPort: 30303
-{{- end }}
-{{- if .expose }}
+  {{- end }}
+  {{- if .expose }}
   - name: rpc
     containerPort: 8545
   - name: ws
     containerPort: {{ default .Values.geth.ws_port .ws_port }}
-{{ end }}
-{{- if .pprof }}
+  {{- end }}
+  {{- if .pprof }}
   - name: pprof
     containerPort: {{ .pprof_port }}
-{{ end }}
+  {{- end }}
+  {{- $resources := default .Values.geth.resources .resources -}}
+  {{- with $resources }}
   resources:
-{{ toYaml .Values.geth.resources | indent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   volumeMounts:
   - name: data
     mountPath: /root/.celo
   - name: data-shared
     mountPath: /data-shared
-{{- if .ethstats }}
+  {{- if .ethstats }}
   - name: account
     mountPath: /root/.celo/account
     readOnly: true
-{{- end }}
+  {{- end }}
 {{- end }}
 
-{{- define "common.geth-prestop-hook" }}
+{{- define "common.geth-prestop-hook" -}}
 lifecycle:
   preStop:
     exec:
@@ -297,13 +300,13 @@ kind: ConfigMap
 metadata:
   name: {{ template "common.fullname" . }}-geth-config
   labels:
-{{ include "common.standard.labels" .  | indent 4 }}
+    {{- include "common.standard.labels" .  | nindent 4 }}
 data:
   networkid: {{ $.Values.genesis.networkId | quote }}
-{{- if eq (default $.Values.genesis.useGenesisFileBase64 "false") "true" }}
+  {{- if eq (default $.Values.genesis.useGenesisFileBase64 "false") "true" }}
   genesis.json: {{ $.Values.genesis.genesisFileBase64 | b64dec | quote }}
-{{- end -}}
-{{- end -}}
+  {{- end }}
+{{- end }}
 
 {{- define "common.celotool-full-node-statefulset-container" -}}
 - name: get-account
@@ -315,26 +318,26 @@ data:
     - |
       [[ $REPLICA_NAME =~ -([0-9]+)$ ]] || exit 1
       RID=${BASH_REMATCH[1]}
-      {{ if .proxy }}
+      {{- if .proxy }}
       # To allow proxies to scale up easily without conflicting with keys of
       # proxies associated with other validators
       KEY_INDEX=$(( ({{ .validator_index }} * 10000) + $RID ))
       echo {{ .validator_index }} > /root/.celo/validator_index
-      {{ else }}
+      {{- else }}
       KEY_INDEX=$RID
-      {{ end }}
+      {{- end }}
       echo "Generating private key with KEY_INDEX=$KEY_INDEX"
       celotooljs.sh generate bip32 --mnemonic "$MNEMONIC" --accountType {{ .mnemonic_account_type }} --index $KEY_INDEX > /root/.celo/pkey
       echo "Private key $(cat /root/.celo/pkey)"
       echo 'Generating address'
       celotooljs.sh generate account-address --private-key $(cat /root/.celo/pkey) > /root/.celo/address
-      {{ if .proxy }}
+      {{- if .proxy }}
       # Generating the account address of the validator
       echo "Generating the account address of the validator {{ .validator_index }}"
       celotooljs.sh generate bip32 --mnemonic "$MNEMONIC" --accountType validator --index {{ .validator_index }} > /root/.celo/validator_pkey
       celotooljs.sh generate account-address --private-key `cat /root/.celo/validator_pkey` > /root/.celo/validator_address
       rm -f /root/.celo/validator_pkey
-      {{ end }}
+      {{- end }}
       echo -n "Generating IP address for node: "
       if [ -z $IP_ADDRESSES ]; then
         echo 'No $IP_ADDRESSES'
@@ -387,7 +390,7 @@ data:
   volumeMounts:
   - name: data
     mountPath: /root/.celo
-{{- end -}}
+{{- end }}
 
 {{- define "common.node-health-check" -}}
 function isReady {
@@ -477,31 +480,33 @@ fi
   volumeMounts:
   - name: data
     mountPath: /root/.celo
-{{- end -}}
+{{- end }}
 
-{{- /* This template does not define ports that will be exposed */ -}}
+{{- /*
+* This template does not define ports that will be exposed
+*/}}
 {{- define "common.full-node-service-no-ports" -}}
 kind: Service
 apiVersion: v1
 metadata:
   name: {{ template "common.fullname" $ }}-{{ .svc_name | default .node_name }}-{{ .index }}{{ .svc_name_suffix | default "" }}
   labels:
-{{ include "common.standard.labels" .  | indent 4 }}
+    {{- include "common.standard.labels" .  | nindent 4 }}
     component: {{ .component_label }}
 spec:
   selector:
     app: {{ template "common.app" $ }}
     release: {{ $.Release.Name }}
     component: {{ .component_label }}
-{{ if .extra_selector -}}
-{{ .extra_selector | indent 4}}
-{{- end }}
+    {{- if .extra_selector }}
+    {{- .extra_selector | nindent 4 }}
+    {{- end }}
     statefulset.kubernetes.io/pod-name: {{ template "common.fullname" $ }}-{{ .node_name }}-{{ .index }}
   type: {{ .service_type }}
-{{- if .load_balancer_ip }}
+  {{- if .load_balancer_ip }}
   loadBalancerIP: {{ .load_balancer_ip }}
+  {{- end }}
 {{- end }}
-{{- end -}}
 
 {{/*
 * Specifies an env var given a dictionary, the name of the desired value, and
@@ -512,17 +517,17 @@ spec:
 - name: {{ .name }}
   value: "{{ (index .dict .value_name) }}"
 {{- end }}
-{{- end -}}
+{{- end }}
 
 {{/*
-Annotations to indicate to the prometheus server that this node should be scraped for metrics
+* Annotations to indicate to the prometheus server that this node should be scraped for metrics
 */}}
 {{- define "common.prometheus-annotations" -}}
 {{- $pprof := .Values.pprof | default dict -}}
 prometheus.io/scrape: "true"
-prometheus.io/path:  "{{ $pprof.path | default "/debug/metrics/prometheus" }}"
+prometheus.io/path: "{{ $pprof.path | default "/debug/metrics/prometheus" }}"
 prometheus.io/port: "{{ $pprof.port | default 6060 }}"
-{{- end -}}
+{{- end }}
 
 {{- define "common.remove-old-chaindata" -}}
 - name: remove-old-chaindata
@@ -557,9 +562,11 @@ prometheus.io/port: "{{ $pprof.port | default 6060 }}"
     requests:
       cpu: "1"
       memory: 2Gi
-{{- end -}}
+{{- end }}
 
-{{- /* Needs a serviceAccountName in the pod with permissions to access gstorage */ -}}
+{{/*
+* Needs a serviceAccountName in the pod with permissions to access gstorage
+*/}}
 {{- define "common.gsutil-sync-data-init-container" -}}
 - name: gsutil-sync-data
   image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
@@ -575,9 +582,16 @@ prometheus.io/port: "{{ $pprof.port | default 6060 }}"
      fi
      mkdir -p /root/.celo/celo
      cd /root/.celo/celo
+     {{- if .Values.geth.gstorage_lz4 | default "true" }}
+     apt update && apt install -y lz4
+     curl -L https://storage.googleapis.com/{{ .Values.geth.gstorage_data_bucket }}/chaindata-latest.tar.lz4 --output chaindata.tar.lz4
+     lz4 -dc chaindata.tar.lz4 | tar -xvf -
+     rm -f chaindata.tar.lz4
+     {{- else }}
      curl -L https://storage.googleapis.com/{{ .Values.geth.gstorage_data_bucket }}/chaindata-latest.tar.gz --output chaindata.tar.gz
      tar -xzvf chaindata.tar.gz -C /root/.celo/celo
      rm -f chaindata.tar.gz
+     {{- end }}
   volumeMounts:
   - name: data
     mountPath: /root/.celo
@@ -585,9 +599,9 @@ prometheus.io/port: "{{ $pprof.port | default 6060 }}"
     requests:
       cpu: "1"
       memory: 2Gi
-{{- end -}}
+{{- end }}
 
-{{- define "common.geth-add-metrics-pprof-config" }}
+{{- define "common.geth-add-metrics-pprof-config" -}}
 
 {{- if .metrics | default true }}
 ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --metrics"
@@ -606,7 +620,7 @@ fi
 {{- end }}
 {{- end }}
 
-{{- define "common.geth-http-ws-flags" }}
+{{- define "common.geth-http-ws-flags" -}}
 
 # Check the format of http/rcp and ws cmd arguments
 RPC_APIS={{ .rpc_apis | default "eth,net,web3,debug" | quote }}

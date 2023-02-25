@@ -1,0 +1,5 @@
+---
+geth:
+  diskSizeGB: 300
+  flags: --datadir=/root/.celo
+  gstorage_data_bucket: celo-chain-backup/mainnet

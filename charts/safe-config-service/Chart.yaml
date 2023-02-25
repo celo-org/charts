@@ -1,9 +1,10 @@
+---
 apiVersion: v2
 appVersion: "0.1.0"
 description: Helm chart for deploying Celo Safe Config Service
 type: application
 home: https://celo.org
-icon: https://pbs.twimg.com/profile_images/1493309659599486986/5ETdHxeE_400x400.jpg
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
 name: safe-config-service
 sources:
   - https://celo.org
@@ -15,11 +16,11 @@ keywords:
   - Celo
   - Safe
   - Config
-version: 1.0.1
+version: 1.0.3
 dependencies:
-- name: postgresql
-  version: 11.9.11
-  repository: https://charts.bitnami.com/bitnami
+  - name: postgresql
+    version: 11.9.11
+    repository: https://charts.bitnami.com/bitnami
 maintainers:
   - name: cLabs
     email: devops@clabs.co

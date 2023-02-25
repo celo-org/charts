@@ -32,7 +32,7 @@ jobs:
       - name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@ceee102ec2387dd9e844e01b530ccd4ec87ce955' # v0.8.0
         with:
-          workload_identity_provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-charts/providers/github-by-repos
+          workload_identity_provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-charts-main/providers/github-by-repos
           service_account: 'publish-helm-charts@devopsre.iam.gserviceaccount.com'
 
       # Gcloud CLI required for login to Artifact Registry

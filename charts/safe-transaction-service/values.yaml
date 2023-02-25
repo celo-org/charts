@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- Chart name override
+# -- Chart name override trigger
 nameOverride: ""
 # -- Chart full name override
 fullnameOverride: ""
@@ -12,13 +12,13 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: us-central1-docker.pkg.dev/clabs-gnosis-safe/safe-transaction-service
+  repository: us-west1-docker.pkg.dev/devopsre/clabs-public-images/safe-transaction-service
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag
   # Please override in terraform via
   # celo-org/infrastructure/terraform-modules/clabs-gnosis-safe-staging/files/transaction-service-values.yaml
-  tag: "61ee03ee2f712941c2b319d1cf2240c414a2177c"
+  tag: latest
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -129,7 +129,7 @@ flower:
     enabled: false
     # -- Flower Ingress class name
     className: nginx
-    # -- Flower custom Ingress annotations 
+    # -- Flower custom Ingress annotations
     annotations: {}
 
     # -- Flower list of hosts to expose flower component. See values.yaml for an example.
@@ -158,7 +158,7 @@ web:
     enabled: false
     # -- Web Ingress class name
     className: nginx
-    # -- Web custom Ingress annotations 
+    # -- Web custom Ingress annotations
     annotations: {}
 
     # -- Web list of hosts to expose web component. See values.yaml for an example.

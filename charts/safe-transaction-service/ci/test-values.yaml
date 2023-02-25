@@ -1,0 +1,29 @@
+---
+env:
+  djangoSecretKey: test
+  ethereumNodeUrl: https://alfajores-forno.celo-testnet.org
+  clientGatewayUri: "testing"
+  webhookToken: "http://testing"
+  djangoSettingsModule: config.settings.production
+
+postgresql:
+  image:
+    tag: "13.8.0"
+
+redis:
+  image:
+    tag: "6.2.7"
+  replica:
+    replicaCount: 1
+
+rabbitmq:
+  auth:
+    password: test
+
+global:
+  postgresql:
+    auth:
+      postgresPassword: test
+      database: "database"
+  redis:
+    password: test

@@ -1,0 +1,14 @@
+---
+replicaCount: 1
+
+storage:
+  storageClass: standard
+  dataSource: {}
+
+geth:
+  service_type: ClusterIP
+  resources:
+    requests:
+      memory: 500Mi
+      cpu: 0.5
+  syncmode: lightest

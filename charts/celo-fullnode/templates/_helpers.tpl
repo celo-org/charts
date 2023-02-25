@@ -3,8 +3,8 @@
 Expand the name of the chart.
 */}}
 {{- define "celo-fullnode.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
 
 {{/*
 Create a default fully qualified app name.
@@ -12,24 +12,24 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "celo-fullnode.fullname" -}}
-{{- if .Values.fullnameOverride -}}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+{{- end }}
 
 {{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "celo-fullnode.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end }}
 
 {{- define "celo-fullnode.rpc-ports" -}}
 - port: 8545
@@ -40,7 +40,7 @@ Create chart name and version as used by the chart label.
   targetPort: ws
   protocol: TCP
   name: ws
-{{- end -}}
+{{- end }}
 
 {{/*
  * The easiest way to get the public IP for the node (VM) that a EKS pod is on
@@ -48,24 +48,24 @@ Create chart name and version as used by the chart label.
  * from the downward k8s API.
 */}}
 {{- define "celo-fullnode.aws-subnet-specific-nat-ip" -}}
-{{- if .Values.aws -}}
+{{- if .Values.aws }}
 PUBLIC_IP=$(wget https://ipinfo.io/ip -O - -q)
 NAT_FLAG="--nat=extip:${PUBLIC_IP}"
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}
 
 {{/*
  * Blockscout indexer requests can take longer than default
  * request timeouts.
  * Adding a dummy comment (template .extra_setup) because helm indenting problems if this template is empty
 */}}
-{{- define "celo-fullnode.extra_setup" }}
+{{- define "celo-fullnode.extra_setup" -}}
 # template .extra_setup
-{{- include  "celo-fullnode.aws-subnet-specific-nat-ip" . }}
+{{- include "celo-fullnode.aws-subnet-specific-nat-ip" . }}
 {{- if .Values.geth.increase_timeouts }}
 ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --http.timeout.read 600 --http.timeout.write 600 --http.timeout.idle 2400"
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}
 
 {{/*
  * This will create an HTTP server at .server_port
@@ -92,4 +92,4 @@ ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --http.timeout.read 600 --http.timeout.wri
     subPath: health-check.sh
   - name: data-shared
     mountPath: /data-shared
-{{- end -}}
+{{- end }}

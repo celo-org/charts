@@ -36,17 +36,22 @@ spec:
             - -c
             args:
               - |
+                {{- if .Values.cronjob.enable_date }}
                 EXISTING_PVCS=$(kubectl get pvc -o go-template --template '{{`{{`}}range .items{{`}}`}}{{`{{`}}.metadata.name{{`}}`}} {{`{{`}}.metadata.creationTimestamp{{`}}`}}{{`{{`}}"\n"{{`}}`}}{{`{{`}}end{{`}}`}}' | awk '$2 <= "'$(date -d'{{ .Values.cronjob.older }}' -Ins --utc | sed 's/+0000/Z/')'" { print $1 }')
-
+                {{- else }}
+                EXISTING_PVCS=$(kubectl get pvc --no-headers -o custom-columns=":metadata.name")
+                {{- end }}
                 USED_PVCS=$(kubectl get pods -o=json | jq -r '.items[].spec | select( has ("volumes") ).volumes[] | select( has ("persistentVolumeClaim") ).persistentVolumeClaim.claimName')
 
-                for i in $EXISTING_PVCS
-                do
-                  if [[ ! " ${USED_PVCS[*]} " =~ " ${i} " ]]
-                  then
-                    kubectl delete pvc $i
+                {{- if .Values.cronjob.filter }}
+                # Filter to keep PVCs with string {{ .Values.cronjob.filter }}
+                EXISTING_PVCS=$(echo "$EXISTING_PVCS" | grep "{{ .Values.cronjob.filter }}")
+                {{- end }}
+                while IFS= read -r pvc; do
+                  if [[ ! " ${USED_PVCS[*]} " =~ ${pvc} ]]; then
+                    kubectl delete pvc "$pvc" {{ if .Values.cronjob.dry_run }}--dry-run=server{{ end }}
                   fi
-                done
+                done <<< "$EXISTING_PVCS"
 
                 exit 0
           restartPolicy: OnFailure

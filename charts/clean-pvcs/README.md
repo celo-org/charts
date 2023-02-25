@@ -1,6 +1,6 @@
 # clean-pvcs
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 Delete PVCs not mounted for some time
 
@@ -17,6 +17,9 @@ Delete PVCs not mounted for some time
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
+| cronjob.dry_run | bool | `true` | If enabling "dry-run" mode (do not delete the pvcs and test what would be deleted) |
+| cronjob.enable_date | bool | `true` | Enable checking the date |
+| cronjob.filter | string | `""` | Filter PVCs with this substring in name |
 | cronjob.older | string | `"now-4 hours"` | Delete PVCs older than (GNU date style) |
 | cronjob.schedule | string | `"0 1 * * *"` | Cronjob schedule |
 | fullnameOverride | string | `""` | Chart full name override |

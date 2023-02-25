@@ -58,13 +58,11 @@ storage:
     # resize.topolvm.io/inodes-threshold: 90%
   # -- Size of the persistent volume claim for the celo-blockchain statefulset
   size: 20Gi
-  snapshot:
-    # -- Enable the use of a snapshot as a source for the celo-blockchain statefulset. Snapshot resource must exist in the same namepace
-    enabled: false
-    # -- Class for the snapshot
-    kind: VolumeSnapshot
-    # -- Name of the snapshot (must exist in the same namespace)
-    name: forno-snapshot
+  # -- Include a dataSource in the volumeClaimTemplates
+  dataSource: {}
+    # apiGroup: snapshot.storage.k8s.io
+    # kind: VolumeSnapshot
+    # name: forno-snapshot
 
 geth:
   # -- Image for the celo-blockchain statefulset
@@ -131,6 +129,20 @@ geth:
     serve: 70
   # -- WS-RPC server listening port
   ws_port: 8546
+  # -- Pod Affinity
+  ## see https://www.verygoodsecurity.com/blog/posts/kubernetes-multi-az-deployments-using-pod-anti-affinity
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: component
+              operator: In
+              values:
+              - celo-fullnode
+          topologyKey: failure-domain.beta.kubernetes.io/zone
+        weight: 100
   # -- HPA configuration for celo-blockchain statefulset. Check official documentation for more info
   autoscaling:
     # -- Enable HPA for celo-blockchain statefulset
@@ -188,4 +200,3 @@ pprof:
   enabled: true
   path: /debug/metrics/prometheus
   port: 6060
-
