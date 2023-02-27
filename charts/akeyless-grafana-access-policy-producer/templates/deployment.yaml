@@ -44,11 +44,11 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: {{ required "Require .Values.service.createPath" .Values.env.createPath }}
+              path: {{ required "Require .Values.service.createPath" .Values.service.createPath }}
               port: http
           readinessProbe:
             httpGet:
-              path: {{ required "Require .Values.service.createPath" .Values.env.createPath }}
+              path: {{ required "Require .Values.service.createPath" .Values.service.createPath }}
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
