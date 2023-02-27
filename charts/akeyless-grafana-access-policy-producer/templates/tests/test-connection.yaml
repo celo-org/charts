@@ -8,8 +8,8 @@ metadata:
     "helm.sh/hook": test
 spec:
   containers:
-    - name: wget
+    - name: nc
       image: busybox
-      command: ['wget']
+      command: ['nc']
       args: ['{{ include "akeyless-grafana-access-policy-producer.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never
