@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "akeyless-grafana-access-policy-producer.fullname" . }}-test-connection"
+  labels:
+    {{- include "akeyless-grafana-access-policy-producer.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: nc
+      image: busybox
+      command: ['nc']
+      args: ['{{ include "akeyless-grafana-access-policy-producer.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
