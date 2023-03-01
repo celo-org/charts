@@ -1,6 +1,6 @@
 # akeyless-grafana-access-policy-producer
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 Helm Chart for Grafana Access Policy Producer
 
@@ -38,7 +38,6 @@ Helm Chart for Grafana Access Policy Producer
 | replicaCount | int | `1` |  |
 | resources | object | `{}` | Container resources |
 | securityContext | object | `{}` |  |
-| service.createPath | string | `"/sync/create"` | Path create requests listen on |
 | service.port | int | `8080` | Kubernetes Service Type |
 | service.type | string | `"ClusterIP"` | Kubernetes Service Type |
 | serviceAccount.annotations | object | `{}` |  |

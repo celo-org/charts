@@ -44,8 +44,6 @@ service:
   type: ClusterIP
   # -- Kubernetes Service Type
   port: 8080
-  # -- Path create requests listen on
-  createPath: /sync/create
 
 ingress:
   # -- Ingress enabled
