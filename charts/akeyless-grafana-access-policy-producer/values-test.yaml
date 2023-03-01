@@ -42,7 +42,6 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 8080
-  createPath: /sync/create
 
 ingress:
   enabled: true
