@@ -1,3 +1,4 @@
+---
 name: Release Helm Chart
 
 on:
@@ -71,7 +72,9 @@ jobs:
         run: |
           echo "${{ steps.updated_files.outputs.all }}" | tr "," "\n" | grep 'charts/' | sed 's#^charts/##' | sed 's#/.*$##' | sort | uniq > changed_charts
           while read chart; do
-            helm dependency update --skip-refresh ./charts/${chart} 
+            # Skip if chart is not a directory (i.e: chart deleted)
+            [ -d charts/${chart} ] || continue
+            helm dependency update --skip-refresh ./charts/${chart}
             helm package -u charts/${chart}/
             helm push ./${chart}-*.tgz oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
           done <<EOF
