@@ -38,7 +38,6 @@ Helm Chart for Grafana Access Policy Producer
 | replicaCount | int | `1` |  |
 | resources | object | `{}` | Container resources |
 | securityContext | object | `{}` |  |
-| service.createPath | string | `"/sync/create"` | Path create requests listen on |
 | service.port | int | `8080` | Kubernetes Service Type |
 | service.type | string | `"ClusterIP"` | Kubernetes Service Type |
 | serviceAccount.annotations | object | `{}` |  |
