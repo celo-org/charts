@@ -4,4 +4,4 @@ metadata:
   name: {{ .Release.Name }}-postinstall-configmap
 data:
   grafana-hook.sh: |
-{{ .Files.Get "scripts/grafana-hook.sh" | indent 4 }}
+    {{ .Files.Get "scripts/grafana-hook.sh" | nindent 4 }}

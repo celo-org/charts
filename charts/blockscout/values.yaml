@@ -419,6 +419,7 @@ blockscout:
       # Example: segmentKey: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-segmentKey
       segmentKey: ""
       discordWebhookUrl: ""
+      grafanaCloud: ""
       dbUser: ""
       dbPassword: ""
       recaptcha:
@@ -456,3 +457,6 @@ infrastructure:
   affinity: {}
   # -- Default nodeSelector for the pods
   nodeSelector: {}
+
+# -- Add annotation with a message about the upgrade process trigger. Intended to be used by CD or deployment tool
+changeCause: ""
