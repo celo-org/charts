@@ -121,19 +121,19 @@ jobs:
         run: |
           kubectl apply -f https://raw.githubusercontent.com/Kong/kong-operator/main/helm-charts/kong/crds/custom-resource-definitions.yaml
 
-      - name: Install dependencies - ConfigConnector CRDs
-        if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/blockscout')
-        run: |
-          dir=${PWD%/*}
-          mkdir /tmp/k8s-config-connector
-          cd /tmp/k8s-config-connector
-          git init
-          git remote add -f origin https://github.com/GoogleCloudPlatform/k8s-config-connector
-          git config core.sparseCheckout true
-          echo "crds/*" >> .git/info/sparse-checkout
-          git pull origin master
-          kubectl apply -f crds/
-          cd $dir
+      # - name: Install dependencies - ConfigConnector CRDs
+      #   if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/blockscout')
+      #   run: |
+      #     dir=${PWD%/*}
+      #     mkdir /tmp/k8s-config-connector
+      #     cd /tmp/k8s-config-connector
+      #     git init
+      #     git remote add -f origin https://github.com/GoogleCloudPlatform/k8s-config-connector
+      #     git config core.sparseCheckout true
+      #     echo "crds/*" >> .git/info/sparse-checkout
+      #     git pull origin master
+      #     kubectl apply -f crds/
+      #     cd $dir
 
       - name: "Templating charts"
         if: steps.list-changed.outputs.changed == 'true'
@@ -161,7 +161,7 @@ jobs:
         run: >
           ct install
           --target-branch ${{ github.event.repository.default_branch }}
-          --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup
+          --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup,blockscout
           --chart-repos bitnami=https://charts.bitnami.com/bitnami
 
   helm-docs:
