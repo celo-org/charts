@@ -80,5 +80,5 @@ spec:
             name: {{ $.Release.Name }}-web
             port:
               number: 4000
-  {{- end }}
-{{- end}}
+  {{- end -}}
+{{- end -}}
