@@ -45,7 +45,7 @@ release: {{ .Release.Name }}
 
 {{- define "common.conditional-init-genesis-container" -}}
 {{- $production_envs := list "mainnet" "rc1" "baklava" "alfajores" -}}
-{{- if not (has .Values.genesis.network $production_envs) -}}
+{{- if not (has .Values.genesis.network $production_envs) }}
 {{- include "common.init-genesis-container" . }}
 {{- end }}
 {{- end }}
@@ -558,6 +558,10 @@ prometheus.io/port: "{{ $pprof.port | default 6060 }}"
   volumeMounts:
   - name: data
     mountPath: /root/.celo
+  resources:
+    requests:
+      cpu: "1"
+      memory: 2Gi
 {{- end }}
 
 {{/*
