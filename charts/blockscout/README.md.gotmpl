@@ -1,0 +1,61 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+- [blockscout](#blockscout)
+  - [Chart requirements](#chart-requirements)
+  - [Chart releases](#chart-releases)
+  - [More relevant values](#more-relevant-values)
+  - [Ingress setup](#ingress-setup)
+  - [Basic chart operation](#basic-chart-operation)
+  - [Values](#values)
+
+## Chart requirements
+
+- Tested with Kubernetes >=1.23
+- Tested with Helm >=v3.9.4
+
+Apart from that, this chart requires the next external dependencies to be accesible:
+
+- Celo archive node endpoints for RPC and WS (see [celo-fullnode](../celo-fullnode/README.md) chart, or use a public provider)
+- A Cloud SQL Postgres instance for the database.
+- Secret Manager with required secrets already provided and accesible. These secret references are defined in the [values.yaml](./values.yaml) file.
+
+## Chart releases
+
+Chart is released to oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout repository automatically every commit to `main` branch.
+Just remind yourself to bump the version of the chart in the [Chart.yaml](./Chart.yaml) file.
+This process is configured using GitHub Actions in the [helm_release.yml](../../.github/workflows/helm_release.yml)
+and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
+
+
+## Basic chart operation
+
+To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet` in namespace `celo` using `values-mainnet-node.yaml` custom values:
+
+```bash
+# Select the chart release to use
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version={{ template "chart.version" . }}" # Use remote chart and specific version
+CHART_RELEASE="./" # Use this local folder
+
+# (Only for local chart) Sync helm dependencies
+helm dependency update
+
+# (Optional) Render the chart template to check the templates
+helm template my-blockscout --create-namespace -f values-alfajores-blockscout2.yaml --namespace=celo --output-dir=/tmp "$CHART_RELEASE"
+
+# Installing the chart
+helm install my-blockscout --create-namespace -f values-alfajores-blockscout2.yaml --namespace=celo "$CHART_RELEASE"
+
+# (Optional) Check a diff when upgrading the chart
+# Using https://github.com/databus23/helm-diff
+helm diff -C5 upgrade my-blockscout -f values-alfajores-blockscout2.yaml --namespace=celo "$CHART_RELEASE"
+
+# Upgrade the chart
+helm upgrade my-blockscout -f values-alfajores-blockscout2.yaml --namespace=celo "$CHART_RELEASE"
+```
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}. To regenerate run `helm-docs` command at this folder.

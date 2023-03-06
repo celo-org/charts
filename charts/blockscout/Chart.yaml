@@ -1,0 +1,24 @@
+---
+apiVersion: v2
+name: blockscout
+version: 1.0.0
+appVersion: v2.0.4-beta
+description: Chart which is used to deploy Blockscout for Celo Networks
+home: https://explorer.celo.org
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+type: application
+sources:
+  - https://celo.org
+  - https://docs.celo.org
+  - https://clabs.co
+  - https://github.com/celo-org/blockscout
+  - https://github.com/blockscout/blockscout
+keywords:
+  - Celo
+  - Ethereum
+  - Blockchain
+  - Blockscout
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
