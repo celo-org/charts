@@ -65,28 +65,37 @@ blockscout:
       enabled: false
   metadataCrawler:
     enabled: true
-  archiveNodes:
-    jsonrpcHttpUrl: http://rc1staging-archivenodes-rpc:8545
-    jsonrpcWsUrl: ws://rc1staging-archivenodes-rpc:8545
-  fullNodes:
-    jsonrpcPublicHttp: https://forno.celo.org
+  shared:
+    epochRewards:
+      enabled: true
+    secrets:
+      segmentKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-segmentKey
+      dbUser: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-dbUser
+      dbPassword: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-dbPassword
+      grafanaCloud: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-grafanaCloud
+      recaptcha:
+        projectId: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaProjectId
+        siteKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaSiteKey
+        apiKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaApiKey
+        secretKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaSecretKey
+      erlang:
+        cookie: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-erlangCookie
+      campaignBannerApiUrl: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-campaignBannerApiUrl
+
+network:
+  name: Celo
+  networkID: 42220
+  nodes:
+    archiveNodes:
+      jsonrpcHttpUrl: http://rc1staging-archivenodes-rpc:8545
+      jsonrpcWsUrl: ws://rc1staging-archivenodes-rpc:8545
+    fullNodes:
+      jsonrpcPublicHttp: https://forno.celo.org
+
+infrastructure:
   metrics:
     enabled: true
-  epochRewards:
-    enabled: true
-  secrets:
-    segmentKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-segmentKey
-    dbUser: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-dbUser
-    dbPassword: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-dbPassword
-    grafanaCloud: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-grafanaCloud
-    recaptcha:
-      projectId: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaProjectId
-      siteKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaSiteKey
-      apiKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaApiKey
-      secretKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaSecretKey
-    erlang:
-      cookie: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-erlangCookie
-    campaignBannerApiUrl: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-campaignBannerApiUrl
-  chain:
-    subnetwork: Celo
-    networkID: 42220
+  gcp:
+    projectId: celo-testnet-production
+  cloudSql:
+    overrideGcpSa: ""
