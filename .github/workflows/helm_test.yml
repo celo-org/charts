@@ -79,13 +79,13 @@ jobs:
 
           # desired cluster name; default is "kind"
           KIND_CLUSTER_NAME="chart-testing"
-          
+
           # create a temp file for the docker config
           echo "Creating temporary docker client config directory ..."
           DOCKER_CONFIG=$(mktemp -d)
           export DOCKER_CONFIG
           trap 'echo "Removing ${DOCKER_CONFIG}/*" && rm -rf ${DOCKER_CONFIG:?}' EXIT
-          
+
           echo "Creating a temporary config.json"
           # This is to force the omission of credsStore, which is automatically
           # created on supported system. With credsStore missing, "docker login"
@@ -101,7 +101,7 @@ jobs:
           echo "Logging in to GCR in temporary docker client config directory ..."
           gcloud auth application-default print-access-token | \
             docker login -u oauth2accesstoken --password-stdin https://us-west1-docker.pkg.dev
-          
+
           # setup credentials on each node
           echo "Moving credentials to kind cluster name='${KIND_CLUSTER_NAME}' nodes ..."
           for node in $(kind get nodes --name "${KIND_CLUSTER_NAME}"); do
@@ -112,7 +112,7 @@ jobs:
             # restart kubelet to pick up the config
             docker exec "${node_name}" systemctl restart kubelet.service
           done
-          
+
           echo "Done!"
 
       - name: Install dependencies - Kong CRDs
@@ -120,6 +120,20 @@ jobs:
         # contains(join(steps.updated_files.outputs.all), 'charts/kong-celo-fullnode/')
         run: |
           kubectl apply -f https://raw.githubusercontent.com/Kong/kong-operator/main/helm-charts/kong/crds/custom-resource-definitions.yaml
+
+      - name: Install dependencies - ConfigConnector CRDs
+        if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/blockscout')
+        run: |
+          dir=${PWD%/*}
+          mkdir /tmp/k8s-config-connector
+          cd /tmp/k8s-config-connector
+          git init
+          git remote add -f origin https://github.com/GoogleCloudPlatform/k8s-config-connector
+          git config core.sparseCheckout true
+          echo "crds/*" >> .git/info/sparse-checkout
+          git pull origin master
+          kubectl apply -f crds/
+          cd $dir
 
       - name: "Templating charts"
         if: steps.list-changed.outputs.changed == 'true'
@@ -147,7 +161,7 @@ jobs:
         run: >
           ct install
           --target-branch ${{ github.event.repository.default_branch }}
-          --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup 
+          --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup,blockscout
           --chart-repos bitnami=https://charts.bitnami.com/bitnami
 
   helm-docs:
@@ -174,7 +188,7 @@ jobs:
 
       - name: 'Run helm-docs in chaged charts'
         run: |
-          helm-docs 
+          helm-docs
 
       - name: "Commit updated README.md to the branch if changed"
         uses: stefanzweifel/git-auto-commit-action@v4

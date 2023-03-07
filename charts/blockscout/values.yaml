@@ -1,0 +1,462 @@
+---
+ingressClassName: nginx
+
+blockscout:
+
+  # -- Configuraton for the eventStream component
+  eventStream:
+    # -- UpdateStrategy for eventStream deployment
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+    port: 4000
+    # -- resources for eventStream container
+    resources:
+      requests:
+        memory: 1000Mi
+        cpu: 2
+    # -- Enable the eventStream component
+    enableEventStream: false
+    # -- `BEANSTALKD_PORT` env for eventStream deployment
+    beanstalkdPort: ""
+    # -- `BEANSTALKD_HOST` env for eventStream deployment
+    beanstalkdHost: ""
+    # -- replicas for eventStream deployment
+    replicas: 0
+    # -- readinessProbe for eventStream container
+    readinessProbe: {}
+      # failureThreshold: 5
+      # httpGet:
+      #   path: /health/readiness
+      #   port: health
+      #   scheme: HTTP
+      # initialDelaySeconds: 30
+      # periodSeconds: 5
+      # successThreshold: 1
+      # timeoutSeconds: 5
+    # -- livenessProbe for eventStream container
+    livenessProbe: {}
+      # failureThreshold: 5
+      # httpGet:
+      #   path: /health/liveness
+      #   port: health
+      #   scheme: HTTP
+      # initialDelaySeconds: 30
+      # periodSeconds: 5
+      # successThreshold: 1
+      # timeoutSeconds: 5
+
+  # -- Configuraton for the indexer component
+  indexer:
+    # -- termination timeout for indexer pod
+    terminationGracePeriodSeconds: 60
+    port: 4001
+    # -- UpdateStrategy for indexer deployment
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+    # -- Database configuration for indexer. Prepared to be used with CloudSQL
+    db:
+      # -- Name of the database to use. Database is created if it does not exist
+      name: blockscout
+      # -- Name of the CloudSQL connection to use
+      connectionName: project:region:db-name
+      port: 5432
+      # -- Configuration for the CloudSQL proxy (https://cloud.google.com/sql/docs/mysql/sql-proxy)
+      proxy:
+        host: 127.0.0.1
+        port: 5432
+        # -- readinessProbe for cloud-sql container
+        readinessProbe: {}
+          # tcpSocket:
+          #   port: 5432
+          # initialDelaySeconds: 30
+          # periodSeconds: 10
+          # timeoutSeconds: 5
+          # successThreshold: 1
+          # failureThreshold: 5
+        # -- livenessProbe for cloud-sql container
+        livenessProbe: {}
+          # tcpSocket:
+          #   port: 5432
+          # initialDelaySeconds: 30
+          # periodSeconds: 10
+          # timeoutSeconds: 5
+          # successThreshold: 1
+          # failureThreshold: 5
+        # -- resources for cloud-sql container
+        resources:
+          requests:
+            memory: 40Mi
+            cpu: 100m
+    # -- Max number of DB connections excluding read-only API endpoints requests
+    poolSize: 200
+    # -- Max number of DB connections for read-only API endpoints requests
+    poolSizeReplica: 5
+    # -- readinessProbe for indexer container
+    readinessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: /health/readiness
+        port: health
+        scheme: HTTP
+      initialDelaySeconds: 30
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    # -- livenessProbe for indexer container
+    livenessProbe: {}
+    # livenessProbe:
+    #   failureThreshold: 5
+    #   httpGet:
+    #     path: /health/liveness
+    #     port: health
+    #     scheme: HTTP
+    #   initialDelaySeconds: 30
+    #   periodSeconds: 5
+    #   successThreshold: 1
+    #   timeoutSeconds: 5
+    # -- resources for indexer container
+    resources:
+      requests:
+        memory: 2G
+        cpu: 2
+    # -- affinity for indexer pods
+    affinity: {}
+    # -- nodeSelector for indexer pods
+    nodeSelector: {}
+    # -- MY_REGION env variable for indexer pod. Do not change.
+    rpcRegion: "indexer"
+    # -- PRIMARY_REGION env variable for indexer pod. Do not change.
+    primaryRpcRegion: "indexer"
+    # -- Enable CELO blockRewards functionality
+    fetchers:
+      blockRewards:
+        enabled: false
+
+  # -- Configuraton for the api component
+  api:
+    # -- If api component is served at rootPath
+    suffix:
+      enabled: false
+      path: ""
+    port: 4000
+    # -- UpdateStrategy for api deployment
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 20%
+    # -- HPA configuration for api deployment
+    autoscaling:
+      maxReplicas: 10
+      minReplicas: 2
+      target:
+        cpu: 70
+    # -- MY_REGION env variable for api pod. Do not change.
+    rpcRegion: "api"
+    # -- PRIMARY_REGION env variable for api pod. Do not change.
+    primaryRpcRegion: "indexer"
+    # -- Database configuration for indexer. Prepared to be used with CloudSQL
+    db:
+      # -- Name of the database to use. Database is created if it does not exist
+      name: blockscout
+      # -- Name of the CloudSQL connection to use
+      connectionName: project:region:db-name
+      # to be fetched from secrets
+      # username: blockscout
+      # password: password
+      port: 5432
+      # -- Configuration for the CloudSQL proxy (https://cloud.google.com/sql/docs/mysql/sql-proxy)
+      proxy:
+        host: 127.0.0.1
+        port: 5432
+        # -- livinessProbe for cloud-sql container
+        readinessProbe: {}
+          # tcpSocket:
+          #   port: 5432
+          # initialDelaySeconds: 30
+          # periodSeconds: 10
+          # timeoutSeconds: 5
+          # successThreshold: 1
+          # failureThreshold: 5
+        # -- livenessProbe for cloud-sql container
+        livenessProbe: {}
+          # tcpSocket:
+          #   port: 5432
+          # initialDelaySeconds: 30
+          # periodSeconds: 10
+          # timeoutSeconds: 5
+          # successThreshold: 1
+          # failureThreshold: 5
+        # -- resources for cloud-sql container
+        resources:
+          requests:
+            memory: 20Mi
+            cpu: 10m
+    # -- Max number of DB connections excluding read-only API endpoints requests
+    poolSize: 30
+    # -- Max number of DB connections for read-only API endpoints requests
+    poolSizeReplica: 5
+    # -- request rateLimit for api coponent
+    rateLimit: "1000000"
+    # -- readinessProbe for api container
+    readinessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: /api/v1/health/liveness
+        port: http
+        scheme: HTTP
+      initialDelaySeconds: 30
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    # -- livenessProbe for api container
+    livenessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: /api/v1/health/liveness
+        port: http
+        scheme: HTTP
+      initialDelaySeconds: 30
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    # -- resources for api container
+    resources:
+      requests:
+        memory: 500Mi
+        cpu: 0.5
+    # -- affinity for api pods
+    affinity: {}
+    # -- nodeSelector for api pods
+    nodeSelector: {}
+
+  # -- Configuraton for the web component
+  web:
+    host: ""
+    suffix:
+      enabled: false
+      path: ""
+    # used once to create additional resources for proper routing
+    # of multiple environments on the same domain
+    extraEnvironments:
+      # format:
+      # -
+      #  environment: alfajores|baklava|rc1 etc.
+      #  suffix: alfajores|baklava|mainnet etc, must match the suffix
+      #          value configured for those environments
+      #  ingressIp: x.x.x.x
+      source: []
+      # format:
+      # -
+      #  sourceHost: ""
+      target: []
+    port: 4000
+    # -- UpdateStrategy for web deployment
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 20%
+    # -- HPA configuration for web deployment
+    autoscaling:
+      maxReplicas: 5
+      minReplicas: 2
+      target:
+        cpu: 70
+    db:
+      # -- Name of the database to use. Database is created if it does not exist
+      name: blockscout
+      # -- Name of the CloudSQL connection to use
+      connectionName: project:region:db-name
+      # to be fetched from secrets
+      # username: blockscout
+      # password: password
+      port: 5432
+      # -- Configuration for the CloudSQL proxy (https://cloud.google.com/sql/docs/mysql/sql-proxy)
+      proxy:
+        host: 127.0.0.1
+        port: 5432
+        # -- readinessProbe for cloud-sql container
+        readinessProbe: {}
+          # tcpSocket:
+          #   port: 5432
+          # initialDelaySeconds: 30
+          # periodSeconds: 10
+          # timeoutSeconds: 5
+          # successThreshold: 1
+          # failureThreshold: 5
+        # -- livenessProbe for cloud-sql container
+        livenessProbe: {}
+          # tcpSocket:
+          #   port: 5432
+          # initialDelaySeconds: 30
+          # periodSeconds: 10
+          # timeoutSeconds: 5
+          # successThreshold: 1
+          # failureThreshold: 5
+        # -- resources for cloud-sql container
+        resources:
+          requests:
+            memory: 20Mi
+            cpu: 10m
+    # -- Max number of DB connections excluding read-only API endpoints requests
+    poolSize: 30
+    # -- Max number of DB connections for read-only API endpoints requests
+    poolSizeReplica: 5
+    # -- readinessProbe for web container
+    readinessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: /api/v1/health/liveness
+        port: http
+        scheme: HTTP
+      initialDelaySeconds: 30
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    # -- livenessProbe for Web container
+    livenessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: /api/v1/health/liveness
+        port: http
+        scheme: HTTP
+      initialDelaySeconds: 30
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+    sourcify:
+      enabled: true
+      serverUrl: https://sourcify.dev/server
+      repoUrl: https://repo.sourcify.dev/contracts
+    # -- resources for web container
+    resources:
+      requests:
+        memory: 250M
+        cpu: 500m
+    # -- affinity for web pods
+    affinity: {}
+    # -- nodeSelector for web pods
+    nodeSelector: {}
+    # -- Configuration for the app menu on the web, for customizing the list of apps on `More` menu
+    appsMenu:
+      enabled: true
+      swapList: '[{"url":"https://ubeswap.org/", "title":"Ubeswap"}, {"url":"https://symmetric.finance/", "title":"Symmetric"}, {"url":"https://www.mobius.money/", "title":"Mobius"}, {"url":"https://mento.finance/", "title":"Mento-fi"}, {"url":"https://swap.bitssa.com/", "title":"Swap Bitssa"}]'
+      defiList: '[{"url":"https://moola.market/", "title":"Moola"},  {"url":"https://www.pinnata.xyz/farm#/", "title":"Pinnata"}, {"url":"https://goodghosting.com/", "title":"GoodGhosting"}, {"url":"https://revo.market/", "title":"Revo"}, {"url":"https://www.immortaldao.finance", "title":"ImmortalDao Finance"}]'
+      walletList: '[{"url":"https://valoraapp.com/", "title":"Valora"}, {"url":"https://celoterminal.com/", "title":"Celo Terminal"}, {"url":"https://celowallet.app/", "title":"Celo Wallet"}, {"url":"https://www.nodewallet.xyz/", "title":"Node Wallet"}]'
+      nftList: '[{"url":"https://niftydrop.net/", "title":"Niftydrop"}, {"url":"https://nfts.valoraapp.com/", "title":"NFT Viewer"}, {"url":"https://cyberbox.art/", "title":"Cyberbox"}, {"url":"https://nom.space/", "title":"Nomspace"}, {"url":"https://alities.io/", "title":"Alities"}]'
+      connectList: '[{"url":"https://impactmarket.com/", "title":"impactMarket"}, {"url":"https://talentprotocol.com/", "title":"Talent Protocol"}, {"url":"https://doni.app/", "title":"Doni"}]'
+      spendList: '[{"url":"https://giftcards.bidali.com/", "title":"Bidali"}, {"url":"https://flywallet.io/", "title":"Flywallet"},{"url":"https://chispend.com/", "title":"ChiSpend"}]'
+      financeToolsList: '[{"url":"https://celotracker.com/", "title":"Celo Tracker"}, {"url":"https://celo.tax/", "title":"celo.tax"}, {"url":"https://trelis.com/", "title": "Trelis"}]'
+      learningList: '[{"url": "https://celo.org/papers/whitepaper", "title":"Celo Whitepaper"}, {"url": "https://learn.figment.io/protocols/celo", "title":"Learn Celo"}, {"url": "https://www.coinbase.com/price/celo", "title":"Coinbase Earn"}]'
+      resourcesList: '[{"url":"https://celovote.com/", "title":"Celo Vote"}, {"url":"https://forum.celo.org/", "title":"Celo Forum"}, {"url":"https://thecelo.com/", "title":"TheCelo"}, {"url":"https://celo.org/validators/explore", "title":"Validators"}, {"url":"https://celoreserve.org/", "title":"Celo Reserve"}, {"url":"https://docs.celo.org/", "title":"Celo Docs"}]'
+    # -- k8s secret with Google recaptcha secret. It needs to pre-exist
+    recaptchaSecretName: ""
+    stats:
+      enabled: false
+      reportUrl: ""
+      makerdojo: ""
+    # -- MY_REGION env variable for web pod. Do not change.
+    rpcRegion: "web"
+    # -- PRIMARY_REGION env variable for web pod. Do not change.
+    primaryRpcRegion: "indexer"
+    # -- DISABLE_LIVE_UPDATES env variable for web pod
+    liveUpdates:
+      disabled: true
+    homepage:
+      # -- Show the exchange rate chart on the homepage
+      showPrice: true
+      # -- Show the tx chart on the homepage
+      showTxs: false
+    # -- ACCOUNT_POOL_SIZE env variable for web pod
+    accountPoolSize: 1
+    # -- Show token icons
+    tokenIcons:
+      enabled: false
+    # -- Enable basicAuth on ingress
+    basicAuth:
+      enabled: false
+    # -- Configuration for the campaignBanner
+    campaignBanner:
+      refreshInterval: "60"
+
+  # -- Configuraton for the metadataCrawler component
+  metadataCrawler:
+    enabled: false
+    # -- Cron schedule for the metadataCrawler
+    schedule: "0 */2 * * *"
+    image:
+      repository: gcr.io/celo-testnet/celo-monorepo
+      tag: metadata-crawler-77a392216d4927e85ce4b683508fc0539aa92a34
+    # -- Discord server for notifications
+    discordClusterName: ""
+
+
+  shared:
+    # -- Enable epochRewards
+    epochRewards:
+      enabled: true
+    # -- Image to use for blockscout components
+    image:
+      repository: gcr.io/celo-testnet/blockscout
+      pullPolicy: IfNotPresent
+      tag: v2.0.4-beta-celo
+    # -- Max delay in seconds for the indexer to be considered unhealthy
+    healthyBlocksPeriod: 300
+    erlangNodeName: blockscout
+    # -- Drop the database on startup
+    db:
+      drop: "false"
+    # -- Reference to secrets. Format: gcp:secretmanager:projects/<project-id>/secrets/<env>-blockscout-<secret-key>. Using tool https://github.com/doitintl/secrets-init
+    secrets:
+      # Format:
+      # secretName: gcp:secretmanager:projects/<project-id>/secrets/<env>-blockscout-<secret-key>
+      # - <project-id> - numeric project id
+      # - <env> - alfajores|baklava|rc1 etc.
+      # - <secret-key> - name of the secret
+      # Example: segmentKey: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-segmentKey
+      segmentKey: ""
+      discordWebhookUrl: ""
+      grafanaCloud: ""
+      dbUser: ""
+      dbPassword: ""
+      recaptcha:
+        projectId: ""
+        siteKey: ""
+        apiKey: ""
+        secretKey: ""
+      erlang:
+        cookie: ""
+      campaignBannerApiUrl: ""
+
+# -- Configuration related with the CELO network
+network:
+  name: Celo
+  networkID: 1101
+  # -- RPC/WS endpoints for the node network. Indexer requires archive data
+  nodes:
+    archiveNodes:
+      jsonrpcHttpUrl: http://tx-nodes-private:8545
+      jsonrpcWsUrl: ws://tx-nodes-private:8545
+    fullNodes:
+      jsonrpcPublicHttp: ""
+
+# -- Infrastructure/Kubernetes shared configuration
+infrastructure:
+  domainName: celo-testnet.org
+  gcp:
+    projectId: celo-testnet-production
+  # -- Grafana url to use during deployment
+  grafanaUrl: https://clabs.grafana.net
+  # -- Enable prometheus metrics, using annotations
+  metrics:
+    enabled: false
+  # -- Default affinity for the pods
+  affinity: {}
+  # -- Default nodeSelector for the pods
+  nodeSelector: {}
+
+# -- Add annotation with a message about the upgrade process trigger. Intended to be used by CD or deployment tool
+changeCause: ""
