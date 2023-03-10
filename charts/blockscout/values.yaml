@@ -17,7 +17,7 @@ blockscout:
         memory: 1000Mi
         cpu: 2
     # -- Enable the eventStream component
-    enableEventStream: false
+    enabled: false
     # -- `BEANSTALKD_PORT` env for eventStream deployment
     beanstalkdPort: ""
     # -- `BEANSTALKD_HOST` env for eventStream deployment
@@ -393,7 +393,6 @@ blockscout:
     # -- Discord server for notifications
     discordClusterName: ""
 
-
   shared:
     # -- Enable epochRewards
     epochRewards:
@@ -457,6 +456,13 @@ infrastructure:
   affinity: {}
   # -- Default nodeSelector for the pods
   nodeSelector: {}
+  configConnector:
+    # -- Set an existing GCP Service Account to skip using config connector for creating the account
+    # Account must exists, have the role roles/cloudsql.client and be authorized to be impersonated 
+    # by the k8s service account {{ .Release.Name }}-cloudsql in the {{ .Release.Namespace }} namespace
+    overrideCloudSQLGcloudSA: ""
+    overrideCloudSecretsGcloudSA: ""
+    namespace: cnrm-system
 
 # -- Add annotation with a message about the upgrade process trigger. Intended to be used by CD or deployment tool
 changeCause: ""

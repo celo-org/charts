@@ -1,0 +1,47 @@
+
+{{- /*
+{{ .Release.Name }}-rbac resources. This Service Account is used for reading the secrets
+from Secret Manager.
+*/}}
+{{- $gcp_service_account_name_sql_created := include "celo.blockscout.sanitize-gcp-service-account-name" (dict "name" (printf "%s-cloudsql" .Release.Name)) -}}
+{{- if not .Values.infrastructure.configConnector.overrideCloudSQLGcloudSA }}
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMServiceAccount
+metadata:
+  name: {{ $gcp_service_account_name_sql_created }}
+  namespace: {{ .Values.infrastructure.configConnector.namespace }}
+spec:
+  displayName: {{ $gcp_service_account_name_sql_created }}
+---
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMPolicy
+metadata:
+  name: {{ .Release.Name }}-cloudsql-workload-identity
+  namespace: {{ .Values.infrastructure.configConnector.namespace }}
+spec:
+  resourceRef:
+    apiVersion: iam.cnrm.cloud.google.com/v1beta1
+    kind: IAMServiceAccount
+    name: {{ .Release.Name }}-cloudsql
+  bindings:
+    - role: roles/iam.workloadIdentityUser
+      members:
+        - serviceAccount:{{ .Values.infrastructure.gcp.projectId }}.svc.id.goog[{{ .Release.Namespace }}/{{ .Release.Name }}-cloudsql]
+---
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMPolicyMember
+metadata:
+  name: {{ .Release.Name }}-cloudsql-reader
+  namespace: {{ .Values.infrastructure.configConnector.namespace }}
+spec:
+  member: serviceAccount:{{ $gcp_service_account_name_sql_created }}@{{ .Values.infrastructure.gcp.projectId }}.iam.gserviceaccount.com
+  role: roles/cloudsql.client
+  condition:
+    title: "Limit Instance Access"
+    description: "Limit access to specific Cloud SQL instances: {{ .Values.blockscout.indexer.db.connectionName }}"
+    expression: "resource.name.startsWith('projects/{{ .Values.infrastructure.gcp.projectId }}/instances/{{ .Values.blockscout.indexer.db.connectionName }}')"
+  resourceRef:
+    kind: Project
+    external: projects/{{ .Values.infrastructure.gcp.projectId }}
+---
+{{- end -}}

@@ -1,3 +1,4 @@
+{{- if .Values.blockscout.eventStream.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -73,7 +74,7 @@ spec:
         - name: METRICS_ENABLED
           value: {{ .Values.infrastructure.metrics.enabled | quote }}
         - name: ENABLE_EVENT_STREAM
-          value: {{ .Values.blockscout.eventStream.enableEventStream | quote }}
+          value: {{ .Values.blockscout.eventStream.enabled | quote }}
         - name: BEANSTALKD_PORT
           value: {{ .Values.blockscout.eventStream.beanstalkdPort | quote }}
         - name: BEANSTALKD_HOST
@@ -92,3 +93,4 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}

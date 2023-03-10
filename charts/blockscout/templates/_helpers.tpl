@@ -18,6 +18,18 @@ Defines common annotations across all blockscout components.
 kubernetes.io/change-cause: {{ default "No change-cause provided" .Values.changeCause }}
 {{- end -}}
 
+
+{{- /*
+Sanitize GCP Service account name
+*/ -}}
+{{- define "celo.blockscout.sanitize-gcp-service-account-name" -}}
+{{- if lt (len .name) 6 }}
+{{- fail "Google Service Account name is not valid. Lenght must be between 6 - 30 characters" }}
+{{- end -}}
+{{ trunc 30 (lower .name) | replace "_" "-" | replace "." "-" }}
+{{- end -}}
+
+
 {{- /*
 Defines the CloudSQL proxy container that terminates
 after termination of the main container.
@@ -27,6 +39,9 @@ the `volumes` section.
 {{- define "celo.blockscout.container.db-terminating-sidecar" -}}
 - name: cloudsql-proxy
   image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
+  {{- $gcp_service_account_name_sql_created := include "celo.blockscout.sanitize-gcp-service-account-name" (dict "name" (printf "%s-cloudsql" .Release.Name)) -}}
+  {{- $gcp_service_account_name_sql := default .Values.infrastructure.configConnector.overrideCloudSQLGcloudSA (printf "%s@%s.iam.gserviceaccount.com" $gcp_service_account_name_sql_created .Values.infrastructure.gcp.projectId) }}
+  serviceAccountName: {{ $gcp_service_account_name_sql }}
   lifecycle:
     postStart:
       exec:
@@ -37,8 +52,10 @@ the `volumes` section.
   - -c
   - |
     /cloud_sql_proxy \
-    -instances={{ .Database.connectionName }}=tcp:{{ .Database.port }} \
-    -credential_file=/secrets/cloudsql/credentials.json &
+    {{- if .Values.infrastructure.configConnector.overrideCloudSQLGcloudSA }}
+    -credential_file=/secrets/cloudsql/credentials.json \
+    {{- end }}
+    -instances={{ .Database.connectionName }}=tcp:{{ .Database.port }} &
     CHILD_PID=$!
     (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
     wait $CHILD_PID
@@ -83,6 +100,7 @@ the `volumes` section.
 {{- define "celo.blockscout.initContainer.secrets-init" -}}
 - name: secrets-init
   image: "doitintl/secrets-init:0.4.2"
+  serviceAccountName: {{ .Release.Name }}-rbac
   args:
     - copy
     - /secrets/
@@ -104,10 +122,15 @@ the `volumes` section.
     postStart:
       exec:
         command: ["/bin/sh", "-c", "until nc -z {{ .Database.proxy.host }}:{{ .Database.proxy.port }}; do sleep 1; done"]
-  command: ["/cloud_sql_proxy",
-            "-instances={{ .Database.connectionName }}=tcp:{{ .Database.port }}",
-            "-credential_file=/secrets/cloudsql/credentials.json",
-            "-term_timeout=30s"]
+  command:
+  - /bin/sh
+  - -c
+  args:
+  - |
+    /cloud_sql_proxy \
+    -credential_file=/secrets/cloudsql/credentials.json \
+    -instances={{ .Database.connectionName }}=tcp:{{ .Database.port }} \
+    -term_timeout=30s
   {{- with .Database.proxy.livenessProbe }}
   livenessProbe:
     {{- toYaml . | nindent 4 }}
@@ -190,4 +213,31 @@ Set a environment variable if the value is not empty.
 - name: {{ .name }}
   value: {{ .value | quote }}
 {{- end -}}
+{{- end -}}
+
+{{- define "celo.blockscout.all-secrets-from-secretmanager-names" -}}
+{{- $result := "" -}}
+{{- $maps := "" -}}
+{{- range $key, $value := .Values.blockscout.shared.secrets -}}
+  {{- if $value -}}
+    {{- if kindIs "map" $value -}}
+      {{- range $keyl2, $valuel2 := $value -}}
+        {{- $secret_name := split "/" $valuel2 -}}
+        {{- if (trim $secret_name._3) -}}
+          {{ $result = printf "%s,%s" $result (trim $secret_name._3) }}
+        {{- else -}}
+          {{ fail (printf "Incorrect secret format for %s with value %s" $keyl2 $valuel2) }}
+        {{- end -}}
+      {{- end -}}
+    {{- else if kindIs "string" $value -}}
+      {{- $secret_name := split "/" $value -}}
+      {{- if (trim $secret_name._3) -}}
+        {{ $result = printf "%s,%s" $result (trim $secret_name._3) }}
+      {{- else -}}
+        {{ fail (printf "Incorrect secret format for %s with value %s" $key $value) }}
+      {{- end -}}
+    {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- trimPrefix "," $result }}
 {{- end -}}
