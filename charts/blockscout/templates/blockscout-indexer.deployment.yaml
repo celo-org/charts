@@ -33,10 +33,10 @@ spec:
         component: blockscout-indexer
         {{- include "celo.blockscout.elixir.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ .Release.Name }}-rbac
+      serviceAccountName: {{ .Release.Name }}
       terminationGracePeriodSeconds: {{ .Values.blockscout.indexer.terminationGracePeriodSeconds }}
       initContainers:
-        {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 6 }}
+      {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 6 }}
       containers:
         {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db -}}
         {{- include "celo.blockscout.container.db-sidecar" $data | nindent 6 }}

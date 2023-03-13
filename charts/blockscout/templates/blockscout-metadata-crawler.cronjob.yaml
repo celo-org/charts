@@ -17,6 +17,7 @@ spec:
           labels:
             {{- include "celo.blockscout.labels" . | nindent 12 }}
         spec:
+          serviceAccountName: {{ .Release.Name }}
           initContainers:
           {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 10 }}
           containers:

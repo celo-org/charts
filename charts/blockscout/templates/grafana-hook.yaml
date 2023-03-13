@@ -9,7 +9,7 @@ metadata:
 spec:
   template:
     spec:
-      serviceAccountName: {{ .Release.Name }}-rbac
+      serviceAccountName: {{ .Release.Name }}
       initContainers:
       {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 6 }}
       containers:

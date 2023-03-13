@@ -32,7 +32,7 @@ spec:
         component: blockscout-api
         {{- include "celo.blockscout.elixir.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ .Release.Name }}-rbac
+      serviceAccountName: {{ .Release.Name }}
       initContainers:
         {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 6 }}
       containers:

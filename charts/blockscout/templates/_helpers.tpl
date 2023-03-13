@@ -39,9 +39,6 @@ the `volumes` section.
 {{- define "celo.blockscout.container.db-terminating-sidecar" -}}
 - name: cloudsql-proxy
   image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
-  {{- $gcp_service_account_name_sql_created := include "celo.blockscout.sanitize-gcp-service-account-name" (dict "name" (printf "%s-cloudsql" .Release.Name)) -}}
-  {{- $gcp_service_account_name_sql := default .Values.infrastructure.configConnector.overrideCloudSQLGcloudSA (printf "%s@%s.iam.gserviceaccount.com" $gcp_service_account_name_sql_created .Values.infrastructure.gcp.projectId) }}
-  serviceAccountName: {{ $gcp_service_account_name_sql }}
   lifecycle:
     postStart:
       exec:
@@ -100,7 +97,6 @@ the `volumes` section.
 {{- define "celo.blockscout.initContainer.secrets-init" -}}
 - name: secrets-init
   image: "doitintl/secrets-init:0.4.2"
-  serviceAccountName: {{ .Release.Name }}-rbac
   args:
     - copy
     - /secrets/
@@ -128,7 +124,9 @@ the `volumes` section.
   args:
   - |
     /cloud_sql_proxy \
+    {{- if .Values.infrastructure.configConnector.overrideCloudSQLGcloudSA }}
     -credential_file=/secrets/cloudsql/credentials.json \
+    {{- end }}
     -instances={{ .Database.connectionName }}=tcp:{{ .Database.port }} \
     -term_timeout=30s
   {{- with .Database.proxy.livenessProbe }}
@@ -226,7 +224,7 @@ Set a environment variable if the value is not empty.
         {{- if (trim $secret_name._3) -}}
           {{ $result = printf "%s,%s" $result (trim $secret_name._3) }}
         {{- else -}}
-          {{ fail (printf "Incorrect secret format for %s with value %s" $keyl2 $valuel2) }}
+          {{ fail (printf "Error A at \"celo.blockscout.all-secrets-from-secretmanager-names\". Incorrect secret format for key %s with value %s and secret $s" $keyl2 $valuel2 $secret_name) }}
         {{- end -}}
       {{- end -}}
     {{- else if kindIs "string" $value -}}
@@ -234,10 +232,36 @@ Set a environment variable if the value is not empty.
       {{- if (trim $secret_name._3) -}}
         {{ $result = printf "%s,%s" $result (trim $secret_name._3) }}
       {{- else -}}
-        {{ fail (printf "Incorrect secret format for %s with value %s" $key $value) }}
+        {{ fail (printf "Error B at \"celo.blockscout.all-secrets-from-secretmanager-names\". Incorrect secret format for key %s with value %s" $key $value) }}
       {{- end -}}
     {{- end -}}
     {{- end -}}
   {{- end -}}
+{{- trimPrefix "," $result }}
+{{- end -}}
+
+{{- define "celo.blockscout.all-secrets-from-secretmanager-names-new" -}}
+{{- $result := "" -}}
+{{- $values := values .Values.blockscout.shared.secrets -}}
+{{- range $value := $values -}}
+  {{- if $value -}}
+    {{- if kindIs "map" $value -}}
+      {{- $values2 := values $value -}}
+      {{- range $value2 := $values2 -}}
+        {{- if $value2 -}}
+          {{- $secret_name := split "/" $value2 -}}
+          {{- if (trim $secret_name._3) -}}
+            {{ $result = printf "%s,%s" $result (trim $secret_name._3) }}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- else if kindIs "string" $value -}}
+      {{- $secret_name := split "/" $value -}}
+      {{- if (trim $secret_name._3) -}}
+        {{ $result = printf "%s,%s" $result (trim $secret_name._3) }}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 {{- trimPrefix "," $result }}
 {{- end -}}

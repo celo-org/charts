@@ -34,7 +34,7 @@ spec:
         component: blockscout-event-stream
         {{- include "celo.blockscout.elixir.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ .Release.Name }}-rbac
+      serviceAccountName: {{ .Release.Name }}
       terminationGracePeriodSeconds: {{ .Values.blockscout.eventStream.terminationGracePeriodSeconds }}
       initContainers:
       {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 6 }}

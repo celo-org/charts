@@ -20,9 +20,9 @@ spec:
           labels:
             {{- include "celo.blockscout.labels" . | nindent 12 }}
         spec:
-          serviceAccountName: {{ .Release.Name }}-rbac
+          serviceAccountName: {{ .Release.Name }}
           initContainers:
-            {{ include "celo.blockscout.initContainer.secrets-init" . | nindent 12 }}
+          {{ include "celo.blockscout.initContainer.secrets-init" . | nindent 12 }}
           containers:
           {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db -}}
           {{- include "celo.blockscout.container.db-terminating-sidecar" $data | nindent 10 }}
