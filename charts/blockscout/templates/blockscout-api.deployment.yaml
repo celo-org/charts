@@ -37,7 +37,7 @@ spec:
         {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 6 }}
       containers:
       {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.api.db -}}
-      {{- include "celo.blockscout.container.db-sidecar" $data | nindent 6 }}
+      {{- include "celo.blockscout.container.db-sidecar" . | nindent 6 }}
       - name: blockscout-api
         image: {{ .Values.blockscout.shared.image.repository }}:api-{{ .Values.blockscout.shared.image.tag }}
         imagePullPolicy: {{ .Values.blockscout.shared.image.pullPolicy }}

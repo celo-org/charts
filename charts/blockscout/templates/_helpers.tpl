@@ -5,8 +5,9 @@ Defines common labels across all blockscout components.
 app: blockscout
 chart: blockscout
 release: {{ .Release.Name }}
-heritage: {{ .Release.Service }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+
 {{- define "celo.blockscout.elixir.labels" -}}
 erlang-cluster: {{ .Release.Name }}
 {{- end -}}
@@ -29,6 +30,27 @@ Sanitize GCP Service account name
 {{ trunc 30 (lower .name) | replace "_" "-" | replace "." "-" }}
 {{- end -}}
 
+{{- define "celo.blockscout.instance-name" -}}
+{{- if .Values.infrastructure.configConnector.cloudSQL.create -}}
+{{ .Values.infrastructure.configConnector.cloudSQL.instanceName | default .Release.Name | replace "_" "-" | replace "." "-" }}
+{{- else -}}
+{{ .Values.infrastructure.database.connectionName }}
+{{- end -}}
+{{- end -}}
+
+{{- define "celo.blockscout.database-connection-string" -}}
+{{- $connection_name := include "celo.blockscout.instance-name" . -}}
+{{- $connection_port := ternary "5432" .Values.infrastructure.database.port .Values.infrastructure.configConnector.cloudSQL.create -}}
+{{ $connection_name }}=tcp:{{ $connection_port }}
+{{- end -}}
+
+{{- define "celo.blockscout.hook-annotations" -}}
+helm.sh/hook: pre-install, pre-upgrade
+helm.sh/hook-weight: "{{ .weight | default 0 }}"
+helm.sh/hook-delete-policy: {{ .delete_policy | default "before-hook-creation" }}
+helm.sh/resource-policy: keep
+{{- end -}}
+
 
 {{- /*
 Defines the CloudSQL proxy container that terminates
@@ -42,28 +64,34 @@ the `volumes` section.
   lifecycle:
     postStart:
       exec:
-        command: ["/bin/sh", "-c", "until nc -z {{ .Database.proxy.host }}:{{ .Database.proxy.port }}; do sleep 1; done"]
+        command: [
+          "/bin/sh", "-c",
+          "sleep {{ .optionalSleep | default 0 }};",
+          "until nc -z {{ .Values.infrastructure.database.proxy.host }}:{{ .Values.infrastructure.database.proxy.port }}; do sleep 1; done"
+        ]
   command:
   - /bin/sh
   args:
   - -c
   - |
-    /cloud_sql_proxy \
-    {{- if .Values.infrastructure.configConnector.overrideCloudSQLGcloudSA }}
-    -credential_file=/secrets/cloudsql/credentials.json \
-    {{- end }}
-    -instances={{ .Database.connectionName }}=tcp:{{ .Database.port }} &
-    CHILD_PID=$!
-    (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
-    wait $CHILD_PID
-    if [[ -f "/tmp/pod/main-terminated" ]]; then exit 0; fi
+      /cloud_sql_proxy \
+      {{- if .Values.infrastructure.configConnector.overrideCloudSQLGcloudSA }}
+      -credential_file=/secrets/cloudsql/credentials.json \
+      {{- end }}
+      -instances={{ include "celo.blockscout.database-connection-string" . }} &
+      CHILD_PID=$!
+      (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
+      wait $CHILD_PID
+      if [[ -f "/tmp/pod/main-terminated" ]]; then exit 0; fi
   securityContext:
     runAsUser: 2  # non-root user
     allowPrivilegeEscalation: false
   volumeMounts:
+  {{- if .Values.infrastructure.configConnector.overrideCloudSecretsGcloudSA }}
   - name: blockscout-cloudsql-credentials
     mountPath: /secrets/cloudsql
     readOnly: true
+  {{- end }}
   - mountPath: /tmp/pod
     name: temporary-dir
     readOnly: true
@@ -71,10 +99,12 @@ the `volumes` section.
 
 {{- /* Defines the volume with CloudSQL proxy credentials file. */ -}}
 {{- define "celo.blockscout.volume.cloudsql-credentials" -}}
+{{- if .Values.infrastructure.configConnector.overrideCloudSecretsGcloudSA -}}
 - name: blockscout-cloudsql-credentials
   secret:
     defaultMode: 420
     secretName: blockscout-cloudsql-credentials
+{{- end -}}
 {{- end -}}
 
 {{- /* Defines an empty dir volume with write access for temporary pid files. */ -}}
@@ -117,7 +147,10 @@ the `volumes` section.
   lifecycle:
     postStart:
       exec:
-        command: ["/bin/sh", "-c", "until nc -z {{ .Database.proxy.host }}:{{ .Database.proxy.port }}; do sleep 1; done"]
+        command: [
+          "/bin/sh", "-c", 
+          "until nc -z {{ .Values.infrastructure.database.proxy.host }}:{{ .Values.infrastructure.database.proxy.port }}; do sleep 1; done"
+        ]
   command:
   - /bin/sh
   - -c
@@ -127,27 +160,30 @@ the `volumes` section.
     {{- if .Values.infrastructure.configConnector.overrideCloudSQLGcloudSA }}
     -credential_file=/secrets/cloudsql/credentials.json \
     {{- end }}
-    -instances={{ .Database.connectionName }}=tcp:{{ .Database.port }} \
+    -instances={{ include "celo.blockscout.database-connection-string" . }} \
     -term_timeout=30s
-  {{- with .Database.proxy.livenessProbe }}
+  {{- with .Values.infrastructure.database.proxy.livenessProbe }}
   livenessProbe:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Database.proxy.readinessProbe }}
+  {{- with .Values.infrastructure.database.proxy.readinessProbe }}
   readinessProbe:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Database.proxy.resources }}
+  {{- $resources := default .Values.infrastructure.database.proxy.resources (((.Database).proxy).resources) }}
+  {{- with $resources }}
   resources:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   securityContext:
     runAsUser: 2  # non-root user
     allowPrivilegeEscalation: false
+  {{- if .Values.infrastructure.configConnector.overrideCloudSecretsGcloudSA }}
   volumeMounts:
     - name: blockscout-cloudsql-credentials
       mountPath: /secrets/cloudsql
       readOnly: true
+  {{- end }}
 {{- end -}}
 
 {{- /*
@@ -155,10 +191,12 @@ Defines shared environment variables for all
 blockscout components.
 */ -}}
 {{- define "celo.blockscout.env-vars" -}}
+{{- $user := ternary .Values.infrastructure.configConnector.cloudSQL.username .Values.blockscout.shared.secrets.dbUser .Values.infrastructure.configConnector.cloudSQL.create -}}
+{{- $password := ternary .Values.infrastructure.configConnector.cloudSQL.userPassword .Values.blockscout.shared.secrets.dbPassword .Values.infrastructure.configConnector.cloudSQL.create -}}
 - name: DATABASE_USER
-  value: {{ .Values.blockscout.shared.secrets.dbUser }}
+  value: {{ $user }}
 - name: DATABASE_PASSWORD
-  value: {{ .Values.blockscout.shared.secrets.dbPassword }}
+  value: {{ $password }}
 - name: ERLANG_COOKIE
   value: {{ .Values.blockscout.shared.secrets.erlang.cookie }}
 - name: POD_IP
@@ -184,13 +222,13 @@ blockscout components.
 - name: ETHEREUM_JSONRPC_WS_URL
   value: {{ .Values.network.nodes.archiveNodes.jsonrpcWsUrl }}
 - name: PGUSER
-  value: {{ .Values.blockscout.shared.secrets.dbUser }}
+  value: {{ $user }}
 - name: DATABASE_DB
-  value: {{ .Database.name }}
+  value: {{ .Values.infrastructure.database.name }}
 - name: DATABASE_HOSTNAME
-  value: {{ .Database.proxy.host | quote }}
+  value: {{ .Values.infrastructure.database.proxy.host | quote }}
 - name: DATABASE_PORT
-  value: {{ .Database.proxy.port | quote }}
+  value: {{ .Values.infrastructure.database.proxy.port | quote }}
 - name: WOBSERVER_ENABLED
   value: "false"
 - name: HEALTHY_BLOCKS_PERIOD

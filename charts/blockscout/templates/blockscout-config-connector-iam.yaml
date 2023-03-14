@@ -12,7 +12,6 @@ metadata:
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/resource-policy: keep
     cnrm.cloud.google.com/project-id: celo-testnet
-
   labels:
     {{- include "celo.blockscout.labels" . | nindent 4 }}
 spec:
@@ -28,6 +27,7 @@ metadata:
     helm.sh/hook-weight: "2"
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/resource-policy: keep
+    cnrm.cloud.google.com/project-id: celo-testnet
   labels:
     {{- include "celo.blockscout.labels" . | nindent 4 }}
 spec:
@@ -50,11 +50,12 @@ metadata:
     helm.sh/hook-weight: "3"
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/resource-policy: keep
+    cnrm.cloud.google.com/project-id: celo-testnet
   labels:
     {{- include "celo.blockscout.labels" . | nindent 4 }}
 spec:
   member: serviceAccount:{{ $gcp_service_account_name_created }}@{{ .Values.infrastructure.gcp.projectId }}.iam.gserviceaccount.com
-  role: roles/secretsmanager.secretAccessor
+  role: roles/secretmanager.secretAccessor
   condition:
     title: "Limit Secret Access"
     description: "Limit access to specific Secrets from Secret Manager"
@@ -78,6 +79,7 @@ metadata:
     helm.sh/hook-weight: "3"
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/resource-policy: keep
+    cnrm.cloud.google.com/project-id: celo-testnet
   labels:
     {{- include "celo.blockscout.labels" . | nindent 4 }}
 spec:
@@ -85,8 +87,10 @@ spec:
   role: roles/cloudsql.client
   condition:
     title: "Limit Instance Access"
-    description: "Limit access to specific Cloud SQL instances: {{ .Values.blockscout.indexer.db.connectionName }}"
-    expression: "resource.name.startsWith('projects/{{ .Values.infrastructure.gcp.projectId }}/instances/{{ .Values.blockscout.indexer.db.connectionName }}')"
+    {{- $instanceName := include "celo.blockscout.instance-name" . }}
+    description: "Limit access to specific Cloud SQL instances: {{ $instanceName }}"
+    expression: "resource.name.startsWith('projects/{{ .Values.infrastructure.gcp.projectId }}/instances/{{ $instanceName }}') &&
+      resource.service == \"sqladmin.googleapis.com\""
   resourceRef:
     kind: Project
     external: projects/{{ .Values.infrastructure.gcp.projectId }}

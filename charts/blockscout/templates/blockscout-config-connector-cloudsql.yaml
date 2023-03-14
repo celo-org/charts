@@ -1,0 +1,87 @@
+{{- if .Values.infrastructure.configConnector.cloudSQL.create }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-cloudsql
+  namespace: {{ .Values.infrastructure.configConnector.namespace }}
+  annotations:
+    helm.sh/hook: pre-install, pre-upgrade
+    helm.sh/hook-weight: "0"
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/resource-policy: keep
+  labels:
+    {{- include "celo.blockscout.labels" . | nindent 4 }}
+data:
+  rootPassword: {{ .Values.infrastructure.configConnector.cloudSQL.rootPassword | b64enc | quote }}
+  username: {{ .Values.infrastructure.configConnector.cloudSQL.username | b64enc | quote }}
+  password: {{ .Values.infrastructure.configConnector.cloudSQL.userPassword | b64enc | quote }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-cloudsql
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/hook: pre-install, pre-upgrade
+    helm.sh/hook-weight: "0"
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/resource-policy: keep
+data:
+  rootPassword: {{ .Values.infrastructure.configConnector.cloudSQL.rootPassword | b64enc | quote }}
+  username: {{ .Values.infrastructure.configConnector.cloudSQL.username | b64enc | quote }}
+  password: {{ .Values.infrastructure.configConnector.cloudSQL.userPassword | b64enc | quote }}
+---
+apiVersion: sql.cnrm.cloud.google.com/v1beta1
+kind: SQLInstance
+metadata:
+  name: {{ include "celo.blockscout.instance-name" . }}
+  namespace: {{ .Values.infrastructure.configConnector.namespace }}
+  annotations:
+    helm.sh/hook: pre-install, pre-upgrade
+    helm.sh/hook-weight: "1"
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/resource-policy: keep
+    cnrm.cloud.google.com/project-id: celo-testnet
+  labels:
+    {{- include "celo.blockscout.labels" . | nindent 4 }}
+spec:
+  databaseVersion: POSTGRES_14
+  region: {{ .Values.infrastructure.configConnector.cloudSQL.region }}
+  rootPassword:
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Release.Name }}-cloudsql
+        key: rootPassword
+  settings:
+    tier: {{ .Values.infrastructure.configConnector.cloudSQL.tier }}
+    diskSize: {{ .Values.infrastructure.configConnector.cloudSQL.diskSize }}
+    diskType: {{ .Values.infrastructure.configConnector.cloudSQL.diskType }}
+    diskAutoresize: {{ .Values.infrastructure.configConnector.cloudSQL.diskAutoresize }}
+    availabilityType: ZONAL
+    {{- if .Values.infrastructure.configConnector.cloudSQL.backupConfiguration.enabled }}
+    backupConfiguration:
+      enabled: true
+      pointInTimeRecoveryEnabled: true
+    {{- end }}
+---
+apiVersion: sql.cnrm.cloud.google.com/v1beta1
+kind: SQLUser
+metadata:
+  name: {{ include "celo.blockscout.instance-name" . }}-{{ .Values.infrastructure.configConnector.cloudSQL.username }}
+  namespace: {{ .Values.infrastructure.configConnector.namespace }}
+  annotations:
+    helm.sh/hook: pre-install, pre-upgrade
+    helm.sh/hook-weight: "2"
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/resource-policy: keep
+    cnrm.cloud.google.com/project-id: celo-testnet
+spec:
+  instanceRef:
+    name: {{ include "celo.blockscout.instance-name" . }}
+  password:
+    valueFrom:
+      secretKeyRef:
+        name: {{ .Release.Name }}-cloudsql
+        key: password
+{{- end }}

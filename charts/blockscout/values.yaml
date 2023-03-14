@@ -456,13 +456,56 @@ infrastructure:
   affinity: {}
   # -- Default nodeSelector for the pods
   nodeSelector: {}
+  database:
+    name: blockscout
+    connectionName: project:region:db-name
+    port: 5432
+    proxy:
+      host: 127.0.0.1
+      port: 5432
+      # -- livinessProbe for cloud-sql container
+      readinessProbe: {}
+        # tcpSocket:
+        #   port: 5432
+        # initialDelaySeconds: 30
+        # periodSeconds: 10
+        # timeoutSeconds: 5
+        # successThreshold: 1
+        # failureThreshold: 5
+      # -- livenessProbe for cloud-sql container
+      livenessProbe: {}
+        # tcpSocket:
+        #   port: 5432
+        # initialDelaySeconds: 30
+        # periodSeconds: 10
+        # timeoutSeconds: 5
+        # successThreshold: 1
+        # failureThreshold: 5
+      # -- resources for cloud-sql container
+      resources:
+        requests:
+          memory: 20Mi
+          cpu: 10m
   configConnector:
     # -- Set an existing GCP Service Account to skip using config connector for creating the account
-    # Account must exists, have the role roles/cloudsql.client and be authorized to be impersonated 
+    # Account must exists, have the role roles/cloudsql.client and be authorized to be impersonated
     # by the k8s service account {{ .Release.Name }}-cloudsql in the {{ .Release.Namespace }} namespace
     overrideCloudSQLGcloudSA: ""
     overrideCloudSecretsGcloudSA: ""
     namespace: cnrm-system
+    cloudSQL:
+      create: false
+      backupConfiguration:
+        enabled: false
+      instanceName: ""
+      region: us-west1
+      tier: db-f1-micro
+      username: "blockscout"
+      userPassword: "blockscout"
+      rootPassword: "blockscout"
+      diskSize: 25
+      diskType: PD_SSD
+      diskAutoresize: true
 
 # -- Add annotation with a message about the upgrade process trigger. Intended to be used by CD or deployment tool
 changeCause: ""

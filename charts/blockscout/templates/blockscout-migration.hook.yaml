@@ -5,10 +5,6 @@ metadata:
   labels:
     {{- include "celo.blockscout.labels" . | nindent 4 }}
     component: blockscout-migration
-  annotations:
-    "helm.sh/hook": pre-install, pre-upgrade
-    "helm.sh/hook-weight": "10"
-    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded
 spec:
   template:
     metadata:
@@ -19,7 +15,7 @@ spec:
       initContainers:
       {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 6 }}
       containers:
-      {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db -}}
+      {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db "optionalSleep" "10" -}}
       {{- include "celo.blockscout.container.db-terminating-sidecar" $data | nindent 6 }}
       - name: blockscout-migration
         image: {{ .Values.blockscout.shared.image.repository }}:{{ .Values.blockscout.shared.image.tag }}
