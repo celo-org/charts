@@ -34,12 +34,21 @@ Sanitize GCP Service account name
 {{- if .Values.infrastructure.configConnector.cloudSQL.create -}}
 {{ .Values.infrastructure.configConnector.cloudSQL.instanceName | default .Release.Name | replace "_" "-" | replace "." "-" }}
 {{- else -}}
+{{- $connection := split ":" .Values.infrastructure.database.connectionName -}}
+{{ $connection._2 }}
+{{- end -}}
+{{- end -}}
+
+{{- define "celo.blockscout.connection-name" -}}
+{{- if .Values.infrastructure.configConnector.cloudSQL.create -}}
+{{ .Values.infrastructure.gcp.projectId }}:{{ .Values.infrastructure.configConnector.cloudSQL.region}}:{{ include "celo.blockscout.instance-name" . }}
+{{- else -}}
 {{ .Values.infrastructure.database.connectionName }}
 {{- end -}}
 {{- end -}}
 
 {{- define "celo.blockscout.database-connection-string" -}}
-{{- $connection_name := include "celo.blockscout.instance-name" . -}}
+{{- $connection_name := include "celo.blockscout.connection-name" . -}}
 {{- $connection_port := ternary "5432" .Values.infrastructure.database.port .Values.infrastructure.configConnector.cloudSQL.create -}}
 {{ $connection_name }}=tcp:{{ $connection_port }}
 {{- end -}}
@@ -95,6 +104,36 @@ the `volumes` section.
   - mountPath: /tmp/pod
     name: temporary-dir
     readOnly: true
+{{- end -}}
+
+{{- /*
+Defines the CloudSQL proxy container that terminates
+after termination of the main container.
+Should be included as the last container as it contains
+the `volumes` section.
+*/ -}}
+{{- define "celo.blockscout.container.init-container-wait-sql-instance" -}}
+- name: wait-cloudsql
+  image: gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
+  command:
+  - /bin/sh
+  args:
+  - -c
+  - |
+      sleep {{ .optionalSleep | default 0 }}
+      [[ -f "/secrets/cloudsql/credentials.json" ]] && gcloud auth activate-service-account --key-file=/secrets/cloudsql/credentials.json
+      until gcloud sql instances describe {{ include "celo.blockscout.instance-name" . }} | grep state | grep RUNNABLE > /dev/null; do 
+        sleep 5; 
+      done
+  securityContext:
+    runAsUser: 1000  # non-root user
+    allowPrivilegeEscalation: false
+  volumeMounts:
+  {{- if .Values.infrastructure.configConnector.overrideCloudSecretsGcloudSA }}
+  - name: blockscout-cloudsql-credentials
+    mountPath: /secrets/cloudsql
+    readOnly: true
+  {{- end }}
 {{- end -}}
 
 {{- /* Defines the volume with CloudSQL proxy credentials file. */ -}}
@@ -198,7 +237,7 @@ blockscout components.
 - name: DATABASE_PASSWORD
   value: {{ $password }}
 - name: ERLANG_COOKIE
-  value: {{ .Values.blockscout.shared.secrets.erlang.cookie }}
+  value: {{ .Values.blockscout.shared.secrets.erlang_cookie }}
 - name: POD_IP
   valueFrom:
     fieldRef:
@@ -251,53 +290,18 @@ Set a environment variable if the value is not empty.
 {{- end -}}
 {{- end -}}
 
-{{- define "celo.blockscout.all-secrets-from-secretmanager-names" -}}
-{{- $result := "" -}}
-{{- $maps := "" -}}
-{{- range $key, $value := .Values.blockscout.shared.secrets -}}
-  {{- if $value -}}
-    {{- if kindIs "map" $value -}}
-      {{- range $keyl2, $valuel2 := $value -}}
-        {{- $secret_name := split "/" $valuel2 -}}
-        {{- if (trim $secret_name._3) -}}
-          {{ $result = printf "%s,%s" $result (trim $secret_name._3) }}
-        {{- else -}}
-          {{ fail (printf "Error A at \"celo.blockscout.all-secrets-from-secretmanager-names\". Incorrect secret format for key %s with value %s and secret $s" $keyl2 $valuel2 $secret_name) }}
-        {{- end -}}
-      {{- end -}}
-    {{- else if kindIs "string" $value -}}
-      {{- $secret_name := split "/" $value -}}
-      {{- if (trim $secret_name._3) -}}
-        {{ $result = printf "%s,%s" $result (trim $secret_name._3) }}
-      {{- else -}}
-        {{ fail (printf "Error B at \"celo.blockscout.all-secrets-from-secretmanager-names\". Incorrect secret format for key %s with value %s" $key $value) }}
-      {{- end -}}
-    {{- end -}}
-    {{- end -}}
-  {{- end -}}
-{{- trimPrefix "," $result }}
-{{- end -}}
-
 {{- define "celo.blockscout.all-secrets-from-secretmanager-names-new" -}}
 {{- $result := "" -}}
-{{- $values := values .Values.blockscout.shared.secrets -}}
-{{- range $value := $values -}}
+{{- $values := (values .Values.blockscout.shared.secrets) -}}
+{{- range $value := (sortAlpha $values) -}}
   {{- if $value -}}
-    {{- if kindIs "map" $value -}}
-      {{- $values2 := values $value -}}
-      {{- range $value2 := $values2 -}}
-        {{- if $value2 -}}
-          {{- $secret_name := split "/" $value2 -}}
-          {{- if (trim $secret_name._3) -}}
-            {{ $result = printf "%s,%s" $result (trim $secret_name._3) }}
-          {{- end -}}
-        {{- end -}}
+    {{- if kindIs "string" $value -}}
+      {{- $secret_name := split ":" $value -}}
+      {{- if (trim $secret_name._2) -}}
+        {{ $result = printf "%s,%s" $result (trim $secret_name._2) }}
       {{- end -}}
-    {{- else if kindIs "string" $value -}}
-      {{- $secret_name := split "/" $value -}}
-      {{- if (trim $secret_name._3) -}}
-        {{ $result = printf "%s,%s" $result (trim $secret_name._3) }}
-      {{- end -}}
+    {{- else -}}
+      {{- fail (printf "Secret value format error for %s" $value) -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}

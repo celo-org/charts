@@ -74,13 +74,11 @@ blockscout:
       dbUser: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout2-dbUser
       dbPassword: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout2-dbPassword
       grafanaCloud: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-grafanaCloud
-      recaptcha:
-        projectId: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-recaptchaProjectId
-        siteKey: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-recaptchaSiteKey
-        apiKey: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-recaptchaApiKey
-        secretKey: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-recaptchaSecretKey
-      erlang:
-        cookie: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout2-erlangCookie
+      recaptcha_projectId: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-recaptchaProjectId
+      recaptcha_siteKey: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-recaptchaSiteKey
+      recaptcha_apiKey: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-recaptchaApiKey
+      recaptcha_secretKey: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-recaptchaSecretKey
+      erlang_cookie: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout2-erlangCookie
       campaignBannerApiUrl: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-campaignBannerApiUrl
 
 network:
