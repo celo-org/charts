@@ -2,7 +2,7 @@
 
 Chart which is used to deploy Blockscout for Celo Networks
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
 
 - [blockscout](#blockscout)
   - [Chart requirements](#chart-requirements)
@@ -36,7 +36,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.0.0" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.1.0" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -81,10 +81,10 @@ helm upgrade my-blockscout -f values-alfajores-blockscout2.yaml --namespace=celo
 | blockscout.api.rpcRegion | string | `"api"` | MY_REGION env variable for api pod. Do not change. |
 | blockscout.api.strategy | object | `{"rollingUpdate":{"maxSurge":1,"maxUnavailable":"20%"}}` | UpdateStrategy for api deployment |
 | blockscout.api.suffix | object | `{"enabled":false,"path":""}` | If api component is served at rootPath |
-| blockscout.eventStream | object | `{"beanstalkdHost":"","beanstalkdPort":"","enableEventStream":false,"livenessProbe":{},"port":4000,"readinessProbe":{},"replicas":0,"resources":{"requests":{"cpu":2,"memory":"1000Mi"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}}` | Configuraton for the eventStream component |
+| blockscout.eventStream | object | `{"beanstalkdHost":"","beanstalkdPort":"","enabled":false,"livenessProbe":{},"port":4000,"readinessProbe":{},"replicas":0,"resources":{"requests":{"cpu":2,"memory":"1000Mi"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}}` | Configuraton for the eventStream component |
 | blockscout.eventStream.beanstalkdHost | string | `""` | `BEANSTALKD_HOST` env for eventStream deployment |
 | blockscout.eventStream.beanstalkdPort | string | `""` | `BEANSTALKD_PORT` env for eventStream deployment |
-| blockscout.eventStream.enableEventStream | bool | `false` | Enable the eventStream component |
+| blockscout.eventStream.enabled | bool | `false` | Enable the eventStream component |
 | blockscout.eventStream.livenessProbe | object | `{}` | livenessProbe for eventStream container |
 | blockscout.eventStream.readinessProbe | object | `{}` | readinessProbe for eventStream container |
 | blockscout.eventStream.replicas | int | `0` | replicas for eventStream deployment |
@@ -147,8 +147,12 @@ helm upgrade my-blockscout -f values-alfajores-blockscout2.yaml --namespace=celo
 | blockscout.web.strategy | object | `{"rollingUpdate":{"maxSurge":1,"maxUnavailable":"20%"}}` | UpdateStrategy for web deployment |
 | blockscout.web.tokenIcons | object | `{"enabled":false}` | Show token icons |
 | changeCause | string | `""` | Add annotation with a message about the upgrade process trigger. Intended to be used by CD or deployment tool |
-| infrastructure | object | `{"affinity":{},"domainName":"celo-testnet.org","gcp":{"projectId":"celo-testnet-production"},"grafanaUrl":"https://clabs.grafana.net","metrics":{"enabled":false},"nodeSelector":{}}` | Infrastructure/Kubernetes shared configuration |
+| infrastructure | object | `{"affinity":{},"configConnector":{"cloudSQL":{"backupConfiguration":{"enabled":false},"create":false,"diskAutoresize":true,"diskSize":25,"diskType":"PD_SSD","instanceName":"","region":"us-west1","rootPassword":"blockscout","tier":"db-f1-micro","userPassword":"blockscout","username":"blockscout"},"namespace":"cnrm-system","overrideCloudSQLGcloudSA":"","overrideCloudSecretsGcloudSA":""},"database":{"connectionName":"project:region:db-name","name":"blockscout","port":5432,"proxy":{"host":"127.0.0.1","livenessProbe":{},"port":5432,"readinessProbe":{},"resources":{"requests":{"cpu":"10m","memory":"20Mi"}}}},"domainName":"celo-testnet.org","gcp":{"projectId":"celo-testnet-production"},"grafanaUrl":"https://clabs.grafana.net","metrics":{"enabled":false},"nodeSelector":{}}` | Infrastructure/Kubernetes shared configuration |
 | infrastructure.affinity | object | `{}` | Default affinity for the pods |
+| infrastructure.configConnector.overrideCloudSQLGcloudSA | string | `""` | Set an existing GCP Service Account to skip using config connector for creating the account Account must exists, have the role roles/cloudsql.client and be authorized to be impersonated by the k8s service account {{ .Release.Name }}-cloudsql in the {{ .Release.Namespace }} namespace |
+| infrastructure.database.proxy.livenessProbe | object | `{}` | livenessProbe for cloud-sql container |
+| infrastructure.database.proxy.readinessProbe | object | `{}` | livinessProbe for cloud-sql container |
+| infrastructure.database.proxy.resources | object | `{"requests":{"cpu":"10m","memory":"20Mi"}}` | resources for cloud-sql container |
 | infrastructure.grafanaUrl | string | `"https://clabs.grafana.net"` | Grafana url to use during deployment |
 | infrastructure.metrics | object | `{"enabled":false}` | Enable prometheus metrics, using annotations |
 | infrastructure.nodeSelector | object | `{}` | Default nodeSelector for the pods |
