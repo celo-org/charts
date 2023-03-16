@@ -9,7 +9,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/c
 - [akeyless-gcp-producer](./charts/akeyless-gcp-producer/README.md): Deploys Akeyless GCP custom producer.
 - [akeyless-grafana-cloud-producer](./charts/akeyless-grafana-cloud-producer/README.md): Deploys Akeyless Grafana Cloud custom producer.
 - [akeyless-okta-producer](./charts/akeyless-okta-producer/README.md): Deploys Akeyless Okta custom producer.
--[blockscout](./charts/blockscout/README.md): Helm chart for deploying the Blockscout-based Celo Explorer. 
+- [blockscout](./charts/blockscout/README.md): Helm chart for deploying the Blockscout-based Celo Explorer. 
 - [celo-fullnode-backups](./charts/celo-fullnode-backups/README.md): Automate celo-blockchain chain backups using PVC snapshots
 - [celo-fullnode](./charts/celo-fullnode/README.md): Deploy Celo Network nodes with different configurations (archive nodes, light nodes, etc.)
 - [clean-pvcs](./charts/clean-pvcs/README.md): Delete PVCs that are not mounted and have not been recently created
