@@ -19,17 +19,6 @@ Defines common annotations across all blockscout components.
 kubernetes.io/change-cause: {{ default "No change-cause provided" .Values.changeCause }}
 {{- end -}}
 
-
-{{- /*
-Sanitize GCP Service account name
-*/ -}}
-{{- define "celo.blockscout.sanitize-gcp-service-account-name" -}}
-{{- if lt (len .name) 6 }}
-{{- fail "Google Service Account name is not valid. Lenght must be between 6 - 30 characters" }}
-{{- end -}}
-{{ trunc 30 (lower .name) | replace "_" "-" | replace "." "-" }}
-{{- end -}}
-
 {{- define "celo.blockscout.instance-name" -}}
 {{- $database := default .Values.infrastructure.database .Database -}}
 {{- $connection := split ":" $database.connectionName -}}
@@ -38,7 +27,7 @@ Sanitize GCP Service account name
 
 {{- define "celo.blockscout.database-connection-string" -}}
 {{- $database := default .Values.infrastructure.database .Database -}}
-{{ .Values.infrastructure.database.connectionName }}=tcp:{{ .Values.infrastructure.database.port }}
+{{ $database.connectionName }}=tcp:{{ $database.port }}
 {{- end -}}
 
 {{- define "celo.blockscout.hook-annotations" -}}
