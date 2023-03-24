@@ -5,8 +5,9 @@ Defines common labels across all blockscout components.
 app: blockscout
 chart: blockscout
 release: {{ .Release.Name }}
-heritage: {{ .Release.Service }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+
 {{- define "celo.blockscout.elixir.labels" -}}
 erlang-cluster: {{ .Release.Name }}
 {{- end -}}
@@ -18,6 +19,24 @@ Defines common annotations across all blockscout components.
 kubernetes.io/change-cause: {{ default "No change-cause provided" .Values.changeCause }}
 {{- end -}}
 
+{{- define "celo.blockscout.instance-name" -}}
+{{- $database := default .Values.infrastructure.database .Database -}}
+{{- $connection := split ":" $database.connectionName -}}
+{{ $connection._2 }}
+{{- end -}}
+
+{{- define "celo.blockscout.database-connection-string" -}}
+{{- $database := default .Values.infrastructure.database .Database -}}
+{{ $database.connectionName }}=tcp:{{ $database.port }}
+{{- end -}}
+
+{{- define "celo.blockscout.hook-annotations" -}}
+helm.sh/hook: pre-install, pre-upgrade
+helm.sh/hook-weight: "{{ .weight | default 0 }}"
+helm.sh/hook-delete-policy: {{ .delete_policy | default "before-hook-creation" }}
+helm.sh/resource-policy: keep
+{{- end -}}
+
 {{- /*
 Defines the CloudSQL proxy container that terminates
 after termination of the main container.
@@ -25,42 +44,61 @@ Should be included as the last container as it contains
 the `volumes` section.
 */ -}}
 {{- define "celo.blockscout.container.db-terminating-sidecar" -}}
+{{- $database := default .Values.infrastructure.database .Database -}}
+{{- if .Values.infrastructure.database.enableCloudSQLProxy -}}
 - name: cloudsql-proxy
   image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
   lifecycle:
     postStart:
       exec:
-        command: ["/bin/sh", "-c", "until nc -z {{ .Database.proxy.host }}:{{ .Database.proxy.port }}; do sleep 1; done"]
+        command: [
+          "/bin/sh", "-c",
+          "sleep {{ .optionalSleep | default 0 }};",
+          "until nc -z {{ $database.proxy.host }}:{{ $database.proxy.port }}; do sleep 1; done"
+        ]
   command:
   - /bin/sh
   args:
   - -c
   - |
-    /cloud_sql_proxy \
-    -instances={{ .Database.connectionName }}=tcp:{{ .Database.port }} \
-    -credential_file=/secrets/cloudsql/credentials.json &
-    CHILD_PID=$!
-    (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
-    wait $CHILD_PID
-    if [[ -f "/tmp/pod/main-terminated" ]]; then exit 0; fi
+      /cloud_sql_proxy \
+      -instances={{ include "celo.blockscout.database-connection-string" . }} &
+      CHILD_PID=$!
+      (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
+      wait $CHILD_PID
+      if [[ -f "/tmp/pod/main-terminated" ]]; then exit 0; fi
   securityContext:
     runAsUser: 2  # non-root user
     allowPrivilegeEscalation: false
   volumeMounts:
-  - name: blockscout-cloudsql-credentials
-    mountPath: /secrets/cloudsql
-    readOnly: true
   - mountPath: /tmp/pod
     name: temporary-dir
     readOnly: true
 {{- end -}}
+{{- end -}}
 
-{{- /* Defines the volume with CloudSQL proxy credentials file. */ -}}
-{{- define "celo.blockscout.volume.cloudsql-credentials" -}}
-- name: blockscout-cloudsql-credentials
-  secret:
-    defaultMode: 420
-    secretName: blockscout-cloudsql-credentials
+{{- /*
+Defines the CloudSQL proxy container that terminates
+after termination of the main container.
+Should be included as the last container as it contains
+the `volumes` section.
+*/ -}}
+{{- define "celo.blockscout.container.init-container-wait-sql-instance" -}}
+- name: wait-cloudsql
+  image: gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
+  command:
+  - /bin/sh
+  args:
+  - -c
+  - |
+      sleep {{ .optionalSleep | default 0 }}
+      until gcloud sql instances describe {{ include "celo.blockscout.instance-name" . }} | grep state | grep RUNNABLE > /dev/null; do 
+        sleep 5; 
+      done
+  securityContext:
+    runAsUser: 1000  # non-root user
+    allowPrivilegeEscalation: false
+  volumeMounts:
 {{- end -}}
 
 {{- /* Defines an empty dir volume with write access for temporary pid files. */ -}}
@@ -98,35 +136,42 @@ Should be included as the last container as it contains
 the `volumes` section.
 */ -}}
 {{- define "celo.blockscout.container.db-sidecar" -}}
+{{- if .Values.infrastructure.database.enableCloudSQLProxy -}}
+{{- $database_host := default .Values.infrastructure.database.proxy.host ((.Database).proxy).connectionName -}}
 - name: cloudsql-proxy
   image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
   lifecycle:
     postStart:
       exec:
-        command: ["/bin/sh", "-c", "until nc -z {{ .Database.proxy.host }}:{{ .Database.proxy.port }}; do sleep 1; done"]
-  command: ["/cloud_sql_proxy",
-            "-instances={{ .Database.connectionName }}=tcp:{{ .Database.port }}",
-            "-credential_file=/secrets/cloudsql/credentials.json",
-            "-term_timeout=30s"]
-  {{- with .Database.proxy.livenessProbe }}
+        command: [
+          "/bin/sh", "-c", 
+          "until nc -z {{ .Values.infrastructure.database.proxy.host }}:{{ .Values.infrastructure.database.proxy.port }}; do sleep 1; done"
+        ]
+  command:
+  - /bin/sh
+  - -c
+  args:
+  - |
+    /cloud_sql_proxy \
+    -instances={{ include "celo.blockscout.database-connection-string" . }} \
+    -term_timeout=30s
+  {{- with .Values.infrastructure.database.proxy.livenessProbe }}
   livenessProbe:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Database.proxy.readinessProbe }}
+  {{- with .Values.infrastructure.database.proxy.readinessProbe }}
   readinessProbe:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Database.proxy.resources }}
+  {{- $resources := default .Values.infrastructure.database.proxy.resources (((.Database).proxy).resources) }}
+  {{- with $resources }}
   resources:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   securityContext:
     runAsUser: 2  # non-root user
     allowPrivilegeEscalation: false
-  volumeMounts:
-    - name: blockscout-cloudsql-credentials
-      mountPath: /secrets/cloudsql
-      readOnly: true
+{{- end -}}
 {{- end -}}
 
 {{- /*
@@ -134,12 +179,14 @@ Defines shared environment variables for all
 blockscout components.
 */ -}}
 {{- define "celo.blockscout.env-vars" -}}
+{{- $user := .Values.blockscout.shared.secrets.dbUser -}}
+{{- $password := .Values.blockscout.shared.secrets.dbPassword -}}
 - name: DATABASE_USER
-  value: {{ .Values.blockscout.shared.secrets.dbUser }}
+  value: {{ $user }}
 - name: DATABASE_PASSWORD
-  value: {{ .Values.blockscout.shared.secrets.dbPassword }}
+  value: {{ $password }}
 - name: ERLANG_COOKIE
-  value: {{ .Values.blockscout.shared.secrets.erlang.cookie }}
+  value: {{ .Values.blockscout.shared.secrets.erlang_cookie }}
 - name: POD_IP
   valueFrom:
     fieldRef:
@@ -163,13 +210,13 @@ blockscout components.
 - name: ETHEREUM_JSONRPC_WS_URL
   value: {{ .Values.network.nodes.archiveNodes.jsonrpcWsUrl }}
 - name: PGUSER
-  value: {{ .Values.blockscout.shared.secrets.dbUser }}
+  value: {{ $user }}
 - name: DATABASE_DB
-  value: {{ .Database.name }}
+  value: {{ .Values.infrastructure.database.name }}
 - name: DATABASE_HOSTNAME
-  value: {{ .Database.proxy.host | quote }}
+  value: {{ .Values.infrastructure.database.proxy.host | quote }}
 - name: DATABASE_PORT
-  value: {{ .Database.proxy.port | quote }}
+  value: {{ .Values.infrastructure.database.proxy.port | quote }}
 - name: WOBSERVER_ENABLED
   value: "false"
 - name: HEALTHY_BLOCKS_PERIOD

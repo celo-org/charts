@@ -17,11 +17,11 @@ spec:
           labels:
             {{- include "celo.blockscout.labels" . | nindent 12 }}
         spec:
-          serviceAccountName: {{ .Release.Name }}-rbac
+          serviceAccountName: {{ .Release.Name }}
           initContainers:
           {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 10 }}
           containers:
-          {{- $data := dict "Values" .Values "Database" .Values.blockscout.indexer.db }}
+          {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db }}
           {{- include "celo.blockscout.container.db-terminating-sidecar" $data | nindent 10 }}
           - name: metadata-crawler
             image: {{ .Values.blockscout.metadataCrawler.image.repository }}:{{ .Values.blockscout.metadataCrawler.image.tag }}
@@ -57,7 +57,6 @@ spec:
             - mountPath: /tmp/pod
               name: temporary-dir
           volumes:
-            {{- include "celo.blockscout.volume.cloudsql-credentials" . | nindent 12 }}
             {{- include "celo.blockscout.volume.temporary-dir" . | nindent 12 }}
           restartPolicy: Never
 {{- end }}

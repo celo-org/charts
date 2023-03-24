@@ -1,6 +1,9 @@
+---
 blockscout:
   eventStream:
     replicas: 1
+    beanstalkdHost: "rc1staging-governance-notifications-beanstalkd.event-notifications.svc.cluster.local"
+
   indexer:
     db:
       connectionName: celo-testnet-production:us-west1:rc1staging
@@ -16,7 +19,6 @@ blockscout:
         cpu: 5
     enableEventStream: true
     beanstalkdPort: "11300"
-    beanstalkdHost: "rc1staging-governance-notifications-beanstalkd.event-notifications.svc.cluster.local"
   api:
     autoscaling:
       maxReplicas: 2
@@ -66,6 +68,9 @@ blockscout:
   metadataCrawler:
     enabled: true
   shared:
+    image:
+      repository: gcr.io/celo-testnet/blockscout
+      tag: f9025063d83005326caccc008e888256c21671ff
     epochRewards:
       enabled: true
     secrets:
@@ -73,13 +78,11 @@ blockscout:
       dbUser: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-dbUser
       dbPassword: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-dbPassword
       grafanaCloud: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-grafanaCloud
-      recaptcha:
-        projectId: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaProjectId
-        siteKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaSiteKey
-        apiKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaApiKey
-        secretKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaSecretKey
-      erlang:
-        cookie: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-erlangCookie
+      recaptcha_projectId: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaProjectId
+      recaptcha_siteKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaSiteKey
+      recaptcha_apiKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaApiKey
+      recaptcha_secretKey: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-recaptchaSecretKey
+      erlang_cookie: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-erlangCookie
       campaignBannerApiUrl: gcp:secretmanager:projects/365081401101/secrets/rc1staging-blockscout-campaignBannerApiUrl
 
 network:
@@ -97,5 +100,3 @@ infrastructure:
     enabled: true
   gcp:
     projectId: celo-testnet-production
-  cloudSql:
-    overrideGcpSa: ""

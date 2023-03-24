@@ -17,7 +17,7 @@ blockscout:
         memory: 1000Mi
         cpu: 2
     # -- Enable the eventStream component
-    enableEventStream: false
+    enabled: false
     # -- `BEANSTALKD_PORT` env for eventStream deployment
     beanstalkdPort: ""
     # -- `BEANSTALKD_HOST` env for eventStream deployment
@@ -66,26 +66,6 @@ blockscout:
       port: 5432
       # -- Configuration for the CloudSQL proxy (https://cloud.google.com/sql/docs/mysql/sql-proxy)
       proxy:
-        host: 127.0.0.1
-        port: 5432
-        # -- readinessProbe for cloud-sql container
-        readinessProbe: {}
-          # tcpSocket:
-          #   port: 5432
-          # initialDelaySeconds: 30
-          # periodSeconds: 10
-          # timeoutSeconds: 5
-          # successThreshold: 1
-          # failureThreshold: 5
-        # -- livenessProbe for cloud-sql container
-        livenessProbe: {}
-          # tcpSocket:
-          #   port: 5432
-          # initialDelaySeconds: 30
-          # periodSeconds: 10
-          # timeoutSeconds: 5
-          # successThreshold: 1
-          # failureThreshold: 5
         # -- resources for cloud-sql container
         resources:
           requests:
@@ -170,26 +150,6 @@ blockscout:
       port: 5432
       # -- Configuration for the CloudSQL proxy (https://cloud.google.com/sql/docs/mysql/sql-proxy)
       proxy:
-        host: 127.0.0.1
-        port: 5432
-        # -- livinessProbe for cloud-sql container
-        readinessProbe: {}
-          # tcpSocket:
-          #   port: 5432
-          # initialDelaySeconds: 30
-          # periodSeconds: 10
-          # timeoutSeconds: 5
-          # successThreshold: 1
-          # failureThreshold: 5
-        # -- livenessProbe for cloud-sql container
-        livenessProbe: {}
-          # tcpSocket:
-          #   port: 5432
-          # initialDelaySeconds: 30
-          # periodSeconds: 10
-          # timeoutSeconds: 5
-          # successThreshold: 1
-          # failureThreshold: 5
         # -- resources for cloud-sql container
         resources:
           requests:
@@ -276,26 +236,6 @@ blockscout:
       port: 5432
       # -- Configuration for the CloudSQL proxy (https://cloud.google.com/sql/docs/mysql/sql-proxy)
       proxy:
-        host: 127.0.0.1
-        port: 5432
-        # -- readinessProbe for cloud-sql container
-        readinessProbe: {}
-          # tcpSocket:
-          #   port: 5432
-          # initialDelaySeconds: 30
-          # periodSeconds: 10
-          # timeoutSeconds: 5
-          # successThreshold: 1
-          # failureThreshold: 5
-        # -- livenessProbe for cloud-sql container
-        livenessProbe: {}
-          # tcpSocket:
-          #   port: 5432
-          # initialDelaySeconds: 30
-          # periodSeconds: 10
-          # timeoutSeconds: 5
-          # successThreshold: 1
-          # failureThreshold: 5
         # -- resources for cloud-sql container
         resources:
           requests:
@@ -352,8 +292,6 @@ blockscout:
       financeToolsList: '[{"url":"https://celotracker.com/", "title":"Celo Tracker"}, {"url":"https://celo.tax/", "title":"celo.tax"}, {"url":"https://trelis.com/", "title": "Trelis"}]'
       learningList: '[{"url": "https://celo.org/papers/whitepaper", "title":"Celo Whitepaper"}, {"url": "https://learn.figment.io/protocols/celo", "title":"Learn Celo"}, {"url": "https://www.coinbase.com/price/celo", "title":"Coinbase Earn"}]'
       resourcesList: '[{"url":"https://celovote.com/", "title":"Celo Vote"}, {"url":"https://forum.celo.org/", "title":"Celo Forum"}, {"url":"https://thecelo.com/", "title":"TheCelo"}, {"url":"https://celo.org/validators/explore", "title":"Validators"}, {"url":"https://celoreserve.org/", "title":"Celo Reserve"}, {"url":"https://docs.celo.org/", "title":"Celo Docs"}]'
-    # -- k8s secret with Google recaptcha secret. It needs to pre-exist
-    recaptchaSecretName: ""
     stats:
       enabled: false
       reportUrl: ""
@@ -393,7 +331,6 @@ blockscout:
     # -- Discord server for notifications
     discordClusterName: ""
 
-
   shared:
     # -- Enable epochRewards
     epochRewards:
@@ -401,7 +338,7 @@ blockscout:
     # -- Image to use for blockscout components
     image:
       repository: gcr.io/celo-testnet/blockscout
-      pullPolicy: IfNotPresent
+      pullPolicy: Always
       tag: v2.0.4-beta-celo
     # -- Max delay in seconds for the indexer to be considered unhealthy
     healthyBlocksPeriod: 300
@@ -422,13 +359,11 @@ blockscout:
       grafanaCloud: ""
       dbUser: ""
       dbPassword: ""
-      recaptcha:
-        projectId: ""
-        siteKey: ""
-        apiKey: ""
-        secretKey: ""
-      erlang:
-        cookie: ""
+      recaptcha_projectId: ""
+      recaptcha_siteKey: ""
+      recaptcha_apiKey: ""
+      recaptcha_secretKey: ""
+      erlang_cookie: ""
       campaignBannerApiUrl: ""
 
 # -- Configuration related with the CELO network
@@ -448,6 +383,9 @@ infrastructure:
   domainName: celo-testnet.org
   gcp:
     projectId: celo-testnet-production
+    # -- GCP Service Account to use with Workload Identity.
+    # If empty, `.Release.Name@projectId.iam.gserviceaccount.com` will be used
+    serviceAccount: ""
   # -- Grafana url to use during deployment
   grafanaUrl: https://clabs.grafana.net
   # -- Enable prometheus metrics, using annotations
@@ -457,6 +395,37 @@ infrastructure:
   affinity: {}
   # -- Default nodeSelector for the pods
   nodeSelector: {}
+  database:
+    enableCloudSQLProxy: true
+    name: blockscout
+    connectionName: project:region:db-name
+    port: 5432
+    proxy:
+      host: 127.0.0.1
+      port: 5432
+      # -- livinessProbe for cloud-sql container
+      readinessProbe: {}
+        # tcpSocket:
+        #   port: 5432
+        # initialDelaySeconds: 30
+        # periodSeconds: 10
+        # timeoutSeconds: 5
+        # successThreshold: 1
+        # failureThreshold: 5
+      # -- livenessProbe for cloud-sql container
+      livenessProbe: {}
+        # tcpSocket:
+        #   port: 5432
+        # initialDelaySeconds: 30
+        # periodSeconds: 10
+        # timeoutSeconds: 5
+        # successThreshold: 1
+        # failureThreshold: 5
+      # -- resources for cloud-sql container
+      resources:
+        requests:
+          memory: 20Mi
+          cpu: 10m
 
 # -- Add annotation with a message about the upgrade process trigger. Intended to be used by CD or deployment tool
 changeCause: ""

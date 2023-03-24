@@ -1,3 +1,4 @@
+{{- if gt (int .Values.blockscout.eventStream.replicas) 0 }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,9 +34,10 @@ spec:
         component: blockscout-event-stream
         {{- include "celo.blockscout.elixir.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ .Release.Name }}-rbac
+      serviceAccountName: {{ .Release.Name }}
       terminationGracePeriodSeconds: {{ .Values.blockscout.eventStream.terminationGracePeriodSeconds }}
       initContainers:
+      {{- include "celo.blockscout.container.init-container-wait-sql-instance" . | nindent 6 }}
       {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 6 }}
       containers:
       - name: blockscout-event-stream
@@ -73,13 +75,13 @@ spec:
         - name: METRICS_ENABLED
           value: {{ .Values.infrastructure.metrics.enabled | quote }}
         - name: ENABLE_EVENT_STREAM
-          value: {{ .Values.blockscout.eventStream.enableEventStream | quote }}
+          value: {{ (ternary "true" "false" (gt (int .Values.blockscout.eventStream.replicas) 0)) | quote }}
         - name: BEANSTALKD_PORT
           value: {{ .Values.blockscout.eventStream.beanstalkdPort | quote }}
         - name: BEANSTALKD_HOST
           value: {{ .Values.blockscout.eventStream.beanstalkdHost | quote }}
         - name: ERLANG_COOKIE
-          value: {{ .Values.blockscout.shared.secrets.erlang.cookie }}
+          value: {{ .Values.blockscout.shared.secrets.erlang_cookie }}
         - name: POD_IP
           valueFrom:
             fieldRef:
@@ -92,3 +94,4 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}
