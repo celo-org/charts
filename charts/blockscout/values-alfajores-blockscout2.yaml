@@ -151,6 +151,3 @@ network:
 infrastructure:
   metrics:
     enabled: true
-  configConnector:
-    overrideCloudSQLGcloudSA: alfajores-blockscout2-rbac
-    overrideCloudSecretsGcloudSA: alfajores-blockscout2-rbac

@@ -31,26 +31,14 @@ Sanitize GCP Service account name
 {{- end -}}
 
 {{- define "celo.blockscout.instance-name" -}}
-{{- if .Values.infrastructure.configConnector.cloudSQL.create -}}
-{{ .Values.infrastructure.configConnector.cloudSQL.instanceName | default .Release.Name | replace "_" "-" | replace "." "-" }}
-{{- else -}}
-{{- $connection := split ":" .Values.infrastructure.database.connectionName -}}
+{{- $database := default .Values.infrastructure.database .Database -}}
+{{- $connection := split ":" $database.connectionName -}}
 {{ $connection._2 }}
-{{- end -}}
-{{- end -}}
-
-{{- define "celo.blockscout.connection-name" -}}
-{{- if .Values.infrastructure.configConnector.cloudSQL.create -}}
-{{ .Values.infrastructure.gcp.projectId }}:{{ .Values.infrastructure.configConnector.cloudSQL.region}}:{{ include "celo.blockscout.instance-name" . }}
-{{- else -}}
-{{ .Values.infrastructure.database.connectionName }}
-{{- end -}}
 {{- end -}}
 
 {{- define "celo.blockscout.database-connection-string" -}}
-{{- $connection_name := include "celo.blockscout.connection-name" . -}}
-{{- $connection_port := ternary "5432" .Values.infrastructure.database.port .Values.infrastructure.configConnector.cloudSQL.create -}}
-{{ $connection_name }}=tcp:{{ $connection_port }}
+{{- $database := default .Values.infrastructure.database .Database -}}
+{{ .Values.infrastructure.database.connectionName }}=tcp:{{ .Values.infrastructure.database.port }}
 {{- end -}}
 
 {{- define "celo.blockscout.hook-annotations" -}}
@@ -60,7 +48,6 @@ helm.sh/hook-delete-policy: {{ .delete_policy | default "before-hook-creation" }
 helm.sh/resource-policy: keep
 {{- end -}}
 
-
 {{- /*
 Defines the CloudSQL proxy container that terminates
 after termination of the main container.
@@ -68,6 +55,8 @@ Should be included as the last container as it contains
 the `volumes` section.
 */ -}}
 {{- define "celo.blockscout.container.db-terminating-sidecar" -}}
+{{- $database := default .Values.infrastructure.database .Database -}}
+{{- if .Values.infrastructure.database.enableCloudSQLProxy -}}
 - name: cloudsql-proxy
   image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
   lifecycle:
@@ -76,7 +65,7 @@ the `volumes` section.
         command: [
           "/bin/sh", "-c",
           "sleep {{ .optionalSleep | default 0 }};",
-          "until nc -z {{ .Values.infrastructure.database.proxy.host }}:{{ .Values.infrastructure.database.proxy.port }}; do sleep 1; done"
+          "until nc -z {{ $database.proxy.host }}:{{ $database.proxy.port }}; do sleep 1; done"
         ]
   command:
   - /bin/sh
@@ -84,9 +73,6 @@ the `volumes` section.
   - -c
   - |
       /cloud_sql_proxy \
-      {{- if .Values.infrastructure.configConnector.overrideCloudSQLGcloudSA }}
-      -credential_file=/secrets/cloudsql/credentials.json \
-      {{- end }}
       -instances={{ include "celo.blockscout.database-connection-string" . }} &
       CHILD_PID=$!
       (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
@@ -96,14 +82,10 @@ the `volumes` section.
     runAsUser: 2  # non-root user
     allowPrivilegeEscalation: false
   volumeMounts:
-  {{- if .Values.infrastructure.configConnector.overrideCloudSecretsGcloudSA }}
-  - name: blockscout-cloudsql-credentials
-    mountPath: /secrets/cloudsql
-    readOnly: true
-  {{- end }}
   - mountPath: /tmp/pod
     name: temporary-dir
     readOnly: true
+{{- end -}}
 {{- end -}}
 
 {{- /*
@@ -121,7 +103,6 @@ the `volumes` section.
   - -c
   - |
       sleep {{ .optionalSleep | default 0 }}
-      [[ -f "/secrets/cloudsql/credentials.json" ]] && gcloud auth activate-service-account --key-file=/secrets/cloudsql/credentials.json
       until gcloud sql instances describe {{ include "celo.blockscout.instance-name" . }} | grep state | grep RUNNABLE > /dev/null; do 
         sleep 5; 
       done
@@ -129,21 +110,6 @@ the `volumes` section.
     runAsUser: 1000  # non-root user
     allowPrivilegeEscalation: false
   volumeMounts:
-  {{- if .Values.infrastructure.configConnector.overrideCloudSecretsGcloudSA }}
-  - name: blockscout-cloudsql-credentials
-    mountPath: /secrets/cloudsql
-    readOnly: true
-  {{- end }}
-{{- end -}}
-
-{{- /* Defines the volume with CloudSQL proxy credentials file. */ -}}
-{{- define "celo.blockscout.volume.cloudsql-credentials" -}}
-{{- if .Values.infrastructure.configConnector.overrideCloudSecretsGcloudSA -}}
-- name: blockscout-cloudsql-credentials
-  secret:
-    defaultMode: 420
-    secretName: blockscout-cloudsql-credentials
-{{- end -}}
 {{- end -}}
 
 {{- /* Defines an empty dir volume with write access for temporary pid files. */ -}}
@@ -181,6 +147,8 @@ Should be included as the last container as it contains
 the `volumes` section.
 */ -}}
 {{- define "celo.blockscout.container.db-sidecar" -}}
+{{- if .Values.infrastructure.database.enableCloudSQLProxy -}}
+{{- $database_host := default .Values.infrastructure.database.proxy.host ((.Database).proxy).connectionName -}}
 - name: cloudsql-proxy
   image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
   lifecycle:
@@ -196,9 +164,6 @@ the `volumes` section.
   args:
   - |
     /cloud_sql_proxy \
-    {{- if .Values.infrastructure.configConnector.overrideCloudSQLGcloudSA }}
-    -credential_file=/secrets/cloudsql/credentials.json \
-    {{- end }}
     -instances={{ include "celo.blockscout.database-connection-string" . }} \
     -term_timeout=30s
   {{- with .Values.infrastructure.database.proxy.livenessProbe }}
@@ -217,12 +182,7 @@ the `volumes` section.
   securityContext:
     runAsUser: 2  # non-root user
     allowPrivilegeEscalation: false
-  {{- if .Values.infrastructure.configConnector.overrideCloudSecretsGcloudSA }}
-  volumeMounts:
-    - name: blockscout-cloudsql-credentials
-      mountPath: /secrets/cloudsql
-      readOnly: true
-  {{- end }}
+{{- end -}}
 {{- end -}}
 
 {{- /*
@@ -230,8 +190,8 @@ Defines shared environment variables for all
 blockscout components.
 */ -}}
 {{- define "celo.blockscout.env-vars" -}}
-{{- $user := ternary .Values.infrastructure.configConnector.cloudSQL.username .Values.blockscout.shared.secrets.dbUser .Values.infrastructure.configConnector.cloudSQL.create -}}
-{{- $password := ternary .Values.infrastructure.configConnector.cloudSQL.userPassword .Values.blockscout.shared.secrets.dbPassword .Values.infrastructure.configConnector.cloudSQL.create -}}
+{{- $user := .Values.blockscout.shared.secrets.dbUser -}}
+{{- $password := .Values.blockscout.shared.secrets.dbPassword -}}
 - name: DATABASE_USER
   value: {{ $user }}
 - name: DATABASE_PASSWORD
@@ -288,22 +248,4 @@ Set a environment variable if the value is not empty.
 - name: {{ .name }}
   value: {{ .value | quote }}
 {{- end -}}
-{{- end -}}
-
-{{- define "celo.blockscout.all-secrets-from-secretmanager-names-new" -}}
-{{- $result := "" -}}
-{{- $values := (values .Values.blockscout.shared.secrets) -}}
-{{- range $value := (sortAlpha $values) -}}
-  {{- if $value -}}
-    {{- if kindIs "string" $value -}}
-      {{- $secret_name := split ":" $value -}}
-      {{- if (trim $secret_name._2) -}}
-        {{ $result = printf "%s,%s" $result (trim $secret_name._2) }}
-      {{- end -}}
-    {{- else -}}
-      {{- fail (printf "Secret value format error for %s" $value) -}}
-    {{- end -}}
-  {{- end -}}
-{{- end -}}
-{{- trimPrefix "," $result }}
 {{- end -}}

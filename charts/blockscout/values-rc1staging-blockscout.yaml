@@ -1,6 +1,9 @@
+---
 blockscout:
   eventStream:
     replicas: 1
+    beanstalkdHost: "rc1staging-governance-notifications-beanstalkd.event-notifications.svc.cluster.local"
+
   indexer:
     db:
       connectionName: celo-testnet-production:us-west1:rc1staging
@@ -16,7 +19,6 @@ blockscout:
         cpu: 5
     enableEventStream: true
     beanstalkdPort: "11300"
-    beanstalkdHost: "rc1staging-governance-notifications-beanstalkd.event-notifications.svc.cluster.local"
   api:
     autoscaling:
       maxReplicas: 2
@@ -66,6 +68,9 @@ blockscout:
   metadataCrawler:
     enabled: true
   shared:
+    image:
+      repository: gcr.io/celo-testnet/blockscout
+      tag: f9025063d83005326caccc008e888256c21671ff
     epochRewards:
       enabled: true
     secrets:
@@ -95,5 +100,3 @@ infrastructure:
     enabled: true
   gcp:
     projectId: celo-testnet-production
-  cloudSql:
-    overrideGcpSa: ""

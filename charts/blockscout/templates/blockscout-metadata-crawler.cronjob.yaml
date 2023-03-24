@@ -57,7 +57,6 @@ spec:
             - mountPath: /tmp/pod
               name: temporary-dir
           volumes:
-            {{- include "celo.blockscout.volume.cloudsql-credentials" . | nindent 12 }}
             {{- include "celo.blockscout.volume.temporary-dir" . | nindent 12 }}
           restartPolicy: Never
 {{- end }}

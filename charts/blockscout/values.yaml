@@ -338,7 +338,7 @@ blockscout:
     # -- Image to use for blockscout components
     image:
       repository: gcr.io/celo-testnet/blockscout
-      pullPolicy: IfNotPresent
+      pullPolicy: Always
       tag: v2.0.4-beta-celo
     # -- Max delay in seconds for the indexer to be considered unhealthy
     healthyBlocksPeriod: 300
@@ -383,6 +383,9 @@ infrastructure:
   domainName: celo-testnet.org
   gcp:
     projectId: celo-testnet-production
+    # -- GCP Service Account to use with Workload Identity.
+    # If empty, `.Release.Name@projectId.iam.gserviceaccount.com` will be used
+    serviceAccount: ""
   # -- Grafana url to use during deployment
   grafanaUrl: https://clabs.grafana.net
   # -- Enable prometheus metrics, using annotations
@@ -393,6 +396,7 @@ infrastructure:
   # -- Default nodeSelector for the pods
   nodeSelector: {}
   database:
+    enableCloudSQLProxy: true
     name: blockscout
     connectionName: project:region:db-name
     port: 5432
@@ -422,26 +426,6 @@ infrastructure:
         requests:
           memory: 20Mi
           cpu: 10m
-  configConnector:
-    # -- Set an existing GCP Service Account to skip using config connector for creating the account
-    # Account must exists, have the role roles/cloudsql.client and be authorized to be impersonated
-    # by the k8s service account {{ .Release.Name }}-cloudsql in the {{ .Release.Namespace }} namespace
-    overrideCloudSQLGcloudSA: ""
-    overrideCloudSecretsGcloudSA: ""
-    namespace: cnrm-system
-    cloudSQL:
-      create: false
-      backupConfiguration:
-        enabled: false
-      instanceName: ""
-      region: us-west1
-      tier: db-f1-micro
-      username: "blockscout"
-      userPassword: "blockscout"
-      rootPassword: "blockscout"
-      diskSize: 25
-      diskType: PD_SSD
-      diskAutoresize: true
 
 # -- Add annotation with a message about the upgrade process trigger. Intended to be used by CD or deployment tool
 changeCause: ""

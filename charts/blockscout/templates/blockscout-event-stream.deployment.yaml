@@ -1,4 +1,4 @@
-{{- if .Values.blockscout.eventStream.enabled }}
+{{- if gt (int .Values.blockscout.eventStream.replicas) 0 }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -75,7 +75,7 @@ spec:
         - name: METRICS_ENABLED
           value: {{ .Values.infrastructure.metrics.enabled | quote }}
         - name: ENABLE_EVENT_STREAM
-          value: {{ .Values.blockscout.eventStream.enabled | quote }}
+          value: {{ (ternary "true" "false" (gt (int .Values.blockscout.eventStream.replicas) 0)) | quote }}
         - name: BEANSTALKD_PORT
           value: {{ .Values.blockscout.eventStream.beanstalkdPort | quote }}
         - name: BEANSTALKD_HOST
