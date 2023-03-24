@@ -111,7 +111,7 @@ spec:
           value: {{ .Values.blockscout.web.accountPoolSize | quote }}
         {{- end }}
         {{- include "celo.blockscout.env-vars" $data | nindent 8 }}
-      {{- include "celo.blockscout.container.db-sidecar" . | nindent 6 }}
+      {{- include "celo.blockscout.container.db-sidecar" $data | nindent 6 }}
       volumes:
         {{- include "celo.blockscout.volume.temporary-dir" . | nindent 8 }}
       {{- $affinity := default .Values.infrastructure.affinity.affinity .Values.blockscout.api.affinity -}}
