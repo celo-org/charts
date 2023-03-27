@@ -8,6 +8,16 @@ release: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
+{{- /*
+Set a environment variable if the value is not empty.
+*/ -}}
+{{- define "celo.blockscout.conditional-env-var" -}}
+{{- if .value -}}
+- name: {{ .name }}
+  value: {{ ternary .value (.value | quote) (kindIs "string" .value) }}
+{{- end -}}
+{{- end -}}
+
 {{- define "celo.blockscout.elixir.labels" -}}
 erlang-cluster: {{ .Release.Name }}
 {{- end -}}
@@ -92,8 +102,8 @@ the `volumes` section.
   - -c
   - |
       sleep {{ .optionalSleep | default 0 }}
-      until gcloud sql instances describe {{ include "celo.blockscout.instance-name" . }} | grep state | grep RUNNABLE > /dev/null; do 
-        sleep 5; 
+      until gcloud sql instances describe {{ include "celo.blockscout.instance-name" . }} | grep state | grep RUNNABLE > /dev/null; do
+        sleep 5;
       done
   securityContext:
     runAsUser: 1000  # non-root user
@@ -144,7 +154,7 @@ the `volumes` section.
     postStart:
       exec:
         command: [
-          "/bin/sh", "-c", 
+          "/bin/sh", "-c",
           "until nc -z {{ .Values.infrastructure.database.proxy.host }}:{{ .Values.infrastructure.database.proxy.port }}; do sleep 1; done"
         ]
   command:
@@ -185,8 +195,7 @@ blockscout components.
   value: {{ $user }}
 - name: DATABASE_PASSWORD
   value: {{ $password }}
-- name: ERLANG_COOKIE
-  value: {{ .Values.blockscout.shared.secrets.erlang_cookie }}
+{{ include "celo.blockscout.conditional-env-var" (dict "name" "ERLANG_COOKIE" "value" .Values.blockscout.shared.secrets.erlang_cookie) }}
 - name: POD_IP
   valueFrom:
     fieldRef:
@@ -229,12 +238,14 @@ blockscout components.
   value: {{ .Values.blockscout.shared.image.tag }}
 {{- end -}}
 
-{{- /*
-Set a environment variable if the value is not empty.
-*/ -}}
-{{- define "celo.blockscout.conditional-env-var" -}}
-{{- if .value -}}
-- name: {{ .name }}
-  value: {{ .value | quote }}
+{{- define "celo.blockscout.getHostName" -}}
+{{- if eq .component "api" -}}
+{{- $apiHost := ternary (printf "%s-api.%s" .Release.Name .Values.infrastructure.domainName) .Values.blockscout.api.hostname (eq .Values.blockscout.api.hostname "") -}}
+{{ $apiHost }}
+{{- else if eq .component "web" -}}
+{{- $webHost := ternary (printf "%s.%s" .Release.Name .Values.infrastructure.domainName) .Values.blockscout.web.hostname (eq .Values.blockscout.web.hostname "") -}}
+{{ $webHost }}
+{{- else -}}
+{{- fail "getHostname needs \"component\" parameter equals to \"web\" or \"api\"" -}}
 {{- end -}}
 {{- end -}}

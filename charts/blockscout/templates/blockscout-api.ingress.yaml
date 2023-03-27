@@ -1,3 +1,4 @@
+{{- $apiHostName := include "celo.blockscout.getHostName" (dict "Values" .Values "Release" .Release "component" "api") -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -15,10 +16,10 @@ spec:
   ingressClassName: {{ default "nginx" .Values.ingressClassName }}
   tls:
   - hosts:
-    - {{ .Release.Name }}-api.{{ .Values.infrastructure.domainName }}
-    secretName: {{ .Release.Name }}-api-tls
+    - {{ $apiHostName }}
+    secretName: {{ $apiHostName }}-tls
   rules:
-  - host: {{ .Release.Name }}-api.{{ .Values.infrastructure.domainName }}
+  - host: {{ $apiHostName }}
     http:
       paths:
       - path: /

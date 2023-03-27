@@ -19,8 +19,7 @@ spec:
       initContainers:
       {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 6 }}
       containers:
-      {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db "optionalSleep" "10" -}}
-      {{- include "celo.blockscout.container.db-terminating-sidecar" $data | nindent 6 }}
+      {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db "optionalSleep" "10" }}
       - name: blockscout-migration
         image: {{ .Values.blockscout.shared.image.repository }}:{{ .Values.blockscout.shared.image.tag }}
         imagePullPolicy: {{ .Values.blockscout.shared.image.pullPolicy }}
@@ -33,7 +32,7 @@ spec:
         - -c
         - |
            trap "touch /tmp/pod/main-terminated" EXIT
-           [ ${DROP_DB} == "true" ] && mix do ecto.drop, ecto.create
+           [ ${DROP_DB} == "true" ] && mix do ecto.drop, ecto.createenv
            mix do ecto.migrate --no-compile
         resources:
           requests:
@@ -46,6 +45,7 @@ spec:
         - name: DROP_DB
           value: "{{ default "false" .Values.blockscout.shared.db.drop }}"
         {{- include "celo.blockscout.env-vars" $data  | nindent 8 }}
+      {{- include "celo.blockscout.container.db-terminating-sidecar" $data | nindent 6 }}
       volumes:
         {{- include "celo.blockscout.volume.temporary-dir" . | nindent 8 }}
       restartPolicy: Never

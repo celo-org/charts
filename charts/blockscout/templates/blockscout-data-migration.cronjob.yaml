@@ -46,11 +46,6 @@ spec:
               - mountPath: /tmp/pod
                 name: temporary-dir
             env:
-              - name: INITIAL_VALUE
-                valueFrom:
-                  secretKeyRef:
-                    name: blockscout-data-migration-secret-key-ref
-                    key: initial-value
               {{- include "celo.blockscout.env-vars" $data | nindent 14 }}
           {{- include "celo.blockscout.container.db-terminating-sidecar" $data | nindent 10 }}
           volumes:
