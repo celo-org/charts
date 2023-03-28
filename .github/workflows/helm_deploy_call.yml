@@ -48,6 +48,11 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Export Environment Variables
+      uses: cardinalby/export-env-action@v2
+      with:
+        envFile: ./.github/workflows/.env
+
     - id: 'auth-gcp-no-master'
       name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v1'
