@@ -53,7 +53,7 @@ jobs:
     steps:
       - id: set-config
         run: |
-          if [ "${{ github.event.inputs.helmfile }}" == "helmfiles-deployments/blockscout/cannoli.yaml" ]; then
+          if [ "${{ github.inputs.helmfile }}" == "helmfiles-deployments/blockscout/cannoli.yaml" ]; then
             echo "cluster=cannoli" >> "$GITHUB_OUTPUT"
             echo "project=cannoli-380909" >> "$GITHUB_OUTPUT"
             echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
