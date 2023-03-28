@@ -1,5 +1,5 @@
 ---
-name: 'Deploy a helm chart. Workflow dispatch'
+name: 'Deploy Helm Chart'
 
 on:
   push:
@@ -11,12 +11,14 @@ on:
         description: 'The helmfile to use for the deployment. It must be a local YAML file.'
         required: true
         type: choice
+        default: helmfiles-deployments/blockscout/cannoli.yaml
         options:
           - helmfiles-deployments/blockscout/cannoli.yaml
       action:
         description: 'The helmfile action to use for the deployment.'
         required: true
         type: choice
+        default: diff
         options:
           - diff
       # cluster-name:

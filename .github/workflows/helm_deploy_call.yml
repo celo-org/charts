@@ -1,5 +1,5 @@
 ---
-name: 'Deploy a helm chart. Worflow Call'
+name: 'Deploy a helm chart. Generic workflow'
 
 on:
   workflow_call:
