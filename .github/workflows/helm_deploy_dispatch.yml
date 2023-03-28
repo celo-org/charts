@@ -2,9 +2,6 @@
 name: 'Deploy Helm Chart'
 
 on:
-  push:
-    branches:
-      - jcortejoso/helm-deploy-action
   workflow_dispatch:
     inputs:
       helmfile:
@@ -19,30 +16,6 @@ on:
         type: choice
         options:
           - diff
-      # cluster-name:
-      #   description: 'The GKE cluster name to use for the deployment.'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - cannoli
-      # project:
-      #   description: 'The GCP project name for the cluster'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - cannoli-380909
-      # cluster-location:
-      #   description: 'The GKE cluster location'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - us-west1-a
-      # service-account:
-      #   description: 'The service account name to use for the deployment. Project must be authorized to use this service account with Workload Identity Pool.'
-      #   required: true
-      #   type: choice
-      #   options:
-      #     - deploy-helm-release@cannoli-380909.iam.gserviceaccount.com
 
 jobs:
   set-config:
@@ -67,10 +40,8 @@ jobs:
     uses: ./.github/workflows/helm_deploy_call.yml
     needs: set-config
     with:
-      # helmfile: ${{ github.event.inputs.helmfile }}
-      # action: ${{ github.event.inputs.action }}
-      helmfile: helmfiles-deployments/blockscout/cannoli.yaml
-      action: diff
+      helmfile: ${{ github.event.inputs.helmfile }}
+      action: ${{ github.event.inputs.action }}
       cluster-name: ${{ needs.set-config.outputs.cluster }}
       cluster-location: ${{ needs.set-config.outputs.cluster-location }}
       project: ${{ needs.set-config.outputs.project }}
