@@ -118,6 +118,8 @@ blockscout:
 
   # -- Configuraton for the api component
   api:
+    # -- Hostname for api ingress endpoint
+    hostname: ""
     # -- If api component is served at rootPath
     suffix:
       enabled: false
@@ -195,7 +197,8 @@ blockscout:
 
   # -- Configuraton for the web component
   web:
-    host: ""
+    # -- Hostname for web ingress endpoint (also applies to api at /(graphql|graphiql|api))
+    hostname: ""
     suffix:
       enabled: false
       path: ""
@@ -339,7 +342,7 @@ blockscout:
     image:
       repository: gcr.io/celo-testnet/blockscout
       pullPolicy: Always
-      tag: v2.0.4-beta-celo
+      tag: c6ca0da21bd238948d13ec2fabf4428a9dbbc7b6
     # -- Max delay in seconds for the indexer to be considered unhealthy
     healthyBlocksPeriod: 300
     erlangNodeName: blockscout

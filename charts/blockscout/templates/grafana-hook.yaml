@@ -1,3 +1,4 @@
+{{- if and .Values.blockscout.shared.secrets.grafanaCloud .Values.infrastructure.grafanaUrl -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -48,3 +49,4 @@ spec:
             defaultMode: 0777
       restartPolicy: Never
       terminationGracePeriodSeconds: 0
+{{- end -}}

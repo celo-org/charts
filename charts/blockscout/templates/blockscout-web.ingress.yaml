@@ -1,3 +1,4 @@
+{{- $webHostName := include "celo.blockscout.getHostName" (dict "Values" .Values "Release" .Release "component" "web") -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -39,43 +40,40 @@ spec:
   ingressClassName: {{ default "nginx" .Values.ingressClassName }}
   tls:
   - hosts:
-    - {{ .Release.Name }}.{{ .Values.infrastructure.domainName }}
-    secretName: {{ .Release.Name }}-web-tls
+    - {{ $webHostName }}
+    secretName: {{ $webHostName }}-tls
   rules:
-  - host: {{ .Release.Name }}.{{ .Values.infrastructure.domainName }}
+  - host: {{ $webHostName }}
     http:
       paths:
-      -
+      - pathType: Prefix
         {{- if .Values.blockscout.web.suffix.enabled }}
         path: /({{ .Values.blockscout.web.suffix.path }})/(api/v1/(decompiled_smart_contract|verified_smart_contracts))
-        {{ else }}
+        {{- else }}
         path: /api/v1/(decompiled_smart_contract|verified_smart_contracts)
         {{- end }}
-        pathType: Prefix
         backend:
           service:
             name: {{ .Release.Name }}-web
             port: 
               number: 4000
-      -
+      - pathType: Prefix
         {{- if .Values.blockscout.web.suffix.enabled }}
         path: /({{ .Values.blockscout.web.suffix.path }})/((graphql|graphiql|api).*)
-        {{ else }}
+        {{- else }}
         path: /(graphql|graphiql|api)
         {{- end }}
-        pathType: Prefix
         backend:
           service:
             name: {{ .Release.Name }}-api
             port: 
               number: 4000
-      -
+      - pathType: Prefix
         {{- if .Values.blockscout.web.suffix.enabled }}
         path: /{{ .Values.blockscout.web.suffix.path }}(/|$)(.*)
-        {{ else }}
+        {{- else }}
         path: /
         {{- end }}
-        pathType: Prefix
         backend:
           service:
             name: {{ .Release.Name }}-web
