@@ -46,7 +46,7 @@ on:
 
 jobs:
   helm-deploy:
-    uses: ./.github/workflows/helm_deploy_call.yaml
+    uses: ./.github/workflows/helm_deploy_call.yml
     with:
       helmfile: ${{ github.event.inputs.helmfile }}
       action: ${{ github.event.inputs.action }}
