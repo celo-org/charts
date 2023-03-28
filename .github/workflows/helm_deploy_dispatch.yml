@@ -1,0 +1,53 @@
+---
+name: 'Deploy a helm chart. Workflow dispatch'
+
+on:
+  workflow_dispatch:
+    inputs:
+      helmfile:
+        description: 'The helmfile to use for the deployment. It must be a local YAML file.'
+        required: true
+        type: choice
+        options:
+          - helmfiles-deployments/blockscout/cannoli.yaml
+      action:
+        description: 'The helmfile action to use for the deployment.'
+        required: true
+        type: choice
+        options:
+          - diff
+      # cluster-name:
+      #   description: 'The GKE cluster name to use for the deployment.'
+      #   required: true
+      #   type: choice
+      #   options:
+      #     - cannoli
+      # project:
+      #   description: 'The GCP project name for the cluster'
+      #   required: true
+      #   type: choice
+      #   options:
+      #     - cannoli-380909
+      # cluster-location:
+      #   description: 'The GKE cluster location'
+      #   required: true
+      #   type: choice
+      #   options:
+      #     - us-west1-a
+      # service-account:
+      #   description: 'The service account name to use for the deployment. Project must be authorized to use this service account with Workload Identity Pool.'
+      #   required: true
+      #   type: choice
+      #   options:
+      #     - deploy-helm-release@cannoli-380909.iam.gserviceaccount.com
+
+jobs:
+  helm-deploy:
+    uses: ./.github/workflows/helm_deploy_call.yaml
+    with:
+      helmfile: ${{ github.event.inputs.helmfile }}
+      action: ${{ github.event.inputs.action }}
+      cluster-name: cannoli
+      cluster-zone: us-west1-a
+      project: cannoli-380909
+      service-account: deploy-helm-release@cannoli-380909.iam.gserviceaccount.com
