@@ -2,9 +2,6 @@
 name: 'Deploy a helm chart. Workflow dispatch'
 
 on:
-  push:
-    branches:
-      - jcortejoso/helm-deploy-action
   workflow_dispatch:
     inputs:
       helmfile:
@@ -51,6 +48,6 @@ jobs:
       helmfile: ${{ github.event.inputs.helmfile }}
       action: ${{ github.event.inputs.action }}
       cluster-name: cannoli
-      cluster-zone: us-west1-a
+      cluster-location: us-west1-a
       project: cannoli-380909
       service-account: deploy-helm-release@cannoli-380909.iam.gserviceaccount.com
