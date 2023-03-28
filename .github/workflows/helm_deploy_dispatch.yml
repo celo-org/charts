@@ -10,13 +10,15 @@ on:
       helmfile:
         description: 'The helmfile to use for the deployment. It must be a local YAML file.'
         required: true
-        type: string
-        default: helmfiles-deployments/blockscout/cannoli.yaml
+        type: choice
+        options:
+          - helmfiles-deployments/blockscout/cannoli.yaml
       action:
         description: 'The helmfile action to use for the deployment.'
         required: true
-        type: string
-        default: diff
+        type: choice
+        options:
+          - diff
       # cluster-name:
       #   description: 'The GKE cluster name to use for the deployment.'
       #   required: true
@@ -53,7 +55,8 @@ jobs:
     steps:
       - id: set-config
         run: |
-          if [ "${{ github.inputs.helmfile }}" == "helmfiles-deployments/blockscout/cannoli.yaml" ]; then
+          # if [ "${{ github.event.inputs.helmfile }}" == "helmfiles-deployments/blockscout/cannoli.yaml" ]; then
+          if [ "helmfiles-deployments/blockscout/cannoli.yaml" == "helmfiles-deployments/blockscout/cannoli.yaml" ]; then
             echo "cluster=cannoli" >> "$GITHUB_OUTPUT"
             echo "project=cannoli-380909" >> "$GITHUB_OUTPUT"
             echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
