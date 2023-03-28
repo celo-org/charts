@@ -11,14 +11,12 @@ on:
         description: 'The helmfile to use for the deployment. It must be a local YAML file.'
         required: true
         type: choice
-        default: helmfiles-deployments/blockscout/cannoli.yaml
         options:
           - helmfiles-deployments/blockscout/cannoli.yaml
       action:
         description: 'The helmfile action to use for the deployment.'
         required: true
         type: choice
-        default: diff
         options:
           - diff
       # cluster-name:
@@ -50,8 +48,10 @@ jobs:
   helm-deploy:
     uses: ./.github/workflows/helm_deploy_call.yml
     with:
-      helmfile: ${{ github.event.inputs.helmfile }}
-      action: ${{ github.event.inputs.action }}
+      # helmfile: ${{ github.event.inputs.helmfile }}
+      # action: ${{ github.event.inputs.action }}
+      helmfile: helmfiles-deployments/blockscout/cannoli.yaml
+      action: diff
       cluster-name: cannoli
       cluster-location: us-west1-a
       project: cannoli-380909
