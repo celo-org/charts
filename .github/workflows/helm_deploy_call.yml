@@ -2,6 +2,9 @@
 name: 'Deploy a helm chart. Worflow Call'
 
 on:
+  push:
+    branches:
+      - jcortejoso/helm-deploy-action
   workflow_call:
     inputs:
       helmfile:
