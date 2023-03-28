@@ -1,0 +1,48 @@
+---
+name: 'Deploy Helm Chart'
+
+on:
+  workflow_dispatch:
+    inputs:
+      helmfile:
+        description: 'The helmfile to use for the deployment. It must be a local YAML file.'
+        required: true
+        type: choice
+        options:
+          - helmfiles-deployments/blockscout/cannoli.yaml
+      action:
+        description: 'The helmfile action to use for the deployment.'
+        required: true
+        type: choice
+        options:
+          - diff
+
+jobs:
+  set-config:
+    runs-on: ubuntu-latest
+    outputs:
+      cluster: ${{ steps.set-config.outputs.cluster }}
+      project: ${{ steps.set-config.outputs.project }}
+      cluster-location: ${{ steps.set-config.outputs.cluster-location }}
+      service-account: ${{ steps.set-config.outputs.service-account }}
+    steps:
+      - id: set-config
+        run: |
+          # if [ "${{ github.event.inputs.helmfile }}" == "helmfiles-deployments/blockscout/cannoli.yaml" ]; then
+          if [ "helmfiles-deployments/blockscout/cannoli.yaml" == "helmfiles-deployments/blockscout/cannoli.yaml" ]; then
+            echo "cluster=cannoli" >> "$GITHUB_OUTPUT"
+            echo "project=cannoli-380909" >> "$GITHUB_OUTPUT"
+            echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
+            echo "service-account=deploy-helm-release@cannoli-380909.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
+          fi
+
+  helm-deploy:
+    uses: ./.github/workflows/helm_deploy_call.yml
+    needs: set-config
+    with:
+      helmfile: ${{ github.event.inputs.helmfile }}
+      action: ${{ github.event.inputs.action }}
+      cluster-name: ${{ needs.set-config.outputs.cluster }}
+      cluster-location: ${{ needs.set-config.outputs.cluster-location }}
+      project: ${{ needs.set-config.outputs.project }}
+      service-account: ${{ needs.set-config.outputs.service-account }}
