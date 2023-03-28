@@ -50,27 +50,27 @@ jobs:
       with:
         envFile: ./.github/workflows/.env
 
-    - id: 'auth-gcp-no-master'
+    - id: 'auth-gcp-no-main'
       name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v1'
       with:
         workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
         service_account: ${{ inputs.service-account }}
-      if: github.ref != 'refs/heads/master'
+      if: github.ref != 'refs/heads/main'
 
-    - id: 'auth-gcp-master'
+    - id: 'auth-gcp-main'
       name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v1'
       with:
         workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER_MASTER }}
         service_account: ${{ inputs.service-account }}
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      timeout-minutes: 10
-      with:
-        limit-access-to-actor: true
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v3
+    #   timeout-minutes: 10
+    #   with:
+    #     limit-access-to-actor: true
 
     - name: 'Set up Cloud SDK'
       if: ${{ inputs.run-gke-credentials }}
