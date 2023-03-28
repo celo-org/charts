@@ -1,0 +1,10 @@
+---
+releases:
+  - name: rc1staging-blockscout
+    chart: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci/blockscout
+    version: 1.2.0
+    createNamespace: true
+    namespace: cannoli
+    missingFileHandler: Error
+    values:
+      - ../../charts/blockscout/values-rc1staging-blockscout.yaml

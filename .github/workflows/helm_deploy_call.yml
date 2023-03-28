@@ -29,7 +29,7 @@ on:
 
 env:
   KUBE_CONFIG_PATH: /home/runner/.kube/config
-  USE_GKE_GCLOUD_AUTH_PLUGIN: True
+  USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
 
 jobs:
   helmfile:
@@ -40,53 +40,53 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-    - name: Export Environment Variables
-      uses: cardinalby/export-env-action@v2
-      with:
-        envFile: ./.github/workflows/.env
+      - name: Export Environment Variables
+        uses: cardinalby/export-env-action@v2
+        with:
+          envFile: ./.github/workflows/.env
 
-    - id: 'auth-gcp-no-main'
-      name: 'Authenticate to Google Cloud'
-      uses: 'google-github-actions/auth@v1'
-      with:
-        workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-        service_account: ${{ inputs.service-account }}
-      if: github.ref != 'refs/heads/main'
+      - id: 'auth-gcp-no-main'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ inputs.service-account }}
+        if: github.ref != 'refs/heads/main'
 
-    - id: 'auth-gcp-main'
-      name: 'Authenticate to Google Cloud'
-      uses: 'google-github-actions/auth@v1'
-      with:
-        workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER_MASTER }}
-        service_account: ${{ inputs.service-account }}
-      if: github.ref == 'refs/heads/main'
+      - id: 'auth-gcp-main'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER_MASTER }}
+          service_account: ${{ inputs.service-account }}
+        if: github.ref == 'refs/heads/main'
 
-    # - name: Setup tmate session
-    #   uses: mxschmitt/action-tmate@v3
-    #   timeout-minutes: 10
-    #   with:
-    #     limit-access-to-actor: true
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      #   timeout-minutes: 10
+      #   with:
+      #     limit-access-to-actor: true
 
-    - name: 'Set up Cloud SDK'
-      if: ${{ inputs.run-gke-credentials }}
-      uses: 'google-github-actions/setup-gcloud@v1'
-      with:
-        install_components: 'core,gke-gcloud-auth-plugin,kubectl'
-        project_id: ${{ inputs.project }}
+      - name: 'Set up Cloud SDK'
+        if: ${{ inputs.run-gke-credentials }}
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          install_components: 'core,gke-gcloud-auth-plugin,kubectl'
+          project_id: ${{ inputs.project }}
 
-    - name: 'Get GKE credentials'
-      uses: google-github-actions/get-gke-credentials@v1
-      with:
-        cluster_name: ${{ inputs.cluster-name }}
-        location: ${{ inputs.cluster-location }}
+      - name: 'Get GKE credentials'
+        uses: google-github-actions/get-gke-credentials@v1
+        with:
+          cluster_name: ${{ inputs.cluster-name }}
+          location: ${{ inputs.cluster-location }}
 
-    - name: Setup helmfile
-      uses: mamezou-tech/setup-helmfile@v1.2.0
+      - name: Setup helmfile
+        uses: mamezou-tech/setup-helmfile@v1.2.0
 
-    - name: Run helmfile
-      run: helmfile --color --file ${{ inputs.helmfile }} ${{ inputs.action }}
+      - name: Run helmfile
+        run: helmfile --color --file ${{ inputs.helmfile }} ${{ inputs.action }}

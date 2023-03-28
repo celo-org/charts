@@ -10,6 +10,7 @@ on:
         type: choice
         options:
           - helmfiles-deployments/blockscout/cannoli.yaml
+          - helmfiles-deployments/blockscout/rc1staging.yaml
       action:
         description: 'The helmfile action to use for the deployment.'
         required: true
@@ -32,6 +33,11 @@ jobs:
           if [ "${{ github.event.inputs.helmfile }}" == "helmfiles-deployments/blockscout/cannoli.yaml" ]; then
             echo "cluster=cannoli" >> "$GITHUB_OUTPUT"
             echo "project=cannoli-380909" >> "$GITHUB_OUTPUT"
+            echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
+            echo "service-account=deploy-helm-release@cannoli-380909.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.inputs.helmfile }}" == "helmfiles-deployments/blockscout/rc1staging.yaml" ]; then
+            echo "cluster=rc1staging" >> "$GITHUB_OUTPUT"
+            echo "project=celo-testnet-production" >> "$GITHUB_OUTPUT"
             echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
             echo "service-account=deploy-helm-release@cannoli-380909.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
           fi
