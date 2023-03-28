@@ -89,4 +89,4 @@ jobs:
       uses: mamezou-tech/setup-helmfile@v1.2.0
 
     - name: Run helmfile
-      run: helmfile --file ${{ inputs.helmfile }} ${{ inputs.action }}
+      run: helmfile --color --file ${{ inputs.helmfile }} ${{ inputs.action }}
