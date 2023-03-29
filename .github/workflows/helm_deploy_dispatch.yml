@@ -11,6 +11,8 @@ on:
         options:
           - cannoli
           - rc1staging
+          - alfajores2
+          - alfajores3
       action:
         description: 'Action to run in the workflow'
         required: true
@@ -35,16 +37,23 @@ jobs:
     steps:
       - id: set-config
         run: |
+          SERVICE_ACCOUNT_SUFFIX="-ro"
+          [ "${{ github.ref_name }}" == main ] && SERVICE_ACCOUNT_SUFFIX=""
           if [ "${{ github.event.inputs.deployment }}" == "cannoli" ]; then
             echo "cluster=cannoli" >> "$GITHUB_OUTPUT"
             echo "project=cannoli-380909" >> "$GITHUB_OUTPUT"
             echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
-            echo "service-account=deploy-helm-cannoli@cannoli-380909.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
+            echo "service-account=deploy-helm-cannoli${SERVICE_ACCOUNT_SUFFIX}@cannoli-380909.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
           elif [ "${{ github.event.inputs.deployment }}" == "rc1staging" ]; then
             echo "cluster=rc1staging" >> "$GITHUB_OUTPUT"
             echo "project=celo-testnet-production" >> "$GITHUB_OUTPUT"
             echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
-            echo "service-account=deploy-helm-celo-prod@celo-testnet-production.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
+            echo "service-account=deploy-helm-celo-prod${SERVICE_ACCOUNT_SUFFIX}@celo-testnet-production.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.event.inputs.deployment }}" =~ ^alfajores[2-3]$ ]]; then
+            echo "cluster=alfajores" >> "$GITHUB_OUTPUT"
+            echo "project=celo-testnet-production" >> "$GITHUB_OUTPUT"
+            echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
+            echo "service-account=deploy-helm-celo-prod${SERVICE_ACCOUNT_SUFFIX}@celo-testnet-production.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
           fi
           if [ -z "${{ github.event.inputs.change-cause }}" ]; then
             echo "change-cause=\"Deployment triggered by ${{ github.triggering_actor }} on ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}\"" >> "$GITHUB_OUTPUT"

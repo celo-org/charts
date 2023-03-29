@@ -46,7 +46,11 @@ blockscout:
   web:
     hostname: blockscout.cannoli.celo-testnet.org
     suffix:
-      enabled: false
+      enabled: true
+      path: "cannoli"
+    extraEnvironments:
+      target:
+        - sourceHost: explorer.celo.org
     autoscaling:
       maxReplicas: 2
       minReplicas: 1
