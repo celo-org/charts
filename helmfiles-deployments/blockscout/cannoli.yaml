@@ -8,3 +8,4 @@ releases:
     missingFileHandler: Error
     values:
       - ../../charts/blockscout/values-cannoli-blockscout.yaml
+      - changeCause: {{ requiredEnv "CHANGE_CAUSE" }}
