@@ -8,4 +8,4 @@ releases:
     missingFileHandler: Error
     values:
       - ../../charts/blockscout/values-rc1staging-blockscout.yaml
-      - changeCause: {{ requiredEnv "CHANGE_CAUSE" }}
+      - changeCause: {{ env "CHANGE_CAUSE" }}
