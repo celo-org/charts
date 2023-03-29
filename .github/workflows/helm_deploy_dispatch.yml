@@ -4,21 +4,22 @@ name: 'Deploy Helm Chart'
 on:
   workflow_dispatch:
     inputs:
-      helmfile:
-        description: 'The helmfile to use for the deployment. It must be a local YAML file.'
+      deployment:
+        description: 'Environment to deploy to'
         required: true
         type: choice
         options:
-          - helmfiles-deployments/blockscout/cannoli.yaml
-          - helmfiles-deployments/blockscout/rc1staging.yaml
+          - cannoli
+          - rc1staging
       action:
-        description: 'The helmfile action to use for the deployment.'
+        description: 'Action to run in the workflow'
         required: true
         type: choice
         options:
           - diff
+          - apply
       change-cause:
-        description: 'The change cause to use for the deployment.'
+        description: 'The change cause to use for the deployment'
         required: false
         type: string
 
@@ -34,12 +35,12 @@ jobs:
     steps:
       - id: set-config
         run: |
-          if [ "${{ github.event.inputs.helmfile }}" == "helmfiles-deployments/blockscout/cannoli.yaml" ]; then
+          if [ "${{ github.event.inputs.deployment }}" == "cannoli" ]; then
             echo "cluster=cannoli" >> "$GITHUB_OUTPUT"
             echo "project=cannoli-380909" >> "$GITHUB_OUTPUT"
             echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
             echo "service-account=deploy-helm-cannoli@cannoli-380909.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
-          elif [ "${{ github.event.inputs.helmfile }}" == "helmfiles-deployments/blockscout/rc1staging.yaml" ]; then
+          elif [ "${{ github.event.inputs.deployment }}" == "rc1staging" ]; then
             echo "cluster=rc1staging" >> "$GITHUB_OUTPUT"
             echo "project=celo-testnet-production" >> "$GITHUB_OUTPUT"
             echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
@@ -55,7 +56,7 @@ jobs:
     uses: ./.github/workflows/helm_deploy_call.yml
     needs: set-config
     with:
-      helmfile: ${{ github.event.inputs.helmfile }}
+      helmfile: helmfiles-deployments/blockscout/${{ github.event.inputs.deployment }}.yaml
       action: ${{ github.event.inputs.action }}
       change-cause: ${{ needs.set-config.outputs.change-cause }}
       cluster-name: ${{ needs.set-config.outputs.cluster }}
