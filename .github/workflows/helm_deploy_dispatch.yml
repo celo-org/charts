@@ -46,9 +46,11 @@ jobs:
             echo "service-account=deploy-helm-celo-prod@celo-testnet-production.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
           fi
           if [ -z "${{ github.event.inputs.change-cause }}" ]; then
-            echo "change-cause=\"\"" >> "$GITHUB_OUTPUT"
+            echo "change-cause=\"Deployment triggered by ${{ github.triggering_actor }} on ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}\"" >> "$GITHUB_OUTPUT"
+          else
+            echo "change-cause=\"${{ github.event.inputs.change-cause }}\"" >> "$GITHUB_OUTPUT"
           fi
-          echo "${{ toJSON(github) }}"
+          fi
 
   helm-deploy:
     uses: ./.github/workflows/helm_deploy_call.yml
@@ -56,7 +58,7 @@ jobs:
     with:
       helmfile: ${{ github.event.inputs.helmfile }}
       action: ${{ github.event.inputs.action }}
-      change-cause: ${{ github.event.inputs.change-cause }}
+      change-cause: ${{ needs.set-config.outputs.change-cause }}
       cluster-name: ${{ needs.set-config.outputs.cluster }}
       cluster-location: ${{ needs.set-config.outputs.cluster-location }}
       project: ${{ needs.set-config.outputs.project }}
