@@ -44,9 +44,10 @@ blockscout:
         cpu: 0.5
     affinity: {}
   web:
-    hostname: blockscout.cannoli.celo-testnet.org
+    hostname: explorer.celo.org
     suffix:
-      enabled: false
+      enabled: true
+      path: "cannoli"
     autoscaling:
       maxReplicas: 2
       minReplicas: 1
