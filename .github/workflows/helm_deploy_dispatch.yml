@@ -17,11 +17,16 @@ on:
         type: choice
         options:
           - diff
+      change-cause:
+        description: 'The change cause to use for the deployment.'
+        required: false
+        type: string
 
 jobs:
   set-config:
     runs-on: ubuntu-latest
     outputs:
+      change-cause: ${{ steps.set-config.outputs.change-cause }}
       cluster: ${{ steps.set-config.outputs.cluster }}
       project: ${{ steps.set-config.outputs.project }}
       cluster-location: ${{ steps.set-config.outputs.cluster-location }}
@@ -40,6 +45,10 @@ jobs:
             echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
             echo "service-account=deploy-helm-celo-prod@celo-testnet-production.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
           fi
+          if [ -z "${{ github.event.inputs.change-cause }}" ]; then
+            echo "change-cause=\"\"" >> "$GITHUB_OUTPUT"
+          fi
+          echo "${{ toJSON(github) }}"
 
   helm-deploy:
     uses: ./.github/workflows/helm_deploy_call.yml
@@ -47,6 +56,7 @@ jobs:
     with:
       helmfile: ${{ github.event.inputs.helmfile }}
       action: ${{ github.event.inputs.action }}
+      change-cause: ${{ github.event.inputs.change-cause }}
       cluster-name: ${{ needs.set-config.outputs.cluster }}
       cluster-location: ${{ needs.set-config.outputs.cluster-location }}
       project: ${{ needs.set-config.outputs.project }}

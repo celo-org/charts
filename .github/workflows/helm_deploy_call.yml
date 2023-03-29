@@ -13,6 +13,10 @@ on:
         required: true
         type: string
         default: 'diff'
+      change-cause:
+        description: 'The change cause to use for the deployment.'
+        required: false
+        type: string
       cluster-name:
         required: true
         type: string
@@ -90,3 +94,5 @@ jobs:
 
       - name: Run helmfile
         run: helmfile --color --file ${{ inputs.helmfile }} ${{ inputs.action }}
+        env:
+          CHANGE_CAUSE: ${{ inputs.change-cause }}
