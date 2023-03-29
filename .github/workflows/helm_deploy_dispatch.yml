@@ -50,7 +50,6 @@ jobs:
           else
             echo "change-cause=\"${{ github.event.inputs.change-cause }}\"" >> "$GITHUB_OUTPUT"
           fi
-          fi
 
   helm-deploy:
     uses: ./.github/workflows/helm_deploy_call.yml
