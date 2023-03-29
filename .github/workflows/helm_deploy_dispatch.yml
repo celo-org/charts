@@ -11,6 +11,8 @@ on:
         options:
           - cannoli
           - rc1staging
+          - alfajores2
+          - alfajores3
       action:
         description: 'Action to run in the workflow'
         required: true
