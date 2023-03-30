@@ -39,7 +39,7 @@ blockscout:
         memory: 500M
         cpu: 200m
   web:
-    host: explorer.celo.org
+    hostname: explorer.celo.org
     suffix:
       enabled: true
       path: "baklava"

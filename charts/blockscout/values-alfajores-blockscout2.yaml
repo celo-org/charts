@@ -76,7 +76,7 @@ blockscout:
                       - blockscout-api
               topologyKey: kubernetes.io/hostname
   web:
-    host: explorer.celo.org
+    hostname: explorer.celo.org
     suffix:
       enabled: true
       path: "alfajores"

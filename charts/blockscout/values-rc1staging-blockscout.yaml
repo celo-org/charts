@@ -2,8 +2,9 @@
 blockscout:
   eventStream:
     replicas: 1
-    beanstalkdHost: "rc1staging-governance-notifications-beanstalkd.event-notifications.svc.cluster.local"
-
+    beanstalkdPort: "11300"
+    beanstalkdHost: "rc1staging-webhooks-beanstalkd.webhooks.svc.cluster.local"
+    beanstalkdTube: "incoming"
   indexer:
     db:
       connectionName: celo-testnet-production:us-west1:rc1staging
@@ -17,7 +18,6 @@ blockscout:
       requests:
         memory: 12Gi
         cpu: 5
-    enableEventStream: true
     beanstalkdPort: "11300"
   api:
     autoscaling:
@@ -38,7 +38,7 @@ blockscout:
         memory: 500Mi
         cpu: 500m
   web:
-    host: rc1staging-blockscout.celo-testnet.org
+    hostname: rc1staging-blockscout.celo-testnet.org
     suffix:
       enabled: true
       path: "rc1staging"

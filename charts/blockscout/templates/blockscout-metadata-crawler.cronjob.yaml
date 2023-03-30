@@ -21,7 +21,7 @@ spec:
           initContainers:
           {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 10 }}
           containers:
-          {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db }}
+          {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db -}}
           {{- include "celo.blockscout.container.db-terminating-sidecar" $data | nindent 10 }}
           - name: metadata-crawler
             image: {{ .Values.blockscout.metadataCrawler.image.repository }}:{{ .Values.blockscout.metadataCrawler.image.tag }}

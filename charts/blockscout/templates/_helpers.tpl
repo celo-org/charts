@@ -61,22 +61,21 @@ the `volumes` section.
   lifecycle:
     postStart:
       exec:
-        command: [
-          "/bin/sh", "-c",
-          "sleep {{ .optionalSleep | default 0 }};",
-          "until nc -z {{ $database.proxy.host }}:{{ $database.proxy.port }}; do sleep 1; done"
-        ]
+        command:
+        - /bin/sh
+        - -c
+        - until nc -z {{ $database.proxy.host }}:{{ $database.proxy.port }}; do sleep 1; done
   command:
   - /bin/sh
   args:
   - -c
   - |
-      /cloud_sql_proxy \
-      -instances={{ include "celo.blockscout.database-connection-string" . }} &
-      CHILD_PID=$!
-      (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
-      wait $CHILD_PID
-      if [[ -f "/tmp/pod/main-terminated" ]]; then exit 0; fi
+    /cloud_sql_proxy \
+    -instances={{ include "celo.blockscout.database-connection-string" . }} &
+    CHILD_PID=$!
+    (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
+    wait $CHILD_PID
+    if [[ -f "/tmp/pod/main-terminated" ]]; then exit 0; fi
   securityContext:
     runAsUser: 2  # non-root user
     allowPrivilegeEscalation: false
@@ -101,7 +100,6 @@ the `volumes` section.
   args:
   - -c
   - |
-      sleep {{ .optionalSleep | default 0 }}
       until gcloud sql instances describe {{ include "celo.blockscout.instance-name" . }} | grep state | grep RUNNABLE > /dev/null; do
         sleep 5;
       done
@@ -153,10 +151,10 @@ the `volumes` section.
   lifecycle:
     postStart:
       exec:
-        command: [
-          "/bin/sh", "-c",
-          "until nc -z {{ .Values.infrastructure.database.proxy.host }}:{{ .Values.infrastructure.database.proxy.port }}; do sleep 1; done"
-        ]
+        command:
+        - /bin/sh
+        - -c
+        - until nc -z {{ .Values.infrastructure.database.proxy.host }}:{{ .Values.infrastructure.database.proxy.port }}; do sleep 1; done
   command:
   - /bin/sh
   - -c

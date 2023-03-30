@@ -24,7 +24,8 @@ spec:
           initContainers:
           {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 12 }}
           containers:
-          {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db }}
+          {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db -}}
+          {{- include "celo.blockscout.container.db-terminating-sidecar" $data | nindent 10 }}
           - name: blockscout-data-migration
             image: {{ .Values.blockscout.shared.image.repository }}:{{ .Values.blockscout.shared.image.tag }}
             imagePullPolicy: {{ .Values.blockscout.shared.image.pullPolicy }}
@@ -47,7 +48,6 @@ spec:
                 name: temporary-dir
             env:
               {{- include "celo.blockscout.env-vars" $data | nindent 14 }}
-          {{- include "celo.blockscout.container.db-terminating-sidecar" $data | nindent 10 }}
           volumes:
             {{- include "celo.blockscout.volume.temporary-dir" . | nindent 12 }}
           restartPolicy: Never

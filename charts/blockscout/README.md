@@ -2,7 +2,7 @@
 
 Chart which is used to deploy Blockscout for Celo Networks
 
-![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
 
 - [blockscout](#blockscout)
   - [Chart requirements](#chart-requirements)
@@ -36,7 +36,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.2.0" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.3.0" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -80,9 +80,10 @@ helm upgrade my-blockscout -f values-alfajores-blockscout2.yaml --namespace=celo
 | blockscout.api.rpcRegion | string | `"api"` | MY_REGION env variable for api pod. Do not change. |
 | blockscout.api.strategy | object | `{"rollingUpdate":{"maxSurge":1,"maxUnavailable":"20%"}}` | UpdateStrategy for api deployment |
 | blockscout.api.suffix | object | `{"enabled":false,"path":""}` | If api component is served at rootPath |
-| blockscout.eventStream | object | `{"beanstalkdHost":"","beanstalkdPort":"","enabled":false,"livenessProbe":{},"port":4000,"readinessProbe":{},"replicas":0,"resources":{"requests":{"cpu":2,"memory":"1000Mi"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}}` | Configuraton for the eventStream component |
+| blockscout.eventStream | object | `{"beanstalkdHost":"","beanstalkdPort":"","beanstalkdTube":"","enabled":false,"livenessProbe":{},"port":4000,"readinessProbe":{},"replicas":0,"resources":{"requests":{"cpu":2,"memory":"1000Mi"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}}` | Configuraton for the eventStream component |
 | blockscout.eventStream.beanstalkdHost | string | `""` | `BEANSTALKD_HOST` env for eventStream deployment |
 | blockscout.eventStream.beanstalkdPort | string | `""` | `BEANSTALKD_PORT` env for eventStream deployment |
+| blockscout.eventStream.beanstalkdTube | string | `""` | `BEANSTALKD_HOST` env for eventStream deployment |
 | blockscout.eventStream.enabled | bool | `false` | Enable the eventStream component |
 | blockscout.eventStream.livenessProbe | object | `{}` | livenessProbe for eventStream container |
 | blockscout.eventStream.readinessProbe | object | `{}` | readinessProbe for eventStream container |
