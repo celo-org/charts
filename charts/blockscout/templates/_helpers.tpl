@@ -55,6 +55,8 @@ the `volumes` section.
 */ -}}
 {{- define "celo.blockscout.container.db-terminating-sidecar" -}}
 {{- $database := default .Values.infrastructure.database .Database -}}
+{{- $host := default .Values.infrastructure.database.proxy.host ((.Database).proxy).host -}}
+{{- $port := default .Values.infrastructure.database.proxy.port ((.Database).proxy).port -}}
 {{- if .Values.infrastructure.database.enableCloudSQLProxy -}}
 - name: cloudsql-proxy
   image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
@@ -64,7 +66,7 @@ the `volumes` section.
         command:
         - /bin/sh
         - -c
-        - until nc -z {{ $database.proxy.host }}:{{ $database.proxy.port }}; do sleep 1; done
+        - until nc -z {{ $host }}:{{ $port }}; do sleep 1; done
   command:
   - /bin/sh
   args:
