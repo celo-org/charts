@@ -79,7 +79,7 @@ spec:
         - name: POOL_SIZE_API
           value: {{ .Values.blockscout.web.poolSizeReplica | quote }}
         - name: BLOCKSCOUT_HOST
-          value: {{ .Values.blockscout.web.hostname | quote }}
+          value: {{ default (include "celo.blockscout.getHostName" (dict "Values" .Values "Release" .Release "component" "web")) .Values.blockscout.web.envHostname | quote }}
         - name: ENABLE_SOURCIFY_INTEGRATION
           value: {{ .Values.blockscout.web.sourcify.enabled | quote }}
         - name: SOURCIFY_SERVER_URL
