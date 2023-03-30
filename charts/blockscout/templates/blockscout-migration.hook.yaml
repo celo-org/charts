@@ -19,7 +19,8 @@ spec:
       initContainers:
       {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 6 }}
       containers:
-      {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db "optionalSleep" "10" }}
+      {{- $data := dict "Release" .Release "Values" .Values "Database" .Values.blockscout.indexer.db -}}
+      {{- include "celo.blockscout.container.db-terminating-sidecar" $data | nindent 6 }}
       - name: blockscout-migration
         image: {{ .Values.blockscout.shared.image.repository }}:{{ .Values.blockscout.shared.image.tag }}
         imagePullPolicy: {{ .Values.blockscout.shared.image.pullPolicy }}
@@ -45,7 +46,6 @@ spec:
         - name: DROP_DB
           value: "{{ default "false" .Values.blockscout.shared.db.drop }}"
         {{- include "celo.blockscout.env-vars" $data  | nindent 8 }}
-      {{- include "celo.blockscout.container.db-terminating-sidecar" $data | nindent 6 }}
       volumes:
         {{- include "celo.blockscout.volume.temporary-dir" . | nindent 8 }}
       restartPolicy: Never

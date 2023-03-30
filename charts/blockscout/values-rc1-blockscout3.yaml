@@ -34,7 +34,7 @@ blockscout:
         memory: 500Mi
         cpu: 1500m
   web:
-    host: explorer.celo.org
+    hostname: explorer.celo.org
     suffix:
       enabled: true
       path: "mainnet"

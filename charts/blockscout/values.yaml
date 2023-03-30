@@ -22,6 +22,8 @@ blockscout:
     beanstalkdPort: ""
     # -- `BEANSTALKD_HOST` env for eventStream deployment
     beanstalkdHost: ""
+    # -- `BEANSTALKD_HOST` env for eventStream deployment
+    beanstalkdTube: ""
     # -- replicas for eventStream deployment
     replicas: 0
     # -- readinessProbe for eventStream container

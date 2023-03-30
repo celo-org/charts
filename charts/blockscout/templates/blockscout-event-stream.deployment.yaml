@@ -37,7 +37,6 @@ spec:
       serviceAccountName: {{ .Release.Name }}
       terminationGracePeriodSeconds: {{ .Values.blockscout.eventStream.terminationGracePeriodSeconds }}
       initContainers:
-      {{- include "celo.blockscout.container.init-container-wait-sql-instance" . | nindent 6 }}
       {{- include "celo.blockscout.initContainer.secrets-init" . | nindent 6 }}
       containers:
       - name: blockscout-event-stream
@@ -74,12 +73,14 @@ spec:
         env:
         - name: METRICS_ENABLED
           value: {{ .Values.infrastructure.metrics.enabled | quote }}
-        - name: ENABLE_EVENT_STREAM
+        - name: ENABLE_BEANSTALKD
           value: {{ (ternary "true" "false" (gt (int .Values.blockscout.eventStream.replicas) 0)) | quote }}
         - name: BEANSTALKD_PORT
           value: {{ .Values.blockscout.eventStream.beanstalkdPort | quote }}
         - name: BEANSTALKD_HOST
           value: {{ .Values.blockscout.eventStream.beanstalkdHost | quote }}
+        - name: BEANSTALKD_TUBE
+          value: {{ .Values.blockscout.eventStream.beanstalkdTube | quote }}
         - name: ERLANG_COOKIE
           value: {{ .Values.blockscout.shared.secrets.erlang_cookie }}
         - name: POD_IP
