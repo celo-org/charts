@@ -22,7 +22,7 @@ blockscout:
     beanstalkdPort: ""
     # -- `BEANSTALKD_HOST` env for eventStream deployment
     beanstalkdHost: ""
-    # -- `BEANSTALKD_HOST` env for eventStream deployment
+    # -- `BEANSTALKD_TUBE` env for eventStream deployment
     beanstalkdTube: ""
     # -- replicas for eventStream deployment
     replicas: 0
@@ -199,8 +199,11 @@ blockscout:
 
   # -- Configuraton for the web component
   web:
-    # -- Hostname for web ingress endpoint (also applies to api at /(graphql|graphiql|api))
+    # -- Hostname for web ingress endpoint (also applies to api at /(graphql|graphiql|api)).
+    # If empty, will be generated based on release name and domainName.
     hostname: ""
+    # -- Env hostname. This will be used by blockscout for generating links. If empty, hostname will be used
+    envHostname: ""
     suffix:
       enabled: false
       path: ""

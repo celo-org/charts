@@ -13,6 +13,8 @@ on:
           - rc1staging
           - alfajores2
           - alfajores3
+          - baklava2
+          - baklava3
       action:
         description: 'Action to run in the workflow'
         required: true

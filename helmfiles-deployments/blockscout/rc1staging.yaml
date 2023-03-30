@@ -1,7 +1,8 @@
 ---
 releases:
   - name: rc1staging-blockscout
-    chart: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci/blockscout
+    #chart: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci/blockscout
+    chart: ../../charts/blockscout
     version: ~1
     createNamespace: false
     namespace: rc1staging
