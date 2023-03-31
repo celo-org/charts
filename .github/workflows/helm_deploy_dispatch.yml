@@ -1,5 +1,6 @@
 ---
 name: 'Deploy Helm Chart'
+run-name: 'Helm ${{ github.event.inputs.action }} on ${{ github.event.inputs.deployment }} triggered by @${{ github.actor }}'
 
 on:
   workflow_dispatch:
@@ -56,7 +57,6 @@ jobs:
             echo "project=celo-testnet-production" >> "$GITHUB_OUTPUT"
             echo "cluster-location=us-west1-a" >> "$GITHUB_OUTPUT"
             echo "service-account=deploy-helm-celo-prod${SERVICE_ACCOUNT_SUFFIX}@celo-testnet-production.iam.gserviceaccount.com" >> "$GITHUB_OUTPUT"
-          fi
           elif [[ "${{ github.event.inputs.deployment }}" =~ ^baklava[2-3]$ ]]; then
             echo "cluster=baklavastaging" >> "$GITHUB_OUTPUT"
             echo "project=celo-testnet-production" >> "$GITHUB_OUTPUT"
