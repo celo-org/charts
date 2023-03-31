@@ -74,8 +74,8 @@ blockscout:
       tag: 40c6ac9493b0985e7889a084e367ad55ad4dbdc5
     secrets:
       segmentKey: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-segmentKey
-      dbUser: blockscout
-      dbPassword: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout3-cloudsql-blockscout
+      dbUser: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout3-dbUser
+      dbPassword: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout3-dbPassword
       grafanaCloud: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-grafanaCloud
       recaptcha_projectId: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-recaptchaProjectId
       recaptcha_siteKey: gcp:secretmanager:projects/365081401101/secrets/baklava-blockscout-recaptchaSiteKey
