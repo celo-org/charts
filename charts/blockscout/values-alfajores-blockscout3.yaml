@@ -154,6 +154,6 @@ infrastructure:
   metrics:
     enabled: true
   gcp:
-    serviceAccount: baklava-blockscout2@celo-testnet-production.iam.gserviceaccount.com
+    serviceAccount: alfajores-blockscout3@celo-testnet-production.iam.gserviceaccount.com
     project: celo-testnet-production
 
