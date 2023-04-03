@@ -345,6 +345,8 @@ blockscout:
     # -- Drop the database on startup
     db:
       drop: "false"
+    # -- Include `INITIAL_VALUE` env var in migration cronjob. Internal for cLabs use only.
+    migrationCronjobEnableSecretKeyRef: false
     # -- Reference to secrets. Format: gcp:secretmanager:projects/<project-id>/secrets/<env>-blockscout-<secret-key>. Using tool https://github.com/doitintl/secrets-init
     secrets:
       # Format:

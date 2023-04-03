@@ -65,6 +65,7 @@ blockscout:
   shared:
     image:
       tag: 3e62c18a5ff5d1bbddce046b86791cd1745795e8
+    migrationCronjobEnableSecretKeyRef: true
     secrets:
       segmentKey: gcp:secretmanager:projects/365081401101/secrets/rc1-blockscout-segmentKey
       discordWebhookUrl: gcp:secretmanager:projects/365081401101/secrets/rc1-blockscout-discordWebhookUrl
