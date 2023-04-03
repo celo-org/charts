@@ -47,6 +47,8 @@ spec:
               - mountPath: /tmp/pod
                 name: temporary-dir
             env:
+              - name: INITIAL_VALUE
+                value: {{ .Values.blockscout.shared.migrationJobInitialValue | quote }}
               {{- include "celo.blockscout.env-vars" $data | nindent 14 }}
           volumes:
             {{- include "celo.blockscout.volume.temporary-dir" . | nindent 12 }}

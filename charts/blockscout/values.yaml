@@ -345,6 +345,8 @@ blockscout:
     # -- Drop the database on startup
     db:
       drop: "false"
+    # -- Starting point for data migration job (`INITIAL_VALUE` env var)
+    migrationJobInitialValue: '{0,0}'
     # -- Reference to secrets. Format: gcp:secretmanager:projects/<project-id>/secrets/<env>-blockscout-<secret-key>. Using tool https://github.com/doitintl/secrets-init
     secrets:
       # Format:
