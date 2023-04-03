@@ -74,7 +74,7 @@ spec:
         - name: METRICS_ENABLED
           value: {{ .Values.infrastructure.metrics.enabled | quote }}
         - name: ENABLE_BEANSTALKD
-          value: {{ (ternary "true" "false" (gt (int .Values.blockscout.eventStream.replicas) 0)) | quote }}
+          value: {{ .Values.blockscout.eventStream.enabled | quote }}
         - name: BEANSTALKD_PORT
           value: {{ .Values.blockscout.eventStream.beanstalkdPort | quote }}
         - name: BEANSTALKD_HOST
