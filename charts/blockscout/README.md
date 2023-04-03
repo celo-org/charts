@@ -2,7 +2,7 @@
 
 Chart which is used to deploy Blockscout for Celo Networks
 
-![Version: 1.3.3](https://img.shields.io/badge/Version-1.3.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
+![Version: 1.3.4](https://img.shields.io/badge/Version-1.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
 
 - [blockscout](#blockscout)
   - [Chart requirements](#chart-requirements)
@@ -36,7 +36,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.3.3" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.3.4" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -116,6 +116,7 @@ helm upgrade my-blockscout -f values-alfajores-blockscout2.yaml --namespace=celo
 | blockscout.shared.erlangNodeName | string | `"blockscout"` |  |
 | blockscout.shared.healthyBlocksPeriod | int | `300` | Max delay in seconds for the indexer to be considered unhealthy |
 | blockscout.shared.image | object | `{"pullPolicy":"Always","repository":"gcr.io/celo-testnet/blockscout","tag":"c6ca0da21bd238948d13ec2fabf4428a9dbbc7b6"}` | Image to use for blockscout components |
+| blockscout.shared.migrationCronjobEnableSecretKeyRef | bool | `false` | Include `INITIAL_VALUE` env var in migration cronjob. Internal for cLabs use only. |
 | blockscout.shared.secrets | object | `{"campaignBannerApiUrl":"","dbPassword":"","dbUser":"","discordWebhookUrl":"","erlang_cookie":"","grafanaCloud":"","recaptcha_apiKey":"","recaptcha_projectId":"","recaptcha_secretKey":"","recaptcha_siteKey":"","segmentKey":""}` | Reference to secrets. Format: gcp:secretmanager:projects/<project-id>/secrets/<env>-blockscout-<secret-key>. Using tool https://github.com/doitintl/secrets-init |
 | blockscout.web | object | `{"accountPoolSize":1,"affinity":{},"appsMenu":{"enabled":true},"autoscaling":{"maxReplicas":5,"minReplicas":2,"target":{"cpu":70}},"basicAuth":{"enabled":false},"campaignBanner":{"refreshInterval":"60"},"db":{"connectionName":"project:region:db-name","name":"blockscout","port":5432,"proxy":{"resources":{"requests":{"cpu":"10m","memory":"20Mi"}}}},"envHostname":"","extraEnvironments":{"source":[],"target":[]},"homepage":{"showPrice":true,"showTxs":false},"hostname":"","liveUpdates":{"disabled":true},"livenessProbe":{"failureThreshold":5,"httpGet":{"path":"/api/v1/health/liveness","port":"http","scheme":"HTTP"},"initialDelaySeconds":30,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":5},"nodeSelector":{},"poolSize":30,"poolSizeReplica":5,"port":4000,"primaryRpcRegion":"indexer","readinessProbe":{"failureThreshold":5,"httpGet":{"path":"/api/v1/health/liveness","port":"http","scheme":"HTTP"},"initialDelaySeconds":30,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":5},"resources":{"requests":{"cpu":"500m","memory":"250M"}},"rpcRegion":"web","sourcify":{"enabled":true,"repoUrl":"https://repo.sourcify.dev/contracts","serverUrl":"https://sourcify.dev/server"},"stats":{"enabled":false,"makerdojo":"","reportUrl":""},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":"20%"}},"suffix":{"enabled":false,"path":""},"tokenIcons":{"enabled":false}}` | Configuraton for the web component |
 | blockscout.web.accountPoolSize | int | `1` | ACCOUNT_POOL_SIZE env variable for web pod |
