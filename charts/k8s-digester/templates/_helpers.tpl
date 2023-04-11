@@ -31,6 +31,30 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Secret name as is hardcoded in
+https://github.com/google/k8s-digester/blob/a0304bcbe5ba51b89c671ad58c62139c0e2172cd/cmd/webhook/webhook.go#L47
+*/}}
+{{- define "digester-system.secret-name" -}}
+{{- printf "digester-webhook-server-cert" }}
+{{- end }}
+
+{{/*
+Service name as is hardcoded in
+https://github.com/google/k8s-digester/blob/a0304bcbe5ba51b89c671ad58c62139c0e2172cd/cmd/webhook/webhook.go#L48
+*/}}
+{{- define "digester-system.svc-name" -}}
+{{- printf "digester-webhook-service" }}
+{{- end }}
+
+{{/*
+Webhook name as is hardcoded in
+https://github.com/google/k8s-digester/blob/a0304bcbe5ba51b89c671ad58c62139c0e2172cd/cmd/webhook/webhook.go#L49
+*/}}
+{{- define "digester-system.webhook-name" -}}
+{{- printf "digester-mutating-webhook-configuration" }}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "digester-system.labels" -}}

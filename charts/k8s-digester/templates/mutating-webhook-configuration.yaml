@@ -1,7 +1,7 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: {{ include "digester-system.fullname" . }}
+  name: {{ include "digester-system.webhook-name" . }}
   labels:
     {{- include "digester-system.labels" . | nindent 4 }}
 webhooks:
@@ -11,7 +11,7 @@ webhooks:
   - v1beta1
   clientConfig:
     service:
-      name: {{ include "digester-system.fullname" . }}
+      name: {{ include "digester-system.svc-name" . }}
       namespace: {{ .Release.Namespace }}
       path: /v1/mutate
     caBundle: Cg==

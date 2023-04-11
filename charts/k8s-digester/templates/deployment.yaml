@@ -50,6 +50,18 @@ spec:
             - name: healthz
               protocol: TCP
               containerPort: 9090
+          env:
+            - name: DEBUG
+              value: "false"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
           livenessProbe:
             httpGet:
               port: healthz
@@ -68,10 +80,6 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.affinity }}
-      affinity:
-{{ tpl .Values.affinity . | indent 8 }}
-      {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
@@ -80,4 +88,8 @@ spec:
       - name: cert
         secret:
           defaultMode: 420
-          secretName: {{ include "digester-system.fullname" . }}
+          secretName: {{ include "digester-system.secret-name" . }}
+      {{- if .Values.affinity }}
+      affinity:
+{{ tpl .Values.affinity . | indent 8 }}
+      {{- end }}
