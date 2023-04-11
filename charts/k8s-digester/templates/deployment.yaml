@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "digester-system.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "digester-system.selectorLabels" . | nindent 6 }}
