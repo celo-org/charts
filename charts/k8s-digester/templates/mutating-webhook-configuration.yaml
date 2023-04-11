@@ -1,0 +1,73 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ include "digester-system.fullname" . }}
+  labels:
+    {{- include "digester-system.labels" . | nindent 4 }}
+webhooks:
+- name: {{ include "digester-system.fullname" . }}.{{ .Release.Namespace }}.svc
+  admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      name: {{ include "digester-system.fullname" . }}
+      namespace: {{ .Release.Namespace }}
+      path: /v1/mutate
+    caBundle: Cg==
+  failurePolicy: Ignore
+  namespaceSelector:
+    matchExpressions:
+    - key: digester/exclude
+      operator: DoesNotExist
+  reinvocationPolicy: IfNeeded
+  rules:
+  - resources:
+    - pods
+    - podtemplates
+    - replicationcontrollers
+    apiGroups:
+    - ''
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    scope: Namespaced
+  - resources:
+    - daemonsets
+    - deployments
+    - replicasets
+    - statefulsets
+    apiGroups:
+    - apps
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    scope: Namespaced
+  - resources:
+    - cronjobs
+    - jobs
+    apiGroups:
+    - batch
+    apiVersions:
+    - v1
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    scope: Namespaced
+  - resources:
+    - containersources
+    apiGroups:
+    - sources.knative.dev
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    scope: Namespaced
+  sideEffects: None
+  timeoutSeconds: 15
