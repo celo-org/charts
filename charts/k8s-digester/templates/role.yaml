@@ -1,0 +1,22 @@
+{{- if .Values.rbac.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "digester-system.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "digester-system.labels" . | nindent 4 }}
+rules:
+- resources:
+  - secrets
+  apiGroups:
+  - ''
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+{{- end }}

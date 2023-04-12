@@ -1,0 +1,17 @@
+apiVersion: v2
+name: k8s-digester
+description: K8S Digester translates images tags to shas
+type: application
+version: 0.1.0
+appVersion: "v0.1.10"
+home: https://github.com/google/k8s-digester
+sources:
+  - https://github.com/google/k8s-digester/tree/main/manifests
+keywords:
+  - Images
+  - Digester
+  - Policies
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
