@@ -1,4 +1,4 @@
-# Default values for akeyless-gcp-producer.
+# Default values for akeyless-gadmin-producer.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -12,7 +12,7 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-gcp-producer
+  repository: us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-gadmin-producer
   # -- Image pullpolicy
   pullPolicy: Always
   # -- Image tag
@@ -63,16 +63,16 @@ ingress:
 
   # -- List of hosts to expose safe-client-gateway. See values.yaml for an example.
   hosts: []
-  # - host: akeyless-gcp.akeyless.celo-networks-dev.org
+  # - host: akeyless-gadmin.akeyless.celo-networks-dev.org
   #   paths:
   #   - path: /
   #     pathType: Prefix
 
   # -- TLS secret for exposing safe-client-gateway with https. See values.yaml for an example.
   tls: []
-  # - secretName: akeyless-gcp-tls
+  # - secretName: akeyless-gadmin-tls
   #   hosts:
-  #      - akeyless-gcp.akeyless.celo-networks-dev.org
+  #      - akeyless-gadmin.akeyless.celo-networks-dev.org
 
 # -- Container resources
 resources: {}
@@ -91,9 +91,9 @@ env:
   # -- Akeyless Access ID (for authentication)
   akeylessAccessID: "p-smsrwoolrzwo"
   # -- Secret Allowed Path
-  secretPathRegex: '^\/dynamic-secrets\/cloud-user-access\/gcp.*'
+  secretPathRegex: '^\/dynamic-secrets\/cloud-user-access\/gadmin.*'
   # -- Secret Allowed Path
-  serviceAccountName: "akeyless-gcp-producer-ro@clabs-secrets-and-permissions.iam.gserviceaccount.com"
+  serviceAccountName: "akeyless-gadmin-producer-ro@clabs-secrets-and-permissions.iam.gserviceaccount.com"
   # -- User to Impersonate in Google Admin SDK
   impersonateUser: "_patrick_admin@clabs.co"
 
