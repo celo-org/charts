@@ -92,11 +92,6 @@ env:
   akeylessAccessID: "p-smsrwoolrzwo"
   # -- Secret Allowed Path
   secretPathRegex: '^\/dynamic-secrets\/cloud-user-access\/gcp.*'
-  # -- Secret Allowed Path
-  serviceAccountName: "akeyless-gcp-producer-ro@clabs-secrets-and-permissions.iam.gserviceaccount.com"
-  # -- User to Impersonate in Google Admin SDK
-  impersonateUser: "_patrick_admin@clabs.co"
-
 
 autoscaling:
   # -- Enable autoscaling
