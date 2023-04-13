@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ultragreen-dashboard.fullname" . }}-tx-fees
+  labels:
+    {{- include "ultragreen-dashboard.labels" . | nindent 4 }}
+    component: footprint
+spec:
+  replicas: {{ .Values.backend.txFees.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "ultragreen-dashboard.selectorLabels" . | nindent 6 }}
+      component: footprint
+  template:
+    metadata:
+      labels:
+        {{- include "ultragreen-dashboard.selectorLabels" . | nindent 8 }}
+        component: footprint
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "ultragreen-dashboard.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.backend.txFees.image.repository }}:{{ .Values.backend.txFees.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.backend.txFees.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.txFees.service.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.backend.txFees.resources | nindent 12 }}
+          env:
+            {{- include "ultragreen-dashboard.env-vars" . | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ultragreen-dashboard.fullname" . }}-tx-fees
+  labels:
+    {{- include "ultragreen-dashboard.labels" . | nindent 4 }}
+    component: footprint
+spec:
+  type: {{ .Values.backend.txFees.service.type }}
+  ports:
+    - port: {{ .Values.backend.txFees.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "ultragreen-dashboard.selectorLabels" . | nindent 4 }}
+    component: footprint
