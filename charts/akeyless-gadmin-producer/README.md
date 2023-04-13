@@ -2,7 +2,7 @@
 
 A Helm chart for Kubernetes
 
-![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 - [akeyless-gadmin-producer](#akeyless-gadmin-producer)
   - [Chart requirements](#chart-requirements)
@@ -37,7 +37,9 @@ and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 | autoscaling.minReplicas | int | `1` | Minimum replicas |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | CPU target utilization |
 | env.akeylessAccessID | string | `"p-smsrwoolrzwo"` | Akeyless Access ID (for authentication) |
+| env.impersonateUser | string | `"_patrick_admin@clabs.co"` | User to Impersonate in Google Admin SDK |
 | env.secretPathRegex | string | `"^\\/dynamic-secrets\\/cloud-user-access\\/gadmin.*"` | Secret Allowed Path |
+| env.serviceAccountName | string | `"akeyless-gadmin-producer@clabs-secrets-and-permissions.iam.gserviceaccount.com"` | Secret Allowed Path |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-gadmin-producer"` | Image repository |
