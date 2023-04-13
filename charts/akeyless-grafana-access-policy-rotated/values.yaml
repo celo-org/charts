@@ -1,0 +1,98 @@
+# Default values for akeyless-grafana-access-policy-rotated.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  # -- Image repository
+  repository: us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-grafana-access-policy-rotated
+  # -- Image pullpolicy
+  pullPolicy: Always
+  # -- Image tag
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: latest
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # -- Kubernetes Service Type
+  type: ClusterIP
+  # -- Kubernetes Service Type
+  port: 8080
+
+ingress:
+  # -- Ingress enabled
+  enabled: false
+  # -- Ingress class name
+  className: nginx
+  # -- Custom Ingress annotations
+  annotations: {}
+  # -- List of hosts to expose safe-client-gateway. See values.yaml for an example.
+  hosts: []
+  # - host: akeyless-grafana-access-policy.akeyless.celo-networks-dev.org
+  #   paths:
+  #   - path: /
+  #     pathType: Prefix
+
+  # -- TLS secret for exposing safe-client-gateway with https. See values.yaml for an example.
+  tls: []
+  # - secretName: akeyless-grafana-access-policy-rotated-tls
+  #   hosts:
+  #      - akeyless-grafana-access-policy.akeyless.celo-networks-dev.org
+
+# -- Container resources
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+env:
+  # -- Akeyless Access ID (for authentication)
+  akeylessAccessID: test   # "p-smsrwoolrzwo"
+  # -- Secret Allowed Path
+  secretPathRegex: '^\/dynamic-secrets\/cloud-user-access\/grafana-access-policy.*'
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
