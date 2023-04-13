@@ -45,11 +45,6 @@ and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-gadmin-producer"` | Image repository |
 | image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
-| ingress.annotations | object | `{}` | Custom Ingress annotations |
-| ingress.className | string | `"nginx"` | Ingress class name |
-| ingress.enabled | bool | `false` | Ingress enabled |
-| ingress.hosts | list | `[]` | List of hosts to expose safe-client-gateway. See values.yaml for an example. |
-| ingress.tls | list | `[]` | TLS secret for exposing safe-client-gateway with https. See values.yaml for an example. |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
 | podAnnotations | object | `{}` | Custom pod annotations |
