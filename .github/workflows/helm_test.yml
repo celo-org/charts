@@ -161,7 +161,7 @@ jobs:
         run: >
           ct install
           --target-branch ${{ github.event.repository.default_branch }}
-          --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup,blockscout
+          --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup,blockscout,akeyless-gadmin-producer
           --chart-repos bitnami=https://charts.bitnami.com/bitnami
 
   helm-docs:
