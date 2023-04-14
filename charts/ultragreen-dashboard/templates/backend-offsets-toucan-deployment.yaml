@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ultragreen-dashboard.fullname" . }}-offsets-toucan
+  labels:
+    {{- include "ultragreen-dashboard.labels" . | nindent 4 }}
+    component: offsets-toucan
+spec:
+  replicas: {{ .Values.backend.offsetsToucan.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "ultragreen-dashboard.selectorLabels" . | nindent 6 }}
+      component: offsets-toucan
+  template:
+    metadata:
+      labels:
+        {{- include "ultragreen-dashboard.selectorLabels" . | nindent 8 }}
+        component: offsets-toucan
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "ultragreen-dashboard.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.backend.offsetsToucan.image.repository }}:{{ .Values.backend.offsetsToucan.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.backend.offsetsToucan.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.backend.offsetsToucan.resources | nindent 12 }}
+          env:
+            {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}

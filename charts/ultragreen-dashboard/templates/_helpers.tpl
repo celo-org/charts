@@ -61,26 +61,18 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
-{{- define "ultragreen-dashboard.env-vars" -}}
+{{- define "ultragreen-dashboard.shared-env-vars" -}}
 - name: PG_HOST
-  value: {{ include "postgresql.primary.fullname" . }}
+  value: {{ include "postgresql.primary.fullname" .Subcharts.postgresql }}
 - name: PG_PORT
-  value: {{ template "postgresql.service.port" . }}
+  value: {{ quote (include "postgresql.service.port" .Subcharts.postgresql) }}
 - name: PG_USER
-  value: {{ include "postgresql.username" . }}
+  value: {{ include "postgresql.username" .Subcharts.postgresql }}
 - name: PG_PSW
   valueFrom:
     secretKeyRef:
-      name: {{ include "postgresql.secretName" . }}
-      key: {{ include "postgresql.userPasswordKey" . }}
+      name: {{ include "postgresql.secretName" .Subcharts.postgresql }}
+      key: {{ include "postgresql.userPasswordKey" .Subcharts.postgresql }}
 - name: PG_DBNAME
-  value: {{ include "postgresql.database" . }}
-- name: COINGECKO_API_KEY
-  value: {{ .Values.coingeckoApiKey }}
-- name: TWITTER_API_KEY
-  value: {{ .Values.twitterApiKey }}
-- name: TWITTER_API_SECRET
-  value: {{ .Values.twitterApiSecret }}
-- name: CLIENT_URL
-  value:  {{ .Values.clientUrl }}
+  value: {{ include "postgresql.database" .Subcharts.postgresql }}
 {{- end -}}

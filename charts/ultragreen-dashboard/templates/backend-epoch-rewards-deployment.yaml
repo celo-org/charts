@@ -27,29 +27,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.backend.epochRewards.image.repository }}:{{ .Values.backend.epochRewards.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.backend.epochRewards.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: {{ .Values.backend.epochRewards.service.port }}
-              protocol: TCP
           resources:
             {{- toYaml .Values.backend.epochRewards.resources | nindent 12 }}
           env:
-            {{- include "ultragreen-dashboard.env-vars" . | nindent 12 }}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "ultragreen-dashboard.fullname" . }}-epoch-rewards
-  labels:
-    {{- include "ultragreen-dashboard.labels" . | nindent 4 }}
-    component: epoch-rewards
-spec:
-  type: {{ .Values.backend.epochRewards.service.type }}
-  ports:
-    - port: {{ .Values.backend.epochRewards.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    {{- include "ultragreen-dashboard.selectorLabels" . | nindent 4 }}
-    component: epoch-rewards
+            {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}
