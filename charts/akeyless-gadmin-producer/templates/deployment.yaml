@@ -38,8 +38,8 @@ spec:
               value: {{ required "Require .Values.env.akeylessAccessID" .Values.env.akeylessAccessID }}
             - name: SECRET_PATH_REGEX
               value: {{ required "Require .Values.env.secretPathRegex" .Values.env.secretPathRegex }}
-            - name: SERVICE_ACCOUNT_NAME
-              value: {{ required "Require .Values.env.serviceAccountName" .Values.env.serviceAccountName }}
+            - name: SERVICE_ACCOUNT
+              value: {{ required "Require .Values.env.serviceAccount" .Values.env.serviceAccount }}
             - name: IMPERSONATION_USER
               value: {{ required "Require .Values.env.impersonateUser" .Values.env.impersonateUser }}
           ports:
