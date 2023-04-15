@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "akeyless-grafana-access-policy-rotated.fullname" . }}
+  labels:
+    {{- include "akeyless-grafana-access-policy-rotated.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "akeyless-grafana-access-policy-rotated.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "akeyless-grafana-access-policy-rotated.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "akeyless-grafana-access-policy-rotated.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: AKEYLESS_ACCESS_ID
+              value: {{ required "Require .Values.env.akeylessAccessID" .Values.env.akeylessAccessID }}
+            - name: MASTER_ACCESS_ID
+              value: {{ required "Require .Values.env.masterAccessID" .Values.env.masterAccessID }}
+            - name: K8S_AUTH_CONFIG
+              value: {{ required "Require .Values.env.k8sAuthConfig" .Values.env.k8sAuthConfig }}
+            - name: MASTER_KEY_PATH
+              value: {{ required "Require .Values.env.masterKeyPath" .Values.env.masterKeyPath }}
+            - name: AKEYLESS_GATEWAY_API_URL
+              value: {{ required "Require .Values.env.akeylessGatewayAPIURL" .Values.env.akeylessGatewayAPIURL }}
+
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
