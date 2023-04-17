@@ -1,6 +1,6 @@
 # akeyless-grafana-access-policy-rotated
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -30,11 +30,6 @@ A Helm chart for Kubernetes
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-grafana-access-policy-rotated"` | Image repository |
 | image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` |  |
-| ingress.annotations | object | `{}` | Custom Ingress annotations |
-| ingress.className | string | `"nginx"` | Ingress class name |
-| ingress.enabled | bool | `false` | Ingress enabled |
-| ingress.hosts | list | `[]` | List of hosts to expose safe-client-gateway. See values.yaml for an example. |
-| ingress.tls | list | `[]` | TLS secret for exposing safe-client-gateway with https. See values.yaml for an example. |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
