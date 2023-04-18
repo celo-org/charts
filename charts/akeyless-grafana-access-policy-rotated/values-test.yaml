@@ -43,9 +43,6 @@ service:
   type: ClusterIP
   port: 8080
 
-ingress:
-  enabled: false
-
 # -- Container resources
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
