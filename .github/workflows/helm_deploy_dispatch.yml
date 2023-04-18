@@ -43,6 +43,7 @@ jobs:
       service-account: ${{ steps.set-config.outputs.service-account }}
     steps:
       - id: set-config
+        shell: bash
         run: |
           SERVICE_ACCOUNT_SUFFIX="-ro"
           [ "${{ github.ref_name }}" == main ] && SERVICE_ACCOUNT_SUFFIX=""
