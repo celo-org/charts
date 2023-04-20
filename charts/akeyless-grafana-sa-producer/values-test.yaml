@@ -1,4 +1,4 @@
-# Default values for akeyless-grafana-access-policy-producer.
+# Default values for akeyless-grafana-sa-producer.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -59,7 +59,6 @@ resources: {}
 env:
   # -- Akeyless Access ID (for authentication)
   akeylessAccessID: "p-smsrwoolrzwo"
-  # -- Secret Allowed Path
 
 autoscaling:
   enabled: false

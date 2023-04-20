@@ -37,13 +37,13 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          livenessProbe:
-            failureThreshold: 3
-            tcpSocket:
-              port: http
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
+#          livenessProbe:
+#            failureThreshold: 3
+#            tcpSocket:
+#              port: http
+#            periodSeconds: 10
+#            successThreshold: 1
+#            timeoutSeconds: 1
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
