@@ -1,4 +1,4 @@
-# Default values for akeyless-grafana-sa-producer.
+# Default values for akeyless-grafana-access-policy-producer.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -40,9 +40,12 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
+  # -- Kubernetes Service Type
   type: ClusterIP
+  # -- Kubernetes Service Type
   port: 8080
 
+# -- Container resources
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -55,10 +58,15 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+env:
+  # -- Akeyless Access ID (for authentication)
+  akeylessAccessID: test   # "p-smsrwoolrzwo"
+  # -- Secret Allowed Path
+
 autoscaling:
   enabled: false
   minReplicas: 1
-  maxReplicas: 100
+  maxReplicas: 3
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
@@ -67,3 +75,4 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
