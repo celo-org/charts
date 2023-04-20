@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ultragreen-dashboard.fullname" . }}-token-prices
+  labels:
+    {{- include "ultragreen-dashboard.labels" . | nindent 4 }}
+    component: token-prices
+spec:
+  replicas: {{ .Values.backend.tokenPrices.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "ultragreen-dashboard.selectorLabels" . | nindent 6 }}
+      component: token-prices
+  template:
+    metadata:
+      labels:
+        {{- include "ultragreen-dashboard.selectorLabels" . | nindent 8 }}
+        component: token-prices
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "ultragreen-dashboard.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.backend.tokenPrices.image.repository }}:{{ .Values.backend.tokenPrices.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.backend.tokenPrices.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.backend.tokenPrices.resources | nindent 12 }}
+          env:
+            {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}
+            - name: COINGECKO_API_KEY
+              value: {{ .Values.backend.coingeckoApiKey }}

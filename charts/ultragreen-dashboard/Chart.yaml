@@ -1,0 +1,25 @@
+---
+apiVersion: v2
+name: ultragreen-dashboard
+type: application
+description: Celo Ultragreed Dashboard
+home: https://celo.org
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+sources:
+  - https://celo.org
+  - https://docs.celo.org
+  - https://clabs.co
+  - https://github.com/celo-org
+version: 0.1.0
+appVersion: "0.1.0"
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
+dependencies:
+  - name: postgresql
+    version: 12.2.7
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+    tags:
+      - postgresql
