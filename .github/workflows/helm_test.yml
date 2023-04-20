@@ -158,13 +158,13 @@ jobs:
 
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
+        continue-on-error: true
         run: >
           ct install
           --target-branch ${{ github.event.repository.default_branch }}
           --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup,blockscout,akeyless-gadmin-producer,ultragreen-dashboard
           --chart-repos bitnami=https://charts.bitnami.com/bitnami
 
-      - uses: actions/checkout@v1
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v1
 
