@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-grafana-access-policy-producer
+  repository: us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-grafana-sa-producer
   # -- Image pullpolicy
   pullPolicy: Always
   # -- Image tag
@@ -40,9 +40,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  # -- Kubernetes Service Type
   type: ClusterIP
-  # -- Kubernetes Service Type
   port: 8080
 
 # -- Container resources
@@ -60,7 +58,7 @@ resources: {}
 
 env:
   # -- Akeyless Access ID (for authentication)
-  akeylessAccessID: test   # "p-smsrwoolrzwo"
+  akeylessAccessID: "p-smsrwoolrzwo"
   # -- Secret Allowed Path
 
 autoscaling:
