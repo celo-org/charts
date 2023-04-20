@@ -36,8 +36,6 @@ spec:
           env:
             - name: AKEYLESS_ACCESS_ID
               value: {{ required "Require .Values.env.akeylessAccessID" .Values.env.akeylessAccessID }}
-            - name: SECRET_PATH_REGEX
-              value: {{ required "Require .Values.env.secretPathRegex" .Values.env.secretPathRegex }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
