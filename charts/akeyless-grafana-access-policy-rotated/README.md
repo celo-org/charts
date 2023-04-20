@@ -1,8 +1,8 @@
-# akeyless-grafana-access-policy-producer
+# akeyless-grafana-access-policy-rotated
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
-Helm Chart for Grafana Access Policy Producer
+A Helm chart for Kubernetes
 
 ## Maintainers
 
@@ -19,11 +19,15 @@ Helm Chart for Grafana Access Policy Producer
 | autoscaling.maxReplicas | int | `3` |  |
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
-| env.akeylessAccessID | string | `"test"` | Akeyless Access ID (for authentication) |
+| env.akeylessAccessID | string | `"p-w04bl62o0ryt"` | Incoming Request Akeyless Access ID (to authenticate incoming rotated secret came from the gateway) |
+| env.akeylessGatewayAPIURL | string | `"https://api.gateway.akeyless.celo-networks-dev.org"` | Akeyless Gateway API Url to authenticate to |
+| env.k8sAuthConfig | string | `"clabs-secrets-and-permissions_akeyless-prod_us-west1-a"` | K8s Auth Config to authenticate back to the server and get master rotated key |
+| env.masterAccessID | string | `"p-18n0d0kfp2qv"` | Access ID to authenticate back to the server and get master rotated key |
+| env.masterKeyPath | string | `"/dynamic-secrets/keys/grafana/clabs/patrick-test-master"` | past to the  master key |
 | env.secretPathRegex | string | `"^\\/dynamic-secrets\\/cloud-user-access\\/grafana-access-policy.*"` | Secret Allowed Path |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-grafana-access-policy-producer"` | Image repository |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-grafana-access-policy-rotated"` | Image repository |
 | image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` |  |
 | nameOverride | string | `""` |  |

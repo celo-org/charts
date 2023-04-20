@@ -38,29 +38,6 @@ service:
   type: ClusterIP
   port: 8080
 
-ingress:
-  enabled: true
-  className:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-  hosts:
-  - host: akeyless-gadmin.akeyless.celo-networks-dev.org
-    paths:
-    - path: / 
-      pathType: Prefix
-      backend:
-        service:
-          name: akeyless-gadmin-producer
-          port:
-            number: 8080
-  tls:
-  - secretName: akeyless-gadmin-tls
-    hosts:
-       - akeyless-gadmin.akeyless.celo-networks-dev.org
-
-
-
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -79,7 +56,7 @@ env:
   # -- Secret Allowed Path
   secretPathRegex: '^\/dynamic-secrets\/cloud-user-access\/gadmin.*'
   # -- Secret Allowed Path
-  serviceAccountName: "akeyless-gadmin-producer@clabs-secrets-and-permissions.iam.gserviceaccount.com"
+  serviceAccount: "akeyless-gadmin-producer@clabs-secrets-and-permissions.iam.gserviceaccount.com"
   # -- User to Impersonate in Google Admin SDK
   impersonateUser: "_patrick_admin@clabs.co"
 

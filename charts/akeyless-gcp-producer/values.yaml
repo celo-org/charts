@@ -53,27 +53,6 @@ service:
   # -- Kubernetes Service Type
   port: 8080
 
-ingress:
-  # -- Ingress enabled
-  enabled: false
-  # -- Ingress class name
-  className: nginx
-  # -- Custom Ingress annotations
-  annotations: {}
-
-  # -- List of hosts to expose safe-client-gateway. See values.yaml for an example.
-  hosts: []
-  # - host: akeyless-gcp.akeyless.celo-networks-dev.org
-  #   paths:
-  #   - path: /
-  #     pathType: Prefix
-
-  # -- TLS secret for exposing safe-client-gateway with https. See values.yaml for an example.
-  tls: []
-  # - secretName: akeyless-gcp-tls
-  #   hosts:
-  #      - akeyless-gcp.akeyless.celo-networks-dev.org
-
 # -- Container resources
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

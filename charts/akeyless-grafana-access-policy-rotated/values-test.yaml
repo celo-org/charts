@@ -1,4 +1,4 @@
-# Default values for akeyless-grafana-access-policy-producer.
+# Default values for akeyless-grafana-access-policy-rotated.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-grafana-access-policy-producer
+  repository: us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-grafana-access-policy-rotated
   # -- Image pullpolicy
   pullPolicy: Always
   # -- Image tag
@@ -57,10 +57,18 @@ resources: {}
   #   memory: 128Mi
 
 env:
-  # -- Akeyless Access ID (for authentication)
-  akeylessAccessID: "p-smsrwoolrzwo"
+  # -- Incoming Request Akeyless Access ID (to authenticate incoming rotated secret came from the gateway)
+  akeylessAccessID: "p-w04bl62o0ryt"
   # -- Secret Allowed Path
   secretPathRegex: '^\/dynamic-secrets\/cloud-user-access\/grafana-access-policy.*'
+  # -- Access ID to authenticate back to the server and get master rotated key
+  masterAccessID: 'p-18n0d0kfp2qv'
+  # -- K8s Auth Config to authenticate back to the server and get master rotated key
+  k8sAuthConfig: 'clabs-secrets-and-permissions_akeyless-prod_us-west1-a'
+  # -- past to the  master key
+  masterKeyPath: /dynamic-secrets/keys/grafana/clabs/patrick-test-master
+  # -- Akeyless Gateway API Url to authenticate to
+  akeylessGatewayAPIURL: https://api.gateway.akeyless.celo-networks-dev.org
 
 autoscaling:
   enabled: false

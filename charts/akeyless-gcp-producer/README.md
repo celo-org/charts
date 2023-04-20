@@ -2,7 +2,7 @@
 
 A Helm chart for Kubernetes
 
-![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.1.7](https://img.shields.io/badge/Version-0.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 - [akeyless-gcp-producer](#akeyless-gcp-producer)
   - [Chart requirements](#chart-requirements)
@@ -43,11 +43,6 @@ and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-gcp-producer"` | Image repository |
 | image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
-| ingress.annotations | object | `{}` | Custom Ingress annotations |
-| ingress.className | string | `"nginx"` | Ingress class name |
-| ingress.enabled | bool | `false` | Ingress enabled |
-| ingress.hosts | list | `[]` | List of hosts to expose safe-client-gateway. See values.yaml for an example. |
-| ingress.tls | list | `[]` | TLS secret for exposing safe-client-gateway with https. See values.yaml for an example. |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
 | podAnnotations | object | `{}` | Custom pod annotations |
