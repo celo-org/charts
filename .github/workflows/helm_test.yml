@@ -165,10 +165,6 @@ jobs:
           --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup,blockscout,akeyless-gadmin-producer,ultragreen-dashboard
           --chart-repos bitnami=https://charts.bitnami.com/bitnami
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v1
-
-
   helm-docs:
     runs-on: 'ubuntu-latest'
 
