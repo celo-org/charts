@@ -27,7 +27,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.backend.offsetsWren.image.repository }}:{{ .Values.backend.offsetsWren.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.backend.offsetsWren.image.pullPolicy }}
+          {{- with .Values.backend.offsetsWren.resources }}
           resources:
-            {{- toYaml .Values.backend.offsetsWren.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
             {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}

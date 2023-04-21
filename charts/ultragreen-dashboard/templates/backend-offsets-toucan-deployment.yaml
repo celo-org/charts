@@ -27,7 +27,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.backend.offsetsToucan.image.repository }}:{{ .Values.backend.offsetsToucan.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.backend.offsetsToucan.image.pullPolicy }}
+          {{- with .Values.backend.offsetsToucan.resources }}
           resources:
-            {{- toYaml .Values.backend.offsetsToucan.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
             {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}
