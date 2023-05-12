@@ -62,7 +62,6 @@ env:
   # -- Akeyless Access ID (for authentication)
   akeylessAccessID: test   # "p-smsrwoolrzwo"
   # -- Secret Allowed Path
-  secretPathRegex: '^\/dynamic-secrets\/cloud-user-access\/grafana-access-policy.*'
 
 autoscaling:
   enabled: false

@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "akeyless-grafana-access-policy-producer.fullname" . }}
+  name: {{ include "akeyless-grafana-sa-producer.fullname" . }}
   labels:
-    {{- include "akeyless-grafana-access-policy-producer.labels" . | nindent 4 }}
+    {{- include "akeyless-grafana-sa-producer.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "akeyless-grafana-access-policy-producer.selectorLabels" . | nindent 6 }}
+      {{- include "akeyless-grafana-sa-producer.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "akeyless-grafana-access-policy-producer.selectorLabels" . | nindent 8 }}
+        {{- include "akeyless-grafana-sa-producer.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "akeyless-grafana-access-policy-producer.serviceAccountName" . }}
+      serviceAccountName: {{ include "akeyless-grafana-sa-producer.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:

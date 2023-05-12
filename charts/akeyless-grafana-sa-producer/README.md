@@ -1,8 +1,8 @@
-# akeyless-grafana-access-policy-producer
+# akeyless-grafana-sa-producer
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
-Helm Chart for Grafana Access Policy Producer
+A Helm chart for Kubernetes
 
 ## Maintainers
 
@@ -22,7 +22,7 @@ Helm Chart for Grafana Access Policy Producer
 | env.akeylessAccessID | string | `"test"` | Akeyless Access ID (for authentication) |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-grafana-access-policy-producer"` | Image repository |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-grafana-sa-producer"` | Image repository |
 | image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` |  |
 | nameOverride | string | `""` |  |
