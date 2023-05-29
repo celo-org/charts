@@ -1,0 +1,6 @@
+dependencies:
+- name: common
+  repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
+  version: 0.2.8
+digest: sha256:5e739d195087574291f3fece604c63caaeb277fcf149f830c1b5549128846d23
+generated: "2023-02-28T18:02:30.603612+01:00"
