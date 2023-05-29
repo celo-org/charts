@@ -42,6 +42,7 @@ geth:
     # limits:
     #   memory: "4Gi"
     #   cpu: "4"
+  storage: true
   ws_port: 8546
   account:
     secret: password

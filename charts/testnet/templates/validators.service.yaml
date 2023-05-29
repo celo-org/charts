@@ -1,7 +1,7 @@
 {{- range $index, $e := until (.Values.replicas.validators | int) -}}
 {{- if (eq (index $.Values.replicas.proxiesPerValidator $index | int) 0) -}}
 {{- if $.Values.geth.static_ips -}}
-{{- $loadBalancerIP := index $.Values.replicas.validatorsIPAddressArray $index }}
+{{- $loadBalancerIP := default "" (index $.Values.replicas.validatorsIPAddressArray $index) }}
 {{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" "LoadBalancer" "node_name" "validators" "component_label" "validators" "load_balancer_ip" $loadBalancerIP ) }}
 {{- else }}
 {{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" "ClusterIP" "node_name" "validators" "component_label" "validators" ) }}

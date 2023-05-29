@@ -20,7 +20,7 @@ metadata:
     {{- include "common.standard.labels" . | nindent 4 }}
     component: validators
 spec:
-  {{- if .Values.geth.ssd_disks }}
+  {{- if .Values.geth.storage }}
   volumeClaimTemplates:
   - metadata:
       name: data

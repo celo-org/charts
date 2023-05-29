@@ -36,7 +36,7 @@ spec:
     statefulset.kubernetes.io/pod-name: {{ template "common.fullname" $ }}-{{ .node_name }}-{{ .index }}
   type: {{ .service_type }}
   publishNotReadyAddresses: true
-  {{- if (eq .service_type "LoadBalancer") }}
+  {{- if and (eq .service_type "LoadBalancer") .load_balancer_ip }}
   loadBalancerIP: {{ .load_balancer_ip }}
   {{- end -}}
 {{- end -}}
@@ -111,7 +111,7 @@ spec:
   {{- $updateStrategy := index $.Values.updateStrategy $.component_label }}
   updateStrategy:
     {{- toYaml $updateStrategy | nindent 4 }}
-  {{- if .Values.geth.ssd_disks }}
+  {{- if .Values.geth.storage }}
   volumeClaimTemplates:
   - metadata:
       name: data
