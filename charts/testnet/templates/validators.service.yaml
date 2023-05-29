@@ -1,7 +1,7 @@
-{{- range $index, $e := until (.Values.geth.validators | int) -}}
-{{- if (eq (index $.Values.geth.proxiesPerValidator $index | int) 0) -}}
+{{- range $index, $e := until (.Values.replicas.validators | int) -}}
+{{- if (eq (index $.Values.replicas.proxiesPerValidator $index | int) 0) -}}
 {{- if $.Values.geth.static_ips -}}
-{{- $loadBalancerIP := index $.Values.geth.validatorsIPAddressArray $index }}
+{{- $loadBalancerIP := index $.Values.replicas.validatorsIPAddressArray $index }}
 {{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" "LoadBalancer" "node_name" "validators" "component_label" "validators" "load_balancer_ip" $loadBalancerIP ) }}
 {{- else }}
 {{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" "ClusterIP" "node_name" "validators" "component_label" "validators" ) }}
@@ -12,7 +12,7 @@
     protocol: UDP
 ---
 {{- if $.Values.geth.static_ips -}}
-{{- $loadBalancerIP := index $.Values.geth.validatorsIPAddressArray $index }}
+{{- $loadBalancerIP := index $.Values.replicas.validatorsIPAddressArray $index }}
 {{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" "LoadBalancer" "node_name" "validators" "svc_name_suffix" "-tcp" "component_label" "validators" "load_balancer_ip" $loadBalancerIP ) }}
 {{- else }}
 {{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" "ClusterIP" "node_name" "validators" "svc_name_suffix" "-tcp" "component_label" "validators" ) }}

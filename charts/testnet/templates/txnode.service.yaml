@@ -1,4 +1,4 @@
-{{- range $index, $e := until (.Values.geth.tx_nodes | int) }}
+{{- range $index, $e := until (.Values.replicas.txNodes | int) }}
 {{- $loadBalancerIP := (index $.Values.geth.txNodesIPAddressArray $index) }}
 {{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" "LoadBalancer" "svc_name" "service" "node_name" "tx-nodes" "component_label" "tx_nodes" "load_balancer_ip" $loadBalancerIP ) }}
   ports:

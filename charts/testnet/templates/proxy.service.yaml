@@ -1,4 +1,4 @@
-{{- range $validatorIndex, $proxyCount := .Values.geth.proxiesPerValidator -}}
+{{- range $validatorIndex, $proxyCount := .Values.replicas.proxiesPerValidator -}}
 {{- range $index, $e := until ($proxyCount | int) -}}
 {{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" "ClusterIP" "svc_name" (print "validators-" $validatorIndex "-proxy-internal") "node_name" (print "validators-" $validatorIndex "-proxy") "name_suffix" "" "component_label" "proxy" "load_balancer_ip" "" ) }}
   ports:

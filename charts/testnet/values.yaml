@@ -25,8 +25,10 @@ celotool:
 genesis:
   networkId: 1110
   network: testnet
-  useGenesisFileBase64: true
+  useGenesisFileBase64: false
   genesisFileBase64: ""
+  # -- Genesis force URL
+  genesisForceUrl: https://gist.githubusercontent.com/jcortejoso/eba86918c7b7c7546589edd9a32f1f08/raw/b564a1cb50c1fb5261ea5238b0c0b2d055af9ba4/genesis.json
 
 geth:
   image:
@@ -43,13 +45,6 @@ geth:
   ws_port: 8546
   account:
     secret: password
-  validators: 2
-  proxiesPerValidator:
-    - 0
-    - 1
-  secondaries: 0
-  tx_nodes: 1
-  private_tx_nodes: 1
   static_ips: false
   txNodesIPAddressArray:
     - 1.2.3.4
@@ -78,10 +73,20 @@ geth:
   light:
     maxpeers: 1000
     serve: 70
+  pprof:
+    enabled: false
+    port: 6060
+metrics:
+  enabled: true
 
-pprof:
-  enabled: false
-  port: 6060
+replicas:
+  validators: 2
+  proxiesPerValidator:
+    - 0
+    - 1
+  secondaries: 0
+  txNodes: 1
+  txNodes_private: 1
 
 # UpdateStrategy for statefulsets only. Partition=0 is default rollingUpdate behaviour.
 updateStrategy:
@@ -148,6 +153,6 @@ pvcAnnotations:
   txnode: {}
   txnode_private: {}
 
-initialCount: 0
+replicaInitialCount: 0
 enableBootnode: true
 forceFornoDomain: ""

@@ -46,7 +46,7 @@ spec:
         component: celo-fullnode
       {{- if .Values.metrics | default true }}
       annotations:
-        {{- include "common.prometheus-annotations" . | nindent 8 }}
+        {{- include "common.prometheus-annotations" (dict "pprof" .Values.geth.pprof ) | nindent 8 }}
       {{- end }}
     spec:
       {{- if .Values.geth.use_gstorage_data | default false }}

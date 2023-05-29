@@ -152,7 +152,7 @@ spec:
         {{- end }}
       {{- if .Values.metrics | default false }}
       annotations:
-        {{- include "common.prometheus-annotations" . | nindent 8 }}
+        {{- include "common.prometheus-annotations" (dict "pprof" .Values.geth.pprof ) | nindent 8 }}
       {{- end }}
     spec:
       initContainers:
@@ -162,7 +162,7 @@ spec:
       {{- include "common.import-geth-account-container" .  | nindent 6 }}
       {{- end }}
       containers:
-      {{- include "common.full-node-container" (dict "Values" .Values "Release" .Release "Chart" .Chart "proxy" .proxy "proxy_allow_private_ip_flag" .proxy_allow_private_ip_flag "unlock" .unlock "rpc_apis" .rpc_apis "expose" .expose "syncmode" .syncmode "gcmode" .gcmode "ws_port" (default .Values.geth.ws_port .ws_port) "pprof" (or (.Values.metrics) (.Values.pprof.enabled)) "pprof_port" (.Values.pprof.port) "light_serve" .Values.geth.light.serve "light_maxpeers" .Values.geth.light.maxpeers "maxpeers" .Values.geth.maxpeers "metrics" .Values.metrics "public_ips" .public_ips "ethstats" (printf "%s-ethstats.%s" (include "common.fullname" .) .Release.Namespace) "extra_setup" .extra_setup)  | nindent 6 }}
+      {{- include "common.full-node-container" (dict "Values" .Values "Release" .Release "Chart" .Chart "proxy" .proxy "proxy_allow_private_ip_flag" .proxy_allow_private_ip_flag "unlock" .unlock "rpc_apis" .rpc_apis "expose" .expose "syncmode" .syncmode "gcmode" .gcmode "ws_port" (default .Values.geth.ws_port .ws_port) "pprof" (or (.Values.metrics) (.Values.geth.pprof.enabled)) "pprof_port" (.Values.geth.pprof.port) "light_serve" .Values.geth.light.serve "light_maxpeers" .Values.geth.light.maxpeers "maxpeers" .Values.geth.maxpeers "metrics" .Values.metrics "public_ips" .public_ips "ethstats" (printf "%s-ethstats.%s" (include "common.fullname" .) .Release.Namespace) "extra_setup" .extra_setup)  | nindent 6 }}
       terminationGracePeriodSeconds:  {{ .Values.geth.terminationGracePeriodSeconds | default 300 }}
       {{- with .node_selector }}
       nodeSelector:

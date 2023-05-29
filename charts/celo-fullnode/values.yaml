@@ -181,6 +181,14 @@ geth:
           value: 25
         selectPolicy: Max
         stabilizationWindowSeconds: 600
+  # -- Pprof configuration for celo-blockchain
+  pprof:
+    enabled: true
+    path: /debug/metrics/prometheus
+    port: 6060
+
+# -- Enable celo-blockchain metrics and prometheus scraping
+metrics: true
 
 # -- Blockchain genesis configuration
 genesis:
@@ -192,11 +200,3 @@ genesis:
   useGenesisFileBase64: false
   # -- Base64 encoded genesis file if `useGenesisFileBase64` is set to true
   genesisFileBase64: ""
-
-# -- Enable celo-blockchain metrics and prometheus scraping
-metrics: true
-# -- Pprof configuration for celo-blockchain
-pprof:
-  enabled: true
-  path: /debug/metrics/prometheus
-  port: 6060
