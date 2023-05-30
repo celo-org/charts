@@ -4,7 +4,7 @@
 # Declare variables to be passed into your templates.
 
 backend:
-  coingeckoApiKey:
+  coingeckoApiKey: ""
   twitterApiKey: ""
   twitterApiSecret: ""
   clientUrl: ""
@@ -12,7 +12,7 @@ backend:
     replicaCount: 1
     resources: {}
     image:
-      repository: us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-api
+      repository: us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-api
       pullPolicy: Always
       tag: latest
     service:
@@ -37,42 +37,42 @@ backend:
     replicaCount: 1
     resources: {}
     image:
-      repository: us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-epoch-rewards
+      repository: us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-epoch-rewards
       pullPolicy: Always
       tag: latest
   footPrint:
     replicaCount: 1
     resources: {}
     image:
-      repository: us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-footprint
+      repository: us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-footprint
       pullPolicy: Always
       tag: latest
   txFees:
     replicaCount: 1
     resources: {}
     image:
-      repository: us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-tx-fees
+      repository: us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-tx-fees
       pullPolicy: Always
       tag: latest
   offsetsToucan:
     replicaCount: 1
     resources: {}
     image:
-      repository: us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-offsets-toucan
+      repository: us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-offsets-toucan
       pullPolicy: Always
       tag: latest
   offsetsWren:
     replicaCount: 1
     resources: {}
     image:
-      repository: us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-offsets-wren
+      repository: us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-offsets-wren
       pullPolicy: Always
       tag: latest
   tokenPrices:
     replicaCount: 1
     resources: {}
     image:
-      repository: us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-token-prices
+      repository: us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-token-prices
       pullPolicy: Always
       tag: latest
 

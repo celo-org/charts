@@ -27,7 +27,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.backend.footPrint.image.repository }}:{{ .Values.backend.footPrint.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.backend.footPrint.image.pullPolicy }}
+          {{- with .Values.backend.footPrint.resources }}
           resources:
-            {{- toYaml .Values.backend.footPrint.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
             {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}
