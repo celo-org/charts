@@ -2,7 +2,7 @@
 
 Helm chart with helper templates and functions for Celo nodes. Import into your chart with `dependencies` and use the templates and functions
 
-![Version: 0.2.9](https://img.shields.io/badge/Version-0.2.9-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 - [common](#common)
   - [Chart releases](#chart-releases)
@@ -23,7 +23,7 @@ To import this chart into your chart, add the following to your `requirements.ya
 dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci
-    version: 0.2.9
+    version: 0.3.0
 ```
 
 ## Values
@@ -31,8 +31,9 @@ dependencies:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | celotool | object | `{"image":{"imagePullPolicy":"IfNotPresent","repository":"gcr.io/celo-testnet/celo-monorepo","tag":"celotool-dc5e5dfa07231a4ff4664816a95eae606293eae9"}}` | Celotool image. This image is used to derivate the private keys from the mnemonic. This is just internally used by cLabs and not required to be used for running nodes |
-| genesis | object | `{"genesisFileBase64":"","network":"rc1","networkId":42220,"useGenesisFileBase64":false}` | Blockchain genesis configuration |
+| genesis | object | `{"genesisFileBase64":"","genesisForceUrl":"https://gist.githubusercontent.com/jcortejoso/eba86918c7b7c7546589edd9a32f1f08/raw/b564a1cb50c1fb5261ea5238b0c0b2d055af9ba4/genesis.json","network":"rc1","networkId":42220,"useGenesisFileBase64":false}` | Blockchain genesis configuration |
 | genesis.genesisFileBase64 | string | `""` | Base64 encoded genesis file if `useGenesisFileBase64` is set to true |
+| genesis.genesisForceUrl | string | `"https://gist.githubusercontent.com/jcortejoso/eba86918c7b7c7546589edd9a32f1f08/raw/b564a1cb50c1fb5261ea5238b0c0b2d055af9ba4/genesis.json"` | Genesis force URL |
 | genesis.network | string | `"rc1"` | Network name. Valid values are mainnet, rc1 (both for mainnet), baklava or afajores |
 | genesis.networkId | int | `42220` | Network ID for custom testnet. Not used in case of mainnet, baklava or alfajores |
 | genesis.useGenesisFileBase64 | bool | `false` | Use a custom genesis shared as part of a configmap. Used for custom networks with small genesis files |
