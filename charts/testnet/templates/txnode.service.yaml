@@ -1,12 +1,20 @@
-{{- range $index, $e := until (.Values.replicas.txNodes | int) }}
-{{- $loadBalancerIP := default "" (index $.Values.geth.txNodesIPAddressArray $index) }}
-{{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" "LoadBalancer" "svc_name" "service" "node_name" "tx-nodes" "component_label" "tx_nodes" "load_balancer_ip" $loadBalancerIP ) }}
+{{- range $index, $e := until (.Values.replicas.txNodes | int) -}}
+{{- /*
+We cannot use `ternary` or other workarounds because go templates evaluates
+all the expressions: https://github.com/Masterminds/sprig/issues/271
+*/}}
+{{- $loadBalancerIP := "" -}}
+{{- if gt (len $.Values.geth.txNodesIPAddressArray) $index -}}
+{{- $loadBalancerIP = index $.Values.geth.txNodesIPAddressArray $index -}}
+{{- end -}}
+{{- $loadBalancerType := ternary "LoadBalancer" "ClusterIP" (ne $loadBalancerIP "") -}}
+{{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" $loadBalancerType "svc_name" "service" "node_name" "tx-nodes" "component_label" "tx_nodes" "load_balancer_ip" $loadBalancerIP ) }}
   ports:
   - name: discovery
     port: 30303
     protocol: UDP
 ---
-{{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" "LoadBalancer" "svc_name" "service" "node_name" "tx-nodes" "svc_name_suffix" "-tcp" "component_label" "tx_nodes" "load_balancer_ip" $loadBalancerIP ) }}
+{{- template "celo.node-service" (dict "Values" $.Values "Release" $.Release "Chart" $.Chart "index" $index "service_type" $loadBalancerType "svc_name" "service" "node_name" "tx-nodes" "svc_name_suffix" "-tcp" "component_label" "tx_nodes" "load_balancer_ip" $loadBalancerIP ) }}
   ports:
   - name: celo
     port: 30303

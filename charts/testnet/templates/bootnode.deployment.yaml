@@ -48,7 +48,7 @@ spec:
             - /bin/sh
             - -c
             - |
-               devp2p discv4 --networkid {{ .Values.genesis.networkId }} ping "enode://$(cat /enode.key)@127.0.0.1:0?discport=30301"
+               devp2p discv4 --networkid {{ quote .Values.genesis.networkId }} ping "enode://$(cat /enode.key)@127.0.0.1:0?discport=30301"
           initialDelaySeconds: 30
           periodSeconds: 30
         volumeMounts:

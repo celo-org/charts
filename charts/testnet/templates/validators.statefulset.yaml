@@ -29,7 +29,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      {{- if .Values.geth.storageClass }}
       storageClassName: {{ .Values.geth.storageClass }}
+      {{- end }}
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
@@ -159,7 +161,7 @@ spec:
         - name: IP_ADDRESSES
           value: {{ join "/" .Values.replicas.validatorsIPAddressArray }}
         - name: BOOTNODE_IP_ADDRESS
-          value: "{{ default .Values.bootnode.defaultBootnodeClusterIP .Values.bootnode.bootnodeIpAddress  }}"
+          value: "{{ default .Values.bootnode.defaultBootnodeClusterIP .Values.bootnode.bootnodeIpAddress }}"
         volumeMounts:
         - name: data
           mountPath: /root/.celo

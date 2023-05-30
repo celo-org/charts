@@ -120,7 +120,9 @@ spec:
         {{- toYaml .pvc_annotations | nindent 8 }}
       {{- end }}
     spec:
+      {{- if $.Values.geth.storageClass }}
       storageClassName: {{ $.Values.geth.storageClass }}
+      {{- end }}
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:

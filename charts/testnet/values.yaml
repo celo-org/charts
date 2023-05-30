@@ -13,7 +13,7 @@ mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion 
 bootnode:
   image:
     repository: us.gcr.io/celo-testnet/geth-all
-    tag: fc254b550a4993956ac7aa3fcd8dd4db63b8c9d2
+    tag: 21d8283af60927589566cb282ab640f1ccec6ebd
   bootnodeIpAddress: ""
   defaultBootnodeClusterIP: 10.12.12.12
 
@@ -43,6 +43,8 @@ geth:
     #   memory: "4Gi"
     #   cpu: "4"
   storage: true
+  diskSizeGB: 5
+  privateTxNodediskSizeGB: 10
   ws_port: 8546
   account:
     secret: password
@@ -70,6 +72,7 @@ geth:
   txNodeTolerations: []
   txNodePrivateNodeSelector: {}
   txNodePrivateTolerations: []
+  ping_ip_from_packet: false
   maxpeers: 1150
   light:
     maxpeers: 1000
@@ -81,13 +84,14 @@ metrics:
   enabled: true
 
 replicas:
-  validators: 2
+  validators: 3
   proxiesPerValidator:
     - 0
     - 1
+    - 0
   secondaries: 0
   txNodes: 1
-  txNodes_private: 1
+  txNodesPrivate: 1
 
 # UpdateStrategy for statefulsets only. Partition=0 is default rollingUpdate behaviour.
 updateStrategy:
