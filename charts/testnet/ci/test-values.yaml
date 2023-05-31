@@ -12,3 +12,7 @@ geth:
     requests:
       memory: "200Mi"
       cpu: "100m"
+mnemonic: drum order gesture act sting mixed skirt shoot wave captain cage common antenna
+  piano erupt roast settle spot extra below canoe gloom goddess neglect
+genesis:
+  genesisForceUrl: https://gist.githubusercontent.com/jcortejoso/224ed898e4708393d209b2848ccec21a/raw/3d95523fffcc42bdf75d962f8f7619280dce1c32/genesis.json
