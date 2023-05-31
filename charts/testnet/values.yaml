@@ -160,4 +160,5 @@ pvcAnnotations:
 
 replicaInitialCount: 0
 enableBootnode: true
+enableFornoIngress: true
 forceFornoDomain: ""
