@@ -27,7 +27,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.backend.txFees.image.repository }}:{{ .Values.backend.txFees.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.backend.txFees.image.pullPolicy }}
+          {{- with .Values.backend.txFees.resources }}
           resources:
-            {{- toYaml .Values.backend.txFees.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
             {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}
