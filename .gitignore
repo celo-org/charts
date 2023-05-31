@@ -1,5 +1,6 @@
 **/*.tgz
 Chart.lock
+.DS_Store
 
 # VSCode
 .vscode/*
