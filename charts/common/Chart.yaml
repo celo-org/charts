@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
 name: common
-version: 0.2.9
+version: 0.3.0
 type: library
 home: https://celo.org
 icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg

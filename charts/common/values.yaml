@@ -49,6 +49,8 @@ genesis:
   useGenesisFileBase64: false
   # -- Base64 encoded genesis file if `useGenesisFileBase64` is set to true
   genesisFileBase64: ""
+  # -- Genesis force URL
+  genesisForceUrl: https://gist.githubusercontent.com/jcortejoso/eba86918c7b7c7546589edd9a32f1f08/raw/b564a1cb50c1fb5261ea5238b0c0b2d055af9ba4/genesis.json
 
 # -- Celotool image. This image is used to derivate the private keys from the mnemonic.
 # This is just internally used by cLabs and not required to be used for running nodes
