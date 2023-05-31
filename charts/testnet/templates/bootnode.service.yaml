@@ -1,0 +1,25 @@
+{{- if .Values.enableBootnode }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "common.fullname" . }}-bootnode
+  labels:
+    {{- include "common.standard.labels" .  | nindent 4 }}
+    component: bootnode
+spec:
+  {{- if $.Values.bootnode.bootnodeIpAddress }}
+  type: LoadBalancer
+  loadBalancerIP: {{ $.Values.bootnode.bootnodeIpAddress }}
+  {{- else }}
+  type: ClusterIP
+  clusterIP: {{ default $.Values.bootnode.defaultBootnodeClusterIP $.Values.bootnode.bootnodeIpAddress }}
+  {{- end }}
+  selector:
+    app: {{ template "common.name" . }}
+    release: {{ .Release.Name }}
+    component: bootnode
+  ports:
+  - name: discovery
+    port: 30301
+    protocol: UDP
+{{- end }}

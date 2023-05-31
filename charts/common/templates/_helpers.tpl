@@ -468,28 +468,6 @@ else
 fi
 {{- end }}
 
-{{- define "common.geth-exporter-container" -}}
-- name: geth-exporter
-  image: "{{ .Values.gethexporter.image.repository }}:{{ .Values.gethexporter.image.tag }}"
-  imagePullPolicy: {{ .Values.imagePullPolicy }}
-  ports:
-    - name: profiler
-      containerPort: 9200
-  command:
-    - /usr/local/bin/geth_exporter
-    - -ipc
-    - /root/.celo/geth.ipc
-    - -filter
-    - (.*overall|percentiles_95)
-  resources:
-    requests:
-      memory: 50M
-      cpu: 50m
-  volumeMounts:
-  - name: data
-    mountPath: /root/.celo
-{{- end }}
-
 {{- /*
 * This template does not define ports that will be exposed
 */}}

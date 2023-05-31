@@ -1,0 +1,34 @@
+{{- if .Values.enableFornoIngress }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Namespace }}-forno-ingress
+  labels:
+    {{- include "common.standard.labels" .  | nindent 4 }}
+    component: forno
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    # Allows WS connections to be 20 minutes long, see https://kubernetes.github.io/ingress-nginx/user-guide/miscellaneous/#websockets
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "1200"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "1200"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: {{ default "nginx" .Values.ingressClassName }}
+  tls:
+  - hosts:
+    {{- $domain := default (printf "%s-forno.%s.org" .Release.Namespace .Values.domain.name) .Values.forceFornoDomain }}
+    - {{ $domain }}
+    secretName: {{ $domain }}-tls
+  rules:
+  - host: {{ $domain }}
+    http:
+      paths:
+      - path: /(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: tx-nodes
+            port: 
+              number: 8545
+{{- end }}

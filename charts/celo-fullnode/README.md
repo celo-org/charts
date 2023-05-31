@@ -2,7 +2,7 @@
 
 Helm chart for deploying a Celo fullnode. More info at https://docs.celo.org
 
-![Version: 0.4.9](https://img.shields.io/badge/Version-0.4.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
 
 - [celo-fullnode](#celo-fullnode)
   - [Chart requirements](#chart-requirements)
@@ -34,7 +34,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.4.9" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.5.0" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -86,6 +86,7 @@ helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo 
 | geth.maxpeers | int | `1150` | Maximum number of netwook peers. Includes both inbound and outbound connections, and light clients |
 | geth.node_keys | list | `[]` | Array with Private keys used for as nodekey for the celo-blockchain replicas. Replica 0 will use the first ip, replica 1 the second, etc. |
 | geth.ping_ip_from_packet | bool | `false` | Enable blockchain option `--ping-ip-from-packet` |
+| geth.pprof | object | `{"enabled":true,"path":"/debug/metrics/prometheus","port":6060}` | Pprof configuration for celo-blockchain |
 | geth.public_ip_per_node | list | `[]` | Array with 'public' ip addresses used for `nat=extip:<ip>` option. Replica 0 will use the first ip, replica 1 the second, etc. |
 | geth.resources | object | `{"limits":{},"requests":{"cpu":"3","memory":"8Gi"}}` | Resources for `geth` container |
 | geth.rpc_apis | string | `"eth,net,rpc,web3"` | API's exposed in the RPC/WS interfaces |
@@ -104,7 +105,6 @@ helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo 
 | ingress.tls | list | `[]` | Ingress TLS configuration |
 | metrics | bool | `true` | Enable celo-blockchain metrics and prometheus scraping |
 | nodeSelector | object | `{}` | Labels to add to `nodeSelector` field of the statefulset |
-| pprof | object | `{"enabled":true,"path":"/debug/metrics/prometheus","port":6060}` | Pprof configuration for celo-blockchain |
 | replicaCount | int | `1` | Number of celo-blockchain statefulset replicas |
 | storage.accessModes | string | `"ReadWriteOnce"` | accessMode for the volumes |
 | storage.annotations | object | `{}` | celo-blockchain pvc annotations |

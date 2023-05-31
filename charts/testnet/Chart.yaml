@@ -1,0 +1,29 @@
+---
+name: testnet
+apiVersion: v2
+version: 0.3.0
+description: Private Celo network Helm chart for Kubernetes
+home: https://clabs.co
+sources:
+  - https://celo.org
+  - https://docs.celo.org
+  - https://clabs.co
+  - https://github.com/celo-org
+keywords:
+  - Celo
+  - Blockchain
+  - Fullnode
+  - Validator
+  - Ethereum
+  - Proof-of-Stake
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
+type: application
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+appVersion: v1.0.0
+dependencies:
+  - name: common
+    repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
+    version: 0.3.0
