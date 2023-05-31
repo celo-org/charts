@@ -12,6 +12,7 @@ geth:
     requests:
       memory: "200Mi"
       cpu: "100m"
+  txNodesIPAddressArray: []
 # Insecure mnemonic for testnet
 mnemonic: drum order gesture act sting mixed skirt shoot wave captain cage common antenna
   piano erupt roast settle spot extra below canoe gloom goddess neglect
