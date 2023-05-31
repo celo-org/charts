@@ -8,7 +8,9 @@ imagePullPolicy: Always
 # ref: https://kubernetes.io/docs/user-guide/node-selection/
 nodeSelector: {}
 
-mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion rib resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery
+# Insecure mnemonic
+mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion rib 
+  resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery
 
 bootnode:
   image:
@@ -73,6 +75,7 @@ geth:
   txNodePrivateNodeSelector: {}
   txNodePrivateTolerations: []
   ping_ip_from_packet: false
+  faultyValidators: 0
   maxpeers: 1150
   light:
     maxpeers: 1000
