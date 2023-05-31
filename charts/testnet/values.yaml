@@ -15,11 +15,11 @@ bootnode:
     repository: us.gcr.io/celo-testnet/geth-all
     tag: 21d8283af60927589566cb282ab640f1ccec6ebd
   bootnodeIpAddress: ""
-  defaultBootnodeClusterIP: 10.12.12.12
+  defaultBootnodeClusterIP: 10.0.0.12
 
 celotool:
   image:
-    repository: gcr.io/celo-testnet/celo-monorepo
+    repository: us.gcr.io/celo-testnet/celo-monorepo
     tag: celotool-dc5e5dfa07231a4ff4664816a95eae606293eae9
 
 genesis:
@@ -32,8 +32,8 @@ genesis:
 
 geth:
   image:
-    repository: us.gcr.io/celo-testnet/geth
-    tag: fc254b550a4993956ac7aa3fcd8dd4db63b8c9d2
+    repository: us.gcr.io/celo-org/geth
+    tag: 1.7.4
   resources:
     requests:
       memory: "256Mi"
@@ -77,6 +77,7 @@ geth:
   light:
     maxpeers: 1000
     serve: 70
+  vmodule: consensus/*=2
   pprof:
     enabled: false
     port: 6060
@@ -115,11 +116,6 @@ updateStrategy:
     type: RollingUpdate
     rollingUpdate:
       partition: 0
-
-gethexporter:
-  image:
-    repository: gcr.io/celo-testnet/geth-exporter
-    tag: ed7d21bd50592709173368cd697ef73c1774a261
 
 blockscout:
   image:
