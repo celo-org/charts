@@ -1,0 +1,14 @@
+bootnode:
+  defaultBootnodeClusterIP: 10.96.12.12
+replicas:
+  validators: 1
+  proxiesPerValidator:
+    - 0
+  secondaries: 0
+  txNodes: 1
+  txNodesPrivate: 0
+geth:
+  resources:
+    requests:
+      memory: "200Mi"
+      cpu: "100m"
