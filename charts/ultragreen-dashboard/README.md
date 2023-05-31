@@ -1,6 +1,6 @@
 # ultragreen-dashboard
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Celo Ultragreed Dashboard
 
@@ -30,7 +30,7 @@ Celo Ultragreed Dashboard
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | backend.api.image.pullPolicy | string | `"Always"` |  |
-| backend.api.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-api"` |  |
+| backend.api.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-api"` |  |
 | backend.api.image.tag | string | `"latest"` |  |
 | backend.api.ingress.annotations."kubernetes.io/tls-acme" | string | `"true"` |  |
 | backend.api.ingress.className | string | `"nginx"` |  |
@@ -45,36 +45,36 @@ Celo Ultragreed Dashboard
 | backend.api.service.port | int | `80` |  |
 | backend.api.service.type | string | `"ClusterIP"` |  |
 | backend.clientUrl | string | `""` |  |
-| backend.coingeckoApiKey | string | `nil` |  |
+| backend.coingeckoApiKey | string | `""` |  |
 | backend.epochRewards.image.pullPolicy | string | `"Always"` |  |
-| backend.epochRewards.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-epoch-rewards"` |  |
+| backend.epochRewards.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-epoch-rewards"` |  |
 | backend.epochRewards.image.tag | string | `"latest"` |  |
 | backend.epochRewards.replicaCount | int | `1` |  |
 | backend.epochRewards.resources | object | `{}` |  |
 | backend.footPrint.image.pullPolicy | string | `"Always"` |  |
-| backend.footPrint.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-footprint"` |  |
+| backend.footPrint.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-footprint"` |  |
 | backend.footPrint.image.tag | string | `"latest"` |  |
 | backend.footPrint.replicaCount | int | `1` |  |
 | backend.footPrint.resources | object | `{}` |  |
 | backend.offsetsToucan.image.pullPolicy | string | `"Always"` |  |
-| backend.offsetsToucan.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-offsets-toucan"` |  |
+| backend.offsetsToucan.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-offsets-toucan"` |  |
 | backend.offsetsToucan.image.tag | string | `"latest"` |  |
 | backend.offsetsToucan.replicaCount | int | `1` |  |
 | backend.offsetsToucan.resources | object | `{}` |  |
 | backend.offsetsWren.image.pullPolicy | string | `"Always"` |  |
-| backend.offsetsWren.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-offsets-wren"` |  |
+| backend.offsetsWren.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-offsets-wren"` |  |
 | backend.offsetsWren.image.tag | string | `"latest"` |  |
 | backend.offsetsWren.replicaCount | int | `1` |  |
 | backend.offsetsWren.resources | object | `{}` |  |
 | backend.tokenPrices.image.pullPolicy | string | `"Always"` |  |
-| backend.tokenPrices.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-token-prices"` |  |
+| backend.tokenPrices.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-token-prices"` |  |
 | backend.tokenPrices.image.tag | string | `"latest"` |  |
 | backend.tokenPrices.replicaCount | int | `1` |  |
 | backend.tokenPrices.resources | object | `{}` |  |
 | backend.twitterApiKey | string | `""` |  |
 | backend.twitterApiSecret | string | `""` |  |
 | backend.txFees.image.pullPolicy | string | `"Always"` |  |
-| backend.txFees.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/clabs-private-images/ultragreen-dashboard-tx-fees"` |  |
+| backend.txFees.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-tx-fees"` |  |
 | backend.txFees.image.tag | string | `"latest"` |  |
 | backend.txFees.replicaCount | int | `1` |  |
 | backend.txFees.resources | object | `{}` |  |

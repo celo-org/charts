@@ -31,8 +31,10 @@ spec:
             - name: http
               containerPort: {{ .Values.backend.api.service.port }}
               protocol: TCP
+          {{- with .Values.backend.api.resources }}
           resources:
-            {{- toYaml .Values.backend.api.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
             {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}
             - name: COINGECKO_API_KEY
