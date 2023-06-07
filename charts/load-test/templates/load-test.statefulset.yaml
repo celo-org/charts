@@ -163,7 +163,7 @@ spec:
 
           exec geth \
           --nousb \
-          --networkid={{ $.Values.geth.networkID }} \
+          --networkid={{ printf "%s" $.Values.geth.networkID }} \
           --nodekey=/root/.celo/pkey{{ $index }} \
           --syncmode=lightest \
           --consoleformat=json \
