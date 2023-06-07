@@ -12,6 +12,7 @@ delay: 0
 genesis:
   network: globaltestnet
   useGenesisFileBase64: false
+  genesisForceUrl: https://gist.githubusercontent.com/jcortejoso/eba86918c7b7c7546589edd9a32f1f08/raw/b564a1cb50c1fb5261ea5238b0c0b2d055af9ba4/genesis.json
 geth:
   accountSecret: secret
   image:
