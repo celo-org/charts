@@ -1,0 +1,30 @@
+---
+bigTxs: true
+blockscout:
+  measurePercent: 0
+  url: https://globaltestnet-blockscout.global-testnet-us-west1.blockchaintestsglobaltestnet.org
+bootnodeIpAddress: 34.83.130.228
+celotool:
+  image:
+    repository: gcr.io/celo-testnet/celo-monorepo
+    tag: celotool-c111b9949aaee09310f8014855514ab67b938afe
+delay: 0
+genesis:
+  network: globaltestnet
+  useGenesisFileBase64: false
+geth:
+  accountSecret: secret
+  image:
+    repository: us.gcr.io/celo-org/geth
+    tag: 1.7.4
+  networkID: 11012
+  staticNodes: ''
+  verbosity: 1
+imagePullPolicy: Always
+initialCount: 0
+mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion rib
+  resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery
+replicas: 0
+reuse_light_clients: true
+threads: 30
+use_random_recipient: false
