@@ -126,7 +126,7 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          {{- $disk_size := ((eq .name "tx-nodes-private" ) | ternary .Values.geth.privateTxNodediskSizeGB .Values.geth.diskSizeGB ) }}
+          {{- $disk_size := ternary .Values.geth.privateTxNodediskSizeGB .Values.geth.diskSizeGB (eq .name "tx-nodes-private") }}
           storage: {{ $disk_size }}Gi
   {{- end }}
   podManagementPolicy: Parallel
