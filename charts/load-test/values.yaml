@@ -1,5 +1,5 @@
 ---
-bigTxs: true
+test-mode: mixed
 extraArgs: ''
 blockscout:
   measurePercent: 0
