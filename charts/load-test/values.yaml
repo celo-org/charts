@@ -1,5 +1,6 @@
 ---
 bigTxs: true
+extraArgs: ''
 blockscout:
   measurePercent: 0
   url: https://globaltestnet-blockscout.global-testnet-us-west1.blockchaintestsglobaltestnet.org

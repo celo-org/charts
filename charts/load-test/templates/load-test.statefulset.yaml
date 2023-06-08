@@ -213,6 +213,9 @@ spec:
               {{- if .Values.bigTxs }}
               --data-test \
               {{- end }}
+              {{- with .Values.extraArgs }}
+              {{ . | nindent 14 }}
+              {{- end }}
               --blockscout-url {{ .Values.blockscout.url }} \
               --blockscoutMeasurePercent {{ .Values.blockscout.measurePercent }} \
               --client-count {{ .Values.threads | default "1" }}
