@@ -210,7 +210,7 @@ spec:
               --recipient-index $RECIPIENT_INDEX \
               --delay {{ .Values.delay }} \
               --mnemonic "$MNEMONIC" \
-              --test-mode={{ .Values.test_mode }} \
+              --test-mode={{ .Values.testMode }} \
               {{- with .Values.extraArgs }}
               {{ . | nindent 14 }}
               {{- end }}

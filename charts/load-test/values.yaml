@@ -1,5 +1,5 @@
 ---
-test-mode: mixed
+testMode: mixed
 extraArgs: ''
 blockscout:
   measurePercent: 0
