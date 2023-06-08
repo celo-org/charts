@@ -7,7 +7,7 @@ bootnodeIpAddress: 34.83.130.228
 celotool:
   image:
     repository: gcr.io/celo-testnet/celo-monorepo
-    tag: celotool-c111b9949aaee09310f8014855514ab67b938afe
+    tag: celotool-6a565197ca569afbf6b0414ba384419489a11daf
 delay: 0
 genesis:
   network: globaltestnet
@@ -18,7 +18,7 @@ geth:
   image:
     repository: us.gcr.io/celo-org/geth
     tag: 1.7.4
-  networkID: 11012
+  networkID: '9099000'
   staticNodes: ''
   verbosity: 1
 imagePullPolicy: Always

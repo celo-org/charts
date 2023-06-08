@@ -109,7 +109,7 @@ spec:
         - "-c"
         - |-
           set -euo pipefail
-          cp /var/geth/static-nodes.json /root/.celo/static-nodes.json
+          [ -f /var/geth/static-nodes.json ] && cp /var/geth/static-nodes.json /root/.celo/static-nodes.json
 
           ADDITIONAL_FLAGS="--allow-insecure-unlock"
           ACCOUNT_ADDRESSES=$(cat /root/.celo/address | tr '\n' ',')
@@ -139,8 +139,10 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /root/.celo
+        {{- if $.Values.geth.staticNodes }}
         - name: config
           mountPath: /var/geth
+        {{- end }}
         - name: account
           mountPath: "/root/.celo/account"
           readOnly: true
@@ -155,7 +157,7 @@ spec:
         - |-
           set -euo pipefail
           cp -rp /root/.celo_share /root/.celo
-          cp /var/geth/static-nodes.json /root/.celo/static-nodes.json
+          [ -f /var/geth/static-nodes.json ] && cp /var/geth/static-nodes.json /root/.celo/static-nodes.json
 
           ACCOUNT_ADDRESS=$(awk 'NR=={{ add $index 1 }}' /root/.celo/address)
 
@@ -177,8 +179,10 @@ spec:
         - name: data
           mountPath: /root/.celo_share
           readOnly: true
+        {{- if $.Values.geth.staticNodes }}
         - name: config
           mountPath: /var/geth
+        {{- end }}
         - name: account
           mountPath: "/root/.celo_share/account"
           readOnly: true
@@ -231,9 +235,11 @@ spec:
       volumes:
       - name: data
         emptyDir: {}
+      {{- if .Values.geth.staticNodes }}
       - name: config
         configMap:
           name: {{ template "common.fullname" . }}-load-test-config
+      {{- end }}
       - name: account
         secret:
           secretName: {{ template "common.fullname" . }}-load-test
