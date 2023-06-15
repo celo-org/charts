@@ -1,0 +1,32 @@
+---
+testMode: mixed
+extraArgs: ''
+blockscout:
+  measurePercent: 0
+  url: https://globaltestnet-blockscout.global-testnet-us-west1.blockchaintestsglobaltestnet.org
+bootnodeIpAddress: 34.83.130.228
+celotool:
+  image:
+    repository: gcr.io/celo-testnet/celo-monorepo
+    tag: celotool-6a565197ca569afbf6b0414ba384419489a11daf
+delay: 0
+genesis:
+  network: globaltestnet
+  useGenesisFileBase64: false
+  genesisForceUrl: https://gist.githubusercontent.com/jcortejoso/eba86918c7b7c7546589edd9a32f1f08/raw/b564a1cb50c1fb5261ea5238b0c0b2d055af9ba4/genesis.json
+geth:
+  accountSecret: secret
+  image:
+    repository: us.gcr.io/celo-org/geth
+    tag: 1.7.4
+  networkID: '9099000'
+  staticNodes: ''
+  verbosity: 1
+imagePullPolicy: Always
+initialCount: 0
+mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion rib
+  resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery
+replicas: 0
+reuse_light_clients: true
+threads: 30
+use_random_recipient: false
