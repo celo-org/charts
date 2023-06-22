@@ -116,7 +116,7 @@ spec:
         {{- include "celo.blockscout.conditional-env-var" (dict "name" "RE_CAPTCHA_SITE_KEY" "value" .Values.blockscout.shared.secrets.recaptcha_siteKey) | nindent 8 }}
         {{- include "celo.blockscout.conditional-env-var" (dict "name" "RE_CAPTCHA_API_KEY" "value" .Values.blockscout.shared.secrets.recaptcha_apiKey) | nindent 8 }}
         {{- include "celo.blockscout.conditional-env-var" (dict "name" "RE_CAPTCHA_SECRET_KEY" "value" .Values.blockscout.shared.secrets.recaptcha_secretKey) | nindent 8 }}
-        {{- include "celo.blockscout.conditional-env-var" (dict "name" "SEGMENT_KEY" "value" .Values.blockscout.shared.secrets.segmentKey) | nindent 8 }}
+        {{- include "celo.blockscout.conditional-env-var" (dict "name" "ANALYTICS_KEY" "value" .Values.blockscout.shared.secrets.analyticsKey) | nindent 8 }}
         {{- include "celo.blockscout.conditional-env-var" (dict "name" "CAMPAIGN_BANNER_BACKEND_URL" "value" .Values.blockscout.shared.secrets.campaignBannerApiUrl) | nindent 8 }}
         - name: CAMPAIGN_BANNER_REFRESH_INTERVAL
           value: {{ .Values.blockscout.web.campaignBanner.refreshInterval | quote }}
