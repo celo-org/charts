@@ -1,7 +1,7 @@
 ---
 testMode: mixed
 extraArgs:
-  - --total-tx-gas 100000 
+  - --total-tx-gas 100000
   - --max-gas-price 25000000000
 replicas: 0
 threads: 30
