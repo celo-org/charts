@@ -210,6 +210,7 @@ spec:
               {{- if $reuseClient }}
               --reuse-client \
               {{- end }}
+              --chainId {{ .Values.geth.networkID }} \
               --index $RID \
               --recipient-index $RECIPIENT_INDEX \
               --delay {{ .Values.delay }} \
