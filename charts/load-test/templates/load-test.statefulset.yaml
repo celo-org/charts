@@ -217,7 +217,7 @@ spec:
               --mnemonic "$MNEMONIC" \
               --test-mode={{ .Values.testMode }} \
               {{- with .Values.extraArgs }}
-              {{ . | nindent 14 }} \
+              {{ toYaml . | nindent 14 }} \
               {{- end }}
               --blockscout-url {{ .Values.blockscout.url }} \
               --blockscoutMeasurePercent {{ .Values.blockscout.measurePercent }} \
