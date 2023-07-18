@@ -94,6 +94,8 @@ spec:
           value: {{ .Values.blockscout.indexer.primaryRpcRegion | quote }}
         - name: INDEXER_DISABLE_BLOCK_REWARD_FETCHER
           value: {{ not .Values.blockscout.indexer.fetchers.blockRewards.enabled | quote }}
+        - name: INDEXER_INTERNAL_TRANSACTIONS_TRACER_TYPE
+          value: {{ .Values.blockscout.indexer.tracerImplementation | quote }}
         {{- include "celo.blockscout.env-vars" $data | nindent 8 }}
       volumes:
         {{- include "celo.blockscout.volume.temporary-dir" . | nindent 8 }}
