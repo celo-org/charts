@@ -113,6 +113,8 @@ blockscout:
     rpcRegion: "indexer"
     # -- PRIMARY_REGION env variable for indexer pod. Do not change.
     primaryRpcRegion: "indexer"
+    # -- tracer to use to fetch internal transactions - 'js' or 'call_tracer'
+    tracerImplementation: "js"
     # -- Enable CELO blockRewards functionality
     fetchers:
       blockRewards:
