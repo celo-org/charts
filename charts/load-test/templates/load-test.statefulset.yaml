@@ -249,7 +249,7 @@ spec:
       - name: account
         secret:
           secretName: {{ template "common.fullname" . }}-load-test
-  {{- if and ($reuseClient (contains "localhost" .Values.web3Provider)) }}
+  {{- if and $reuseClient (contains "localhost" .Values.web3Provider) }}
   volumeClaimTemplates:
   - metadata:
       name: data
