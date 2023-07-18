@@ -1,6 +1,17 @@
 ---
 testMode: mixed
-extraArgs: ''
+extraArgs:
+  - --total-tx-gas 100000
+  - --max-gas-price 25000000000
+replicas: 0
+threads: 30
+# For multi-cluster setups
+initialCount: 0
+mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion rib
+  resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery
+web3Provider: http://localhost:8545
+generatePrivateKeys: false
+useRandomRecipient: false
 blockscout:
   measurePercent: 0
   url: https://globaltestnet-blockscout.global-testnet-us-west1.blockchaintestsglobaltestnet.org
@@ -8,7 +19,7 @@ bootnodeIpAddress: 34.83.130.228
 celotool:
   image:
     repository: gcr.io/celo-testnet/celo-monorepo
-    tag: celotool-6a565197ca569afbf6b0414ba384419489a11daf
+    tag: celotool-a829487e24d0295247d5f78e98dee2abf8554947
 delay: 0
 genesis:
   network: globaltestnet
@@ -23,10 +34,3 @@ geth:
   staticNodes: ''
   verbosity: 1
 imagePullPolicy: Always
-initialCount: 0
-mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion rib
-  resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery
-replicas: 0
-reuse_light_clients: true
-threads: 30
-use_random_recipient: false

@@ -40,6 +40,8 @@ spec:
         component: load-test
     spec:
       initContainers:
+      {{- include "common.conditional-init-genesis-container" .  | nindent 6 }}
+      {{- if .Values.generatePrivateKeys }}
       - name: generate-keys
         image: {{ .Values.celotool.image.repository }}:{{ .Values.celotool.image.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
@@ -82,7 +84,6 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /root/.celo
-      {{- include "common.conditional-init-genesis-container" .  | nindent 6 }}
       - name: import-geth-account
         image: {{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
@@ -99,7 +100,9 @@ spec:
         - name: account
           mountPath: "/root/.celo/account"
           readOnly: true
+      {{- end }}
       containers:
+      {{- if contains "localhost" .Values.web3Provider }}
       {{- if $reuseClient }}
       - name: geth
         image: {{ $.Values.geth.image.repository }}:{{ $.Values.geth.image.tag }}
@@ -187,6 +190,7 @@ spec:
           mountPath: "/root/.celo_share/account"
           readOnly: true
       {{- end -}}
+      {{- end -}}
       {{- end }}
       - name: simulate-client
         image: {{ .Values.celotool.image.repository }}:{{ .Values.celotool.image.tag }}
@@ -213,14 +217,14 @@ spec:
               --mnemonic "$MNEMONIC" \
               --test-mode={{ .Values.testMode }} \
               {{- with .Values.extraArgs }}
-              {{ . | nindent 14 }}
+              {{ toYaml . | nindent 14 }} \
               {{- end }}
               --blockscout-url {{ .Values.blockscout.url }} \
               --blockscoutMeasurePercent {{ .Values.blockscout.measurePercent }} \
               --client-count {{ .Values.threads | default "1" }}
         env:
         - name: LOAD_TEST_USE_RANDOM_RECIPIENT
-          value: "{{ default "true" .Values.use_random_recipient }}"
+          value: "{{ default "true" .Values.useRandomRecipient }}"
         - name: MNEMONIC
           valueFrom:
             secretKeyRef:
@@ -245,7 +249,7 @@ spec:
       - name: account
         secret:
           secretName: {{ template "common.fullname" . }}-load-test
-  {{- if $reuseClient }}
+  {{- if and $reuseClient (contains "localhost" .Values.web3Provider) }}
   volumeClaimTemplates:
   - metadata:
       name: data
