@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "rosetta.name" }}
+  name: {{ include "rosetta.name" . }}
   labels:
     {{- include "rosetta.labels" . | nindent 4 }}
 spec:
@@ -29,7 +29,7 @@ spec:
   serviceName: {{ template "rosetta.fullname" . }}
   selector:
     matchLabels:
-      {{- include "rosetta.short_labels" . | nindent 6 }}
+      {{- include "rosetta.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
@@ -54,11 +54,12 @@ spec:
         command:
           - /bin/sh
           - "-c"
-        args: |
-                /usr/local/bin/rosetta run \
-                --geth.network {{ .Values.network }} \
-                --geth.syncmode full \
-                --geth.gcmode archive
+        args:
+        - |
+            /usr/local/bin/rosetta run \
+              --geth.network {{ .Values.network }} \
+              --geth.syncmode full \
+              --geth.gcmode archive
         {{- with .Values.resources }}
         resources:
           {{- toYaml . | nindent  10 }}

@@ -1,3 +1,4 @@
+---
 replicaCount: 1
 network: mainnet
 affinity: {}
