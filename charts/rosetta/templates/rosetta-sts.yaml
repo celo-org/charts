@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "rosetta.name" }}
+  labels:
+    {{- include "rosetta.labels" . | nindent 4 }}
+spec:
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      {{- with .Values.storage.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- if .Values.storage.storageClass }}
+      storageClassName: {{ .Values.storage.storageClass }}
+      {{- end }}
+      accessModes: [ "{{ .Values.storage.accessModes }}" ]
+      resources:
+        requests:
+          storage: {{ .Values.storage.size }}
+      {{- with .Values.storage.dataSource }}
+      dataSource:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  podManagementPolicy: Parallel
+  replicas: {{ .Values.replicaCount }}
+  serviceName: {{ template "rosetta.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "rosetta.short_labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "rosetta.labels" . | nindent 8 }}
+    spec:
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: rosetta
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: Always
+        command:
+          - /bin/sh
+          - "-c"
+        args: |
+                /usr/local/bin/rosetta run \
+                --geth.network {{ .Values.network }} \
+                --geth.syncmode full \
+                --geth.gcmode archive
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent  10 }}
+        {{- end }}
+        ports:
+          - containerPort: 8080
+            name: http
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: data-shared
+        emptyDir: {}
