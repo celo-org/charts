@@ -41,7 +41,6 @@ spec:
         - |
             exec /bin/rosetta-cli check:data \
               --configuration-file /cli-config/cli-config.json
-        {{- with .Values.resources }}
         volumeMounts:
           - name: cli-config
             mountPath: /cli-config
