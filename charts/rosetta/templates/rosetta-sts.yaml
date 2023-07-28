@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "rosetta.name" . }}
+  name: {{ include "rosetta.fullname" . }}
   labels:
     {{- include "rosetta.labels" . | nindent 4 }}
 spec:
@@ -67,6 +67,9 @@ spec:
         ports:
           - containerPort: 8080
             name: http
+        volumeMounts:
+          - name: data
+            mountPath: /data
       terminationGracePeriodSeconds: 300
       volumes:
       - name: data
