@@ -1,10 +1,11 @@
 ---
 replicaCount: 1
 network: mainnet
+networkId: 42220
 affinity: {}
 nodeSelector: {}
 tolerations: {}
-image: 
+image:
   repository: us.gcr.io/celo-testnet/rosetta
   tag: gingerbread-prep-1.8.0-beta.1
 resources:
@@ -29,3 +30,8 @@ storage:
     # apiGroup: snapshot.storage.k8s.io
     # kind: VolumeSnapshot
     # name: forno-snapshot
+
+cli:
+  image:
+    repository: us.gcr.io/celo-testnet/rosetta-cli
+    tag: v0.10.3

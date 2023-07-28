@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rosetta.fullname" . }}-cli
+  labels:
+    {{- include "rosetta.labels" . | nindent 4 }}
+    component: cli
+spec:
+  podManagementPolicy: Parallel
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "rosetta.selectorLabels" . | nindent 6 }}
+      component: cli
+  template:
+    metadata:
+      labels:
+        {{- include "rosetta.labels" . | nindent 8 }}
+        component: cli
+    spec:
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: rosetta-cli
+        image: {{ .Values.cli.image.repository }}:{{ .Values.cli.image.tag }}
+        imagePullPolicy: Always
+        command:
+          - /bin/sh
+          - "-c"
+        args:
+        - |
+            exec /bin/rosetta-cli check:data \
+              --configuration-file /cli-config/cli-config.json
+        {{- with .Values.resources }}
+        volumeMounts:
+          - name: cli-config
+            mountPath: /cli-config
+      terminationGracePeriodSeconds: 300
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: cli-config
+        configMap:
+          name: {{ include "rosetta.fullname" . }}-cli-config

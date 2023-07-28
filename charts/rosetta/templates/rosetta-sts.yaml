@@ -4,6 +4,7 @@ metadata:
   name: {{ include "rosetta.fullname" . }}
   labels:
     {{- include "rosetta.labels" . | nindent 4 }}
+    component: server
 spec:
   volumeClaimTemplates:
   - metadata:
@@ -30,10 +31,12 @@ spec:
   selector:
     matchLabels:
       {{- include "rosetta.selectorLabels" . | nindent 6 }}
+      component: server
   template:
     metadata:
       labels:
         {{- include "rosetta.labels" . | nindent 8 }}
+        component: server
     spec:
       {{- with .Values.affinity }}
       affinity:
