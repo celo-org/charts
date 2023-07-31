@@ -8,7 +8,7 @@ nodeSelector: {}
 tolerations: {}
 image:
   repository: us.gcr.io/celo-testnet/rosetta
-  tag: gingerbread-prep-1.8.0-beta.1
+  tag: gingerbread-prep-2
 resources:
   requests:
     cpu: 7
