@@ -59,8 +59,15 @@ spec:
           - "-c"
         args:
         - |
+            {{- if .Values.genesisUrl }}
+            wget -O /data/genesis.json {{ .Values.genesisUrl }}
+            {{- end }}
             exec /usr/local/bin/rosetta run \
+              {{- if .Values.genesisUrl }}
+              --geth.genesis /data/genesis.json \
+              {{- else }}
               --geth.network {{ .Values.network }} \
+              {{- end }}
               --geth.syncmode full \
               --geth.gcmode archive
         {{- with .Values.resources }}

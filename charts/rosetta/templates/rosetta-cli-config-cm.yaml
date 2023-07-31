@@ -1,3 +1,4 @@
+{{- if .Values.cli.enabled -}}
 apiVersion: v1
 data:
   cli-config.json: |
@@ -50,3 +51,4 @@ data:
 kind: ConfigMap
 metadata:
   name: {{ include "rosetta.fullname" . }}-cli-config
+{{- end }}

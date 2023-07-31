@@ -2,6 +2,7 @@
 replicaCount: 1
 network: mainnet
 networkId: 42220
+genesisUrl: ""
 affinity: {}
 nodeSelector: {}
 tolerations: {}
@@ -12,6 +13,10 @@ resources:
   requests:
     cpu: 7
     memory: 12Gi
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  domain: "integration-tests.celo-networks-dev.org"
 storage:
   # -- Name of the storage class to use for the celo-blockchain statefulset
   storageClass: premium-rwo
@@ -32,6 +37,7 @@ storage:
     # name: forno-snapshot
 
 cli:
+  enabled: false
   image:
     repository: us.gcr.io/celo-testnet/rosetta-cli
     tag: v0.10.3
