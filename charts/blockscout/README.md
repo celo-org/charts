@@ -2,7 +2,7 @@
 
 Chart which is used to deploy Blockscout for Celo Networks
 
-![Version: 1.3.8](https://img.shields.io/badge/Version-1.3.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
+![Version: 1.3.9](https://img.shields.io/badge/Version-1.3.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
 
 - [blockscout](#blockscout)
   - [Chart requirements](#chart-requirements)
@@ -36,7 +36,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.3.8" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.3.9" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -90,14 +90,15 @@ helm upgrade my-blockscout -f values-alfajores-blockscout2.yaml --namespace=celo
 | blockscout.eventStream.replicas | int | `0` | replicas for eventStream deployment |
 | blockscout.eventStream.resources | object | `{"requests":{"cpu":2,"memory":"1000Mi"}}` | resources for eventStream container |
 | blockscout.eventStream.strategy | object | `{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}` | UpdateStrategy for eventStream deployment |
-| blockscout.indexer | object | `{"affinity":{},"db":{"connectionName":"project:region:db-name","name":"blockscout","port":5432,"proxy":{"resources":{"requests":{"cpu":"100m","memory":"40Mi"}}}},"fetchers":{"blockRewards":{"enabled":false}},"livenessProbe":{},"nodeSelector":{},"poolSize":200,"poolSizeReplica":5,"port":4001,"primaryRpcRegion":"indexer","readinessProbe":{"failureThreshold":5,"httpGet":{"path":"/health/readiness","port":"health","scheme":"HTTP"},"initialDelaySeconds":30,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":5},"resources":{"requests":{"cpu":2,"memory":"2G"}},"rpcRegion":"indexer","strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0}},"terminationGracePeriodSeconds":60,"tracerImplementation":"call_tracer"}` | Configuraton for the indexer component |
+| blockscout.indexer | object | `{"affinity":{},"db":{"connectionName":"project:region:db-name","name":"blockscout","port":5432,"proxy":{"resources":{"requests":{"cpu":"100m","memory":"40Mi"}}}},"fetchers":{"blockRewards":{"enabled":false},"catchup":{"batchSize":5,"concurrency":5}},"livenessProbe":{},"nodeSelector":{},"poolSize":200,"poolSizeReplica":5,"port":4001,"primaryRpcRegion":"indexer","readinessProbe":{"failureThreshold":5,"httpGet":{"path":"/health/readiness","port":"health","scheme":"HTTP"},"initialDelaySeconds":30,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":5},"resources":{"requests":{"cpu":2,"memory":"2G"}},"rpcRegion":"indexer","strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0}},"terminationGracePeriodSeconds":60,"tracerImplementation":"call_tracer"}` | Configuraton for the indexer component |
 | blockscout.indexer.affinity | object | `{}` | affinity for indexer pods |
 | blockscout.indexer.db | object | `{"connectionName":"project:region:db-name","name":"blockscout","port":5432,"proxy":{"resources":{"requests":{"cpu":"100m","memory":"40Mi"}}}}` | Database configuration for indexer. Prepared to be used with CloudSQL |
 | blockscout.indexer.db.connectionName | string | `"project:region:db-name"` | Name of the CloudSQL connection to use |
 | blockscout.indexer.db.name | string | `"blockscout"` | Name of the database to use. Database is created if it does not exist |
 | blockscout.indexer.db.proxy | object | `{"resources":{"requests":{"cpu":"100m","memory":"40Mi"}}}` | Configuration for the CloudSQL proxy (https://cloud.google.com/sql/docs/mysql/sql-proxy) |
 | blockscout.indexer.db.proxy.resources | object | `{"requests":{"cpu":"100m","memory":"40Mi"}}` | resources for cloud-sql container |
-| blockscout.indexer.fetchers | object | `{"blockRewards":{"enabled":false}}` | Enable CELO blockRewards functionality |
+| blockscout.indexer.fetchers.blockRewards | object | `{"enabled":false}` | Enable CELO blockRewards functionality |
+| blockscout.indexer.fetchers.catchup | object | `{"batchSize":5,"concurrency":5}` | Block catchup fetcher config |
 | blockscout.indexer.livenessProbe | object | `{}` | livenessProbe for indexer container |
 | blockscout.indexer.nodeSelector | object | `{}` | nodeSelector for indexer pods |
 | blockscout.indexer.poolSize | int | `200` | Max number of DB connections excluding read-only API endpoints requests |

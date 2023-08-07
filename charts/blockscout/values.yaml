@@ -115,8 +115,12 @@ blockscout:
     primaryRpcRegion: "indexer"
     # -- tracer to use to fetch internal transactions - 'js' or 'call_tracer'
     tracerImplementation: "call_tracer"
-    # -- Enable CELO blockRewards functionality
     fetchers:
+      # -- Block catchup fetcher config
+      catchup:
+        batchSize: 5
+        concurrency: 5
+      # -- Enable CELO blockRewards functionality
       blockRewards:
         enabled: false
 
