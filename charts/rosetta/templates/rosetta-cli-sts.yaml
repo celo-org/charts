@@ -64,9 +64,11 @@ spec:
             RID=${BASH_REMATCH[1]}
             CUT_RID=$(($RID + 1))
             START_BLOCK=$(echo -n "{{ .Values.cli.startBlock }}" | cut -d',' -f$CUT_RID)
+
             # Workaround because rosetta-cli looks for files (like bootstrap_balances) relative
             # to the configuration file path
             cp -rpL /cli-config/cli-config.json /rosetta-cli-conf/cli-config.json
+
             exec /usr/local/bin/rosetta-cli check:data \
               --configuration-file /rosetta-cli-conf/cli-config.json \
               --data-dir /data \
