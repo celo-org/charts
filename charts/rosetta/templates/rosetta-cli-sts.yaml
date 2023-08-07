@@ -56,16 +56,26 @@ spec:
         image: {{ .Values.cli.image.repository }}:{{ .Values.cli.image.tag }}
         imagePullPolicy: Always
         command:
-          - /bin/sh
+          - /bin/bash
           - "-c"
         args:
         - |
+            [[ $REPLICA_NAME =~ -([0-9]+)$ ]] || exit 1
+            RID=${BASH_REMATCH[1]}
+            CUT_RID=$(($RID + 1))
+            START_BLOCK=$(echo -n "{{ .Values.cli.startBlock }}" | cut -d',' -f$CUT_RID)
             # Workaround because rosetta-cli looks for files (like bootstrap_balances) relative
             # to the configuration file path
             cp -rpL /cli-config/cli-config.json /rosetta-cli-conf/cli-config.json
             exec /usr/local/bin/rosetta-cli check:data \
               --configuration-file /rosetta-cli-conf/cli-config.json \
-              --data-dir /data
+              --data-dir /data \
+              --start-block $START_BLOCK
+        env:
+          - name: REPLICA_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
         volumeMounts:
           - name: cli-config
             mountPath: /cli-config

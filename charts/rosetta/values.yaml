@@ -40,6 +40,9 @@ storage:
 cli:
   enabled: false
   replicaCount: 1
+  # Multple starting blocks splitted by comma. Each replica will take the starting block in order.
+  # startBlock: "0, 100000, 4000000"
+  startBlock: "0"
   image:
     repository: us.gcr.io/celo-testnet/rosetta-cli
     tag: v0.10.3
