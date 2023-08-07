@@ -3,12 +3,13 @@ replicaCount: 1
 network: mainnet
 networkId: 42220
 genesisUrl: ""
+bootnodeUrl: ""
 affinity: {}
 nodeSelector: {}
 tolerations: {}
 image:
   repository: us.gcr.io/celo-testnet/rosetta
-  tag: gingerbread-prep-2
+  tag: gingerbread-prep-3
 resources:
   requests:
     cpu: 7
@@ -38,6 +39,25 @@ storage:
 
 cli:
   enabled: false
+  replicaCount: 1
   image:
     repository: us.gcr.io/celo-testnet/rosetta-cli
     tag: v0.10.3
+  storage:
+    # -- Name of the storage class to use for the celo-blockchain statefulset
+    storageClass: premium-rwo
+    # -- accessMode for the volumes
+    accessModes: ReadWriteOnce
+    # -- celo-blockchain pvc annotations
+    annotations:
+      resize.topolvm.io/increase: 10%
+      resize.topolvm.io/storage_limit: 300Gi
+      resize.topolvm.io/threshold: 85%
+      resize.topolvm.io/inodes-threshold: 90%
+    # -- Size of the persistent volume claim for the celo-blockchain statefulset
+    size: 10Gi
+    # -- Include a dataSource in the volumeClaimTemplates
+    dataSource: {}
+      # apiGroup: snapshot.storage.k8s.io
+      # kind: VolumeSnapshot
+      # name: forno-snapshot

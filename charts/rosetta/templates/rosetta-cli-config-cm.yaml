@@ -5,7 +5,7 @@ data:
     {
       "network": {
         "blockchain": "celo",
-        "network": "{{ .Values.networkId }}",
+        "network": "{{ .Values.networkId }}"
       },
       "online_url": "http://{{ include "rosetta.fullname" . }}:8080",
       "data_directory": "",
@@ -28,7 +28,7 @@ data:
         "log_reconciliations": false,
         "ignore_reconciliation_error": false,
         "exempt_accounts": "",
-        "bootstrap_balances": "/rosetta-cli-conf/{{ .Values.network }}/bootstrap_balances.json",
+        "bootstrap_balances": "{{ .Values.network }}/bootstrap_balances.json",
         "interesting_accounts": "",
         "reconciliation_disabled": false,
         "reconciliation_drain_disabled": false,

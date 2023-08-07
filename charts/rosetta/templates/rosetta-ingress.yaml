@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-  - host: {{ include "rosetta.fullname" . }}.{{ .Values.ingress.domain }}
+  - host: {{ include "rosetta.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.ingress.domain }}
     http:
       paths:
       - backend:
@@ -23,5 +23,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - {{ include "rosetta.fullname" . }}.{{ .Values.ingress.domain }}
-    secretName: {{ include "rosetta.fullname" . }}.{{ .Values.ingress.domain }}-tls
+    - {{ include "rosetta.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.ingress.domain }}
+    secretName: {{ include "rosetta.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.ingress.domain }}-tls

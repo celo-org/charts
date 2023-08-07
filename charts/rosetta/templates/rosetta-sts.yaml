@@ -68,6 +68,9 @@ spec:
               {{- else }}
               --geth.network {{ .Values.network }} \
               {{- end }}
+              {{- if .Values.bootnodeUrl }}
+              --geth.bootnodes {{ .Values.bootnodeUrl }} \
+              {{- end }}
               --geth.syncmode full \
               --geth.gcmode archive
         {{- with .Values.resources }}
