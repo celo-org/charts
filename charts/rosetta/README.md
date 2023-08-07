@@ -20,7 +20,6 @@ Rosetta Client for Celo Networks
 | cli.image.repository | string | `"us.gcr.io/celo-testnet/rosetta-cli"` |  |
 | cli.image.tag | string | `"v0.10.3"` |  |
 | cli.replicaCount | int | `1` |  |
-| cli.startBlock | string | `"0"` |  |
 | cli.storage.accessModes | string | `"ReadWriteOnce"` | accessMode for the volumes |
 | cli.storage.annotations | object | `{"resize.topolvm.io/increase":"10%","resize.topolvm.io/inodes-threshold":"90%","resize.topolvm.io/storage_limit":"300Gi","resize.topolvm.io/threshold":"85%"}` | celo-blockchain pvc annotations |
 | cli.storage.dataSource | object | `{}` | Include a dataSource in the volumeClaimTemplates |
