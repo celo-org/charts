@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "rosetta.fullname" . }}
+  labels:
+    {{- include "rosetta.labels" . | nindent 4 }}
+    component: server
+spec:
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      {{- with .Values.storage.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- if .Values.storage.storageClass }}
+      storageClassName: {{ .Values.storage.storageClass }}
+      {{- end }}
+      accessModes: [ "{{ .Values.storage.accessModes }}" ]
+      resources:
+        requests:
+          storage: {{ .Values.storage.size }}
+      {{- with .Values.storage.dataSource }}
+      dataSource:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  podManagementPolicy: Parallel
+  replicas: {{ .Values.replicaCount }}
+  serviceName: {{ template "rosetta.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "rosetta.selectorLabels" . | nindent 6 }}
+      component: server
+  template:
+    metadata:
+      labels:
+        {{- include "rosetta.labels" . | nindent 8 }}
+        component: server
+    spec:
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: rosetta
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: Always
+        command:
+          - /bin/sh
+          - "-c"
+        args:
+        - |
+            {{- if .Values.genesisUrl }}
+            wget -O /data/genesis.json {{ .Values.genesisUrl }}
+            {{- end }}
+            exec /usr/local/bin/rosetta run \
+              {{- if .Values.genesisUrl }}
+              --geth.genesis /data/genesis.json \
+              {{- else }}
+              --geth.network {{ .Values.network }} \
+              {{- end }}
+              {{- if .Values.bootnodeUrl }}
+              --geth.bootnodes {{ .Values.bootnodeUrl }} \
+              {{- end }}
+              --geth.syncmode full \
+              --geth.gcmode archive
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent  10 }}
+        {{- end }}
+        ports:
+          - containerPort: 8080
+            name: http
+        volumeMounts:
+          - name: data
+            mountPath: /data
+      terminationGracePeriodSeconds: 300
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: data-shared
+        emptyDir: {}

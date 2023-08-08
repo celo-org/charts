@@ -1,0 +1,82 @@
+{{- if .Values.cli.enabled -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "rosetta.fullname" . }}-cli
+  labels:
+    {{- include "rosetta.labels" . | nindent 4 }}
+    component: cli
+spec:
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      {{- with .Values.cli.storage.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- if .Values.cli.storage.storageClass }}
+      storageClassName: {{ .Values.cli.storage.storageClass }}
+      {{- end }}
+      accessModes: [ "{{ .Values.cli.storage.accessModes }}" ]
+      resources:
+        requests:
+          storage: {{ .Values.cli.storage.size }}
+      {{- with .Values.cli.storage.dataSource }}
+      dataSource:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  podManagementPolicy: Parallel
+  replicas: {{ .Values.cli.replicaCount }}
+  serviceName: {{ template "rosetta.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "rosetta.selectorLabels" . | nindent 6 }}
+      component: cli
+  template:
+    metadata:
+      labels:
+        {{- include "rosetta.labels" . | nindent 8 }}
+        component: cli
+    spec:
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: rosetta-cli
+        image: {{ .Values.cli.image.repository }}:{{ .Values.cli.image.tag }}
+        imagePullPolicy: Always
+        command:
+          - /bin/bash
+          - "-c"
+        args:
+        - |
+            # Workaround because rosetta-cli looks for files (like bootstrap_balances) relative
+            # to the configuration file path
+            cp -rpL /cli-config/cli-config.json /rosetta-cli-conf/cli-config.json
+
+            exec /usr/local/bin/rosetta-cli check:data \
+              --configuration-file /rosetta-cli-conf/cli-config.json \
+              --data-dir /data
+        volumeMounts:
+          - name: cli-config
+            mountPath: /cli-config
+          - name: data
+            mountPath: /data
+      terminationGracePeriodSeconds: 300
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: cli-config
+        configMap:
+          name: {{ include "rosetta.fullname" . }}-cli-config
+{{- end }}

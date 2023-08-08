@@ -1,0 +1,17 @@
+---
+apiVersion: v2
+name: rosetta
+type: application
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+version: 0.0.1
+description: Rosetta Client for Celo Networks
+keywords:
+  - Celo
+  - Blockchain
+  - Ethereum
+  - Proof-of-Stake
+appVersion: v1.0.0
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co

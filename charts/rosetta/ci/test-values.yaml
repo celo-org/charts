@@ -1,0 +1,15 @@
+---
+resources:
+  requests:
+    cpu: 1
+    memory: 2Gi
+storage:
+  storageClass: standard
+  size: 5Gi
+
+cli:
+  enabled: true
+  replicaCount: 1
+  storage:
+    storageClass: standard
+    size: 2Gi

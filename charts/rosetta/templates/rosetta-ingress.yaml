@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+  labels:
+    {{- include "rosetta.labels" . | nindent 4 }}
+    component: server
+  name: {{ include "rosetta.fullname" . }}
+spec:
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+  rules:
+  - host: {{ include "rosetta.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.ingress.domain }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: {{ include "rosetta.fullname" . }}
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - {{ include "rosetta.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.ingress.domain }}
+    secretName: {{ include "rosetta.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.ingress.domain }}-tls
