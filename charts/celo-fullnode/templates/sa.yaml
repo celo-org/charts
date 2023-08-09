@@ -1,5 +1,8 @@
+{{- $serviceAccount := lookup "v1" "ServiceAccount" .Release.Namespace "gcloud-storage-access" -}}
+{{- if not $serviceAccount -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   annotations:
   name: gcloud-storage-access
+{{- end -}}
