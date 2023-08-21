@@ -603,7 +603,6 @@ fi
 {{- end }}
 
 {{- define "common.geth-http-ws-flags" -}}
-
 # Check the format of http/rcp and ws cmd arguments
 RPC_APIS={{ .rpc_apis | default "eth,net,web3,debug" | quote }}
 WS_PORT="{{ .ws_port | default 8545 }}"
@@ -619,4 +618,101 @@ else
   ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --rpc --rpcaddr $LISTEN_ADDRESS --rpcapi=$RPC_APIS --rpccorsdomain='*' --rpcvhosts=*"
   ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --ws --wsaddr $LISTEN_ADDRESS --wsorigins=* --wsapi=$RPC_APIS --wsport=$WS_PORT"
 fi
+{{- end }}
+
+{{- define "common.delete-pod-cronjob" -}}
+{{- /*
+This CronJob in intended to delete regularly a geth pod
+in order to force geth to flush the data to disk, so it can 
+be used as an snapshot
+*/}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    {{- include "common.standard.labels" . | nindent 4 }}
+    component: restart-geth
+  name: {{ template "common.fullname" . }}-restart-geth
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            {{- include "common.standard.labels" . | nindent 12 }}
+            component: restart-geth
+        spec:
+          containers:
+          - name: restart-geth
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              kubectl delete pod -n {{ .Release.Namespace }} {{ template "common.fullname" . }}-{{ .podIndex }}-0
+            image: bitnami/kubectl:latest
+            imagePullPolicy: Always
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          serviceAccountName: {{ template "common.fullname" . }}-restart-geth
+          terminationGracePeriodSeconds: 30
+  schedule: "{{ .schedule }}"
+  successfulJobsHistoryLimit: 3
+  suspend: true
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    {{- include "common.standard.labels" . | nindent 4 }}
+    component: restart-geth
+  name: {{ template "common.fullname" . }}-restart-geth
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    {{- include "common.standard.labels" . | nindent 4 }}
+    component: restart-geth
+  name: {{ template "common.fullname" . }}-restart-geth
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+  - delete
+  - update
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    {{- include "common.standard.labels" . | nindent 4 }}
+    component: restart-geth
+  name: {{ template "common.fullname" . }}-restart-geth
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "common.fullname" . }}-restart-geth
+subjects:
+- kind: ServiceAccount
+  name: {{ template "common.fullname" . }}-restart-geth
+  namespace: {{ .Release.Namespace }}
 {{- end }}
