@@ -12,3 +12,6 @@ geth:
       memory: 500Mi
       cpu: 0.5
   syncmode: lightest
+
+deletePodCronJob:
+  enabled: true
