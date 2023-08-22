@@ -60,7 +60,8 @@ helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo 
 |-----|------|---------|-------------|
 | aws | bool | `false` | Enables aws specific settings |
 | azure | bool | `false` | Enables azure specific settings |
-| deletePodCronJob | object | `{"enabled":false,"podIndex":0,"schedule":"0 10 * * 1,4"}` | Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk |
+| deletePodCronJob | object | `{"enabled":false,"extraFlags":"","podIndex":0,"schedule":"0 10 * * 1,4"}` | Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk |
+| deletePodCronJob.extraFlags | string | `""` | Extra cmd flags to pass to the delete pod command |
 | deletePodCronJob.podIndex | int | `0` | Statefulset index to delete |
 | deletePodCronJob.schedule | string | `"0 10 * * 1,4"` | Cron expression for the CronJob |
 | extraPodLabels | object | `{}` | Labels to add to the podTemplateSpec from statefulset |
