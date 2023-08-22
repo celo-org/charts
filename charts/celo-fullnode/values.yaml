@@ -208,3 +208,5 @@ deletePodCronJob:
   schedule: "0 10 * * 1,4"
   # -- Statefulset index to delete
   podIndex: 0
+  # -- Extra cmd flags to pass to the delete pod command
+  extraFlags: ""

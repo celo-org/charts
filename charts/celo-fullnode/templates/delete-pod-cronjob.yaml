@@ -30,7 +30,8 @@ spec:
             - -c
             args:
             - |
-              kubectl delete pod -n {{ .Release.Namespace }} {{ printf "%s-%d" (include "common.fullname" .) (.Values.deletePodCronJob.podIndex | int) }}
+              extraFlags="{{ .Values.deletePodCronJob.extraFlags }}"
+              kubectl delete pod -n {{ .Release.Namespace }} "${extraFlags}" {{ printf "%s-%d" (include "common.fullname" .) (.Values.deletePodCronJob.podIndex | int) }}
             image: bitnami/kubectl:latest
             imagePullPolicy: Always
             terminationMessagePath: /dev/termination-log
