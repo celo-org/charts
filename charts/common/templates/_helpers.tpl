@@ -652,7 +652,7 @@ spec:
             - -c
             args:
             - |
-              kubectl delete pod -n {{ .Release.Namespace }} {{ template "common.fullname" . }}-{{ .podIndex }}-0
+              kubectl delete pod -n {{ .Release.Namespace }} {{ .podName }}
             image: bitnami/kubectl:latest
             imagePullPolicy: Always
             terminationMessagePath: /dev/termination-log

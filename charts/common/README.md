@@ -2,7 +2,7 @@
 
 Helm chart with helper templates and functions for Celo nodes. Import into your chart with `dependencies` and use the templates and functions
 
-![Version: 0.3.3](https://img.shields.io/badge/Version-0.3.3-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 - [common](#common)
   - [Chart releases](#chart-releases)
@@ -23,7 +23,7 @@ To import this chart into your chart, add the following to your `requirements.ya
 dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci
-    version: 0.3.3
+    version: 0.3.4
 ```
 
 ## Values
