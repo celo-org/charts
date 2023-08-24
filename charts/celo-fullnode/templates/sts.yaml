@@ -46,10 +46,10 @@ spec:
         {{- toYaml .Values.extraPodLabels | nindent 8 }}
         {{- end }}
         component: celo-fullnode
-      {{- if .Values.metrics | default true }}
       annotations:
+        clabs.co/images: "{{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}"
+        {{- if .Values.geth.pprof.enabled }}
         {{- include "common.prometheus-annotations" (dict "pprof" .Values.geth.pprof ) | nindent 8 }}
-      {{- end }}
     spec:
       {{- if .Values.geth.use_gstorage_data | default false }}
       serviceAccountName: gcloud-storage-access
