@@ -98,6 +98,8 @@ spec:
           value: {{ .Values.blockscout.indexer.fetchers.catchup.batchSize | quote }}
         - name: INDEXER_CATCHUP_BLOCKS_CONCURRENCY
           value: {{ .Values.blockscout.indexer.fetchers.catchup.concurrency | quote }}
+        - name: INDEXER_INTERNAL_TRANSACTIONS_TRACER_TYPE
+          value: {{ .Values.blockscout.indexer.tracerImplementation | quote }}
         {{- include "celo.blockscout.env-vars" $data | nindent 8 }}
       volumes:
         {{- include "celo.blockscout.volume.temporary-dir" . | nindent 8 }}
