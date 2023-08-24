@@ -48,7 +48,6 @@ spec:
         component: celo-fullnode
       annotations:
         clabs.co/images: "{{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}"
-        {{- if .Values.geth.pprof.enabled }}
         {{- include "common.prometheus-annotations" (dict "pprof" .Values.geth.pprof ) | nindent 8 }}
     spec:
       {{- if .Values.geth.use_gstorage_data | default false }}
