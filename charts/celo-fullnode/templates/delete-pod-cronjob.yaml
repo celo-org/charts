@@ -31,7 +31,7 @@ spec:
             args:
             - |
               extraFlags="{{ .Values.deletePodCronJob.extraFlags }}"
-              kubectl delete pod -n {{ .Release.Namespace }} "${extraFlags}" {{ printf "%s-%d" (include "common.fullname" .) (.Values.deletePodCronJob.podIndex | int) }}
+              kubectl delete pod -n {{ .Release.Namespace }} {{ printf "%s-%d" (include "common.fullname" .) (.Values.deletePodCronJob.podIndex | int) }} $extraFlags
             image: bitnami/kubectl:latest
             imagePullPolicy: Always
             terminationMessagePath: /dev/termination-log
@@ -43,7 +43,7 @@ spec:
           terminationGracePeriodSeconds: 30
   schedule: "{{ .Values.deletePodCronJob.schedule }}"
   successfulJobsHistoryLimit: 3
-  suspend: true
+  suspend: false
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -88,7 +88,7 @@ metadata:
   name: {{ template "common.fullname" . }}-restart-geth
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
+  kind: Role
   name: {{ template "common.fullname" . }}-restart-geth
 subjects:
 - kind: ServiceAccount
