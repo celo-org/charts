@@ -30,10 +30,6 @@ spec:
             - -c
             args:
             - |
-              # Delete the pod to force geth to flush the data to disk
-              extraFlagsPod="{{ .Values.deletePodCronJob.extraFlagsPod }}"
-              kubectl delete pod -n {{ .Release.Namespace }} {{ printf "%s-%d" (include "common.fullname" .) (.Values.deletePodCronJob.podIndex | int) }} $extraFlagsPod
-
               # Delete pvc that are not currently used
               extraFlagsPvc="{{ .Values.deletePodCronJob.extraFlagsPvc }}"
               unused_pvcs="$(kubectl describe pvc | grep -E "^Name:.*$|^Namespace:.*$|^Used By:.*$" | grep -B 2 "<none>" | grep -E "^Name:.*$")"
@@ -42,6 +38,10 @@ spec:
                 echo "Deleting pvc $pvc"
                 kubectl delete pvc -n {{ .Release.Namespace }} $pvc $extraFlagsPvc
               done <<< "$unused_pvcs"
+
+              # Delete the pod to force geth to flush the data to disk
+              extraFlagsPod="{{ .Values.deletePodCronJob.extraFlagsPod }}"
+              kubectl delete pod -n {{ .Release.Namespace }} {{ printf "%s-%d" (include "common.fullname" .) (.Values.deletePodCronJob.podIndex | int) }} $extraFlagsPod
             image: bitnami/kubectl:latest
             imagePullPolicy: Always
             terminationMessagePath: /dev/termination-log
