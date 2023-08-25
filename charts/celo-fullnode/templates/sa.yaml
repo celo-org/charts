@@ -1,8 +1,11 @@
 {{- $serviceAccount := lookup "v1" "ServiceAccount" .Release.Namespace "gcloud-storage-access" -}}
-{{- if not $serviceAccount -}}
+{{- if (and (and (not $serviceAccount) .Release.IsInstall) (and .Values.geth.use_gstorage_data .Values.geth.gcp_workload_idantity_email)) -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
+  {{- with .Values.geth.gcp_workload_idantity_email }}
   annotations:
+    iam.gke.io/gcp-service-account: {{ . }}
+  {{- end }}
   name: gcloud-storage-access
 {{- end -}}
