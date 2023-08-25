@@ -35,7 +35,7 @@ spec:
               kubectl delete pod -n {{ .Release.Namespace }} {{ printf "%s-%d" (include "common.fullname" .) (.Values.deletePodCronJob.podIndex | int) }} $extraFlagsPod
 
               # Delete pvc that are not currently used
-              extraFlagsPod="{{ .Values.deletePodCronJob.extraFlagsPvc }}"
+              extraFlagsPvc="{{ .Values.deletePodCronJob.extraFlagsPvc }}"
               unused_pvcs="$(kubectl describe pvc | grep -E "^Name:.*$|^Namespace:.*$|^Used By:.*$" | grep -B 2 "<none>" | grep -E "^Name:.*$")"
               while IFS= read -r line; do
                 pvc=$(echo $line | awk '{print $2}')
