@@ -2,7 +2,7 @@
 
 Helm chart for deploying a Celo fullnode. More info at https://docs.celo.org
 
-![Version: 0.5.7](https://img.shields.io/badge/Version-0.5.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
+![Version: 0.5.8](https://img.shields.io/badge/Version-0.5.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
 
 - [celo-fullnode](#celo-fullnode)
   - [Chart requirements](#chart-requirements)
@@ -34,7 +34,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.5.7" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.5.8" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -83,6 +83,7 @@ helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo 
 | geth.expose_rpc_externally | bool | `false` | Expose RPC port externally in the individual replica services |
 | geth.extra_flags | string | `"--txpool.nolocals"` | Geth's extra flags options (as string) |
 | geth.gcmode | string | `"full"` | Blockchain garbage collection mode. Valid values are: full and archive |
+| geth.gcp_workload_idantity_email | string | `""` |  |
 | geth.image | object | `{"imagePullPolicy":"IfNotPresent","repository":"us.gcr.io/celo-testnet/geth","tag":"master"}` | Image for the celo-blockchain statefulset |
 | geth.in_memory_discovery_table | bool | `false` | Enable blockchain option `--use-in-memory-discovery-table` |
 | geth.light.maxpeers | int | `1000` | Maximum number of light clients to serve, or light servers to attach to |
@@ -100,6 +101,7 @@ helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo 
 | geth.service_type | string | `"LoadBalancer"` | Type of the LoadBalancer for the service attached to each replica. Each replica of the statefulset will have a service of this type. If type is `LoadBalancer`, it will be created with the `public_ip_per_node` as the `loadBalancerIP` |
 | geth.syncmode | string | `"full"` | Blockchain sync mode. Valid values are: full, lightest, light and fast |
 | geth.updateStrategy | object | `{"rollingUpdate":{"partition":0},"type":"RollingUpdate"}` | Celo-blockchain statefulset `updateStrategy` |
+| geth.use_gstorage_data | bool | `false` | Use GCS backup. Deprecated |
 | geth.verbosity | int | `2` | Loggin verbosity. Valid values are: 0-5. 0 is the least verbose |
 | geth.ws_port | int | `8546` | WS-RPC server listening port |
 | ingress.annotations | object | `{}` | Ingress annotations |

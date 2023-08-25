@@ -80,6 +80,9 @@ geth:
   syncmode: full
   # -- Blockchain garbage collection mode. Valid values are: full and archive
   gcmode: full
+  # -- Use GCS backup. Deprecated
+  use_gstorage_data: false
+  gcp_workload_idantity_email: ""
   # -- Enable blockchain option `--ping-ip-from-packet`
   ping_ip_from_packet: false
   # -- Enable blockchain option `--use-in-memory-discovery-table`

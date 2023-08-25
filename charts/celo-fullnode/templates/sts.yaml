@@ -51,7 +51,7 @@ spec:
         clabs.co/images: "{{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}"
         {{- include "common.prometheus-annotations" (dict "pprof" $pprof ) | nindent 8 }}
     spec:
-      {{- if .Values.geth.use_gstorage_data | default false }}
+      {{- if (and .Values.geth.use_gstorage_data .Values.geth.gcp_workload_idantity_email) | default false }}
       serviceAccountName: gcloud-storage-access
       {{- end }}
       {{- with .Values.geth.affinity }}
