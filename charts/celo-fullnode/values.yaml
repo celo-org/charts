@@ -212,4 +212,6 @@ deletePodCronJob:
   # -- Statefulset index to delete
   podIndex: 0
   # -- Extra cmd flags to pass to the delete pod command
-  extraFlags: ""
+  extraFlagsPod: ""
+  # -- Extra cmd flags to pass to the delete pvc command
+  extraFlagsPvc: ""
