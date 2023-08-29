@@ -56,10 +56,9 @@ spec:
         {{- if .Values.extraPodLabels.validators }}
         {{- toYaml .Values.extraPodLabels.validators | nindent 8 }}
         {{- end }}
-      {{- if .Values.metrics | default false }}
       annotations:
+        clabs.co/images: "{{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}; {{ .Values.celotool.image.repository }}:{{ .Values.celotool.image.tag }}"
         {{- include "common.prometheus-annotations" (dict "pprof" .Values.geth.pprof ) | nindent 8 }}
-      {{- end }}
     spec:
       initContainers:
       {{- include "common.conditional-init-genesis-container" . | nindent 6 }}
@@ -73,8 +72,6 @@ spec:
         - |
           [[ $REPLICA_NAME =~ -([0-9]+)$ ]] || exit 1
           RID=${BASH_REMATCH[1]}
-          # GlobalTesntet change
-          RID=$((RID + {{ .Values.replicaInitialCount }}))
           echo -n "$RID" >/root/.celo/replica_id
           echo "Generating private key for rid=$RID"
           celotooljs.sh generate bip32 --mnemonic "$MNEMONIC" --accountType validator --index "$RID" > /root/.celo/pkey
@@ -83,16 +80,13 @@ spec:
 
           # If this is a proxied validator, it will not have an external IP address
           # and EXTERNAL_IP_ADDRESS will be empty
-          # For the IP we use the pod index without the globaltestnet change
-          [[ $REPLICA_NAME =~ -([0-9]+)$ ]] || exit 1
-          RID_NO_GLOBALTESTNET=${BASH_REMATCH[1]}
-          EXTERNAL_IP_ADDRESS=`echo -n "$IP_ADDRESSES" | cut -d '/' -f $((RID_NO_GLOBALTESTNET + 1))`
+          EXTERNAL_IP_ADDRESS=`echo -n "$IP_ADDRESSES" | cut -d '/' -f $((RID + 1))`
           echo "$EXTERNAL_IP_ADDRESS" > /root/.celo/externalIpAddress
 
           # Put the proxies per validator array into a comma separated string
           # so we can index it at runtime
           PROXIES_PER_VALIDATOR="{{ join "," .Values.replicas.proxiesPerValidator }}"
-          PROXY_COUNT=`echo -n $PROXIES_PER_VALIDATOR | cut -d ',' -f $((RID_NO_GLOBALTESTNET + 1))`
+          PROXY_COUNT=`echo -n $PROXIES_PER_VALIDATOR | cut -d ',' -f $((RID + 1))`
           echo -n "$PROXY_COUNT" > /root/.celo/proxyCount
 
           if [[ -z "$EXTERNAL_IP_ADDRESS" ]]; then
@@ -159,7 +153,7 @@ spec:
               name: {{ template "common.fullname" . }}-geth-account
               key: mnemonic
         - name: IP_ADDRESSES
-          value: {{ join "/" .Values.replicas.validatorsIPAddressArray }}
+          value: {{ join "/" .Values.geth.validatorsIPAddressArray }}
         - name: BOOTNODE_IP_ADDRESS
           value: "{{ default .Values.bootnode.defaultBootnodeClusterIP .Values.bootnode.bootnodeIpAddress }}"
         volumeMounts:
@@ -275,7 +269,8 @@ spec:
         - name: metrics
           containerPort: 6060
         {{- end }}
-        {{- with .Values.geth.resources }}
+        {{- $resources := default .Values.geth.resources .Values.geth.validatorResources -}}
+        {{- with $resources }}
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
@@ -286,6 +281,10 @@ spec:
           mountPath: /root/.celo/account
           readOnly: true
       terminationGracePeriodSeconds: {{ .Values.geth.terminationGracePeriodSeconds | default 300 }}
+      {{- with .Values.geth.validatorAffinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.geth.validatorNodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -36,7 +36,7 @@ spec:
           exec /usr/local/bin/bootnode --nodekey=/etc/bootnode/node.key --verbosity=5 ${NAT_FLAG} --networkid=${NETWORK_ID} --ping-ip-from-packet={{ .Values.geth.ping_ip_from_packet }}
         env:
         - name: IP_ADDRESS
-          value: {{ default "none" .Values.geth.bootnodeIpAddress }}
+          value: {{ default $.Values.bootnode.defaultBootnodeClusterIP $.Values.bootnode.bootnodeIpAddress }}
         - name: NETWORK_ID
           valueFrom:
             configMapKeyRef:
@@ -88,7 +88,7 @@ spec:
       volumes:
       - name: data
         emptyDir: {}
-      {{- if .Values.geth.overwriteBootnodePrivateKey }}
+      {{- if .Values.bootnode.bootnodePrivateKey }}
       - name: bootnode-pkey
         secret:
           secretName: {{ template "common.fullname" . }}-geth-account

@@ -17,7 +17,8 @@ bootnode:
   image:
     repository: us.gcr.io/celo-testnet/geth-all
     tag: 21d8283af60927589566cb282ab640f1ccec6ebd
-  bootnodeIpAddress: ""
+  # bootnodeIpAddress: ""
+  # bootnodePrivateKey: ""
   defaultBootnodeClusterIP: 10.0.0.12
 
 celotool:
@@ -52,6 +53,7 @@ geth:
   account:
     secret: password
   static_ips: false
+  validatorsIPAddressArray: []
   txNodesIPAddressArray:
     - 1.2.3.4
   validatorExtraSnippet: |
@@ -65,18 +67,24 @@ geth:
   txNodePrivateExtraSnippet: |
     echo "txnode-private"
     ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --http.timeout.read 600 --http.timeout.write 600 --http.timeout.idle 2400"
+  validatorAffinity: {}
   validatorNodeSelector: {}
   validatorTolerations: []
+  secondaryAffinity: {}
   secondaryNodeSelector: {}
   secondaryTolerations: []
-  proxyNodeSelector: {}
+  proxyAffinity: {}
+  proxySelector: {}
   proxyTolerations: []
+  txNodeAffinity: {}
   txNodeNodeSelector: {}
   txNodeTolerations: []
+  txNodePrivateAffinity: {}
   txNodePrivateNodeSelector: {}
   txNodePrivateTolerations: []
   ping_ip_from_packet: false
   faultyValidators: 0
+  rpc_gascap: 0
   maxpeers: 1150
   light:
     maxpeers: 1000
@@ -163,3 +171,12 @@ replicaInitialCount: 0
 enableBootnode: true
 enableFornoIngress: true
 forceFornoDomain: ""
+
+# -- Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk
+deletePodCronJob:
+  enabled: false
+  # -- Cron expression for the CronJob
+  schedule: "0 10 * * 1,4"
+  # -- Statefulset to delete a pod f
+  # -- Statefulset index to delete
+  podIndex: 0
