@@ -176,7 +176,12 @@ forceFornoDomain: ""
 deletePodCronJob:
   enabled: false
   # -- Cron expression for the CronJob
-  schedule: "0 10 * * 1,4"
-  # -- Statefulset to delete a pod f
+  schedule: "0 10,22 * * *"
+  # -- Component to delete. Valid values are validators, and tx-nodes
+  component: tx-nodes
   # -- Statefulset index to delete
   podIndex: 0
+  # -- Extra cmd flags to pass to the delete pod command
+  extraFlagsPod: ""
+  # -- Extra cmd flags to pass to the delete pvc command
+  extraFlagsPvc: ""
