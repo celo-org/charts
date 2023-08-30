@@ -362,7 +362,13 @@ data:
         fi
       else
         echo 'Using $IP_ADDRESSES'
-        echo $IP_ADDRESSES | cut -d '/' -f $((RID + 1)) > /root/.celo/ipAddress
+        POD_IP_ADDRESS=$(echo $IP_ADDRESSES | cut -d '/' -f $((RID + 1)))
+        if [ -z $POD_IP_ADDRESS ]; then
+          echo 'Using Pod IP address'
+          echo $(hostname -i) > /root/.celo/ipAddress
+        else
+          echo $POD_IP_ADDRESS > /root/.celo/ipAddress
+        fi
       fi
       echo "/root/.celo/ipAddress"
       cat /root/.celo/ipAddress
@@ -584,7 +590,6 @@ prometheus.io/port: "{{ $pprof.port | default 6060 }}"
 {{- end }}
 
 {{- define "common.geth-add-metrics-pprof-config" -}}
-
 {{- if .metrics | default true }}
 ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --metrics"
 {{- end }}
