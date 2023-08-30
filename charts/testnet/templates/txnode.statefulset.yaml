@@ -9,6 +9,7 @@
   "expose" true
   "syncmode" "full"
   "gcmode" "full"
+  "dataSource" $.Values.dataSource.full
   "rpc_apis" "eth,net,web3"
   "rcp_gascap" "10000000"
   "ws_port" "8545"

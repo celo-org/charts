@@ -1,3 +1,4 @@
+---
 bootnode:
   defaultClusterIP: 10.96.12.12
 replicas:
