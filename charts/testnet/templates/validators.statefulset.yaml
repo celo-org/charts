@@ -29,13 +29,17 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.geth.storageClass }}
-      storageClassName: {{ .Values.geth.storageClass }}
+      {{- with .Values.geth.storageClassName }}
+      storageClassName: {{ . }}
       {{- end }}
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
           storage: {{ .Values.geth.diskSizeGB }}Gi
+      {{- with .Values.dataSource.full }}
+      dataSource:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
   {{- end }}
   podManagementPolicy: Parallel
   {{- with .Values.updateStrategy.validators }}
@@ -46,12 +50,12 @@ spec:
   serviceName: validators
   selector:
     matchLabels:
-      {{- include "common.standard.labels" . | nindent 6 }}
+      {{- include "common.standard.short_labels" . | nindent 6 }}
       component: validators
   template:
     metadata:
       labels:
-        {{- include "common.standard.labels" . | nindent 8 }}
+        {{- include "common.standard.short_labels" . | nindent 8 }}
         component: validators
         {{- if .Values.extraPodLabels.validators }}
         {{- toYaml .Values.extraPodLabels.validators | nindent 8 }}
@@ -155,7 +159,7 @@ spec:
         - name: IP_ADDRESSES
           value: {{ join "/" .Values.geth.validatorsIPAddressArray }}
         - name: BOOTNODE_IP_ADDRESS
-          value: "{{ default .Values.bootnode.defaultBootnodeClusterIP .Values.bootnode.bootnodeIpAddress }}"
+          value: "{{ default .Values.bootnode.defaultClusterIP .Values.bootnode.ipAddress }}"
         volumeMounts:
         - name: data
           mountPath: /root/.celo

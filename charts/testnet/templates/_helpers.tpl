@@ -120,21 +120,25 @@ spec:
         {{- toYaml .pvc_annotations | nindent 8 }}
       {{- end }}
     spec:
-      {{- if $.Values.geth.storageClass }}
-      storageClassName: {{ $.Values.geth.storageClass }}
+      {{- with $.Values.geth.storageClassName }}
+      storageClassName: {{ . }}
       {{- end }}
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
           {{- $disk_size := ternary .Values.geth.privateTxNodediskSizeGB .Values.geth.diskSizeGB (eq .name "tx-nodes-private") }}
           storage: {{ $disk_size }}Gi
+      {{- with .dataSource }}
+      dataSource:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
   {{- end }}
   podManagementPolicy: Parallel
   replicas: {{ .replicas }}
   serviceName: {{ .name }}
   selector:
     matchLabels:
-      {{- include "common.standard.labels" .  | nindent 6 }}
+      {{- include "common.standard.short_labels" .  | nindent 6 }}
       component: {{ .component_label }}
       {{- if .proxy | default false }}
       {{- $validatorProxied := printf "%s-validators-%d" .Release.Namespace .validator_index }}
@@ -143,7 +147,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "common.standard.labels" .  | nindent 8 }}
+        {{- include "common.standard.short_labels" .  | nindent 8 }}
         component: {{ .component_label }}
         {{- if .extraPodLabels -}}
         {{- toYaml .extraPodLabels | nindent 8 }}

@@ -17,9 +17,9 @@ bootnode:
   image:
     repository: us.gcr.io/celo-testnet/geth-all
     tag: 21d8283af60927589566cb282ab640f1ccec6ebd
-  # bootnodeIpAddress: ""
-  # bootnodePrivateKey: ""
-  defaultBootnodeClusterIP: 10.0.0.12
+  # ipAddress: ""
+  # privateKey: ""
+  defaultClusterIP: 10.0.0.12
 
 celotool:
   image:
@@ -47,6 +47,7 @@ geth:
     #   memory: "4Gi"
     #   cpu: "4"
   storage: true
+  storageClassName: ""
   diskSizeGB: 5
   privateTxNodediskSizeGB: 10
   ws_port: 8546
@@ -167,6 +168,10 @@ pvcAnnotations:
   txnode: {}
   txnode_private: {}
 
+dataSource:
+  full: {}
+  archive: {}
+
 replicaInitialCount: 0
 enableBootnode: true
 enableFornoIngress: true
@@ -175,7 +180,8 @@ forceFornoDomain: ""
 # -- Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk
 deletePodCronJob:
   enabled: false
-  # -- Cron expression for the CronJob
+  # -- Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute,
+  # with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes)
   schedule: "0 10,22 * * *"
   # -- Component to delete. Valid values are validators, and tx-nodes
   component: tx-nodes

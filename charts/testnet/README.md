@@ -33,14 +33,19 @@ Private Celo network Helm chart for Kubernetes
 | blockscout.image.indexerTag | string | `"indexer"` |  |
 | blockscout.image.repository | string | `"gcr.io/celo-testnet/blockscout"` |  |
 | blockscout.image.webTag | string | `"web"` |  |
-| bootnode.defaultBootnodeClusterIP | string | `"10.0.0.12"` |  |
+| bootnode.defaultClusterIP | string | `"10.0.0.12"` |  |
 | bootnode.image.repository | string | `"us.gcr.io/celo-testnet/geth-all"` |  |
 | bootnode.image.tag | string | `"21d8283af60927589566cb282ab640f1ccec6ebd"` |  |
 | celotool.image.repository | string | `"us.gcr.io/celo-testnet/celo-monorepo"` |  |
 | celotool.image.tag | string | `"celotool-dc5e5dfa07231a4ff4664816a95eae606293eae9"` |  |
-| deletePodCronJob | object | `{"enabled":false,"podIndex":0,"schedule":"0 10 * * 1,4"}` | Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk |
+| dataSource.archive | object | `{}` |  |
+| dataSource.full | object | `{}` |  |
+| deletePodCronJob | object | `{"component":"tx-nodes","enabled":false,"extraFlagsPod":"","extraFlagsPvc":"","podIndex":0,"schedule":"0 10,22 * * *"}` | Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk |
+| deletePodCronJob.component | string | `"tx-nodes"` | Component to delete. Valid values are validators, and tx-nodes |
+| deletePodCronJob.extraFlagsPod | string | `""` | Extra cmd flags to pass to the delete pod command |
+| deletePodCronJob.extraFlagsPvc | string | `""` | Extra cmd flags to pass to the delete pvc command |
 | deletePodCronJob.podIndex | int | `0` | Statefulset index to delete |
-| deletePodCronJob.schedule | string | `"0 10 * * 1,4"` | Cron expression for the CronJob |
+| deletePodCronJob.schedule | string | `"0 10,22 * * *"` | Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute, with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes) |
 | domain.name | string | `"celo-networks-dev"` |  |
 | enableBootnode | bool | `true` |  |
 | enableFornoIngress | bool | `true` |  |
@@ -82,6 +87,7 @@ Private Celo network Helm chart for Kubernetes
 | geth.secondayExtraSnippet | string | `"echo \"secondary-validator\"\n"` |  |
 | geth.static_ips | bool | `false` |  |
 | geth.storage | bool | `true` |  |
+| geth.storageClassName | string | `""` |  |
 | geth.txNodeAffinity | object | `{}` |  |
 | geth.txNodeExtraSnippet | string | `"echo \"txnode\"\n"` |  |
 | geth.txNodeNodeSelector | object | `{}` |  |

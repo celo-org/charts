@@ -1,5 +1,5 @@
 bootnode:
-  defaultBootnodeClusterIP: 10.96.12.12
+  defaultClusterIP: 10.96.12.12
 replicas:
   validators: 1
   proxiesPerValidator:

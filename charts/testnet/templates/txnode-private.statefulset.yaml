@@ -9,6 +9,7 @@
 "expose" true
 "syncmode" "full"
 "gcmode" "archive"
+"dataSource" $.Values.dataSource.archive
 "rpc_apis" "eth,net,web3,debug,txpool"
 "ws_port" "8545"
 "resources" (default $.Values.geth.resources $.Values.geth.txNodePrivateResources)
