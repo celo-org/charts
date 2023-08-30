@@ -36,7 +36,7 @@ spec:
           exec /usr/local/bin/bootnode --nodekey=/etc/bootnode/node.key --verbosity=5 ${NAT_FLAG} --networkid=${NETWORK_ID} --ping-ip-from-packet={{ .Values.geth.ping_ip_from_packet }}
         env:
         - name: IP_ADDRESS
-          value: {{ default "none" .Values.geth.bootnodeIpAddress }}
+          value: {{ default $.Values.bootnode.defaultClusterIP $.Values.bootnode.ipAddress }}
         - name: NETWORK_ID
           valueFrom:
             configMapKeyRef:
@@ -52,7 +52,7 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 30
         volumeMounts:
-        {{- if not .Values.geth.overwriteBootnodePrivateKey }}
+        {{- if not .Values.geth.overwriteprivateKey }}
         - name: data
           mountPath: /etc/bootnode
         {{- else }}
@@ -64,7 +64,7 @@ spec:
         - name: discovery
           containerPort: 30301
           protocol: UDP
-      {{- if not .Values.geth.overwriteBootnodePrivateKey }}
+      {{- if not .Values.geth.overwriteprivateKey }}
       initContainers:
       - name: generate-node-key
         image: {{ .Values.celotool.image.repository }}:{{ .Values.celotool.image.tag }}
@@ -88,12 +88,12 @@ spec:
       volumes:
       - name: data
         emptyDir: {}
-      {{- if .Values.geth.overwriteBootnodePrivateKey }}
+      {{- if .Values.bootnode.privateKey }}
       - name: bootnode-pkey
         secret:
           secretName: {{ template "common.fullname" . }}-geth-account
           items:
-          - key: bootnodePrivateKey
+          - key: privateKey
             path: node.key
       {{- end }}
       {{- with .Values.nodeSelector }}

@@ -29,13 +29,17 @@ spec:
         {{- toYaml .Values.pvcAnnotations.secondary | nindent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.geth.storageClass }}
-      storageClassName: {{ .Values.geth.storageClass }}
+      {{- with .Values.geth.storageClassName }}
+      storageClassName: {{ . }}
       {{- end }}
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
           storage: {{ .Values.geth.diskSizeGB }}Gi
+      {{- with .Values.dataSource.full }}
+      dataSource:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
   {{- end }}
   podManagementPolicy: Parallel
   {{- with .Values.updateStrategy.secondaries }}
@@ -46,20 +50,19 @@ spec:
   serviceName: secondaries
   selector:
     matchLabels:
-      {{- include "common.standard.labels" .  | nindent 6 }}
+      {{- include "common.standard.short_labels" .  | nindent 6 }}
       component: secondaries
   template:
     metadata:
       labels:
-        {{- include "common.standard.labels" .  | nindent 8 }}
+        {{- include "common.standard.short_labels" .  | nindent 8 }}
         component: secondaries
         {{- if .Values.extraPodLabels.secondaries }}
         {{- toYaml .Values.extraPodLabels.secondaries | nindent 8 }}
         {{- end }}
-      {{- if .Values.metrics | default false }}
       annotations:
+        clabs.co/images: "{{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}; {{ .Values.celotool.image.repository }}:{{ .Values.celotool.image.tag }}"
         {{- include "common.prometheus-annotations" (dict "pprof" .Values.geth.pprof ) | nindent 8 }}
-      {{- end }}
     spec:
       initContainers:
       {{- include "common.conditional-init-genesis-container" .  | nindent 6 }}
@@ -73,7 +76,6 @@ spec:
         - |-
           [[ $REPLICA_NAME =~ -([0-9]+)$ ]] || exit 1
           RID=${BASH_REMATCH[1]}
-          RID=$((RID + {{ .Values.replicaInitialCount }}))
           echo -n "$RID" >/root/.celo/replica_id
           echo "Generating private key for rid=$RID"
           celotooljs.sh generate bip32 --mnemonic "$MNEMONIC" --accountType validator --index "$RID" > /root/.celo/pkey
@@ -82,16 +84,13 @@ spec:
 
           # If this is a proxied validator, it will not have an external IP address
           # and EXTERNAL_IP_ADDRESS will be empty
-          # For the IP we use the pod index without the globaltestnet change
-          [[ $REPLICA_NAME =~ -([0-9]+)$ ]] || exit 1
-          RID_NO_GLOBALTESTNET=${BASH_REMATCH[1]}
-          EXTERNAL_IP_ADDRESS=`echo -n "$IP_ADDRESSES" | cut -d '/' -f $((RID_NO_GLOBALTESTNET + 1))`
+          EXTERNAL_IP_ADDRESS=`echo -n "$IP_ADDRESSES" | cut -d '/' -f $((RID + 1))`
           echo "$EXTERNAL_IP_ADDRESS" > /root/.celo/externalIpAddress
 
           # Put the proxies per validator array into a comma separated string
           # so we can index it at runtime
           PROXIES_PER_VALIDATOR="{{ join "," .Values.replicas.proxiesPerValidator }}"
-          PROXY_COUNT=`echo -n $PROXIES_PER_VALIDATOR | cut -d ',' -f $((RID_NO_GLOBALTESTNET + 1))`
+          PROXY_COUNT=`echo -n $PROXIES_PER_VALIDATOR | cut -d ',' -f $((RID + 1))`
           echo -n "$PROXY_COUNT" > /root/.celo/proxyCount
 
           if [[ -z "$EXTERNAL_IP_ADDRESS" ]]; then
@@ -155,9 +154,9 @@ spec:
               name: {{ template "common.fullname" . }}-geth-account
               key: mnemonic
         - name: IP_ADDRESSES
-          value: {{ join "/" .Values.replicas.validatorsIPAddressArray }}
+          value: {{ join "/" .Values.geth.validatorsIPAddressArray }}
         - name: BOOTNODE_IP_ADDRESS
-          value: "{{ default "none" .Values.geth.bootnodeIpAddress  }}"
+          value: "{{ default $.Values.bootnode.defaultClusterIP $.Values.bootnode.ipAddress }}"
         volumeMounts:
         - name: data
           mountPath: /root/.celo
@@ -262,7 +261,8 @@ spec:
         - name: metrics
           containerPort: 6060
         {{- end }}
-        {{- with .Values.geth.resources }}
+        {{- $resources := default .Values.geth.resources .Values.geth.secondaryResources -}}
+        {{- with $resources }}
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
@@ -272,6 +272,10 @@ spec:
         - name: account
           mountPath: /root/.celo/account
           readOnly: true
+      {{- with .Values.secondayAffinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.secondayNodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

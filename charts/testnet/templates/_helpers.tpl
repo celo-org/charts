@@ -120,21 +120,25 @@ spec:
         {{- toYaml .pvc_annotations | nindent 8 }}
       {{- end }}
     spec:
-      {{- if $.Values.geth.storageClass }}
-      storageClassName: {{ $.Values.geth.storageClass }}
+      {{- with $.Values.geth.storageClassName }}
+      storageClassName: {{ . }}
       {{- end }}
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
           {{- $disk_size := ternary .Values.geth.privateTxNodediskSizeGB .Values.geth.diskSizeGB (eq .name "tx-nodes-private") }}
           storage: {{ $disk_size }}Gi
+      {{- with .dataSource }}
+      dataSource:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
   {{- end }}
   podManagementPolicy: Parallel
   replicas: {{ .replicas }}
   serviceName: {{ .name }}
   selector:
     matchLabels:
-      {{- include "common.standard.labels" .  | nindent 6 }}
+      {{- include "common.standard.short_labels" .  | nindent 6 }}
       component: {{ .component_label }}
       {{- if .proxy | default false }}
       {{- $validatorProxied := printf "%s-validators-%d" .Release.Namespace .validator_index }}
@@ -143,7 +147,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "common.standard.labels" .  | nindent 8 }}
+        {{- include "common.standard.short_labels" .  | nindent 8 }}
         component: {{ .component_label }}
         {{- if .extraPodLabels -}}
         {{- toYaml .extraPodLabels | nindent 8 }}
@@ -152,20 +156,55 @@ spec:
         {{- $validatorProxied := printf "%s-validators-%d" .Release.Namespace .validator_index }}
         validator-proxied: "{{ $validatorProxied }}"
         {{- end }}
-      {{- if .Values.metrics | default false }}
       annotations:
+        clabs.co/images: "{{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}; {{ .Values.celotool.image.repository }}:{{ .Values.celotool.image.tag }}"
         {{- include "common.prometheus-annotations" (dict "pprof" .Values.geth.pprof ) | nindent 8 }}
-      {{- end }}
     spec:
       initContainers:
       {{- include "common.conditional-init-genesis-container" .  | nindent 6 }}
-      {{- include "common.celotool-full-node-statefulset-container" (dict  "Values" .Values "Release" .Release "Chart" .Chart "proxy" .proxy "mnemonic_account_type" .mnemonic_account_type "service_ip_env_var_prefix" .service_ip_env_var_prefix "ip_addresses" .ip_addresses "validator_index" .validator_index) | nindent 6 }}
+      {{- include "common.celotool-full-node-statefulset-container" (dict
+        "Values" .Values
+        "Release" .Release
+        "Chart" .Chart
+        "proxy" .proxy
+        "mnemonic_account_type" .mnemonic_account_type
+        "service_ip_env_var_prefix" .service_ip_env_var_prefix
+        "ip_addresses" .ip_addresses
+        "validator_index" .validator_index
+        ) | nindent 6 }}
       {{- if .unlock | default false }}
       {{- include "common.import-geth-account-container" .  | nindent 6 }}
       {{- end }}
       containers:
-      {{- include "common.full-node-container" (dict "Values" .Values "Release" .Release "Chart" .Chart "proxy" .proxy "proxy_allow_private_ip_flag" .proxy_allow_private_ip_flag "unlock" .unlock "rpc_apis" .rpc_apis "expose" .expose "syncmode" .syncmode "gcmode" .gcmode "ws_port" (default .Values.geth.ws_port .ws_port) "pprof" (or (.Values.metrics) (.Values.geth.pprof.enabled)) "pprof_port" (.Values.geth.pprof.port) "light_serve" .Values.geth.light.serve "light_maxpeers" .Values.geth.light.maxpeers "maxpeers" .Values.geth.maxpeers "metrics" .Values.metrics "public_ips" .public_ips "ethstats" (printf "%s-ethstats.%s" (include "common.fullname" .) .Release.Namespace) "extra_setup" .extra_setup)  | nindent 6 }}
+      {{- include "common.full-node-container" (dict
+        "Values" .Values
+        "Release" .Release
+        "Chart" .Chart
+        "proxy" .proxy
+        "proxy_allow_private_ip_flag" .proxy_allow_private_ip_flag
+        "unlock" .unlock
+        "rpc_apis" .rpc_apis
+        "expose" .expose
+        "rcp_gascap" (default (int .Values.geth.rpc_gascap) (int .rcp_gascap))
+        "syncmode" .syncmode
+        "gcmode" .gcmode
+        "resources" .resources
+        "ws_port" (default .Values.geth.ws_port .ws_port)
+        "pprof" (or (.Values.metrics) (.Values.geth.pprof.enabled))
+        "pprof_port" (.Values.geth.pprof.port)
+        "light_serve" .Values.geth.light.serve
+        "light_maxpeers" .Values.geth.light.maxpeers
+        "maxpeers" .Values.geth.maxpeers
+        "metrics" .Values.metrics
+        "public_ips" .public_ips
+        "ethstats" (printf "%s-ethstats.%s" (include "common.fullname" .) .Release.Namespace)
+        "extra_setup" .extra_setup
+        ) | nindent 6 }}
       terminationGracePeriodSeconds:  {{ .Values.geth.terminationGracePeriodSeconds | default 300 }}
+      {{- with .affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .node_selector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

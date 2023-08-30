@@ -7,12 +7,12 @@ metadata:
     {{- include "common.standard.labels" .  | nindent 4 }}
     component: bootnode
 spec:
-  {{- if $.Values.bootnode.bootnodeIpAddress }}
+  {{- if $.Values.bootnode.ipAddress }}
   type: LoadBalancer
-  loadBalancerIP: {{ $.Values.bootnode.bootnodeIpAddress }}
+  loadBalancerIP: {{ $.Values.bootnode.ipAddress }}
   {{- else }}
   type: ClusterIP
-  clusterIP: {{ default $.Values.bootnode.defaultBootnodeClusterIP $.Values.bootnode.bootnodeIpAddress }}
+  clusterIP: {{ default $.Values.bootnode.defaultClusterIP $.Values.bootnode.ipAddress }}
   {{- end }}
   selector:
     app: {{ template "common.name" . }}

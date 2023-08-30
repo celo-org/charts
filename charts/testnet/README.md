@@ -1,6 +1,6 @@
 # testnet
 
-![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Private Celo network Helm chart for Kubernetes
 
@@ -23,7 +23,7 @@ Private Celo network Helm chart for Kubernetes
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.3.2 |
+| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.4.0 |
 
 ## Values
 
@@ -33,12 +33,19 @@ Private Celo network Helm chart for Kubernetes
 | blockscout.image.indexerTag | string | `"indexer"` |  |
 | blockscout.image.repository | string | `"gcr.io/celo-testnet/blockscout"` |  |
 | blockscout.image.webTag | string | `"web"` |  |
-| bootnode.bootnodeIpAddress | string | `""` |  |
-| bootnode.defaultBootnodeClusterIP | string | `"10.0.0.12"` |  |
+| bootnode.defaultClusterIP | string | `"10.0.0.12"` |  |
 | bootnode.image.repository | string | `"us.gcr.io/celo-testnet/geth-all"` |  |
 | bootnode.image.tag | string | `"21d8283af60927589566cb282ab640f1ccec6ebd"` |  |
 | celotool.image.repository | string | `"us.gcr.io/celo-testnet/celo-monorepo"` |  |
 | celotool.image.tag | string | `"celotool-dc5e5dfa07231a4ff4664816a95eae606293eae9"` |  |
+| dataSource.archive | object | `{}` |  |
+| dataSource.full | object | `{}` |  |
+| deletePodCronJob | object | `{"component":"tx-nodes","enabled":false,"extraFlagsPod":"","extraFlagsPvc":"","podIndex":0,"schedule":"0 10,22 * * *"}` | Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk |
+| deletePodCronJob.component | string | `"tx-nodes"` | Component to delete. Valid values are validators, and tx-nodes |
+| deletePodCronJob.extraFlagsPod | string | `""` | Extra cmd flags to pass to the delete pod command |
+| deletePodCronJob.extraFlagsPvc | string | `""` | Extra cmd flags to pass to the delete pvc command |
+| deletePodCronJob.podIndex | int | `0` | Statefulset index to delete |
+| deletePodCronJob.schedule | string | `"0 10,22 * * *"` | Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute, with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes) |
 | domain.name | string | `"celo-networks-dev"` |  |
 | enableBootnode | bool | `true` |  |
 | enableFornoIngress | bool | `true` |  |
@@ -66,27 +73,35 @@ Private Celo network Helm chart for Kubernetes
 | geth.pprof.enabled | bool | `false` |  |
 | geth.pprof.port | int | `6060` |  |
 | geth.privateTxNodediskSizeGB | int | `10` |  |
+| geth.proxyAffinity | object | `{}` |  |
 | geth.proxyExtraSnippet | string | `"echo \"Proxy\"\n"` |  |
-| geth.proxyNodeSelector | object | `{}` |  |
+| geth.proxySelector | object | `{}` |  |
 | geth.proxyTolerations | list | `[]` |  |
 | geth.resources.limits | object | `{}` |  |
 | geth.resources.requests.cpu | string | `"500m"` |  |
 | geth.resources.requests.memory | string | `"256Mi"` |  |
+| geth.rpc_gascap | int | `0` |  |
+| geth.secondaryAffinity | object | `{}` |  |
 | geth.secondaryNodeSelector | object | `{}` |  |
 | geth.secondaryTolerations | list | `[]` |  |
 | geth.secondayExtraSnippet | string | `"echo \"secondary-validator\"\n"` |  |
 | geth.static_ips | bool | `false` |  |
 | geth.storage | bool | `true` |  |
+| geth.storageClassName | string | `""` |  |
+| geth.txNodeAffinity | object | `{}` |  |
 | geth.txNodeExtraSnippet | string | `"echo \"txnode\"\n"` |  |
 | geth.txNodeNodeSelector | object | `{}` |  |
+| geth.txNodePrivateAffinity | object | `{}` |  |
 | geth.txNodePrivateExtraSnippet | string | `"echo \"txnode-private\"\nADDITIONAL_FLAGS=\"${ADDITIONAL_FLAGS} --http.timeout.read 600 --http.timeout.write 600 --http.timeout.idle 2400\"\n"` |  |
 | geth.txNodePrivateNodeSelector | object | `{}` |  |
 | geth.txNodePrivateTolerations | list | `[]` |  |
 | geth.txNodeTolerations | list | `[]` |  |
 | geth.txNodesIPAddressArray[0] | string | `"1.2.3.4"` |  |
+| geth.validatorAffinity | object | `{}` |  |
 | geth.validatorExtraSnippet | string | `"echo \"Validator\"\n"` |  |
 | geth.validatorNodeSelector | object | `{}` |  |
 | geth.validatorTolerations | list | `[]` |  |
+| geth.validatorsIPAddressArray | list | `[]` |  |
 | geth.verbosity | int | `1` |  |
 | geth.vmodule | string | `"consensus/*=2"` |  |
 | geth.ws_port | int | `8546` |  |
