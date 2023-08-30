@@ -389,7 +389,7 @@ data:
         apiVersion: v1
         fieldPath: status.podIP
   - name: BOOTNODE_IP_ADDRESS
-    value: "{{ default .Values.bootnode.defaultBootnodeClusterIP .Values.bootnode.bootnodeIpAddress }}"
+    value: "{{ default .Values.bootnode.defaultClusterIP .Values.bootnode.ipAddress }}"
   - name: REPLICA_NAME
     valueFrom:
       fieldRef:
