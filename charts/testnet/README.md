@@ -23,7 +23,7 @@ Private Celo network Helm chart for Kubernetes
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.3.6 |
+| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.4.0 |
 
 ## Values
 
