@@ -207,8 +207,9 @@ genesis:
 # -- Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk
 deletePodCronJob:
   enabled: false
-  # -- Cron expression for the CronJob
-  schedule: "0 10 * * 1,4"
+  # -- Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute,
+  # with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes)
+  schedule: "0 10,22 * * *"
   # -- Statefulset index to delete
   podIndex: 0
   # -- Extra cmd flags to pass to the delete pod command
