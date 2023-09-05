@@ -12,7 +12,7 @@ on:
       - 'charts/**/Chart.yaml'
 
 env:
-  HELM_VERSION: "v3.9.4"
+  HELM_VERSION: "v3.12.3"
 
 jobs:
   helm-release:
