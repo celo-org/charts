@@ -34,7 +34,7 @@ spec:
       protocol: UDP
     {{- else }}
     - port: 30303
-      targetPort: ethereum
+      targetPort: 30303
       name: ethereum
       protocol: {{ $protocol }}
     {{- end }}
