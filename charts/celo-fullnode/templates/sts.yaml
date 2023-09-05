@@ -106,6 +106,7 @@ spec:
           "pprof" (or (.Values.metrics) ($pprof.enabled))
           "pprof_port" $pprof.port
           "metrics" .Values.metrics
+          "ping_ip_from_packet" .Values.geth.ping_ip_from_packet
           "ports" .Values.geth.service_node_port_per_full_node
           "light_serve" .Values.geth.light.serve
           "light_maxpeers" .Values.geth.light.maxpeers

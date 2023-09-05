@@ -18,7 +18,7 @@ jobs:
     runs-on: 'ubuntu-latest'
 
     env:
-      HELM_VERSION: "v3.10.1"
+      HELM_VERSION: "v3.12.3"
 
     permissions:
       contents: 'read'
