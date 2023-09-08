@@ -208,8 +208,11 @@ fi
       {{- if not (has .Values.genesis.network $mainnet_envs) }}
       $BOOTNODE_FLAG \
       {{- end }}
+      {{- $lightmodes := list "lightest" "light" -}}
+      {{- if not (has .Values.geth.syncmode $lightmodes) }}
       --light.serve={{ if kindIs "invalid" .light_serve }}90{{ else }}{{ .light_serve }}{{ end }} \
       --light.maxpeers={{ if kindIs "invalid" .light_maxpeers }}1000{{ else }}{{ .light_maxpeers }}{{ end }} \
+      {{- end }}
       --maxpeers={{ if kindIs "invalid" .maxpeers }}1200{{ else }}{{ .maxpeers }}{{ end }} \
       --nousb \
       --syncmode={{ .syncmode | default .Values.geth.syncmode }} \
