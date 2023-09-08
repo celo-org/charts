@@ -1,0 +1,24 @@
+{{- if .Values.geth.autoscaling.enabled -}}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "common.fullname" . }}
+  labels:
+    {{- include "common.standard.labels" . | nindent 4 }}
+    component: celo-lightestnode
+spec:
+  minReplicas: {{ .Values.geth.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.geth.autoscaling.maxReplicas }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: {{ template "common.fullname" . }}
+  {{- with .Values.geth.autoscaling.metrics }}
+  metrics:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.geth.autoscaling.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end -}}

@@ -1,0 +1,30 @@
+---
+apiVersion: v2
+appVersion: "1.6.0"
+description: Helm chart for deploying a Celo lightest node
+  More info at https://docs.celo.org
+type: application
+home: https://celo.org
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+name: celo-lightestnode
+sources:
+  - https://celo.org
+  - https://docs.celo.org
+  - https://clabs.co
+  - https://github.com/celo-org
+keywords:
+  - Celo
+  - Blockchain
+  - Lightest node
+  - Validator
+  - Ethereum
+  - Proof-of-Stake
+version: 0.6.1
+dependencies:
+  - name: common
+    repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
+    version: 0.4.0
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co

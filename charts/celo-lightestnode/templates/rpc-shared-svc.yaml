@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "common.fullname" . }}-rpc
+  labels:
+    {{- include "common.standard.labels" . | nindent 4 }}
+    component: celo-lightestnode-rpc-traffic
+  annotations:
+    {{- if .Values.geth.create_network_endpoint_group }}
+    cloud.google.com/neg: '{"exposed_ports": {"8545":{},"8546":{}}}'
+    {{- end }}
+spec:
+  type: ClusterIP
+  sessionAffinity: {{ default "None" .Values.geth.service_session_affinity }}
+  ports:
+  {{- include "celo-lightestnode.rpc-ports" . | nindent 4 }}
+  selector:
+    {{- include "common.standard.short_labels" . | nindent 4 }}
+    component: celo-lightestnode
