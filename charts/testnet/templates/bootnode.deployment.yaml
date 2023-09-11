@@ -12,12 +12,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "common.standard.labels" .  | nindent 6 }}
+      {{- include "common.standard.short_labels" .  | nindent 6 }}
       component: bootnode
   template:
     metadata:
       labels:
-        {{- include "common.standard.labels" .  | nindent 8 }}
+        {{- include "common.standard.short_labels" .  | nindent 8 }}
         component: bootnode
     spec:
       containers:
