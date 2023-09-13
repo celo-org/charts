@@ -2,7 +2,7 @@
 
 Helm chart for deploying a Celo fullnode. More info at https://docs.celo.org
 
-![Version: 0.6.2](https://img.shields.io/badge/Version-0.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
+![Version: 0.6.3](https://img.shields.io/badge/Version-0.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
 
 - [celo-fullnode](#celo-fullnode)
   - [Chart requirements](#chart-requirements)
@@ -34,7 +34,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.6.2" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.6.3" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -60,9 +60,10 @@ helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo 
 |-----|------|---------|-------------|
 | aws | bool | `false` | Enables aws specific settings |
 | azure | bool | `false` | Enables azure specific settings |
-| deletePodCronJob | object | `{"enabled":false,"extraFlagsPod":"","extraFlagsPvc":"","podIndex":0,"schedule":"0 10,22 * * *"}` | Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk |
+| deletePodCronJob | object | `{"enabled":false,"extraFlagsPod":"","extraFlagsPvc":"","extraSkippedPvc":[1,2,3],"podIndex":0,"schedule":"0 10,22 * * *"}` | Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk |
 | deletePodCronJob.extraFlagsPod | string | `""` | Extra cmd flags to pass to the delete pod command |
 | deletePodCronJob.extraFlagsPvc | string | `""` | Extra cmd flags to pass to the delete pvc command |
+| deletePodCronJob.extraSkippedPvc | list | `[1,2,3]` | Extra PVC index(es) to skip deletion |
 | deletePodCronJob.podIndex | int | `0` | Statefulset index to delete |
 | deletePodCronJob.schedule | string | `"0 10,22 * * *"` | Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute, with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes) |
 | extraPodLabels | object | `{}` | Labels to add to the podTemplateSpec from statefulset |
