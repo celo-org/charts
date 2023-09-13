@@ -43,4 +43,3 @@ This repo uses GitHub Actions to automatically perform the following:
 The [chart-testing Action](https://github.com/helm/chart-testing-action) allows testing the installation/deletion of a chart using a custom `values.yaml` file. In order to do that, the action allows for a chart to have multiple custom values files matching the glob pattern `*-values.yaml` in a directory named `ci` in the root of the chart's directory. The chart is installed and tested for each of these files.
 
 If no custom values file is present, the chart is installed and tested with defaults.
-
