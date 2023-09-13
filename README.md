@@ -15,7 +15,6 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/c
 - [clean-pvcs](./charts/clean-pvcs/README.md): Delete PVCs that are not mounted and have not been recently created
 - [common](./charts/common/README.md): Common library with Celo validators and full nodes helper functions and templates
 - [daily-chain-backups](./charts/daily-chain-backup/README.md): Helm chart for a cron job taking periodic chain backups and uploading them to GCS.
-- [eksportisto-monitoring](./charts/eksportisto-monitoring/README.md): A Grafana Agent deployment to send Eksportisto data to the Mento Grafana Cloud instance.
 - [kong-celo-fullnode](./charts/kong-celo-fullnode/README.md): Chart wrapper over celo-fullnode chart to adapt to Forno. It requires a Kong controller, kong ingressClass and kong crds installed in the cluster, and creates the Kong consumers, plugins and rate limits.
 - [celo-safe-client-gateway](./charts/safe-client-gateway/README.md): Helm chart for deploying Celo Safe Client Gateway.
 - [celo-safe-config-service](./charts/safe-config-service/README.md): Helm chart for deploying Celo Safe Config Service.
