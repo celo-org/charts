@@ -32,7 +32,15 @@ spec:
             - |
               # Delete pvc that are not currently used
               extraFlagsPvc="{{ .Values.deletePodCronJob.extraFlagsPvc }}"
-              unused_pvcs="$(kubectl describe pvc | grep -E "^Name:.*$|^Namespace:.*$|^Used By:.*$" | grep -B 2 "<none>" | grep -E "^Name:.*$")"
+              unused_pvcs="$(kubectl describe pvc \
+              | grep -E "^Name:.*$|^Used By:.*$" \
+              | grep -B 1 "<none>" \
+              | grep -E "^Name:.*$" \
+              | grep -v "{{ printf "data-%s-%s-%d" (include "common.fullname" .) .Values.deletePodCronJob.component (.Values.deletePodCronJob.podIndex | int) }}" \
+              {{- range .Values.deletePodCronJob.extraSkippedPvc }}
+              | grep -v "{{ printf "data-%s-%s-%d" (include "common.fullname" $) .component (.index | int) }}" \
+              {{- end }}
+              )"
               while IFS= read -r line; do
                 pvc=$(echo $line | awk '{print $2}')
                 echo "Deleting pvc $pvc"

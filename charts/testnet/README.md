@@ -1,6 +1,6 @@
 # testnet
 
-![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Private Celo network Helm chart for Kubernetes
 
@@ -40,10 +40,11 @@ Private Celo network Helm chart for Kubernetes
 | celotool.image.tag | string | `"celotool-dc5e5dfa07231a4ff4664816a95eae606293eae9"` |  |
 | dataSource.archive | object | `{}` |  |
 | dataSource.full | object | `{}` |  |
-| deletePodCronJob | object | `{"component":"tx-nodes","enabled":false,"extraFlagsPod":"","extraFlagsPvc":"","podIndex":0,"schedule":"0 10,22 * * *"}` | Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk |
+| deletePodCronJob | object | `{"component":"tx-nodes","enabled":false,"extraFlagsPod":"","extraFlagsPvc":"","extraSkippedPvc":[{"component":"validators","index":0},{"component":"validators","index":1},{"component":"validators","index":2},{"component":"tx-nodes","index":1}],"podIndex":0,"schedule":"0 10,22 * * *"}` | Enable a CronJob that will delete a pod of the statefulset to force flushing the data to disk |
 | deletePodCronJob.component | string | `"tx-nodes"` | Component to delete. Valid values are validators, and tx-nodes |
 | deletePodCronJob.extraFlagsPod | string | `""` | Extra cmd flags to pass to the delete pod command |
 | deletePodCronJob.extraFlagsPvc | string | `""` | Extra cmd flags to pass to the delete pvc command |
+| deletePodCronJob.extraSkippedPvc | list | `[{"component":"validators","index":0},{"component":"validators","index":1},{"component":"validators","index":2},{"component":"tx-nodes","index":1}]` | Extra PVC index(es) to skip deletion |
 | deletePodCronJob.podIndex | int | `0` | Statefulset index to delete |
 | deletePodCronJob.schedule | string | `"0 10,22 * * *"` | Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute, with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes) |
 | domain.name | string | `"celo-networks-dev"` |  |

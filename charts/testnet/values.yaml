@@ -191,3 +191,13 @@ deletePodCronJob:
   extraFlagsPod: ""
   # -- Extra cmd flags to pass to the delete pvc command
   extraFlagsPvc: ""
+  # -- Extra PVC index(es) to skip deletion
+  extraSkippedPvc:
+    - component: validators
+      index: 0
+    - component: validators
+      index: 1
+    - component: validators
+      index: 2
+    - component: tx-nodes
+      index: 1
