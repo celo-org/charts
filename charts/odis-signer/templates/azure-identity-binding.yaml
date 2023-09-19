@@ -1,0 +1,9 @@
+{{- if .Values.azureKVIdentity.enabled }}
+apiVersion: "aadpodidentity.k8s.io/v1"
+kind: AzureIdentityBinding
+metadata:
+  name: {{ include "odis-signer.fullname" . }}
+spec:
+  azureIdentity: {{ include "odis-signer.fullname" . }}
+  selector: {{ include "odis-signer.fullname" . }}
+{{- end }}
