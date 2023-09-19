@@ -52,7 +52,7 @@ spec:
             {{- end }}
           env:
             - name: SERVER_PORT
-              value: {{ include "odis-signer.port" . }}
+              value: {{ include "odis-signer.port" . | quote }}
             {{- if .Values.env.tracing.enabled}}
             {{- include "odis-signer.env-var" (dict "name" "TRACER_ENDPOINT" "dict" .Values.env.tracing "value_name" "endpoint") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "TRACING_SERVICE_NAME" "dict" .Values.env.tracing "value_name" "serviceName") | indent 12 }}
