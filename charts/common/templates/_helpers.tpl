@@ -53,7 +53,7 @@ release: {{ .Release.Name }}
 {{- define "common.init-genesis-container" -}}
 {{- $network := ternary "rc1" .Values.genesis.network ( eq .Values.genesis.network "mainnet" ) -}}
 {{- $genesisRenderURL := printf "https://www.googleapis.com/storage/v1/b/genesis_blocks/o/%s?alt=media" $network -}}
-{{- $bootEnodeRenderURL := printf "https://storage.googleapis.com/env_bootnodes/{{ $network }}" $network -}}
+{{- $bootEnodeRenderURL := printf "https://storage.googleapis.com/env_bootnodes/%s" $network -}}
 {{- $gensisFinalURL := default $genesisRenderURL .Values.genesis.genesisForceUrl }}
 - name: init-genesis
   image: {{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}
