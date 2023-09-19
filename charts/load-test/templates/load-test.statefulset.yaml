@@ -204,7 +204,7 @@ spec:
             RID=$(cat /root/.celo/rid)
 
             # Send the txs to the next load test client
-            RECIPIENT_INDEX=$(( ($RID + 1) % {{ .Values.replicas }} ))
+            RECIPIENT_INDEX=$(( ($RID + 1) % {{ max (.Values.replicas | int) 1 }} ))
 
             exec celotooljs.sh geth simulate-client \
               {{- if $reuseClient }}
@@ -216,8 +216,8 @@ spec:
               --delay {{ .Values.delay }} \
               --mnemonic "$MNEMONIC" \
               --test-mode={{ .Values.testMode }} \
-              {{- with .Values.extraArgs }}
-              {{ toYaml . | nindent 14 }} \
+              {{- range .Values.extraArgs }}
+              {{- . | nindent 14 }} \
               {{- end }}
               --blockscout-url {{ .Values.blockscout.url }} \
               --blockscoutMeasurePercent {{ .Values.blockscout.measurePercent }} \

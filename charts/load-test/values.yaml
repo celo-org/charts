@@ -10,7 +10,7 @@ initialCount: 0
 mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion rib
   resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery
 web3Provider: http://localhost:8545
-generatePrivateKeys: false
+generatePrivateKeys: true
 useRandomRecipient: false
 blockscout:
   measurePercent: 0
