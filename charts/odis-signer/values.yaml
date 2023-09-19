@@ -107,7 +107,7 @@ securityContext: {}
   # runAsUser: 1000
 
 ingress:
-  # -- Enable ingress resource 
+  # -- Enable ingress resource
   enabled: false
   # -- Ingress class name
   className: "nginx"
