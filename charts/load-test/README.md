@@ -1,6 +1,6 @@
 # load-test
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Chart which is used to run load test for a Celo Network
 
@@ -14,7 +14,7 @@ Chart which is used to run load test for a Celo Network
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.3.2 |
+| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.4.2 |
 
 ## Values
 
@@ -28,7 +28,7 @@ Chart which is used to run load test for a Celo Network
 | delay | int | `0` |  |
 | extraArgs[0] | string | `"--total-tx-gas 100000"` |  |
 | extraArgs[1] | string | `"--max-gas-price 25000000000"` |  |
-| generatePrivateKeys | bool | `false` |  |
+| generatePrivateKeys | bool | `true` |  |
 | genesis.genesisForceUrl | string | `"https://gist.githubusercontent.com/jcortejoso/eba86918c7b7c7546589edd9a32f1f08/raw/b564a1cb50c1fb5261ea5238b0c0b2d055af9ba4/genesis.json"` |  |
 | genesis.network | string | `"globaltestnet"` |  |
 | genesis.useGenesisFileBase64 | bool | `false` |  |
