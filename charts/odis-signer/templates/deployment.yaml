@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "odis-signer.fullname" . }}
+  labels:
+    {{- include "odis-signer.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "odis-signer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "odis-signer.selectorLabels" . | nindent 8 }}
+        {{- if .Values.azureKVIdentity.enabled }}
+        aadpodidbinding: {{ include "odis-signer.fullname" . }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "odis-signer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ include "odis-signer.port" . }}
+              protocol: TCP
+          command:
+            - bash
+            - "-c"
+            {{- if .Values.env.tracing.enabled}}
+            - |
+              sleep 60; yarn start:docker:tracing
+            {{- else }}
+            - |
+              sleep 60; yarn start:docker
+            {{- end }}
+          env:
+            - name: SERVER_PORT
+              value: {{ include "odis-signer.port" . | quote }}
+            {{- if .Values.env.tracing.enabled}}
+            {{- include "odis-signer.env-var" (dict "name" "TRACER_ENDPOINT" "dict" .Values.env.tracing "value_name" "endpoint") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "TRACING_SERVICE_NAME" "dict" .Values.env.tracing "value_name" "serviceName") | indent 12 }}
+            {{- end }}
+            {{- include "odis-signer.env-var" (dict "name" "LOG_FORMAT" "dict" .Values.env.log "value_name" "format") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "LOG_LEVEL" "dict" .Values.env.log "value_name" "level") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "BLOCKCHAIN_PROVIDER" "dict" .Values.env.blockchain "value_name" "blockchainProvider") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "BLOCKCHAIN_API_KEY" "dict" .Values.env.blockchain "value_name" "blockchainApiKey") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "DB_TYPE" "dict" .Values.env.db "value_name" "type") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "DB_HOST" "dict" .Values.env.db "value_name" "host") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "DB_PORT" "dict" .Values.env.db "value_name" "port") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "DB_DATABASE" "dict" .Values.env.db "value_name" "database") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "DB_USERNAME" "dict" .Values.env.db "value_name" "username") | indent 12 }}
+            {{- if .Values.env.db.password }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-password
+                  key: db-password
+            {{- end }}
+            {{- include "odis-signer.env-var" (dict "name" "KEYSTORE_TYPE" "dict" .Values.env.keystore "value_name" "type") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "KEYSTORE_AZURE_VAULT_NAME" "dict" .Values.env.keystore "value_name" "vaultName") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "KEYSTORE_AZURE_SECRET_NAME" "dict" .Values.env.keystore "value_name" "secretName") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "PHONE_NUMBER_PRIVACY_KEY_NAME_BASE" "optional" true "dict" .Values.env.keystore "value_name" "pnpKeyNameBase") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "PHONE_NUMBER_PRIVACY_LATEST_KEY_VERSION" "optional" true "dict" .Values.env.keystore "value_name" "pnpKeyLatestVersion") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "DOMAINS_KEY_NAME_BASE" "optional" true "dict" .Values.env.keystore "value_name" "domainsKeyNameBase") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "DOMAINS_LATEST_KEY_VERSION" "optional" true "dict" .Values.env.keystore "value_name" "domainsKeyLatestVersion") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "DOMAINS_API_ENABLED" "dict" .Values.env.api "value_name" "domainsAPIEnabled") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "PHONE_NUMBER_PRIVACY_API_ENABLED" "dict" .Values.env.api "value_name" "pnpAPIEnabled") | indent 12 }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /status
+              port: http
+            {{- end }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /status
+              port: http
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
