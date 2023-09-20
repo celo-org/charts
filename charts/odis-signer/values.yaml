@@ -92,6 +92,9 @@ azureKVIdentity:
 
 # -- Custom pod annotations
 podAnnotations: {}
+  # prometheus.io/path: /metrics
+  # prometheus.io/port: "3000"
+  # prometheus.io/scrape: "true"
 
 # -- Custom pod security context
 podSecurityContext: {}
