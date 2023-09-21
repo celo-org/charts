@@ -1,6 +1,6 @@
 # rosetta
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.0](https://img.shields.io/badge/AppVersion-v2.0.0-informational?style=flat-square)
 
 Rosetta Client for Celo Networks
 
@@ -27,7 +27,7 @@ Rosetta Client for Celo Networks
 | cli.storage.storageClass | string | `"premium-rwo"` | Name of the storage class to use for the celo-blockchain statefulset |
 | genesisUrl | string | `""` |  |
 | image.repository | string | `"us.gcr.io/celo-testnet/rosetta"` |  |
-| image.tag | string | `"gingerbread-prep-3"` |  |
+| image.tag | string | `"v2.0.0"` |  |
 | ingress.domain | string | `"integration-tests.celo-networks-dev.org"` |  |
 | ingress.enabled | bool | `true` |  |
 | ingress.ingressClassName | string | `"nginx"` |  |
