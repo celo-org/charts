@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "odis-combiner.fullname" . }}
+  labels:
+    {{- include "odis-combiner.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "odis-combiner.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "odis-combiner.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "odis-combiner.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ include "odis-combiner.port" . }}
+              protocol: TCP
+          command:
+            - bash
+            - "-c"
+            {{- if .Values.env.tracing.enabled}}
+            - |
+              sleep 60; yarn start:docker:tracing
+            {{- else }}
+            - |
+              sleep 60; yarn start:docker
+            {{- end }}
+          env:
+            - name: PORT
+              value: {{ include "odis-combiner.port" . | quote }}
+            {{- if .Values.env.tracing.enabled}}
+            {{- include "odis-combiner.env-var" (dict "name" "TRACER_ENDPOINT" "dict" .Values.env.tracing "value_name" "endpoint") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "TRACING_SERVICE_NAME" "dict" .Values.env.tracing "value_name" "serviceName") | indent 12 }}
+            {{- end }}
+            {{- include "odis-combiner.env-var" (dict "name" "LOG_FORMAT" "dict" .Values.env.log "value_name" "format") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "LOG_LEVEL" "dict" .Values.env.log "value_name" "level") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "BLOCKCHAIN_PROVIDER" "dict" .Values.env.blockchain "value_name" "blockchainProvider") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "ODIS_BLOCKCHAIN_PROVIDER" "dict" .Values.env.blockchain "value_name" "odisBlockchainProvider") | indent 12 }}
+            {{- if .Values.env.blockchain.blockchainApiKey }}
+            - name: BLOCKCHAIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "odis-combiner.secret" . }}
+                  key: {{ include "odis-combiner.secret" . }}
+            {{- end }}
+            {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_FULL_NODE_DELAY_MS" "dict" .Values.env.domain "value_name" "domainFullNodeDelayMs") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_FULL_NODE_RETRY_COUNT" "dict" .Values.env.domain "value_name" "domainFullNodeRetryCount") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_FULL_NODE_TIMEOUT_MS" "dict" .Values.env.domain "value_name" "domainFullNodeTimeoutMs") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_KEYS_CURRENT_VERSION" "dict" .Values.env.domain "value_name" "domainKeysCurrentVersion") | indent 12 }}
+            {{- include "odis-combiner.env-var-squote" (dict "name" "DOMAIN_KEYS_VERSIONS" "dict" .Values.env.domain "value_name" "domainKeysVersions") | indent 12 }}
+            {{- include "odis-combiner.env-var-squote" (dict "name" "DOMAIN_ODIS_SERVICES_SIGNERS" "dict" .Values.env.domain "value_name" "domainOdisServicesSigners") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_ODIS_SERVICES_TIMEOUT_MILLISECONDS" "dict" .Values.env.domain "value_name" "domainOdisServicesTimeoutMillisecond") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_SERVICE_NAME" "dict" .Values.env.domain "value_name" "domainServiceName") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_SHOULD_AUTHENTICATE" "dict" .Values.env.domain "value_name" "domainShouldAuthenticate") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_SHOULD_CHECK_QUOTA" "dict" .Values.env.domain "value_name" "domainShouldCheckQuota") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PNP_FULL_NODE_DELAY_MS" "dict" .Values.env.pnp "value_name" "pnpFullNodeDelayMs") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PNP_FULL_NODE_RETRY_COUNT" "dict" .Values.env.pnp "value_name" "pnpFullNodeRetryCount") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PNP_FULL_NODE_TIMEOUT_MS" "dict" .Values.env.pnp "value_name" "pnpFullNodeTimeoutMs") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PNP_KEYS_CURRENT_VERSION" "dict" .Values.env.pnp "value_name" "pnpKeysCurrentVersion") | indent 12 }}
+            {{- include "odis-combiner.env-var-squote" (dict "name" "PNP_KEYS_VERSIONS" "dict" .Values.env.pnp "value_name" "pnpKeysVersions") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PNP_MOCK_DECK" "dict" .Values.env.pnp "value_name" "pnpMockDeck") | indent 12 }}
+            {{- include "odis-combiner.env-var-squote" (dict "name" "PNP_ODIS_SERVICES_SIGNERS" "dict" .Values.env.pnp "value_name" "pnpOdisServicesSigners") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PNP_ODIS_SERVICES_TIMEOUT_MILLISECONDS" "dict" .Values.env.pnp "value_name" "pnpOdisServicesTimeoutMilliseconds") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PNP_SERVICE_NAME" "dict" .Values.env.pnp "value_name" "pnpServiceName") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PNP_SHOULD_AUTHENTICATE" "dict" .Values.env.pnp "value_name" "pnpShouldAuthenticate") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PNP_SHOULD_CHECK_QUOTA" "dict" .Values.env.pnp "value_name" "pnpShoulñdCheckQuota") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PNP_SHOULD_MOCK_ACCOUNT_SERVICE" "dict" .Values.env.pnp "value_name" "pnpShouldMockAccountService") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "CONTEXT_NAME" "dict" .Values.env.gcp "value_name" "contextName") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "EVENTARC_CLOUD_EVENT_SOURCE" "dict" .Values.env.gcp "value_name" "eventarcCloudEventSource") | indent 12 }}
+            {{- include "odis-combiner.env-var-squote" (dict "name" "FIREBASE_CONFIG" "dict" .Values.env.gcp "value_name" "firebaseConfig") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "GCLOUD_PROJECT" "dict" .Values.env.gcp "value_name" "gcloudProject") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "MIN_INSTANCES" "dict" .Values.env.gcp "value_name" "minInstances") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "REQUEST_CONCURRENCY" "dict" .Values.env.gcp "value_name" "requestConcurrency") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "SERVICE_NAME" "dict" .Values.env.gcp "value_name" "serviceName") | indent 12 }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /status
+              port: http
+            {{- end }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /status
+              port: http
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
