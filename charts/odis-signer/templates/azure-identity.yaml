@@ -1,0 +1,13 @@
+---
+{{- if .Values.azureKVIdentity.enabled }}
+apiVersion: aadpodidentity.k8s.io/v1
+kind: AzureIdentity
+metadata:
+  name: {{ include "odis-signer.fullname" . }}
+  annotations:
+    aadpodidentity.k8s.io/Behavior: namespaced
+spec:
+  type: 0
+  resourceID: {{ .Values.azureKVIdentity.id }}
+  clientID: {{ .Values.azureKVIdentity.clientId }}
+{{- end }}

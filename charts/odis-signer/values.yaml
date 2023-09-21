@@ -1,0 +1,178 @@
+# Default values for odis-signer-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+# -- Number of deployment replicas
+replicaCount: 1
+
+image:
+  # -- Image repository
+  repository: us.gcr.io/celo-testnet/celo-monorepo
+  # -- Image pullpolicy
+  pullPolicy: Always
+  # -- Image tag
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "oblivious-decentralized-identifier-service-3.0.1"
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+env:
+  tracing:
+    # -- Enable tracing
+    enabled: true
+    # -- Env. Var TRACER_ENDPOINT. If enabled is false, will not be added to the deployment.
+    endpoint: "https://<GRAFANA_AGENT_URL>/api/traces"
+    # -- Env. Var TRACING_SERVICE_NAME. If enabled is false, will not be added to the deployment.
+    serviceName: "odis-signer-env-cluster"
+  log:
+    # -- Env. Var LOG_FORMAT.
+    format: stackdriver
+    # -- Env. Var LOG_LEVEL.
+    level: trace
+  blockchain:
+    # -- Env. Var BLOCKCHAIN_PROVIDER.
+    blockchainProvider: "https://forno.celo.org"
+    # -- Env. Var BLOCKCHAIN_API_KEY.
+    blockchainApiKey: "kong-api-key"
+  db:
+    # -- Env. Var DB_TYPE.
+    type: "postgres"
+    # -- Env. Var DB_DATABASE.
+    database: "database"
+    # -- Env. Var DB_HOST.
+    host: db.host
+    # -- Database password. If set, it creates a secret and env. var DB_PASSWORD referencing that secret.
+    password: null
+    # -- Env. Var DB_PORT.
+    port: 5432
+    # -- Env. Var DB_USERNAME.
+    username: db-user
+  keystore:
+    # -- Env. Var KEYSTORE_TYPE.
+    type: "AzureKeyVault"
+    # -- Env. Var KEYSTORE_AZURE_VAULT_NAME.
+    vaultName: vault-name
+    # -- Env. Var KEYSTORE_AZURE_SECRET_NAME.
+    secretName: secret-name
+    # -- Env. Var PHONE_NUMBER_PRIVACY_KEY_NAME_BASE. If not set, it won't be added to the deployment.
+    pnpKeyNameBase: ""
+    # -- Env. Var PHONE_NUMBER_PRIVACY_LATEST_KEY_VERSION. If not set, it won't be added to the deployment.
+    pnpKeyLatestVersion: ""
+    # -- Env. Var DOMAINS_KEY_NAME_BASE. If not set, it won't be added to the deployment.
+    domainsKeyNameBase: ""
+    # -- Env. Var DOMAINS_LATEST_KEY_VERSION. If not set, it won't be added to the deployment.
+    domainsKeyLatestVersion: ""
+  api:
+    # -- Env. Var DOMAINS_API_ENABLED.
+    domainsAPIEnabled: false
+    # -- Env. Var PHONE_NUMBER_PRIVACY_API_ENABLED.
+    pnpAPIEnabled: true
+
+azureKVIdentity:
+  # -- Enable Azure aadpodidentity.
+  enabled: false
+  # -- Azure aadpodidentity clientId
+  clientId: clientid
+  # -- Azure aadpodidentity identity id
+  id: /subscriptions/7a6f5f20-bd43-4267-8c35-a734efca140c/resourcegroups/mainnet-pgpnp-eastasia/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ODISSIGNERID-mainnet-pgpnp-eastasia-AZURE_ODIS_EASTASIA_A
+
+# -- Custom pod annotations
+podAnnotations: {}
+  # prometheus.io/path: /metrics
+  # prometheus.io/port: "3000"
+  # prometheus.io/scrape: "true"
+
+# -- Custom pod security context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Custom container security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+ingress:
+  # -- Enable ingress resource
+  enabled: false
+  # -- Ingress class name
+  className: "nginx"
+  # -- Ingress annotations
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  # -- Ingress hostnames
+  hosts: []
+  #  - host: chart-example.local
+  #    paths:
+  #      - path: /
+  #        pathType: ImplementationSpecific
+  # -- Ingress TLS configuration
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# -- Liveness probe configuration
+livenessProbe: {}
+#  timeoutSeconds: 30
+#  httpGet:
+#    path: /status
+#    port: http
+
+# -- Readiness probe configuration
+readinessProbe: {}
+#  timeoutSeconds: 30
+#  httpGet:
+#    path: /status
+#    port: http
+
+# -- Container resources
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  # -- Enable autoscaling
+  enabled: false
+  # -- Minimum replicas
+  minReplicas: 1
+  # -- Maximum replicas
+  maxReplicas: 3
+  # -- CPU target utilization
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes pod affinity
+affinity: {}
