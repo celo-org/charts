@@ -1,6 +1,6 @@
 ---
 apiVersion: v2
-appVersion: "<PLACEHOLDER>"
+appVersion: "0.0.1"
 description: Helm chart for deploying Celo ODIS signer in AKS
 type: application
 home: https://celo.org

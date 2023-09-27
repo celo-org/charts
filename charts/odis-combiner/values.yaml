@@ -12,12 +12,12 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: us.gcr.io/celo-testnet/celo-monorepo
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/test-combiner-prom
   # -- Image pullpolicy
   pullPolicy: Always
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "<PLACEHOLDER>"
+  tag: "latest"
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -33,7 +33,7 @@ serviceAccount:
 env:
   tracing:
     # -- Enable tracing
-    enabled: true
+    enabled: false
     # -- Env. Var TRACER_ENDPOINT. If enabled is false, will not be added to the deployment.
     endpoint: "https://<GRAFANA_AGENT_URL>/api/traces"
     # -- Env. Var TRACING_SERVICE_NAME. If enabled is false, will not be added to the deployment.
@@ -117,10 +117,10 @@ env:
     serviceName: "odis-combiner"
 
 # -- Custom pod annotations
-podAnnotations: {}
-  # prometheus.io/path: /metrics
-  # prometheus.io/port: "3000"
-  # prometheus.io/scrape: "true"
+podAnnotations:
+  prometheus.io/path: /metrics
+  prometheus.io/port: "8080"
+  prometheus.io/scrape: "true"
 
 # -- Custom pod security context
 podSecurityContext: {}
