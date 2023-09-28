@@ -31,7 +31,7 @@ Helm chart for deploying Celo ODIS signer in AKS
 | env.blockchain.blockchainApiKey | string | `"kong-api-key"` | Env. Var BLOCKCHAIN_API_KEY. |
 | env.blockchain.blockchainProvider | string | `"https://alfajores-forno.celo-testnet.org"` | Env. Var BLOCKCHAIN_PROVIDER. |
 | env.blockchain.odisBlockchainProvider | string | `"https://alfajores-forno.celo-testnet.org"` | Env. Var ODIS_BLOCKCHAIN_PROVIDER. |
-| env.domain.domainEnabled | bool | `true` | Env. Var DOMAIN_ENABLED. |
+| env.domain.domainEnabled | bool | `true` | Env. Var DOMAINS_API_ENABLED. |
 | env.domain.domainFullNodeDelayMs | string | `"100"` | Env. Var DOMAIN_FULL_NODE_DELAY_MS |
 | env.domain.domainFullNodeRetryCount | string | `"5"` | Env. Var DOMAIN_FULL_NODE_RETRY_COUNT |
 | env.domain.domainFullNodeTimeoutMs | string | `"1000"` | Env. Var DOMAIN_FULL_NODE_TIMEOUT_MS |
@@ -51,7 +51,7 @@ Helm chart for deploying Celo ODIS signer in AKS
 | env.gcp.serviceName | string | `"odis-combiner"` | Env. Var SERVICE_NAME |
 | env.log.format | string | `"stackdriver"` | Env. Var LOG_FORMAT. |
 | env.log.level | string | `"trace"` | Env. Var LOG_LEVEL. |
-| env.pnp.pnpEnabled | bool | `true` | Env. Var PNP_ENABLED. |
+| env.pnp.pnpEnabled | bool | `true` | Env. Var PHONE_NUMBER_PRIVACY_API_ENABLED. |
 | env.pnp.pnpFullNodeDelayMs | string | `"100"` | Env. Var PNP_FULL_NODE_DELAY_MS |
 | env.pnp.pnpFullNodeRetryCount | string | `"5"` | Env. Var PNP_FULL_NODE_RETRY_COUNT |
 | env.pnp.pnpFullNodeTimeoutMs | string | `"1000"` | Env. Var PNP_FULL_NODE_TIMEOUT_MS |
