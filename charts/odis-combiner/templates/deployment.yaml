@@ -65,6 +65,7 @@ spec:
                   name: {{ include "odis-combiner.secret" . }}
                   key: {{ include "odis-combiner.secret" . }}
             {{- end }}
+            {{- include "odis-combiner.env-var" (dict "name" "DOMAINS_API_ENABLED" "dict" .Values.env.pnp "value_name" "domainEnabled") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_FULL_NODE_DELAY_MS" "dict" .Values.env.domain "value_name" "domainFullNodeDelayMs") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_FULL_NODE_RETRY_COUNT" "dict" .Values.env.domain "value_name" "domainFullNodeRetryCount") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_FULL_NODE_TIMEOUT_MS" "dict" .Values.env.domain "value_name" "domainFullNodeTimeoutMs") | indent 12 }}
@@ -75,6 +76,7 @@ spec:
             {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_SERVICE_NAME" "dict" .Values.env.domain "value_name" "domainServiceName") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_SHOULD_AUTHENTICATE" "dict" .Values.env.domain "value_name" "domainShouldAuthenticate") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_SHOULD_CHECK_QUOTA" "dict" .Values.env.domain "value_name" "domainShouldCheckQuota") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PHONE_NUMBER_PRIVACY_API_ENABLED" "dict" .Values.env.pnp "value_name" "pnpEnabled") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "PNP_FULL_NODE_DELAY_MS" "dict" .Values.env.pnp "value_name" "pnpFullNodeDelayMs") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "PNP_FULL_NODE_RETRY_COUNT" "dict" .Values.env.pnp "value_name" "pnpFullNodeRetryCount") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "PNP_FULL_NODE_TIMEOUT_MS" "dict" .Values.env.pnp "value_name" "pnpFullNodeTimeoutMs") | indent 12 }}

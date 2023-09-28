@@ -51,7 +51,7 @@ env:
     # -- Env. Var BLOCKCHAIN_API_KEY.
     blockchainApiKey: "kong-api-key"
   domain:
-    # -- Env. Var DOMAIN_ENABLED.
+    # -- Env. Var DOMAINS_API_ENABLED.
     domainEnabled: true
     # -- Env. Var DOMAIN_FULL_NODE_DELAY_MS
     domainFullNodeDelayMs: "100"
@@ -74,7 +74,7 @@ env:
     # -- Env. Var DOMAIN_SHOULD_CHECK_QUOTA
     domainShouldCheckQuota: false
   pnp:
-    # -- Env. Var PNP_ENABLED.
+    # -- Env. Var PHONE_NUMBER_PRIVACY_API_ENABLED.
     pnpEnabled: true
     # -- Env. Var PNP_FULL_NODE_DELAY_MS
     pnpFullNodeDelayMs: "100"
