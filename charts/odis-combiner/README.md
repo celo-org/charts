@@ -30,7 +30,6 @@ Helm chart for deploying Celo ODIS signer in AKS
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | CPU target utilization |
 | env.blockchain.blockchainApiKey | string | `"kong-api-key"` | Env. Var BLOCKCHAIN_API_KEY. |
 | env.blockchain.blockchainProvider | string | `"https://alfajores-forno.celo-testnet.org"` | Env. Var BLOCKCHAIN_PROVIDER. |
-| env.blockchain.odisBlockchainProvider | string | `"https://alfajores-forno.celo-testnet.org"` | Env. Var ODIS_BLOCKCHAIN_PROVIDER. |
 | env.domain.domainEnabled | bool | `true` | Env. Var DOMAINS_API_ENABLED. |
 | env.domain.domainFullNodeDelayMs | string | `"100"` | Env. Var DOMAIN_FULL_NODE_DELAY_MS |
 | env.domain.domainFullNodeRetryCount | string | `"5"` | Env. Var DOMAIN_FULL_NODE_RETRY_COUNT |
@@ -42,13 +41,6 @@ Helm chart for deploying Celo ODIS signer in AKS
 | env.domain.domainServiceName | string | `"odis_combiner"` | Env. Var DOMAIN_SERVICE_NAME |
 | env.domain.domainShouldAuthenticate | bool | `false` | Env. Var DOMAIN_SHOULD_AUTHENTICATE |
 | env.domain.domainShouldCheckQuota | bool | `false` | Env. Var DOMAIN_SHOULD_CHECK_QUOTA |
-| env.gcp.contextName | string | `"alfajores"` | Env. Var CONTEXT_NAME |
-| env.gcp.eventarcCloudEventSource | string | `"projects/celo-phone-number-privacy-stg/locations/us-central1/services/combinerGen2"` | Env. Var EVENTARC_CLOUD_EVENT_SOURCE |
-| env.gcp.firebaseConfig | string | `"{\"projectId\":\"celo-phone-number-privacy-stg\",\"databaseURL\":\"https://celo-phone-number-privacy-stg.firebaseio.com\",\"storageBucket\":\"celo-phone-number-privacy-stg.appspot.com\"}"` | Env. Var FIREBASE_CONFIG |
-| env.gcp.gcloudProject | string | `"celo-phone-number-privacy-stg"` | Env. Var GCLOUD_PROJECT |
-| env.gcp.minInstances | string | `"0"` | Env. Var MIN_INSTANCES |
-| env.gcp.requestConcurrency | string | `"80"` | Env. Var REQUEST_CONCURRENCY |
-| env.gcp.serviceName | string | `"odis-combiner"` | Env. Var SERVICE_NAME |
 | env.log.format | string | `"stackdriver"` | Env. Var LOG_FORMAT. |
 | env.log.level | string | `"trace"` | Env. Var LOG_LEVEL. |
 | env.pnp.pnpEnabled | bool | `true` | Env. Var PHONE_NUMBER_PRIVACY_API_ENABLED. |
@@ -64,6 +56,7 @@ Helm chart for deploying Celo ODIS signer in AKS
 | env.pnp.pnpShouldAuthenticate | bool | `false` | Env. Var PNP_SHOULD_AUTHENTICATE |
 | env.pnp.pnpShouldMockAccountService | bool | `false` | Env. Var PNP_SHOULD_MOCK_ACCOUNT_SERVICE |
 | env.pnp.pnpShoulñdCheckQuota | bool | `false` | Env. Var PNP_SHOULD_CHECK_QUOTA |
+| env.service.serviceName | string | `"odis-combiner"` | Env. Var SERVICE_NAME |
 | env.tracing.enabled | bool | `false` | Enable tracing |
 | env.tracing.endpoint | string | `"https://<GRAFANA_AGENT_URL>/api/traces"` | Env. Var TRACER_ENDPOINT. If enabled is false, will not be added to the deployment. |
 | env.tracing.serviceName | string | `"odis-combiner-env-cluster"` | Env. Var TRACING_SERVICE_NAME. If enabled is false, will not be added to the deployment. |
