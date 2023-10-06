@@ -65,7 +65,7 @@ spec:
                   name: {{ include "odis-combiner.secret" . }}
                   key: {{ include "odis-combiner.secret" . }}
             {{- end }}
-            {{- include "odis-combiner.env-var" (dict "name" "DOMAINS_API_ENABLED" "dict" .Values.env.pnp "value_name" "domainEnabled") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "DOMAINS_API_ENABLED" "dict" .Values.env.domain "value_name" "domainEnabled") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_FULL_NODE_DELAY_MS" "dict" .Values.env.domain "value_name" "domainFullNodeDelayMs") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_FULL_NODE_RETRY_COUNT" "dict" .Values.env.domain "value_name" "domainFullNodeRetryCount") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_FULL_NODE_TIMEOUT_MS" "dict" .Values.env.domain "value_name" "domainFullNodeTimeoutMs") | indent 12 }}
