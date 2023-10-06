@@ -46,8 +46,6 @@ env:
   blockchain:
     # -- Env. Var BLOCKCHAIN_PROVIDER.
     blockchainProvider: "https://alfajores-forno.celo-testnet.org"
-    # -- Env. Var ODIS_BLOCKCHAIN_PROVIDER.
-    odisBlockchainProvider: "https://alfajores-forno.celo-testnet.org"
     # -- Env. Var BLOCKCHAIN_API_KEY.
     blockchainApiKey: "kong-api-key"
   domain:
@@ -100,19 +98,7 @@ env:
     pnpShoulñdCheckQuota: false
     # -- Env. Var PNP_SHOULD_MOCK_ACCOUNT_SERVICE
     pnpShouldMockAccountService: false
-  gcp:
-    # -- Env. Var CONTEXT_NAME
-    contextName: "alfajores"
-    # -- Env. Var EVENTARC_CLOUD_EVENT_SOURCE
-    eventarcCloudEventSource: "projects/celo-phone-number-privacy-stg/locations/us-central1/services/combinerGen2"
-    # -- Env. Var FIREBASE_CONFIG
-    firebaseConfig: '{"projectId":"celo-phone-number-privacy-stg","databaseURL":"https://celo-phone-number-privacy-stg.firebaseio.com","storageBucket":"celo-phone-number-privacy-stg.appspot.com"}'
-    # -- Env. Var GCLOUD_PROJECT
-    gcloudProject: "celo-phone-number-privacy-stg"
-    # -- Env. Var MIN_INSTANCES
-    minInstances: "0"
-    # -- Env. Var REQUEST_CONCURRENCY
-    requestConcurrency: "80"
+  service:
     # -- Env. Var SERVICE_NAME
     serviceName: "odis-combiner"
 
