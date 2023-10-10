@@ -1,6 +1,6 @@
 # odis-combiner
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf](https://img.shields.io/badge/AppVersion-4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer in AKS
 
@@ -24,6 +24,8 @@ Helm chart for deploying Celo ODIS signer in AKS
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
+| akeyless.enabled | bool | `false` | Enable Akeyless secret injector for Env. Var BLOCKCHAIN_API_KEY |
+| akeyless.path | string | `"/static-secrets/identity-circle/ODIS-Combiner/Staging/Forno-API-Key"` | Akeyless path to Forno API key |
 | autoscaling.enabled | bool | `false` | Enable autoscaling |
 | autoscaling.maxReplicas | int | `3` | Maximum replicas |
 | autoscaling.minReplicas | int | `1` | Minimum replicas |
@@ -54,7 +56,7 @@ Helm chart for deploying Celo ODIS signer in AKS
 | env.pnp.pnpOdisServicesTimeoutMilliseconds | string | `"5000"` | Env. Var PNP_ODIS_SERVICES_TIMEOUT_MILLISECONDS |
 | env.pnp.pnpServiceName | string | `"odis_combiner"` | Env. Var PNP_SERVICE_NAME |
 | env.pnp.pnpShouldAuthenticate | bool | `false` | Env. Var PNP_SHOULD_AUTHENTICATE |
-| env.pnp.pnpShouldMockAccountService | bool | `false` | Env. Var PNP_SHOULD_MOCK_ACCOUNT_SERVICE |
+| env.pnp.pnpShouldMockAccountService | bool | `false` |  |
 | env.pnp.pnpShoulñdCheckQuota | bool | `false` | Env. Var PNP_SHOULD_CHECK_QUOTA |
 | env.service.serviceName | string | `"odis-combiner"` | Env. Var SERVICE_NAME |
 | env.tracing.enabled | bool | `false` | Enable tracing |
@@ -62,8 +64,8 @@ Helm chart for deploying Celo ODIS signer in AKS
 | env.tracing.serviceName | string | `"odis-combiner-env-cluster"` | Env. Var TRACING_SERVICE_NAME. If enabled is false, will not be added to the deployment. |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/test-combiner-prom"` | Image repository |
-| image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/odis-combiner"` | Image repository |
+| image.tag | string | `"4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `"nginx"` | Ingress class name |
