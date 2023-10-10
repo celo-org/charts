@@ -1,0 +1,22 @@
+---
+apiVersion: v2
+appVersion: "4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf"
+description: Helm chart for deploying Celo ODIS signer in AKS
+type: application
+home: https://celo.org
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+name: odis-combiner
+sources:
+  - https://celo.org
+  - https://docs.celo.org
+  - https://clabs.co
+  - https://github.com/celo-org
+keywords:
+  - Celo
+  - ODIS
+  - Ethereum
+version: 0.1.0
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
