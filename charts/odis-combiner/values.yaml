@@ -12,12 +12,12 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: us-west1-docker.pkg.dev/devopsre/dev-images/test-combiner-prom
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/odis-combiner
   # -- Image pullpolicy
   pullPolicy: Always
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: "4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf"
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -96,11 +96,16 @@ env:
     pnpShouldAuthenticate: false
     # -- Env. Var PNP_SHOULD_CHECK_QUOTA
     pnpShoulñdCheckQuota: false
-    # -- Env. Var PNP_SHOULD_MOCK_ACCOUNT_SERVICE
     pnpShouldMockAccountService: false
   service:
     # -- Env. Var SERVICE_NAME
     serviceName: "odis-combiner"
+
+akeyless:
+  # -- Enable Akeyless secret injector for Env. Var BLOCKCHAIN_API_KEY
+  enabled: false
+  # -- Akeyless path to Forno API key
+  path: "/static-secrets/identity-circle/ODIS-Combiner/Staging/Forno-API-Key"
 
 # -- Custom pod annotations
 podAnnotations:
