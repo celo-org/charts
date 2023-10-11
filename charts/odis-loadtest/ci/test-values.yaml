@@ -1,0 +1,23 @@
+---
+env:
+  network: alfajoresstaging
+  reqPerSec: "20"
+  privateKey: "testKey"
+  privateKeyPercentage: "50"
+  duration: "100"
+
+akeyless:
+  enabled: false
+
+args:
+  - |
+    echo "Hello world"
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 700Mi
+
+nodeSelector: null
+
+tolerations: null

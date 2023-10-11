@@ -1,0 +1,107 @@
+# Default values for odis-loadtest-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+# -- Number of deployment replicas
+replicaCount: 1
+
+image:
+  # -- Image repository
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/odis-loadtest
+  # -- Image pullpolicy
+  pullPolicy: Always
+  # -- Image tag
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "85baf6c3854aff588d88332addd709d544ebd6c4"
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+env:
+  # -- Env. Var NETWORK
+  network: alfajoresstaging
+  # -- Env. Var REQ_PER_SEC
+  reqPerSec: "20"
+  # -- Env. Var PRIVATE_KEY. Won't be used if akeyless.enabled is true
+  privateKey: "testKey"
+  # -- Env. Var PRIVATE_KEY_PERCENTAGE
+  privateKeyPercentage: "50"
+  # -- Env. Var DURATION
+  duration: "100"
+
+akeyless:
+  # -- Enable Akeyless secret injector for Env. Var PRIVATE_KEY
+  enabled: true
+  # -- Akeyless path to load test private key
+  path: "/static-secrets/identity-circle/LoadTests/Private-Key-LoadTests"
+
+args:
+  - |
+    yarn loadTest $NETWORK $REQ_PER_SEC --privateKey=$PRIVATE_KEY --privateKeyPercentage=$PRIVATE_KEY_PERCENTAGE --duration=$DURATION --useDEK
+    echo "Done load testing"
+    tail -f /dev/null
+
+# -- Custom pod annotations
+podAnnotations: {}
+
+# -- Custom pod security context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Custom container security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# -- Liveness probe configuration
+livenessProbe: {}
+#  timeoutSeconds: 30
+#  httpGet:
+#    path: /status
+#    port: http
+
+# -- Readiness probe configuration
+readinessProbe: {}
+#  timeoutSeconds: 30
+#  httpGet:
+#    path: /status
+#    port: http
+
+# -- Container resources
+resources:
+  requests:
+    cpu: 500m
+    memory: 700Mi
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- Kubernetes node selector
+nodeSelector:
+  pool: odis-loadtest
+
+# -- Kubernetes tolerations
+tolerations:
+  - effect: NoSchedule
+    key: pool
+    operator: Equal
+    value: odis-loadtest
+
+# -- Kubernetes pod affinity
+affinity: {}
