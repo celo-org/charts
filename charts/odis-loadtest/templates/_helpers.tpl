@@ -65,7 +65,7 @@ Create the name of the service account to use
 ODIS loadTest secret name and key
 */}}
 {{- define "odis-loadtest.secret" -}}
-privateKey
+private-key
 {{- end }}
 
 {{/*

@@ -12,6 +12,7 @@ akeyless:
 args:
   - |
     echo "Hello world"
+    tail -f /dev/null
 
 resources:
   requests:
