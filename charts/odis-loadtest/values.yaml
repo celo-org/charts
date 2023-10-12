@@ -12,12 +12,12 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: us-west1-docker.pkg.dev/devopsre/dev-images/odis-loadtest
+  repository: us-west1-docker.pkg.dev/devopsre/social-connect/odis-loadtest
   # -- Image pullpolicy
   pullPolicy: Always
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "85baf6c3854aff588d88332addd709d544ebd6c4"
+  tag: "k8s-loadtest"
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -27,24 +27,24 @@ env:
   network: alfajoresstaging
   # -- Env. Var REQ_PER_SEC
   reqPerSec: "20"
-  # -- Env. Var PRIVATE_KEY. Won't be used if akeyless.enabled is true
+  # -- Env. Var PRIVATE_KEY. Won't be used if existingSecret is defined
   privateKey: "testKey"
   # -- Env. Var PRIVATE_KEY_PERCENTAGE
   privateKeyPercentage: "50"
   # -- Env. Var DURATION
   duration: "100"
 
-akeyless:
-  # -- Enable Akeyless secret injector for Env. Var PRIVATE_KEY
-  enabled: true
-  # -- Akeyless path to load test private key
-  path: "/static-secrets/identity-circle/LoadTests/Private-Key-LoadTests"
+# -- Existing secret for Env. Var PRIVATE_KEY
+existingSecret: odis-loadtest-private-key
 
 args:
   - |
-    yarn loadTest $NETWORK $REQ_PER_SEC --privateKey=$PRIVATE_KEY --privateKeyPercentage=$PRIVATE_KEY_PERCENTAGE --duration=$DURATION --useDEK
-    echo "Done load testing"
+    echo $PRIVATE_KEY
+    echo "Hello world"
     tail -f /dev/null
+    #yarn loadTest $NETWORK $REQ_PER_SEC --privateKey=$PRIVATE_KEY --privateKeyPercentage=$PRIVATE_KEY_PERCENTAGE --duration=$DURATION --useDEK
+    #echo "Done load testing"
+    #tail -f /dev/null
 
 # -- Custom pod annotations
 podAnnotations: {}

@@ -9,6 +9,8 @@ env:
 akeyless:
   enabled: false
 
+existingSecret: null
+
 args:
   - |
     echo "Hello world"
