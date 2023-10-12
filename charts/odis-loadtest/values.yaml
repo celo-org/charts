@@ -39,12 +39,9 @@ existingSecret: odis-loadtest-private-key
 
 args:
   - |
-    echo $PRIVATE_KEY
-    echo "Hello world"
+    yarn loadTest $NETWORK $REQ_PER_SEC --privateKey=$PRIVATE_KEY --privateKeyPercentage=$PRIVATE_KEY_PERCENTAGE --duration=$DURATION --useDEK
+    echo "Done load testing"
     tail -f /dev/null
-    #yarn loadTest $NETWORK $REQ_PER_SEC --privateKey=$PRIVATE_KEY --privateKeyPercentage=$PRIVATE_KEY_PERCENTAGE --duration=$DURATION --useDEK
-    #echo "Done load testing"
-    #tail -f /dev/null
 
 # -- Custom pod annotations
 podAnnotations: {}
