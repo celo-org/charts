@@ -24,18 +24,17 @@ Helm chart for deploying Celo ODIS load tests in GKE
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| akeyless.enabled | bool | `true` | Enable Akeyless secret injector for Env. Var PRIVATE_KEY |
-| akeyless.path | string | `"/static-secrets/identity-circle/LoadTests/Private-Key-LoadTests"` | Akeyless path to load test private key |
-| args[0] | string | `"yarn loadTest $NETWORK $REQ_PER_SEC --privateKey=$PRIVATE_KEY --privateKeyPercentage=$PRIVATE_KEY_PERCENTAGE --duration=$DURATION --useDEK\necho \"Done load testing\"\ntail -f /dev/null\n"` |  |
+| args[0] | string | `"echo $PRIVATE_KEY\necho \"Hello world\"\ntail -f /dev/null\n#yarn loadTest $NETWORK $REQ_PER_SEC --privateKey=$PRIVATE_KEY --privateKeyPercentage=$PRIVATE_KEY_PERCENTAGE --duration=$DURATION --useDEK\n#echo \"Done load testing\"\n#tail -f /dev/null\n"` |  |
 | env.duration | string | `"100"` | Env. Var DURATION |
 | env.network | string | `"alfajoresstaging"` | Env. Var NETWORK |
-| env.privateKey | string | `"testKey"` | Env. Var PRIVATE_KEY. Won't be used if akeyless.enabled is true |
+| env.privateKey | string | `"testKey"` | Env. Var PRIVATE_KEY. Won't be used if existingSecret is defined |
 | env.privateKeyPercentage | string | `"50"` | Env. Var PRIVATE_KEY_PERCENTAGE |
 | env.reqPerSec | string | `"20"` | Env. Var REQ_PER_SEC |
+| existingSecret | string | `"odis-loadtest-private-key"` | Existing secret for Env. Var PRIVATE_KEY |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/odis-loadtest"` | Image repository |
-| image.tag | string | `"85baf6c3854aff588d88332addd709d544ebd6c4"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/social-connect/odis-loadtest"` | Image repository |
+| image.tag | string | `"k8s-loadtest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
