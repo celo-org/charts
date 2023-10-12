@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "odis-loadtest.fullname" . }}
+  labels:
+    {{- include "odis-loadtest.labels" . | nindent 4 }}
+  annotations:
+    clabs.co/images: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "odis-loadtest.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        clabs.co/images: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "odis-loadtest.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+          - /bin/sh
+          - -c
+          {{- with .Values.args }}
+          args:
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          env:
+            {{- include "odis-loadtest.env-var" (dict "name" "NETWORK" "dict" .Values.env "value_name" "network") | indent 12 }}
+            {{- include "odis-loadtest.env-var" (dict "name" "REQ_PER_SEC" "dict" .Values.env "value_name" "reqPerSec") | indent 12 }}
+            {{- include "odis-loadtest.env-var" (dict "name" "PRIVATE_KEY_PERCENTAGE" "dict" .Values.env "value_name" "privateKeyPercentage") | indent 12 }}
+            {{- include "odis-loadtest.env-var" (dict "name" "DURATION" "dict" .Values.env "value_name" "duration") | indent 12 }}
+            {{- if and (.Values.env.privateKey) (not .Values.existingSecret) }}
+            - name: PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "odis-loadtest.secret" . }}
+                  key: {{ include "odis-loadtest.secret" . }}
+            {{- end }}
+            {{- if (.Values.existingSecret) }}
+            - name: PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: {{ include "odis-loadtest.secret" . }}
+            {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /status
+              port: http
+            {{- end }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /status
+              port: http
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
