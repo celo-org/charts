@@ -24,7 +24,7 @@ Helm chart for deploying Celo ODIS load tests in GKE
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| args[0] | string | `"echo $PRIVATE_KEY\necho \"Hello world\"\ntail -f /dev/null\n#yarn loadTest $NETWORK $REQ_PER_SEC --privateKey=$PRIVATE_KEY --privateKeyPercentage=$PRIVATE_KEY_PERCENTAGE --duration=$DURATION --useDEK\n#echo \"Done load testing\"\n#tail -f /dev/null\n"` |  |
+| args[0] | string | `"yarn loadTest $NETWORK $REQ_PER_SEC --privateKey=$PRIVATE_KEY --privateKeyPercentage=$PRIVATE_KEY_PERCENTAGE --duration=$DURATION --useDEK\necho \"Done load testing\"\ntail -f /dev/null\n"` |  |
 | env.duration | string | `"100"` | Env. Var DURATION |
 | env.network | string | `"alfajoresstaging"` | Env. Var NETWORK |
 | env.privateKey | string | `"testKey"` | Env. Var PRIVATE_KEY. Won't be used if existingSecret is defined |
