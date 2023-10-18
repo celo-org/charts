@@ -83,9 +83,9 @@ env:
     domainsKeyLatestVersion: null
     azure: {}
       # -- Env. Var KEYSTORE_AZURE_VAULT_NAME.
-      #vaultName: vault-name
+      # vaultName: vault-name
       # -- Env. Var KEYSTORE_AZURE_SECRET_NAME.
-      #secretName: secret-name
+      # secretName: secret-name
     gcp:
       # -- Env. Var. KEYSTORE_GOOGLE_PROJECT_ID. If not set, it won't be added to the deployment.
       projectID: celo-testnet
