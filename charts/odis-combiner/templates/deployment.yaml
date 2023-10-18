@@ -96,7 +96,7 @@ spec:
             {{- include "odis-combiner.env-var" (dict "name" "PNP_ODIS_SERVICES_TIMEOUT_MILLISECONDS" "dict" .Values.env.pnp "value_name" "pnpOdisServicesTimeoutMilliseconds") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "PNP_SERVICE_NAME" "dict" .Values.env.pnp "value_name" "pnpServiceName") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "PNP_SHOULD_AUTHENTICATE" "dict" .Values.env.pnp "value_name" "pnpShouldAuthenticate") | indent 12 }}
-            {{- include "odis-combiner.env-var" (dict "name" "PNP_SHOULD_CHECK_QUOTA" "dict" .Values.env.pnp "value_name" "pnpShoulñdCheckQuota") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "PNP_SHOULD_CHECK_QUOTA" "dict" .Values.env.pnp "value_name" "pnpShouldCheckQuota") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "PNP_SHOULD_MOCK_ACCOUNT_SERVICE" "dict" .Values.env.pnp "value_name" "pnpShouldMockAccountService") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "SERVICE_NAME" "dict" .Values.env.service "value_name" "serviceName") | indent 12 }}
           {{- with .Values.livenessProbe }}
