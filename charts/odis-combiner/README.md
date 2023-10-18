@@ -1,6 +1,6 @@
 # odis-combiner
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf](https://img.shields.io/badge/AppVersion-4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf](https://img.shields.io/badge/AppVersion-4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer in AKS
 
@@ -56,8 +56,8 @@ Helm chart for deploying Celo ODIS signer in AKS
 | env.pnp.pnpOdisServicesTimeoutMilliseconds | string | `"5000"` | Env. Var PNP_ODIS_SERVICES_TIMEOUT_MILLISECONDS |
 | env.pnp.pnpServiceName | string | `"odis_combiner"` | Env. Var PNP_SERVICE_NAME |
 | env.pnp.pnpShouldAuthenticate | bool | `false` | Env. Var PNP_SHOULD_AUTHENTICATE |
+| env.pnp.pnpShouldCheckQuota | bool | `false` | Env. Var PNP_SHOULD_CHECK_QUOTA |
 | env.pnp.pnpShouldMockAccountService | bool | `false` |  |
-| env.pnp.pnpShoulñdCheckQuota | bool | `false` | Env. Var PNP_SHOULD_CHECK_QUOTA |
 | env.service.serviceName | string | `"odis-combiner"` | Env. Var SERVICE_NAME |
 | env.tracing.enabled | bool | `false` | Enable tracing |
 | env.tracing.endpoint | string | `"https://<GRAFANA_AGENT_URL>/api/traces"` | Env. Var TRACER_ENDPOINT. If enabled is false, will not be added to the deployment. |
