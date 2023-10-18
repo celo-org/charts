@@ -69,10 +69,17 @@ ODIS signer port is fixed
 {{- end }}
 
 {{/*
-ODIS signer secret name and key
+ODIS signer secret db password name and key
 */}}
-{{- define "odis-signer.secret" -}}
+{{- define "odis-signer.secret-db-password" -}}
 db-password
+{{- end }}
+
+{{/*
+ODIS signer secret forno key name and key
+*/}}
+{{- define "odis-signer.secret-forno-key" -}}
+forno-key
 {{- end }}
 
 {{/*

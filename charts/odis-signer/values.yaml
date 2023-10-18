@@ -26,14 +26,15 @@ serviceAccount:
   # -- Specifies whether a service account should be created
   create: true
   # -- Annotations to add to the service account
-  annotations: {}
+  annotations:
+    iam.gke.io/gcp-service-account: odis-signer0-staging@celo-testnet.iam.gserviceaccount.com
   # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
   name: ""
 
 env:
   tracing:
     # -- Enable tracing
-    enabled: true
+    enabled: false
     # -- Env. Var TRACER_ENDPOINT. If enabled is false, will not be added to the deployment.
     endpoint: "https://<GRAFANA_AGENT_URL>/api/traces"
     # -- Env. Var TRACING_SERVICE_NAME. If enabled is false, will not be added to the deployment.
@@ -45,42 +46,65 @@ env:
     level: trace
   blockchain:
     # -- Env. Var BLOCKCHAIN_PROVIDER.
-    blockchainProvider: "https://forno.celo.org"
-    # -- Env. Var BLOCKCHAIN_API_KEY.
-    blockchainApiKey: "kong-api-key"
+    blockchainProvider: "https://alfajores-forno.celo-testnet.org"
+    # -- Env. Var BLOCKCHAIN_API_KEY. Won't be used if blockchainApiKeyExistingSecret is defined.
+    blockchainApiKey: null
+    # -- Existing secret for forno API key.
+    blockchainApiKeyExistingSecret: "odis-signer-forno-key"
   db:
     # -- Env. Var DB_TYPE.
     type: "postgres"
     # -- Env. Var DB_DATABASE.
-    database: "database"
-    # -- Env. Var DB_HOST.
-    host: db.host
-    # -- Database password. If set, it creates a secret and env. var DB_PASSWORD referencing that secret.
+    database: "phoneNumberPrivacy"
+    # -- Env. Var DB_USE_SSL. If cloudSqlProxy is enabled, this must be false.
+    useSsl: false
+    # -- Env. Var DB_HOST. If cloudSqlProxy is enabled, will be converted to 127.0.0.1 for odis-signer container
+    host: "celo-testnet:us-central1:staging-pgpnp-centralus"
+    # -- Database password. If set, it creates a secret and env. var DB_PASSWORD referencing that secret. Won't be used if passwordExistingSecret is defined.
     password: null
+    # -- Existing secret for DB password.
+    passwordExistingSecret: "odis-signer-db-password"
     # -- Env. Var DB_PORT.
     port: 5432
     # -- Env. Var DB_USERNAME.
-    username: db-user
+    username: "pgpnp"
+    # -- Enable Cloud SQL proxy for GCP
+    cloudSqlProxy: true
   keystore:
-    # -- Env. Var KEYSTORE_TYPE.
-    type: "AzureKeyVault"
-    # -- Env. Var KEYSTORE_AZURE_VAULT_NAME.
-    vaultName: vault-name
-    # -- Env. Var KEYSTORE_AZURE_SECRET_NAME.
-    secretName: secret-name
-    # -- Env. Var PHONE_NUMBER_PRIVACY_KEY_NAME_BASE. If not set, it won't be added to the deployment.
-    pnpKeyNameBase: ""
-    # -- Env. Var PHONE_NUMBER_PRIVACY_LATEST_KEY_VERSION. If not set, it won't be added to the deployment.
-    pnpKeyLatestVersion: ""
-    # -- Env. Var DOMAINS_KEY_NAME_BASE. If not set, it won't be added to the deployment.
-    domainsKeyNameBase: ""
-    # -- Env. Var DOMAINS_LATEST_KEY_VERSION. If not set, it won't be added to the deployment.
-    domainsKeyLatestVersion: ""
+    # -- Env. Var KEYSTORE_TYPE. Options are "GoogleSecretManager" (GCP) or "AzureKeyVault" (Azure)
+    type: "GoogleSecretManager"
+    # -- Env. Var PHONE_NUMBER_PRIVACY_KEY_NAME_BASE. For GCP, this is the secret name. If not set, it won't be added to the deployment.
+    pnpKeyNameBase: "test-odis-signer-phoneNumberPrivacy0-1"
+    # -- Env. Var PHONE_NUMBER_PRIVACY_LATEST_KEY_VERSION. For GCP, this is the secret version. If not set, it won't be added to the deployment.
+    pnpKeyLatestVersion: null
+    # -- Env. Var DOMAINS_KEY_NAME_BASE. For GCP, this is the secret name. If not set, it won't be added to the deployment.
+    domainsKeyNameBase: "test-odis-signer-domains0-1"
+    # -- Env. Var DOMAINS_LATEST_KEY_VERSION. For GCP, this is the secret version. If not set, it won't be added to the deployment.
+    domainsKeyLatestVersion: null
+    azure: {}
+      # -- Env. Var KEYSTORE_AZURE_VAULT_NAME.
+      #vaultName: vault-name
+      # -- Env. Var KEYSTORE_AZURE_SECRET_NAME.
+      #secretName: secret-name
+    gcp:
+      # -- Env. Var. KEYSTORE_GOOGLE_PROJECT_ID. If not set, it won't be added to the deployment.
+      projectID: celo-testnet
   api:
     # -- Env. Var DOMAINS_API_ENABLED.
-    domainsAPIEnabled: false
+    domainsAPIEnabled: true
     # -- Env. Var PHONE_NUMBER_PRIVACY_API_ENABLED.
     pnpAPIEnabled: true
+  odis:
+    # -- Env. Var ODIS_SIGNER_TIMEOUT. If not set, it won't be added to the deployment.
+    odisSignerTimeout: "6000"
+    # -- Env. Var TEST_QUOTA_BYPASS_PERCENTAGE. If not set, it won't be added to the deployment.
+    testQuotaBypassPercentage: "50"
+    # -- Env. Var SHOULD_MOCK_ACCOUNT_SERVICE. If not set, it won't be added to the deployment.
+    shouldMockAccountService: "false"
+    # -- Env. Var MOCK_DEK. If not set, it won't be added to the deployment.
+    mockDek: "0x034846bc781cacdafc66f3a77aa9fc3c56a9dadcd683c72be3c446fee8da041070"
+    # -- Env. Var SHOULD_MOCK_REQUEST_SERVICE. If not set, it won't be added to the deployment.
+    shouldMockRequestService: "false"
 
 azureKVIdentity:
   # -- Enable Azure aadpodidentity.
