@@ -1,6 +1,6 @@
 # odis-signer
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: oblivious-decentralized-identifier-service-3.0.1](https://img.shields.io/badge/AppVersion-oblivious--decentralized--identifier--service--3.0.1-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: oblivious-decentralized-identifier-service-3.0.1](https://img.shields.io/badge/AppVersion-oblivious--decentralized--identifier--service--3.0.1-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer in AKS
 
@@ -31,26 +31,37 @@ Helm chart for deploying Celo ODIS signer in AKS
 | azureKVIdentity.clientId | string | `"clientid"` | Azure aadpodidentity clientId |
 | azureKVIdentity.enabled | bool | `false` | Enable Azure aadpodidentity. |
 | azureKVIdentity.id | string | `"/subscriptions/7a6f5f20-bd43-4267-8c35-a734efca140c/resourcegroups/mainnet-pgpnp-eastasia/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ODISSIGNERID-mainnet-pgpnp-eastasia-AZURE_ODIS_EASTASIA_A"` | Azure aadpodidentity identity id |
-| env.api.domainsAPIEnabled | bool | `false` | Env. Var DOMAINS_API_ENABLED. |
+| command | string | `nil` | Optional command to execute |
+| env.api.domainsAPIEnabled | bool | `true` | Env. Var DOMAINS_API_ENABLED. |
 | env.api.pnpAPIEnabled | bool | `true` | Env. Var PHONE_NUMBER_PRIVACY_API_ENABLED. |
-| env.blockchain.blockchainApiKey | string | `"kong-api-key"` | Env. Var BLOCKCHAIN_API_KEY. |
-| env.blockchain.blockchainProvider | string | `"https://forno.celo.org"` | Env. Var BLOCKCHAIN_PROVIDER. |
-| env.db.database | string | `"database"` | Env. Var DB_DATABASE. |
-| env.db.host | string | `"db.host"` | Env. Var DB_HOST. |
-| env.db.password | string | `nil` | Database password. If set, it creates a secret and env. var DB_PASSWORD referencing that secret. |
+| env.blockchain.blockchainApiKey | string | `nil` | Env. Var BLOCKCHAIN_API_KEY. Won't be used if blockchainApiKeyExistingSecret is defined. |
+| env.blockchain.blockchainApiKeyExistingSecret | string | `"odis-signer-forno-key"` | Existing secret for forno API key. |
+| env.blockchain.blockchainProvider | string | `"https://alfajores-forno.celo-testnet.org"` | Env. Var BLOCKCHAIN_PROVIDER. |
+| env.db.cloudSqlProxy | bool | `true` | Enable Cloud SQL proxy for GCP |
+| env.db.database | string | `"phoneNumberPrivacy"` | Env. Var DB_DATABASE. |
+| env.db.host | string | `"celo-testnet:us-central1:staging-pgpnp-centralus"` | Env. Var DB_HOST. If cloudSqlProxy is enabled, will be converted to 127.0.0.1 for odis-signer container |
+| env.db.password | string | `nil` | Database password. If set, it creates a secret and env. var DB_PASSWORD referencing that secret. Won't be used if passwordExistingSecret is defined. |
+| env.db.passwordExistingSecret | string | `"odis-signer-db-password"` | Existing secret for DB password. |
 | env.db.port | int | `5432` | Env. Var DB_PORT. |
 | env.db.type | string | `"postgres"` | Env. Var DB_TYPE. |
-| env.db.username | string | `"db-user"` | Env. Var DB_USERNAME. |
-| env.keystore.domainsKeyLatestVersion | string | `""` | Env. Var DOMAINS_LATEST_KEY_VERSION. If not set, it won't be added to the deployment. |
-| env.keystore.domainsKeyNameBase | string | `""` | Env. Var DOMAINS_KEY_NAME_BASE. If not set, it won't be added to the deployment. |
-| env.keystore.pnpKeyLatestVersion | string | `""` | Env. Var PHONE_NUMBER_PRIVACY_LATEST_KEY_VERSION. If not set, it won't be added to the deployment. |
-| env.keystore.pnpKeyNameBase | string | `""` | Env. Var PHONE_NUMBER_PRIVACY_KEY_NAME_BASE. If not set, it won't be added to the deployment. |
-| env.keystore.secretName | string | `"secret-name"` | Env. Var KEYSTORE_AZURE_SECRET_NAME. |
-| env.keystore.type | string | `"AzureKeyVault"` | Env. Var KEYSTORE_TYPE. |
-| env.keystore.vaultName | string | `"vault-name"` | Env. Var KEYSTORE_AZURE_VAULT_NAME. |
+| env.db.useSsl | bool | `false` | Env. Var DB_USE_SSL. If cloudSqlProxy is enabled, this must be false. |
+| env.db.username | string | `"pgpnp"` | Env. Var DB_USERNAME. |
+| env.keystore.azure | object | `{}` |  |
+| env.keystore.domainsKeyLatestVersion | string | `nil` | Env. Var DOMAINS_LATEST_KEY_VERSION. For GCP, this is the secret version. If not set, it won't be added to the deployment. |
+| env.keystore.domainsKeyNameBase | string | `"test-odis-signer-domains0-1"` | Env. Var DOMAINS_KEY_NAME_BASE. For GCP, this is the secret name. If not set, it won't be added to the deployment. |
+| env.keystore.gcp | object | `{"projectID":"celo-testnet"}` | Env. Var KEYSTORE_AZURE_SECRET_NAME. secretName: secret-name |
+| env.keystore.gcp.projectID | string | `"celo-testnet"` | Env. Var. KEYSTORE_GOOGLE_PROJECT_ID. If not set, it won't be added to the deployment. |
+| env.keystore.pnpKeyLatestVersion | string | `nil` | Env. Var PHONE_NUMBER_PRIVACY_LATEST_KEY_VERSION. For GCP, this is the secret version. If not set, it won't be added to the deployment. |
+| env.keystore.pnpKeyNameBase | string | `"test-odis-signer-phoneNumberPrivacy0-1"` | Env. Var PHONE_NUMBER_PRIVACY_KEY_NAME_BASE. For GCP, this is the secret name. If not set, it won't be added to the deployment. |
+| env.keystore.type | string | `"GoogleSecretManager"` | Env. Var KEYSTORE_TYPE. Options are "GoogleSecretManager" (GCP) or "AzureKeyVault" (Azure) |
 | env.log.format | string | `"stackdriver"` | Env. Var LOG_FORMAT. |
 | env.log.level | string | `"trace"` | Env. Var LOG_LEVEL. |
-| env.tracing.enabled | bool | `true` | Enable tracing |
+| env.odis.mockDek | string | `"0x034846bc781cacdafc66f3a77aa9fc3c56a9dadcd683c72be3c446fee8da041070"` | Env. Var MOCK_DEK. If not set, it won't be added to the deployment. |
+| env.odis.odisSignerTimeout | string | `"6000"` | Env. Var ODIS_SIGNER_TIMEOUT. If not set, it won't be added to the deployment. |
+| env.odis.shouldMockAccountService | string | `"false"` | Env. Var SHOULD_MOCK_ACCOUNT_SERVICE. If not set, it won't be added to the deployment. |
+| env.odis.shouldMockRequestService | string | `"false"` | Env. Var SHOULD_MOCK_REQUEST_SERVICE. If not set, it won't be added to the deployment. |
+| env.odis.testQuotaBypassPercentage | string | `"50"` | Env. Var TEST_QUOTA_BYPASS_PERCENTAGE. If not set, it won't be added to the deployment. |
+| env.tracing.enabled | bool | `false` | Enable tracing |
 | env.tracing.endpoint | string | `"https://<GRAFANA_AGENT_URL>/api/traces"` | Env. Var TRACER_ENDPOINT. If enabled is false, will not be added to the deployment. |
 | env.tracing.serviceName | string | `"odis-signer-env-cluster"` | Env. Var TRACING_SERVICE_NAME. If enabled is false, will not be added to the deployment. |
 | fullnameOverride | string | `""` | Chart full name override |
@@ -72,7 +83,7 @@ Helm chart for deploying Celo ODIS signer in AKS
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
 | securityContext | object | `{}` | Custom container security context |
-| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.annotations | object | `{"iam.gke.io/gcp-service-account":"odis-signer0-staging@celo-testnet.iam.gserviceaccount.com"}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | tolerations | list | `[]` | Kubernetes tolerations |
