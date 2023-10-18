@@ -62,12 +62,18 @@ spec:
           command:
             - bash
             - "-c"
-            {{- if .Values.env.tracing.enabled}}
+            {{- if .Values.command }}
+            {{- with .Values.command }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- else }}
+            {{- if .Values.env.tracing.enabled }}
             - |
               sleep 60; yarn start:docker:tracing
             {{- else }}
             - |
               sleep 60; yarn start:docker
+            {{- end }}
             {{- end }}
           env:
             - name: SERVER_PORT

@@ -16,6 +16,11 @@ serviceAccount:
   annotations: {}
   name: ""
 
+command:
+  - |
+    echo "Done load testing"
+    tail -f /dev/null
+
 env:
   tracing:
     enabled: false
@@ -27,12 +32,14 @@ env:
   blockchain:
     blockchainProvider: "https://alfajores-forno.celo-testnet.org"
     blockchainApiKey: "test-key"
+    blockchainApiKeyExistingSecret: null
   db:
     type: "postgres"
     database: "test"
     useSsl: false
     host: "test-host"
     password: "test-pass"
+    passwordExistingSecret: null
     port: 5432
     username: "test"
     cloudSqlProxy: false
