@@ -95,7 +95,7 @@ env:
     # -- Env. Var PNP_SHOULD_AUTHENTICATE
     pnpShouldAuthenticate: false
     # -- Env. Var PNP_SHOULD_CHECK_QUOTA
-    pnpShoulñdCheckQuota: false
+    pnpShouldCheckQuota: false
     pnpShouldMockAccountService: false
   service:
     # -- Env. Var SERVICE_NAME
