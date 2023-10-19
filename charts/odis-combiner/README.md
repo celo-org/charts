@@ -1,6 +1,6 @@
 # odis-combiner
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf](https://img.shields.io/badge/AppVersion-4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf](https://img.shields.io/badge/AppVersion-4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer in AKS
 
@@ -24,13 +24,13 @@ Helm chart for deploying Celo ODIS signer in AKS
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| akeyless.enabled | bool | `false` | Enable Akeyless secret injector for Env. Var BLOCKCHAIN_API_KEY |
-| akeyless.path | string | `"/static-secrets/identity-circle/ODIS-Combiner/Staging/Forno-API-Key"` | Akeyless path to Forno API key |
 | autoscaling.enabled | bool | `false` | Enable autoscaling |
 | autoscaling.maxReplicas | int | `3` | Maximum replicas |
 | autoscaling.minReplicas | int | `1` | Minimum replicas |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | CPU target utilization |
-| env.blockchain.blockchainApiKey | string | `"kong-api-key"` | Env. Var BLOCKCHAIN_API_KEY. |
+| command | string | `nil` | Optional command to execute |
+| env.blockchain.blockchainApiKey | string | `"kong-api-key"` | Env. Var BLOCKCHAIN_API_KEY. Won't be used if blockchainApiKeyExistingSecret is defined |
+| env.blockchain.blockchainApiKeyExistingSecret | string | `nil` | Existing secret for Env. Var BLOCKCHAIN_API_KEY. |
 | env.blockchain.blockchainProvider | string | `"https://alfajores-forno.celo-testnet.org"` | Env. Var BLOCKCHAIN_PROVIDER. |
 | env.domain.domainEnabled | bool | `true` | Env. Var DOMAINS_API_ENABLED. |
 | env.domain.domainFullNodeDelayMs | string | `"100"` | Env. Var DOMAIN_FULL_NODE_DELAY_MS |
