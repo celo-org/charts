@@ -17,9 +17,6 @@ spec:
     metadata:
       annotations:
         clabs.co/images: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-      {{- if and (.Values.akeyless.enabled) (.Values.akeyless.path) }}
-        akeyless/enabled: "true"
-      {{- end }}
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -63,16 +60,18 @@ spec:
             {{- include "odis-combiner.env-var" (dict "name" "LOG_FORMAT" "dict" .Values.env.log "value_name" "format") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "LOG_LEVEL" "dict" .Values.env.log "value_name" "level") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "BLOCKCHAIN_PROVIDER" "dict" .Values.env.blockchain "value_name" "blockchainProvider") | indent 12 }}
-            {{- if and (.Values.env.blockchain.blockchainApiKey) (not .Values.akeyless.enabled) }}
+            {{- if .Values.env.blockchain.blockchainApiKeyExistingSecret }}
+            - name: BLOCKCHAIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.env.blockchain.blockchainApiKeyExistingSecret }}
+                  key: {{ include "odis-combiner.secret" . }}         
+            {{- else if and (.Values.env.blockchain.blockchainApiKey) (not .Values.env.blockchain.blockchainApiKeyExistingSecret) }}
             - name: BLOCKCHAIN_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ include "odis-combiner.secret" . }}
                   key: {{ include "odis-combiner.secret" . }}
-            {{- end }}
-            {{- if and (.Values.akeyless.enabled) (.Values.akeyless.path) }}
-            - name: BLOCKCHAIN_API_KEY
-              value: 'akeyless:{{ .Values.akeyless.path }}'
             {{- end }}
             {{- include "odis-combiner.env-var" (dict "name" "DOMAINS_API_ENABLED" "dict" .Values.env.domain "value_name" "domainEnabled") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "DOMAIN_FULL_NODE_DELAY_MS" "dict" .Values.env.domain "value_name" "domainFullNodeDelayMs") | indent 12 }}

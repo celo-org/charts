@@ -46,8 +46,10 @@ env:
   blockchain:
     # -- Env. Var BLOCKCHAIN_PROVIDER.
     blockchainProvider: "https://alfajores-forno.celo-testnet.org"
-    # -- Env. Var BLOCKCHAIN_API_KEY.
+    # -- Env. Var BLOCKCHAIN_API_KEY. Won't be used if blockchainApiKeyExistingSecret is defined
     blockchainApiKey: "kong-api-key"
+    # -- Existing secret for Env. Var BLOCKCHAIN_API_KEY.
+    blockchainApiKeyExistingSecret: null
   domain:
     # -- Env. Var DOMAINS_API_ENABLED.
     domainEnabled: true
@@ -100,12 +102,6 @@ env:
   service:
     # -- Env. Var SERVICE_NAME
     serviceName: "odis-combiner"
-
-akeyless:
-  # -- Enable Akeyless secret injector for Env. Var BLOCKCHAIN_API_KEY
-  enabled: false
-  # -- Akeyless path to Forno API key
-  path: "/static-secrets/identity-circle/ODIS-Combiner/Staging/Forno-API-Key"
 
 # -- Custom pod annotations
 podAnnotations:

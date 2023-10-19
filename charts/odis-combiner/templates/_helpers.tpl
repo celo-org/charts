@@ -69,10 +69,10 @@ ODIS signer port is fixed
 {{- end }}
 
 {{/*
-ODIS signer secret name and key
+ODIS signer secret key
 */}}
 {{- define "odis-combiner.secret" -}}
-forno-api-key
+forno-key
 {{- end }}
 
 {{/*
