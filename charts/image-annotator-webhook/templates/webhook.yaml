@@ -30,7 +30,8 @@ items:
       service:
         namespace: {{ .Release.Namespace }}
         name: {{ template "image-annotator-webhook.fullname" . }}
-        path: /pods
+        path: /mutate
+        port: 8443
       caBundle: {{ b64enc $ca.Cert }}
     failurePolicy: Ignore
     namespaceSelector:
