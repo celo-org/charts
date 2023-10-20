@@ -14,14 +14,14 @@ image:
   pullPolicy: Always
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "de6fa7237f4946492c59bf80f95a26c833fad0d4"
+  tag: "53c323230674dc8dc51535c95efdacb6ee0f6d37"
 
 # -- Image pull secrets
 imagePullSecrets: []
 
 env:
   # -- Env. Var LOG_LEVEL
-  log_level: info
+  log_level: debug
 
 # -- Custom pod annotations
 podAnnotations: {}
