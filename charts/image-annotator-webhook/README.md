@@ -15,11 +15,11 @@ Deploys a kubernetes webhook to mutate podSpecs to include container images as a
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| env.log_level | string | `"info"` | Env. Var LOG_LEVEL |
+| env.log_level | string | `"debug"` | Env. Var LOG_LEVEL |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/image-annotator-webhook/image-annotator-webhook"` | Image repository |
-| image.tag | string | `"de6fa7237f4946492c59bf80f95a26c833fad0d4"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"53c323230674dc8dc51535c95efdacb6ee0f6d37"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
