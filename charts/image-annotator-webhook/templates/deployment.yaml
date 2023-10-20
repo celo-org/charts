@@ -41,7 +41,7 @@ spec:
               containerPort: {{ include "image-annotator-webhook.port" . }}
               protocol: TCP
           env:
-            {{- include "image-annotator-webhook.env-var" (dict "name" "LOG_LEVEL" "dict" .Values.env "value_name" "network") | indent 12 }}
+            {{- include "image-annotator-webhook.env-var" (dict "name" "LOG_LEVEL" "dict" .Values.env "value_name" "log_level") | indent 12 }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -62,6 +62,10 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: tls
+              mountPath: "/etc/image-annotator-webhook/tls"
+              readOnly: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -74,3 +78,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: tls
+          secret:
+            secretName: {{ template "image-annotator-webhook.fullname" . }}
