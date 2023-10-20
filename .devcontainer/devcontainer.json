@@ -17,8 +17,9 @@
 		},
 		"ghcr.io/devcontainers-contrib/features/kind:1": {},
 		"ghcr.io/devcontainers-contrib/features/kubectx-kubens:1": {},
-		"ghcr.io/guiyomh/features/vim:0": {}
-	}
+		"ghcr.io/guiyomh/features/vim:0": {},
+		"ghcr.io/meaningful-ooo/devcontainer-features/homebrew:2": {}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
@@ -27,7 +28,7 @@
 	// "postCreateCommand": "kubectl version",
 
 	// Use 'postStartCommand' to run commands after the container is created like starting minikube.
-	// "postStartCommand": "nohup bash -c 'minikube start &' > minikube.log 2>&1",
+	"postStartCommand": "brew install chart-testing norwoodj/tap/helm-docs && alias k=kubectl"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
