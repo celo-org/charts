@@ -25,10 +25,10 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "kubectl version",
+	"postCreateCommand": "brew install chart-testing norwoodj/tap/helm-docs && alias k=kubectl"
 
 	// Use 'postStartCommand' to run commands after the container is created like starting minikube.
-	"postStartCommand": "brew install chart-testing norwoodj/tap/helm-docs && alias k=kubectl"
+	// "postStartCommand": "",
 
 	// Configure tool-specific properties.
 	// "customizations": {},
