@@ -1,0 +1,79 @@
+---
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+# -- Number of deployment replicas
+replicaCount: 1
+
+image:
+  # -- Image repository
+  repository: us-west1-docker.pkg.dev/devopsre/image-annotator-webhook/image-annotator-webhook
+  # -- Image pullpolicy
+  pullPolicy: Always
+  # -- Image tag
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "de6fa7237f4946492c59bf80f95a26c833fad0d4"
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+env:
+  # -- Env. Var LOG_LEVEL
+  log_level: info
+
+# -- Custom pod annotations
+podAnnotations: {}
+
+# -- Custom pod security context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Custom container security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# -- Liveness probe configuration
+livenessProbe: {}
+#  timeoutSeconds: 30
+#  httpGet:
+#    path: /status
+#    port: http
+
+# -- Readiness probe configuration
+readinessProbe: {}
+#  timeoutSeconds: 30
+#  httpGet:
+#    path: /status
+#    port: http
+
+# -- Container resources
+resources:
+  requests:
+    cpu: 10m
+    memory: 20Mi
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes pod affinity
+affinity: {}

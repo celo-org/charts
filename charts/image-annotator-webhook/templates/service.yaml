@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "image-annotator-webhook.fullname" . }}
+  labels:
+    {{- include "image-annotator-webhook.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ include "image-annotator-webhook.port" . }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "image-annotator-webhook.selectorLabels" . | nindent 4 }}

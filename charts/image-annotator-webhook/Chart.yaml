@@ -1,0 +1,17 @@
+---
+apiVersion: v2
+name: image-annotator-webhook
+type: application
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+version: 0.1.0
+description: Deploys a kubernetes webhook to mutate podSpecs to include container images as annotations
+keywords:
+  - Celo
+  - Blockchain
+  - Ethereum
+  - Proof-of-Stake
+appVersion: v0.1.0
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
