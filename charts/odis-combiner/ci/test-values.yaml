@@ -2,9 +2,9 @@ nameOverride: ""
 fullnameOverride: ""
 replicaCount: 1
 image:
-  repository: us-west1-docker.pkg.dev/devopsre/dev-images/odis-combiner
+  repository: us-west1-docker.pkg.dev/devopsre/social-connect/odis-combiner
   pullPolicy: Always
-  tag: "4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf"
+  tag: "odis-combiner-3.3.0"
 imagePullSecrets: []
 serviceAccount:
   create: true
@@ -54,10 +54,8 @@ env:
     pnpShouldMockAccountService: false
   service:
     serviceName: "odis-combiner"
-podAnnotations:
-  prometheus.io/path: /metrics
-  prometheus.io/port: "8080"
-  prometheus.io/scrape: "true"
+    serverPort: "8081"
+podAnnotations: {}
 podSecurityContext: {}
 securityContext: {}
 ingress:

@@ -17,6 +17,9 @@ spec:
     metadata:
       annotations:
         clabs.co/images: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        prometheus.io/path: /metrics
+        prometheus.io/port: {{ include "odis-combiner.port" . | quote }}
+        prometheus.io/scrape: "true"
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -57,7 +60,7 @@ spec:
             {{- end }}
             {{- end }}
           env:
-            - name: PORT
+            - name: SERVER_PORT
               value: {{ include "odis-combiner.port" . | quote }}
             {{- if .Values.env.tracing.enabled}}
             {{- include "odis-combiner.env-var" (dict "name" "TRACER_ENDPOINT" "dict" .Values.env.tracing "value_name" "endpoint") | indent 12 }}

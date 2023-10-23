@@ -12,12 +12,12 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: us-west1-docker.pkg.dev/devopsre/dev-images/odis-combiner
+  repository: us-west1-docker.pkg.dev/devopsre/social-connect/odis-combiner
   # -- Image pullpolicy
   pullPolicy: Always
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf"
+  tag: "odis-combiner-3.3.0"
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -105,12 +105,11 @@ env:
   service:
     # -- Env. Var SERVICE_NAME
     serviceName: "odis-combiner"
+    # -- Env. Var SERVICE_PORT
+    serverPort: 8081
 
 # -- Custom pod annotations
-podAnnotations:
-  prometheus.io/path: /metrics
-  prometheus.io/port: "8080"
-  prometheus.io/scrape: "true"
+podAnnotations: {}
 
 # -- Custom pod security context
 podSecurityContext: {}
