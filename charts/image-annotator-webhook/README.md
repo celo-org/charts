@@ -19,7 +19,7 @@ Deploys a kubernetes webhook to mutate podSpecs to include container images as a
 | fullnameOverride | string | `""` | Chart full name override. Please take into account that webhook order execution is based on alphabetical order |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/image-annotator-webhook/image-annotator-webhook"` | Image repository |
-| image.tag | string | `"9f2396fedb94de948a2ebb21ce493ee33691f887"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"4ca7bd14b0bd17a224006b85e1d9c5c05189a6ed"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
