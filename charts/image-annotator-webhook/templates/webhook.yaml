@@ -21,9 +21,9 @@ items:
 - apiVersion: admissionregistration.k8s.io/v1
   kind: MutatingWebhookConfiguration
   metadata:
-    # Adding Aa to force be first webhook alphabetically.
+    # Adding aa to force be first webhook alphabetically.
     # Reason is to priorize this webhook over policy controller's
-    name: Aa{{ template "image-annotator-webhook.fullname" . }}
+    name: aa{{ template "image-annotator-webhook.fullname" . }}
   webhooks:
   - name: pods.{{ template "image-annotator-webhook.name" . }}.admission
     admissionReviewVersions:
