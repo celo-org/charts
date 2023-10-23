@@ -1,7 +1,7 @@
 ---
 # -- Chart name override
 nameOverride: ""
-# -- Chart full name override
+# -- Chart full name override. Please take into account that webhook order execution is based on alphabetical order
 fullnameOverride: ""
 
 # -- Number of deployment replicas
