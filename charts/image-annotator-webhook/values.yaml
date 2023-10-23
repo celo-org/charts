@@ -14,7 +14,7 @@ image:
   pullPolicy: Always
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "53c323230674dc8dc51535c95efdacb6ee0f6d37"
+  tag: "9f2396fedb94de948a2ebb21ce493ee33691f887"
 
 # -- Image pull secrets
 imagePullSecrets: []
