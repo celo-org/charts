@@ -1,6 +1,6 @@
 # odis-combiner
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf](https://img.shields.io/badge/AppVersion-4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf](https://img.shields.io/badge/AppVersion-4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer in AKS
 
@@ -58,14 +58,15 @@ Helm chart for deploying Celo ODIS signer in AKS
 | env.pnp.pnpShouldAuthenticate | bool | `false` | Env. Var PNP_SHOULD_AUTHENTICATE |
 | env.pnp.pnpShouldCheckQuota | bool | `false` | Env. Var PNP_SHOULD_CHECK_QUOTA |
 | env.pnp.pnpShouldMockAccountService | bool | `false` |  |
+| env.service.serverPort | int | `8081` | Env. Var SERVICE_PORT |
 | env.service.serviceName | string | `"odis-combiner"` | Env. Var SERVICE_NAME |
 | env.tracing.enabled | bool | `false` | Enable tracing |
 | env.tracing.endpoint | string | `"https://<GRAFANA_AGENT_URL>/api/traces"` | Env. Var TRACER_ENDPOINT. If enabled is false, will not be added to the deployment. |
 | env.tracing.serviceName | string | `"odis-combiner-env-cluster"` | Env. Var TRACING_SERVICE_NAME. If enabled is false, will not be added to the deployment. |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/odis-combiner"` | Image repository |
-| image.tag | string | `"4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/social-connect/odis-combiner"` | Image repository |
+| image.tag | string | `"odis-combiner-3.3.0"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `"nginx"` | Ingress class name |
@@ -75,7 +76,7 @@ Helm chart for deploying Celo ODIS signer in AKS
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
-| podAnnotations | object | `{"prometheus.io/path":"/metrics","prometheus.io/port":"8080","prometheus.io/scrape":"true"}` | Custom pod annotations |
+| podAnnotations | object | `{}` | Custom pod annotations |
 | podSecurityContext | object | `{}` | Custom pod security context |
 | readinessProbe | object | `{}` | Readiness probe configuration |
 | replicaCount | int | `1` | Number of deployment replicas |
