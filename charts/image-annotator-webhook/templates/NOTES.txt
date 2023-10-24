@@ -1,0 +1,17 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}
+
+Please take into account that webhook execution order is done alphabetically.
+If there is any other webhook that modifies the images executed (i.e.: `policy.sigstore.dev`),
+you may need/want the name of the webhook (i.e.: `.Values.fullnameOverride`) is first 
+based on alphabetical order.
+
+To check the existing webhooks of your cluster:
+
+  $ kubectl get mutatingwebhookconfigurations.admissionregistration.k8s.io
