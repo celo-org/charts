@@ -65,7 +65,11 @@ Create the name of the service account to use
 ODIS signer port is fixed
 */}}
 {{- define "odis-combiner.port" -}}
-8080
+{{- if .Values.env.service.serverPort }}
+{{- .Values.env.service.serverPort }}
+{{- else }}
+8081
+{{- end }}
 {{- end }}
 
 {{/*
