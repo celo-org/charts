@@ -1,0 +1,71 @@
+---
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+
+image:
+  repository: us.gcr.io/celo-testnet/celo-monorepo
+  pullPolicy: Always
+  tag: "oblivious-decentralized-identifier-service-3.0.1"
+
+imagePullSecrets: []
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+command:
+  - |
+    echo "Done load testing"
+    tail -f /dev/null
+
+env:
+  tracing:
+    enabled: false
+    endpoint: "https://<GRAFANA_AGENT_URL>/api/traces"
+    serviceName: "odis-signer-env-cluster"
+  log:
+    format: stackdriver
+    level: trace
+  blockchain:
+    blockchainProvider: "https://alfajores-forno.celo-testnet.org"
+    blockchainApiKey: "test-key"
+    blockchainApiKeyExistingSecret: null
+  db:
+    type: "postgres"
+    database: "test"
+    useSsl: false
+    host: "test-host"
+    password: "test-pass"
+    passwordExistingSecret: null
+    port: 5432
+    username: "test"
+    cloudSqlProxy: false
+  keystore:
+    type: "GoogleSecretManager"
+    pnpKeyNameBase: "test-odis-signer-phoneNumberPrivacy0-1"
+    pnpKeyLatestVersion: null
+    domainsKeyNameBase: "test-odis-signer-domains0-1"
+    domainsKeyLatestVersion: null
+    azure: {}
+    gcp:
+      projectID: celo-testnet
+  api:
+    domainsAPIEnabled: false
+    pnpAPIEnabled: false
+  odis:
+    odisSignerTimeout: "6000"
+    testQuotaBypassPercentage: "50"
+    shouldMockAccountService: "false"
+    mockDek: "test-mock"
+    shouldMockRequestService: "false"
+
+azureKVIdentity:
+  enabled: false
+  clientId: clientid
+  id: test
+
+autoscaling:
+  enabled: false

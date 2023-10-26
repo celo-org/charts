@@ -31,6 +31,25 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+        {{- if .Values.env.db.cloudSqlProxy }}
+        - name: cloudsql-proxy
+          args:
+          # Enable structured logging with LogEntry format:
+          - "--structured-logs"
+          # Replace DB_PORT with the port the proxy should listen on
+          - "--port={{ .Values.env.db.port }}"
+          - "{{ .Values.env.db.host }}"
+          securityContext:
+            # The default Cloud SQL Auth Proxy image runs as the
+            # "nonroot" user and group (uid: 65532) by default.
+            runAsNonRoot: true
+          image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.1.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 25m
+              memory: 10M
+        {{- end }}
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -43,45 +62,87 @@ spec:
           command:
             - bash
             - "-c"
-            {{- if .Values.env.tracing.enabled}}
+            {{- if .Values.command }}
+            {{- with .Values.command }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- else }}
+            {{- if .Values.env.tracing.enabled }}
             - |
               sleep 60; yarn start:docker:tracing
             {{- else }}
             - |
               sleep 60; yarn start:docker
             {{- end }}
+            {{- end }}
           env:
             - name: SERVER_PORT
               value: {{ include "odis-signer.port" . | quote }}
             {{- if .Values.env.tracing.enabled}}
-            {{- include "odis-signer.env-var" (dict "name" "TRACER_ENDPOINT" "dict" .Values.env.tracing "value_name" "endpoint") | indent 12 }}
-            {{- include "odis-signer.env-var" (dict "name" "TRACING_SERVICE_NAME" "dict" .Values.env.tracing "value_name" "serviceName") | indent 12 }}
+              {{- include "odis-signer.env-var" (dict "name" "TRACER_ENDPOINT" "dict" .Values.env.tracing "value_name" "endpoint") | indent 12 }}
+              {{- include "odis-signer.env-var" (dict "name" "TRACING_SERVICE_NAME" "dict" .Values.env.tracing "value_name" "serviceName") | indent 12 }}
             {{- end }}
             {{- include "odis-signer.env-var" (dict "name" "LOG_FORMAT" "dict" .Values.env.log "value_name" "format") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "LOG_LEVEL" "dict" .Values.env.log "value_name" "level") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "BLOCKCHAIN_PROVIDER" "dict" .Values.env.blockchain "value_name" "blockchainProvider") | indent 12 }}
-            {{- include "odis-signer.env-var" (dict "name" "BLOCKCHAIN_API_KEY" "dict" .Values.env.blockchain "value_name" "blockchainApiKey") | indent 12 }}
+            {{- if and (not .Values.env.blockchain.blockchainApiKeyExistingSecret) (.Values.env.blockchain.blockchainApiKey) }}
+            - name: BLOCKCHAIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "odis-signer.secret-forno-key" . }}
+                  key: {{ include "odis-signer.secret-forno-key" . }}
+            {{- else if .Values.env.blockchain.blockchainApiKeyExistingSecret }}
+            - name: BLOCKCHAIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.env.blockchain.blockchainApiKeyExistingSecret }}
+                  key: {{ include "odis-signer.secret-forno-key" . }}
+            {{- end }}
             {{- include "odis-signer.env-var" (dict "name" "DB_TYPE" "dict" .Values.env.db "value_name" "type") | indent 12 }}
-            {{- include "odis-signer.env-var" (dict "name" "DB_HOST" "dict" .Values.env.db "value_name" "host") | indent 12 }}
+            {{- if .Values.env.db.cloudSqlProxy }}
+            - name: DB_USE_SSL
+              value: "false"
+            - name: DB_HOST
+              value: "127.0.0.1"
+            {{- else }}
+              {{- include "odis-signer.env-var" (dict "name" "DB_USE_SSL" "dict" .Values.env.db "value_name" "useSsl") | indent 12 }}
+              {{- include "odis-signer.env-var" (dict "name" "DB_HOST" "dict" .Values.env.db "value_name" "host") | indent 12 }}
+            {{- end }}
             {{- include "odis-signer.env-var" (dict "name" "DB_PORT" "dict" .Values.env.db "value_name" "port") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "DB_DATABASE" "dict" .Values.env.db "value_name" "database") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "DB_USERNAME" "dict" .Values.env.db "value_name" "username") | indent 12 }}
-            {{- if .Values.env.db.password }}
+            {{- if and (not .Values.env.db.passwordExistingSecret) (.Values.env.db.password) }}
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: db-password
-                  key: db-password
+                  name: {{ include "odis-signer.secret-db-password" . }}
+                  key: {{ include "odis-signer.secret-db-password" . }}
+            {{- else if .Values.env.db.passwordExistingSecret }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.env.db.passwordExistingSecret }}
+                  key: {{ include "odis-signer.secret-db-password" . }}
             {{- end }}
             {{- include "odis-signer.env-var" (dict "name" "KEYSTORE_TYPE" "dict" .Values.env.keystore "value_name" "type") | indent 12 }}
-            {{- include "odis-signer.env-var" (dict "name" "KEYSTORE_AZURE_VAULT_NAME" "dict" .Values.env.keystore "value_name" "vaultName") | indent 12 }}
-            {{- include "odis-signer.env-var" (dict "name" "KEYSTORE_AZURE_SECRET_NAME" "dict" .Values.env.keystore "value_name" "secretName") | indent 12 }}
+            {{- if eq .Values.env.keystore.type "AzureKeyVault" }}
+              {{- include "odis-signer.env-var" (dict "name" "KEYSTORE_AZURE_VAULT_NAME" "dict" .Values.env.keystore.azure "value_name" "vaultName") | indent 12 }}
+              {{- include "odis-signer.env-var" (dict "name" "KEYSTORE_AZURE_SECRET_NAME" "dict" .Values.env.keystore.azure "value_name" "secretName") | indent 12 }}
+            {{- end }}
+            {{- if eq .Values.env.keystore.type "GoogleSecretManager" }}
+              {{- include "odis-signer.env-var" (dict "name" "KEYSTORE_GOOGLE_PROJECT_ID" "dict" .Values.env.keystore.gcp "value_name" "projectID") | indent 12 }}
+            {{- end }}
             {{- include "odis-signer.env-var" (dict "name" "PHONE_NUMBER_PRIVACY_KEY_NAME_BASE" "optional" true "dict" .Values.env.keystore "value_name" "pnpKeyNameBase") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "PHONE_NUMBER_PRIVACY_LATEST_KEY_VERSION" "optional" true "dict" .Values.env.keystore "value_name" "pnpKeyLatestVersion") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "DOMAINS_KEY_NAME_BASE" "optional" true "dict" .Values.env.keystore "value_name" "domainsKeyNameBase") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "DOMAINS_LATEST_KEY_VERSION" "optional" true "dict" .Values.env.keystore "value_name" "domainsKeyLatestVersion") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "DOMAINS_API_ENABLED" "dict" .Values.env.api "value_name" "domainsAPIEnabled") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "PHONE_NUMBER_PRIVACY_API_ENABLED" "dict" .Values.env.api "value_name" "pnpAPIEnabled") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "ODIS_SIGNER_TIMEOUT" "optional" true "dict" .Values.env.odis "value_name" "odisSignerTimeout") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "TEST_QUOTA_BYPASS_PERCENTAGE" "optional" true "dict" .Values.env.odis "value_name" "testQuotaBypassPercentage") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "SHOULD_MOCK_ACCOUNT_SERVICE" "optional" true "dict" .Values.env.odis "value_name" "shouldMockAccountService") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "MOCK_DEK" "optional" true "dict" .Values.env.odis "value_name" "mockDek") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "SHOULD_MOCK_REQUEST_SERVICE" "optional" true "dict" .Values.env.odis "value_name" "shouldMockRequestService") | indent 12 }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
