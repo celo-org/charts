@@ -1,0 +1,84 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "image-annotator-webhook.fullname" . }}
+  labels:
+    {{- include "image-annotator-webhook.labels" . | nindent 4 }}
+  annotations:
+    clabs.co/images: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+    image-annotator-webhook/exclude: "true"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "image-annotator-webhook.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        clabs.co/images: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image-annotator-webhook/exclude: "true"
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "image-annotator-webhook.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ include "image-annotator-webhook.port" . }}
+              protocol: TCP
+          env:
+            {{- include "image-annotator-webhook.env-var" (dict "name" "LOG_LEVEL" "dict" .Values.env "value_name" "log_level") | indent 12 }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /status
+              port: http
+            {{- end }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /status
+              port: http
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: tls
+              mountPath: "/etc/image-annotator-webhook/tls"
+              readOnly: true
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: tls
+          secret:
+            secretName: {{ template "image-annotator-webhook.fullname" . }}
