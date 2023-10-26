@@ -1,6 +1,6 @@
 # image-annotator-webhook
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.0](https://img.shields.io/badge/AppVersion-v0.1.0-informational?style=flat-square)
+![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.0](https://img.shields.io/badge/AppVersion-v0.1.0-informational?style=flat-square)
 
 Deploys a kubernetes webhook to mutate podSpecs to include container images as annotations
 
@@ -19,7 +19,7 @@ Deploys a kubernetes webhook to mutate podSpecs to include container images as a
 | fullnameOverride | string | `""` | Chart full name override. Please take into account that webhook order execution is based on alphabetical order |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/image-annotator-webhook/image-annotator-webhook"` | Image repository |
-| image.tag | string | `"4ca7bd14b0bd17a224006b85e1d9c5c05189a6ed"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"6505a2a84d56779d092331cbbdb9588b0ed165bb"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
