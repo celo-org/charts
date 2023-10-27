@@ -44,7 +44,7 @@ spec:
       # Exit on any error
       set -e
       # Get the annotation for this pod
-      ANNOTATION_VALUE=$(kubectl get pod {{ include "image-annotator-webhook.fullname" . }}-test -o jsonpath='{.metadata.annotations}' | jq -r '.["image-check_annotation"]')
+      ANNOTATION_VALUE=$(kubectl get pod {{ include "image-annotator-webhook.fullname" . }}-test -o jsonpath='{.metadata.annotations}' | jq -r '.["image.clabs.co/check_annotation"]')
       # Check that the annotation is set
       echo "Container check-annotation annotated with image value: $ANNOTATION_VALUE"
     image: bitnami/kubectl:latest
