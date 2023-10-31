@@ -177,7 +177,7 @@ jobs:
     needs: 'helm-test'
 
     env:
-      HELM_DOCS_VERSION: "1.11.0"
+      HELM_DOCS_VERSION: "1.11.3"
 
     permissions:
       contents: 'write'
