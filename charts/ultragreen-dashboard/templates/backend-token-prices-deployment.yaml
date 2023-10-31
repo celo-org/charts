@@ -25,12 +25,15 @@ spec:
       serviceAccountName: {{ include "ultragreen-dashboard.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.backend.tokenPrices.image.repository }}:{{ .Values.backend.tokenPrices.image.tag | default .Chart.AppVersion }}"
+          image: {{ .Values.backend.tokenPrices.image.repository }}:{{ .Values.backend.tokenPrices.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.backend.tokenPrices.image.pullPolicy }}
           {{- with .Values.backend.tokenPrices.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          command:
+           - python
+           - main.py
           env:
             {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}
             - name: COINGECKO_API_KEY

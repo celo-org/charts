@@ -1,5 +1,5 @@
 {{- if .Values.backend.api.ingress.enabled -}}
-{{- $fullName := include "ultragreen-dashboard.fullname" . -}}
+{{- $fullName := printf "%s-%s" (include "ultragreen-dashboard.fullname" .) "backend-api" -}}
 {{- $svcPort := .Values.backend.api.service.port -}}
 {{- if and .Values.backend.api.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.backend.api.ingress.annotations "kubernetes.io/ingress.class") }}
