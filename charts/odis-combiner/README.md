@@ -1,6 +1,6 @@
 # odis-combiner
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf](https://img.shields.io/badge/AppVersion-4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf](https://img.shields.io/badge/AppVersion-4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer in AKS
 

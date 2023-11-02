@@ -1,6 +1,6 @@
 # odis-loadtest
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 85baf6c3854aff588d88332addd709d544ebd6c4](https://img.shields.io/badge/AppVersion-85baf6c3854aff588d88332addd709d544ebd6c4-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 85baf6c3854aff588d88332addd709d544ebd6c4](https://img.shields.io/badge/AppVersion-85baf6c3854aff588d88332addd709d544ebd6c4-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS load tests in GKE
 
