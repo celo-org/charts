@@ -30,17 +30,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get GitHub Token from akeyless
-        id: get_auth_token
-        uses:
-          docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
-        with:
-          api-url: https://api.gateway.akeyless.celo-networks-dev.org
-          access-id: p-kf9vjzruht6l
-          static-secrets: '{"/dynamic-secrets/keys/github/charts/contents=write,pull_requests=write":"GITHUB_TOKEN"}'
-
       - name: "Install Helm"
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
         with:
           version: "${{ env.HELM_VERSION }}"
 
@@ -50,7 +41,7 @@ jobs:
           check-latest: true
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.3.1
+        uses: helm/chart-testing-action@v2
 
       - name: Run chart-testing (list-changed)
         id: list-changed
@@ -68,18 +59,18 @@ jobs:
 
       - name: Create kind cluster
         if: steps.list-changed.outputs.changed == 'true'
-        uses: helm/kind-action@v1.4.0
+        uses: helm/kind-action@v1.8.0
 
       - name: 'Authenticate to Google Cloud'
         if: steps.list-changed.outputs.changed == 'true'
-        uses: 'google-github-actions/auth@ceee102ec2387dd9e844e01b530ccd4ec87ce955' # v0.8.0
+        uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-charts/providers/github-by-repos
           service_account: 'pull-helm-charts@devopsre.iam.gserviceaccount.com'
 
       - name: 'Set up Cloud SDK'
         if: steps.list-changed.outputs.changed == 'true'
-        uses: 'google-github-actions/setup-gcloud@v0'
+        uses: google-github-actions/setup-gcloud@v1
 
       - name: "Login to Artifact Registry"
         if: steps.list-changed.outputs.changed == 'true'
