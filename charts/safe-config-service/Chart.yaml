@@ -16,7 +16,7 @@ keywords:
   - Celo
   - Safe
   - Config
-version: 1.0.3
+version: 1.0.4
 dependencies:
   - name: postgresql
     version: 11.9.11
