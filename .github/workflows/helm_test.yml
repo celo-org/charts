@@ -13,17 +13,13 @@ on:
       - 'charts/**/README.md.gotmpl'
 
 jobs:
-
   helm-test:
     runs-on: 'ubuntu-latest'
-
     env:
       HELM_VERSION: "v3.13.1"
-
     permissions:
       contents: read
       id-token: write
-
     steps:
       - name: "Checkout current PR"
         uses: actions/checkout@v4
@@ -178,7 +174,6 @@ jobs:
       HELM_DOCS_VERSION: "1.11.3"
     permissions:
       id-token: write
-
     steps:
       - name: Get GitHub Token from akeyless
         id: get_auth_token
@@ -187,7 +182,7 @@ jobs:
         with:
           api-url: https://api.gateway.akeyless.celo-networks-dev.org
           access-id: p-kf9vjzruht6l
-          static-secrets: '{"/dynamic-secrets/keys/github/charts/contents=write,pull_requests=write":"PAT"}'
+          dynamic-secrets: '{"/dynamic-secrets/keys/github/charts/contents=write,pull_requests=write":"PAT"}'
 
       - name: 'Checkout current PR'
         uses: actions/checkout@v4
