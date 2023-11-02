@@ -9,7 +9,7 @@ To learn more about the release, try:
 
 Please take into account that webhook execution order is done alphabetically.
 If there is any other webhook that modifies the images executed (i.e.: `policy.sigstore.dev`),
-you may need/want the name of the webhook (i.e.: `.Values.fullnameOverride`) is first 
+you may need/want the name of the webhook (i.e.: `.Values.fullnameOverride`) first 
 based on alphabetical order.
 
 To check the existing webhooks of your cluster:
