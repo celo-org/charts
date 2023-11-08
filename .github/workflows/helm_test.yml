@@ -5,12 +5,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      # Run if any of the following files are changed
-      - 'charts/**/templates/**'
-      - 'charts/**/values.yaml'
-      - 'charts/**/Chart.yaml'
-      - 'charts/**/README.md.gotmpl'
 
 jobs:
   helm-test:
