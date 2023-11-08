@@ -26,7 +26,6 @@ jobs:
               - 'charts/**/values.yaml'
               - 'charts/**/Chart.yaml'
     
-    
   helm-release:
     needs: changes
     if: ${{ needs.changes.outputs.helm-release == 'true' }}
