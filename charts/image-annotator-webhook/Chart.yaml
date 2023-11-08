@@ -3,7 +3,7 @@ apiVersion: v2
 name: image-annotator-webhook
 type: application
 icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
-version: 0.3.1
+version: 0.3.4
 description: Deploys a kubernetes webhook to mutate podSpecs to include container images as annotations
 keywords:
   - Celo
