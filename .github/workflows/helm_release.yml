@@ -5,17 +5,31 @@ on:
   push:
     branches:
       - main
-    paths:
-      # Run if any of the following files are changed
-      - 'charts/**/templates/**'
-      - 'charts/**/values.yaml'
-      - 'charts/**/Chart.yaml'
 
 env:
   HELM_VERSION: "v3.12.3"
 
 jobs:
+  # Only release if any of the following files are changed
+  changes:
+    runs-on: 'ubuntu-latest'
+    permissions:
+      pull-requests: read
+    outputs:
+      helm-release: ${{ steps.filter.outputs.helm-release }}
+    steps:
+      - uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            helm-release:
+              - 'charts/**/templates/**'
+              - 'charts/**/values.yaml'
+              - 'charts/**/Chart.yaml'
+    
+    
   helm-release:
+    needs: changes
+    if: ${{ needs.changes.outputs.helm-release == 'true' }}
     runs-on: 'ubuntu-latest'
     # Add "id-token" with the intended permissions.
     permissions:
@@ -40,7 +54,7 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
 
-      - name: Add Helm repositories
+      - name: "Add Helm repositories"
         run: |
           # Install yq tool to parse Chart.yaml to identify Helm dependencies repositories
           wget https://github.com/mikefarah/yq/releases/download/v4.21.1/yq_linux_386 -O /usr/bin/yq && chmod +x /usr/bin/yq
