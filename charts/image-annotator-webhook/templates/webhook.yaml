@@ -50,6 +50,8 @@ items:
         operator: DoesNotExist
       - key: image-annotator-webhook/exclude
         operator: DoesNotExist
+      - key: policy.sigstore.dev/exclude
+        operator: DoesNotExist
     reinvocationPolicy: Never
     rules:
     - apiGroups:
