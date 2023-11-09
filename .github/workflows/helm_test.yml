@@ -17,6 +17,7 @@ jobs:
     steps:
       - name: "Check charts files changes"
         uses: dorny/paths-filter@v2
+        id: filter
         with:
           filters: |
             charts-change:
@@ -26,7 +27,7 @@ jobs:
 
   helm-test:
     needs: helm-change
-    if: ${{ needs.helm-change.charts-change == 'true' }}
+    if: ${{ needs.helm-change.outputs.charts-change == 'true' }}
     runs-on: 'ubuntu-latest'
     env:
       HELM_VERSION: "v3.13.1"
