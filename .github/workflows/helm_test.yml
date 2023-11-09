@@ -5,15 +5,28 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      # Run if any of the following files are changed
-      - 'charts/**/templates/**'
-      - 'charts/**/values.yaml'
-      - 'charts/**/Chart.yaml'
-      - 'charts/**/README.md.gotmpl'
 
 jobs:
+  # Only run tests and generate docs if Helm files have changed.
+  helm-change:
+    runs-on: 'ubuntu-latest'
+    permissions:
+      pull-requests: read
+    outputs:
+      charts-change: ${{ steps.filter.outputs.charts-change }}
+    steps:
+      - name: "Check charts files changes"
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            charts-change:
+              - 'charts/**/templates/**'
+              - 'charts/**/values.yaml'
+              - 'charts/**/Chart.yaml'
+
   helm-test:
+    needs: helm-change
+    if: ${{ needs.helm-change.charts-change == 'true' }}
     runs-on: 'ubuntu-latest'
     env:
       HELM_VERSION: "v3.13.1"
@@ -31,15 +44,16 @@ jobs:
         with:
           version: "${{ env.HELM_VERSION }}"
 
-      - uses: actions/setup-python@v4
+      - name: "Install Python 3"
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
           check-latest: true
 
-      - name: Set up chart-testing
+      - name: "Set up chart-testing"
         uses: helm/chart-testing-action@v2
 
-      - name: Run chart-testing (list-changed)
+      - name: "Run chart-testing (list-changed)"
         id: list-changed
         run: |
           changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
@@ -49,22 +63,22 @@ jobs:
             echo "changed_charts=$changed" >> $GITHUB_OUTPUT
           fi
 
-      - name: Run chart-testing (lint)
+      - name: "Run chart-testing (lint)"
         if: steps.list-changed.outputs.changed == 'true'
         run: ct lint --target-branch ${{ github.event.repository.default_branch }}
 
-      - name: Create kind cluster
+      - name: "Create kind cluster"
         if: steps.list-changed.outputs.changed == 'true'
         uses: helm/kind-action@v1.8.0
 
-      - name: 'Authenticate to Google Cloud'
+      - name: "Authenticate to Google Cloud"
         if: steps.list-changed.outputs.changed == 'true'
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-charts/providers/github-by-repos
           service_account: 'pull-helm-charts@devopsre.iam.gserviceaccount.com'
 
-      - name: 'Set up Cloud SDK'
+      - name: "Set up Cloud SDK"
         if: steps.list-changed.outputs.changed == 'true'
         uses: google-github-actions/setup-gcloud@v1
 
@@ -111,13 +125,13 @@ jobs:
 
           echo "Done!"
 
-      - name: Install dependencies - Kong CRDs
+      - name: "Install dependencies - Kong CRDs"
         if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/kong-celo-fullnode')
         # contains(join(steps.updated_files.outputs.all), 'charts/kong-celo-fullnode/')
         run: |
           kubectl apply -f https://raw.githubusercontent.com/Kong/kong-operator/main/helm-charts/kong/crds/custom-resource-definitions.yaml
 
-      - name: Install dependencies - ConfigConnector CRDs
+      - name: "Install dependencies - ConfigConnector CRDs"
         if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/blockscout')
         run: |
           dir=${PWD%/*}
@@ -152,14 +166,14 @@ jobs:
             fi
           done
 
-      - name: Setup tmate session
+      - name: "Setup tmate session"
         uses: mxschmitt/action-tmate@v3
         timeout-minutes: 30
         if: false
         with:
           limit-access-to-actor: true
 
-      - name: Run chart-testing (install)
+      - name: "Run chart-testing (install)"
         if: steps.list-changed.outputs.changed == 'true'
         run: >
           ct install
@@ -175,7 +189,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - name: Get GitHub Token from akeyless
+      - name: "Get GitHub Token from Akeyless"
         id: get_auth_token
         uses:
           docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
@@ -184,19 +198,19 @@ jobs:
           access-id: p-kf9vjzruht6l
           dynamic-secrets: '{"/dynamic-secrets/keys/github/charts/contents=write,pull_requests=write":"PAT"}'
 
-      - name: 'Checkout current PR'
+      - name: "Checkout current PR"
         uses: actions/checkout@v4
         with:
           token: ${{ env.PAT }}
 
-      - name: 'install helm-docs'
+      - name: "Install helm-docs"
         run: |
           cd /tmp
           wget https://github.com/norwoodj/helm-docs/releases/download/v${{env.HELM_DOCS_VERSION}}/helm-docs_${{env.HELM_DOCS_VERSION}}_Linux_x86_64.tar.gz
           tar -xvf helm-docs_${{env.HELM_DOCS_VERSION}}_Linux_x86_64.tar.gz
           sudo mv helm-docs /usr/local/sbin
 
-      - name: 'Run helm-docs in chaged charts'
+      - name: "Run helm-docs in changed charts"
         run: |
           helm-docs
 
