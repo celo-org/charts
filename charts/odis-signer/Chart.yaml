@@ -1,6 +1,6 @@
 ---
 apiVersion: v2
-appVersion: "oblivious-decentralized-identifier-service-3.0.1"
+appVersion: "odis-signer-3.1.1"
 description: Helm chart for deploying Celo ODIS signer
 type: application
 home: https://celo.org
@@ -15,7 +15,7 @@ keywords:
   - Celo
   - ODIS
   - Ethereum
-version: 0.2.1
+version: 0.2.2
 maintainers:
   - name: cLabs
     email: devops@clabs.co
