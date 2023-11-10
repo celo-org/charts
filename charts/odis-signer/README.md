@@ -1,6 +1,6 @@
 # odis-signer
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: oblivious-decentralized-identifier-service-3.0.1](https://img.shields.io/badge/AppVersion-oblivious--decentralized--identifier--service--3.0.1-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: odis-signer-3.1.1](https://img.shields.io/badge/AppVersion-odis--signer--3.1.1-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer
 
@@ -37,12 +37,17 @@ Helm chart for deploying Celo ODIS signer
 | env.blockchain.blockchainApiKey | string | `nil` | Env. Var BLOCKCHAIN_API_KEY. Won't be used if blockchainApiKeyExistingSecret is defined. |
 | env.blockchain.blockchainApiKeyExistingSecret | string | `"odis-signer-forno-key"` | Existing secret for forno API key. |
 | env.blockchain.blockchainProvider | string | `"https://alfajores-forno.celo-testnet.org"` | Env. Var BLOCKCHAIN_PROVIDER. |
+| env.blockchain.fullNodeRetryCount | int | `5` | Env. Var RETRY_COUNT. If not set, it won't be added to the deployment. |
+| env.blockchain.fullNodeRetryDelayMs | int | `100` | Env. Var RETRY_DELAY_IN_MS. If not set, it won't be added to the deployment. |
+| env.blockchain.fullNodeTimeoutMs | int | `1000` | Env. Var TIMEOUT_MS. If not set, it won't be added to the deployment. |
 | env.db.cloudSqlProxy | bool | `true` | Enable Cloud SQL proxy for GCP |
 | env.db.database | string | `"phoneNumberPrivacy"` | Env. Var DB_DATABASE. |
 | env.db.host | string | `"celo-testnet:us-central1:staging-pgpnp-centralus"` | Env. Var DB_HOST. If cloudSqlProxy is enabled, will be converted to 127.0.0.1 for odis-signer container |
 | env.db.password | string | `nil` | Database password. If set, it creates a secret and env. var DB_PASSWORD referencing that secret. Won't be used if passwordExistingSecret is defined. |
 | env.db.passwordExistingSecret | string | `"odis-signer-db-password"` | Existing secret for DB password. |
+| env.db.poolMaxSize | int | `50` | Env. Var DB_POOL_MAX_SIZE. If not set, it won't be added to the deployment. |
 | env.db.port | int | `5432` | Env. Var DB_PORT. |
+| env.db.timeout | int | `1000` | Env. Var DB_TIMEOUT. If not set, it won't be added to the deployment. |
 | env.db.type | string | `"postgres"` | Env. Var DB_TYPE. |
 | env.db.useSsl | bool | `false` | Env. Var DB_USE_SSL. If cloudSqlProxy is enabled, this must be false. |
 | env.db.username | string | `"pgpnp"` | Env. Var DB_USERNAME. |
@@ -57,7 +62,11 @@ Helm chart for deploying Celo ODIS signer
 | env.log.format | string | `"stackdriver"` | Env. Var LOG_FORMAT. |
 | env.log.level | string | `"trace"` | Env. Var LOG_LEVEL. |
 | env.odis.mockDek | string | `"0x034846bc781cacdafc66f3a77aa9fc3c56a9dadcd683c72be3c446fee8da041070"` | Env. Var MOCK_DEK. If not set, it won't be added to the deployment. |
+| env.odis.mockTotalQuota | string | `"10"` | Env. Var MOCK_TOTAL_QUOTA. If not set, it won't be added to the deployment. |
 | env.odis.odisSignerTimeout | string | `"6000"` | Env. Var ODIS_SIGNER_TIMEOUT. If not set, it won't be added to the deployment. |
+| env.odis.requestPrunningAtServerStart | string | `"false"` | Env. Var REQUEST_PRUNNING_AT_SERVER_START. If not set, it won't be added to the deployment. |
+| env.odis.requestPrunningDays | string | `"7"` | Env. Var REQUEST_PRUNNING_DAYS. If not set, it won't be added to the deployment. |
+| env.odis.requestPrunningJobCronPattern | string | `"0 0 3 * * *"` | Env. Var REQUEST_PRUNNING_JOB_CRON_PATTERN. If not set, it won't be added to the deployment. |
 | env.odis.shouldMockAccountService | string | `"false"` | Env. Var SHOULD_MOCK_ACCOUNT_SERVICE. If not set, it won't be added to the deployment. |
 | env.odis.shouldMockRequestService | string | `"false"` | Env. Var SHOULD_MOCK_REQUEST_SERVICE. If not set, it won't be added to the deployment. |
 | env.odis.testQuotaBypassPercentage | string | `"50"` | Env. Var TEST_QUOTA_BYPASS_PERCENTAGE. If not set, it won't be added to the deployment. |
@@ -66,8 +75,8 @@ Helm chart for deploying Celo ODIS signer
 | env.tracing.serviceName | string | `"odis-signer-env-cluster"` | Env. Var TRACING_SERVICE_NAME. If enabled is false, will not be added to the deployment. |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
-| image.repository | string | `"us.gcr.io/celo-testnet/celo-monorepo"` | Image repository |
-| image.tag | string | `"oblivious-decentralized-identifier-service-3.0.1"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/social-connect/odis-signer"` | Image repository |
+| image.tag | string | `"odis-signer-3.1.1"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `"nginx"` | Ingress class name |
