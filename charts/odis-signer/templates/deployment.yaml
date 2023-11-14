@@ -98,9 +98,6 @@ spec:
                   name: {{ .Values.env.blockchain.blockchainApiKeyExistingSecret }}
                   key: {{ include "odis-signer.secret-forno-key" . }}
             {{- end }}
-            {{- include "odis-signer.env-var" (dict "name" "TIMEOUT_MS" "optional" true "dict" .Values.env.blockchain "value_name" "fullNodeTimeoutMs") | indent 12 }}
-            {{- include "odis-signer.env-var" (dict "name" "RETRY_COUNT" "optional" true "dict" .Values.env.blockchain "value_name" "fullNodeRetryCount") | indent 12 }}
-            {{- include "odis-signer.env-var" (dict "name" "RETRY_DELAY_IN_MS" "optional" true "dict" .Values.env.blockchain "value_name" "fullNodeRetryDelayMs") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "DB_TYPE" "dict" .Values.env.db "value_name" "type") | indent 12 }}
             {{- if .Values.env.db.cloudSqlProxy }}
             - name: DB_USE_SSL
@@ -144,11 +141,13 @@ spec:
             {{- include "odis-signer.env-var" (dict "name" "DOMAINS_API_ENABLED" "dict" .Values.env.api "value_name" "domainsAPIEnabled") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "PHONE_NUMBER_PRIVACY_API_ENABLED" "dict" .Values.env.api "value_name" "pnpAPIEnabled") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "ODIS_SIGNER_TIMEOUT" "optional" true "dict" .Values.env.odis "value_name" "odisSignerTimeout") | indent 12 }}
-            {{- include "odis-signer.env-var" (dict "name" "TEST_QUOTA_BYPASS_PERCENTAGE" "optional" true "dict" .Values.env.odis "value_name" "testQuotaBypassPercentage") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "TIMEOUT_MS" "optional" true "dict" .Values.env.odis "value_name" "fullNodeTimeoutMs") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "RETRY_COUNT" "optional" true "dict" .Values.env.odis "value_name" "fullNodeRetryCount") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "RETRY_DELAY_IN_MS" "optional" true "dict" .Values.env.odis "value_name" "fullNodeRetryDelayMs") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "SHOULD_MOCK_ACCOUNT_SERVICE" "optional" true "dict" .Values.env.odis "value_name" "shouldMockAccountService") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "MOCK_DEK" "optional" true "dict" .Values.env.odis "value_name" "mockDek") | indent 12 }}
-            {{- include "odis-signer.env-var" (dict "name" "SHOULD_MOCK_REQUEST_SERVICE" "optional" true "dict" .Values.env.odis "value_name" "shouldMockRequestService") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "MOCK_TOTAL_QUOTA" "optional" true "dict" .Values.env.odis "value_name" "mockTotalQuota") | indent 12 }}
+            {{- include "odis-signer.env-var" (dict "name" "SHOULD_MOCK_REQUEST_SERVICE" "optional" true "dict" .Values.env.odis "value_name" "shouldMockRequestService") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "REQUEST_PRUNNING_DAYS" "optional" true "dict" .Values.env.odis "value_name" "requestPrunningDays") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "REQUEST_PRUNNING_AT_SERVER_START" "optional" true "dict" .Values.env.odis "value_name" "requestPrunningAtServerStart") | indent 12 }}
             {{- include "odis-signer.env-var" (dict "name" "REQUEST_PRUNNING_JOB_CRON_PATTERN" "optional" true "dict" .Values.env.odis "value_name" "requestPrunningJobCronPattern") | indent 12 }}

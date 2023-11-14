@@ -1,6 +1,6 @@
 # odis-signer
 
-![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: odis-signer-3.1.1](https://img.shields.io/badge/AppVersion-odis--signer--3.1.1-informational?style=flat-square)
+![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: odis-signer-3.1.1](https://img.shields.io/badge/AppVersion-odis--signer--3.1.1-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer
 
@@ -37,9 +37,6 @@ Helm chart for deploying Celo ODIS signer
 | env.blockchain.blockchainApiKey | string | `nil` | Env. Var BLOCKCHAIN_API_KEY. Won't be used if blockchainApiKeyExistingSecret is defined. |
 | env.blockchain.blockchainApiKeyExistingSecret | string | `"odis-signer-forno-key"` | Existing secret for forno API key. |
 | env.blockchain.blockchainProvider | string | `"https://alfajores-forno.celo-testnet.org"` | Env. Var BLOCKCHAIN_PROVIDER. |
-| env.blockchain.fullNodeRetryCount | int | `5` | Env. Var RETRY_COUNT. If not set, it won't be added to the deployment. |
-| env.blockchain.fullNodeRetryDelayMs | int | `100` | Env. Var RETRY_DELAY_IN_MS. If not set, it won't be added to the deployment. |
-| env.blockchain.fullNodeTimeoutMs | int | `1000` | Env. Var TIMEOUT_MS. If not set, it won't be added to the deployment. |
 | env.db.cloudSqlProxy | bool | `true` | Enable Cloud SQL proxy for GCP |
 | env.db.database | string | `"phoneNumberPrivacy"` | Env. Var DB_DATABASE. |
 | env.db.host | string | `"celo-testnet:us-central1:staging-pgpnp-centralus"` | Env. Var DB_HOST. If cloudSqlProxy is enabled, will be converted to 127.0.0.1 for odis-signer container |
@@ -61,6 +58,9 @@ Helm chart for deploying Celo ODIS signer
 | env.keystore.type | string | `"GoogleSecretManager"` | Env. Var KEYSTORE_TYPE. Options are "GoogleSecretManager" (GCP) or "AzureKeyVault" (Azure) |
 | env.log.format | string | `"stackdriver"` | Env. Var LOG_FORMAT. |
 | env.log.level | string | `"trace"` | Env. Var LOG_LEVEL. |
+| env.odis.fullNodeRetryCount | int | `5` | Env. Var RETRY_COUNT. If not set, it won't be added to the deployment. |
+| env.odis.fullNodeRetryDelayMs | int | `100` | Env. Var RETRY_DELAY_IN_MS. If not set, it won't be added to the deployment. |
+| env.odis.fullNodeTimeoutMs | int | `1000` | Env. Var TIMEOUT_MS. If not set, it won't be added to the deployment. |
 | env.odis.mockDek | string | `"0x034846bc781cacdafc66f3a77aa9fc3c56a9dadcd683c72be3c446fee8da041070"` | Env. Var MOCK_DEK. If not set, it won't be added to the deployment. |
 | env.odis.mockTotalQuota | string | `"10"` | Env. Var MOCK_TOTAL_QUOTA. If not set, it won't be added to the deployment. |
 | env.odis.odisSignerTimeout | string | `"6000"` | Env. Var ODIS_SIGNER_TIMEOUT. If not set, it won't be added to the deployment. |
@@ -69,7 +69,6 @@ Helm chart for deploying Celo ODIS signer
 | env.odis.requestPrunningJobCronPattern | string | `"0 0 3 * * *"` | Env. Var REQUEST_PRUNNING_JOB_CRON_PATTERN. If not set, it won't be added to the deployment. |
 | env.odis.shouldMockAccountService | string | `"false"` | Env. Var SHOULD_MOCK_ACCOUNT_SERVICE. If not set, it won't be added to the deployment. |
 | env.odis.shouldMockRequestService | string | `"false"` | Env. Var SHOULD_MOCK_REQUEST_SERVICE. If not set, it won't be added to the deployment. |
-| env.odis.testQuotaBypassPercentage | string | `"50"` | Env. Var TEST_QUOTA_BYPASS_PERCENTAGE. If not set, it won't be added to the deployment. |
 | env.tracing.enabled | bool | `false` | Enable tracing |
 | env.tracing.endpoint | string | `"https://<GRAFANA_AGENT_URL>/api/traces"` | Env. Var TRACER_ENDPOINT. If enabled is false, will not be added to the deployment. |
 | env.tracing.serviceName | string | `"odis-signer-env-cluster"` | Env. Var TRACING_SERVICE_NAME. If enabled is false, will not be added to the deployment. |
