@@ -33,9 +33,6 @@ env:
     blockchainProvider: "https://alfajores-forno.celo-testnet.org"
     blockchainApiKey: "test-key"
     blockchainApiKeyExistingSecret: null
-    fullNodeTimeoutMs: 2000
-    fullNodeRetryCount: 3
-    fullNodeRetryDelayMs: 1000
   db:
     type: "postgres"
     database: "test"
@@ -62,11 +59,13 @@ env:
     pnpAPIEnabled: false
   odis:
     odisSignerTimeout: "7000"
-    testQuotaBypassPercentage: "50"
+    fullNodeTimeoutMs: 2000
+    fullNodeRetryCount: 3
+    fullNodeRetryDelayMs: 1000
     shouldMockAccountService: "false"
     mockDek: "test-mock"
-    shouldMockRequestService: "false"
     mockTotalQuota: "15"
+    shouldMockRequestService: "false"
     requestPrunningDays: "7"
     requestPrunningAtServerStart: "true"
     requestPrunningJobCronPattern: '0 0 4 * * *'

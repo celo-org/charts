@@ -54,12 +54,6 @@ env:
     blockchainApiKey: null
     # -- Existing secret for forno API key.
     blockchainApiKeyExistingSecret: "odis-signer-forno-key"
-    # -- Env. Var TIMEOUT_MS. If not set, it won't be added to the deployment.
-    fullNodeTimeoutMs: 1000
-    # -- Env. Var RETRY_COUNT. If not set, it won't be added to the deployment.
-    fullNodeRetryCount: 5
-    # -- Env. Var RETRY_DELAY_IN_MS. If not set, it won't be added to the deployment.
-    fullNodeRetryDelayMs: 100
   db:
     # -- Env. Var DB_TYPE.
     type: "postgres"
@@ -110,16 +104,20 @@ env:
   odis:
     # -- Env. Var ODIS_SIGNER_TIMEOUT. If not set, it won't be added to the deployment.
     odisSignerTimeout: "6000"
-    # -- Env. Var TEST_QUOTA_BYPASS_PERCENTAGE. If not set, it won't be added to the deployment.
-    testQuotaBypassPercentage: "50"
+    # -- Env. Var TIMEOUT_MS. If not set, it won't be added to the deployment.
+    fullNodeTimeoutMs: 1000
+    # -- Env. Var RETRY_COUNT. If not set, it won't be added to the deployment.
+    fullNodeRetryCount: 5
+    # -- Env. Var RETRY_DELAY_IN_MS. If not set, it won't be added to the deployment.
+    fullNodeRetryDelayMs: 100
     # -- Env. Var SHOULD_MOCK_ACCOUNT_SERVICE. If not set, it won't be added to the deployment.
     shouldMockAccountService: "false"
     # -- Env. Var MOCK_DEK. If not set, it won't be added to the deployment.
     mockDek: "0x034846bc781cacdafc66f3a77aa9fc3c56a9dadcd683c72be3c446fee8da041070"
-    # -- Env. Var SHOULD_MOCK_REQUEST_SERVICE. If not set, it won't be added to the deployment.
-    shouldMockRequestService: "false"
     # -- Env. Var MOCK_TOTAL_QUOTA. If not set, it won't be added to the deployment.
     mockTotalQuota: "10"
+    # -- Env. Var SHOULD_MOCK_REQUEST_SERVICE. If not set, it won't be added to the deployment.
+    shouldMockRequestService: "false"
     # -- Env. Var REQUEST_PRUNNING_DAYS. If not set, it won't be added to the deployment.
     requestPrunningDays: "7"
     # -- Env. Var REQUEST_PRUNNING_AT_SERVER_START. If not set, it won't be added to the deployment.
