@@ -12,12 +12,12 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: us.gcr.io/celo-testnet/celo-monorepo
+  repository: us-west1-docker.pkg.dev/devopsre/social-connect/odis-signer
   # -- Image pullpolicy
   pullPolicy: Always
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "oblivious-decentralized-identifier-service-3.0.1"
+  tag: "odis-signer-3.1.1"
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -71,6 +71,10 @@ env:
     port: 5432
     # -- Env. Var DB_USERNAME.
     username: "pgpnp"
+    # -- Env. Var DB_POOL_MAX_SIZE. If not set, it won't be added to the deployment.
+    poolMaxSize: 50
+    # -- Env. Var DB_TIMEOUT. If not set, it won't be added to the deployment.
+    timeout: 1000
     # -- Enable Cloud SQL proxy for GCP
     cloudSqlProxy: true
   keystore:
@@ -100,14 +104,26 @@ env:
   odis:
     # -- Env. Var ODIS_SIGNER_TIMEOUT. If not set, it won't be added to the deployment.
     odisSignerTimeout: "6000"
-    # -- Env. Var TEST_QUOTA_BYPASS_PERCENTAGE. If not set, it won't be added to the deployment.
-    testQuotaBypassPercentage: "50"
+    # -- Env. Var TIMEOUT_MS. If not set, it won't be added to the deployment.
+    fullNodeTimeoutMs: 1000
+    # -- Env. Var RETRY_COUNT. If not set, it won't be added to the deployment.
+    fullNodeRetryCount: 5
+    # -- Env. Var RETRY_DELAY_IN_MS. If not set, it won't be added to the deployment.
+    fullNodeRetryDelayMs: 100
     # -- Env. Var SHOULD_MOCK_ACCOUNT_SERVICE. If not set, it won't be added to the deployment.
     shouldMockAccountService: "false"
     # -- Env. Var MOCK_DEK. If not set, it won't be added to the deployment.
     mockDek: "0x034846bc781cacdafc66f3a77aa9fc3c56a9dadcd683c72be3c446fee8da041070"
+    # -- Env. Var MOCK_TOTAL_QUOTA. If not set, it won't be added to the deployment.
+    mockTotalQuota: "10"
     # -- Env. Var SHOULD_MOCK_REQUEST_SERVICE. If not set, it won't be added to the deployment.
     shouldMockRequestService: "false"
+    # -- Env. Var REQUEST_PRUNNING_DAYS. If not set, it won't be added to the deployment.
+    requestPrunningDays: "7"
+    # -- Env. Var REQUEST_PRUNNING_AT_SERVER_START. If not set, it won't be added to the deployment.
+    requestPrunningAtServerStart: "false"
+    # -- Env. Var REQUEST_PRUNNING_JOB_CRON_PATTERN. If not set, it won't be added to the deployment.
+    requestPrunningJobCronPattern: '0 0 3 * * *'
 
 azureKVIdentity:
   # -- Enable Azure aadpodidentity.

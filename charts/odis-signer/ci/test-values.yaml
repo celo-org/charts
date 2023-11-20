@@ -5,9 +5,9 @@ fullnameOverride: ""
 replicaCount: 1
 
 image:
-  repository: us.gcr.io/celo-testnet/celo-monorepo
+  repository: us-west1-docker.pkg.dev/devopsre/social-connect/odis-signer
   pullPolicy: Always
-  tag: "oblivious-decentralized-identifier-service-3.0.1"
+  tag: "odis-signer-3.1.1"
 
 imagePullSecrets: []
 
@@ -42,6 +42,8 @@ env:
     passwordExistingSecret: null
     port: 5432
     username: "test"
+    poolMaxSize: 60
+    timeout: 10000
     cloudSqlProxy: false
   keystore:
     type: "GoogleSecretManager"
@@ -56,11 +58,17 @@ env:
     domainsAPIEnabled: false
     pnpAPIEnabled: false
   odis:
-    odisSignerTimeout: "6000"
-    testQuotaBypassPercentage: "50"
+    odisSignerTimeout: "7000"
+    fullNodeTimeoutMs: 2000
+    fullNodeRetryCount: 3
+    fullNodeRetryDelayMs: 1000
     shouldMockAccountService: "false"
     mockDek: "test-mock"
+    mockTotalQuota: "15"
     shouldMockRequestService: "false"
+    requestPrunningDays: "7"
+    requestPrunningAtServerStart: "true"
+    requestPrunningJobCronPattern: '0 0 4 * * *'
 
 azureKVIdentity:
   enabled: false
