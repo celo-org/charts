@@ -19,7 +19,7 @@ keywords:
 version: 1.0.4
 dependencies:
   - name: postgresql
-    version: 11.9.11
+    version: 11.9.13
     repository: https://charts.bitnami.com/bitnami
 maintainers:
   - name: cLabs
