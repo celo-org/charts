@@ -11,7 +11,7 @@ on:
       - '**/*dockerfile*'
   pull_request:
     branches:
-      - jcortejoso/health-checker-image
+      - main
     paths:
       # Run if any of the following files are changed
       - '**/*Dockerfile*'
