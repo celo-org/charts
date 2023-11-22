@@ -18,14 +18,14 @@ keywords:
   - Validator
   - Ethereum
   - Proof-of-Stake
-version: 0.4.3
+version: 0.4.4
 dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
     version: 0.2.2
   - name: gemini
     repository: https://charts.fairwinds.com/stable
-    version: 1.0.0
+    version: 1.0.1
     condition: gemini.enabled
 maintainers:
   - name: cLabs
