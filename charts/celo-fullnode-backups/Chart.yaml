@@ -25,7 +25,7 @@ dependencies:
     version: 0.4.3
   - name: gemini
     repository: https://charts.fairwinds.com/stable
-    version: 1.0.0
+    version: 1.0.1
     condition: gemini.enabled
 maintainers:
   - name: cLabs
