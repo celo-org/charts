@@ -1,7 +1,7 @@
 ---
 name: testnet
 apiVersion: v2
-version: 0.4.4
+version: 0.4.5
 description: Private Celo network Helm chart for Kubernetes
 home: https://clabs.co
 sources:
