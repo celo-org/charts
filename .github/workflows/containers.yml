@@ -6,10 +6,10 @@ on:
     branches:
       - main
       - jcortejoso/health-checker-image
-    # paths:
-    #   # Run if any of the following files are changed
-    #   - '**/*Dockerfile*'
-    #   - '**/*dockerfile*'
+    paths:
+      # Run if any of the following files are changed
+      - '**/*Dockerfile*'
+      - '**/*dockerfile*'
 
 jobs:
   detect-files-changed:
