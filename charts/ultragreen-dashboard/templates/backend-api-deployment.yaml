@@ -25,7 +25,7 @@ spec:
       serviceAccountName: {{ include "ultragreen-dashboard.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.backend.api.image.repository }}:{{ .Values.backend.api.image.tag | default .Chart.AppVersion }}"
+          image: {{ .Values.backend.api.image.repository }}:{{ .Values.backend.api.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.backend.api.image.pullPolicy }}
           ports:
             - name: http

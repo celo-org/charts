@@ -25,11 +25,14 @@ spec:
       serviceAccountName: {{ include "ultragreen-dashboard.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.backend.offsetsWren.image.repository }}:{{ .Values.backend.offsetsWren.image.tag | default .Chart.AppVersion }}"
+          image: {{ .Values.backend.offsetsWren.image.repository }}:{{ .Values.backend.offsetsWren.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.backend.offsetsWren.image.pullPolicy }}
           {{- with .Values.backend.offsetsWren.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          command:
+           - python
+           - main.py
           env:
             {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}
