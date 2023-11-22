@@ -19,7 +19,7 @@ Helm chart for deploying Celo Safe Transaction Service
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | postgresql | 11.9.11 |
+| https://charts.bitnami.com/bitnami | postgresql | 11.9.13 |
 | https://charts.bitnami.com/bitnami | rabbitmq | 11.16.2 |
 | https://charts.bitnami.com/bitnami | redis | 17.3.7 |
 
