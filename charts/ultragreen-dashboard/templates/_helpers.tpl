@@ -63,16 +63,16 @@ Create the name of the service account to use
 
 {{- define "ultragreen-dashboard.shared-env-vars" -}}
 - name: PG_HOST
-  value: {{ include "postgresql.primary.fullname" .Subcharts.postgresql }}
+  value: {{ include "postgresql.v1.primary.fullname" .Subcharts.postgresql }}
 - name: PG_PORT
-  value: {{ quote (include "postgresql.service.port" .Subcharts.postgresql) }}
+  value: {{ quote (include "postgresql.v1.service.port" .Subcharts.postgresql) }}
 - name: PG_USER
-  value: {{ include "postgresql.username" .Subcharts.postgresql }}
+  value: {{ include "postgresql.v1.username" .Subcharts.postgresql }}
 - name: PG_PSW
   valueFrom:
     secretKeyRef:
-      name: {{ include "postgresql.secretName" .Subcharts.postgresql }}
-      key: {{ include "postgresql.userPasswordKey" .Subcharts.postgresql }}
+      name: {{ include "postgresql.v1.secretName" .Subcharts.postgresql }}
+      key: {{ include "postgresql.v1.userPasswordKey" .Subcharts.postgresql }}
 - name: PG_DBNAME
-  value: {{ include "postgresql.database" .Subcharts.postgresql }}
+  value: {{ include "postgresql.v1.database" .Subcharts.postgresql }}
 {{- end -}}
