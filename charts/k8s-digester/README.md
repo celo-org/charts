@@ -1,6 +1,6 @@
 # k8s-digester
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.10](https://img.shields.io/badge/AppVersion-v0.1.10-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.10](https://img.shields.io/badge/AppVersion-v0.1.10-informational?style=flat-square)
 
 K8S Digester translates images tags to shas
 
@@ -24,7 +24,7 @@ K8S Digester translates images tags to shas
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"ghcr.io/google/k8s-digester"` | Image repository |
-| image.tag | string | `"v0.1.10@sha256:ce9a943663db3dfa31e9bc1572696c1df4d5bbaa8036e02b46426a5cd46a2b18"` | Image tag |
+| image.tag | string | `"v0.1.12@sha256:1bdd3e2442f3f4087502bf525537f32bdf02e595f47c6ae9ed32771d2455b3cb"` | Image tag |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | nameOverride | string | `""` | Chart name override trigger |
 | nodeSelector | object | `{}` | Kubernetes node selector |

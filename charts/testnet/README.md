@@ -1,6 +1,6 @@
 # testnet
 
-![Version: 0.4.4](https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.6](https://img.shields.io/badge/Version-0.4.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Private Celo network Helm chart for Kubernetes
 
@@ -23,7 +23,7 @@ Private Celo network Helm chart for Kubernetes
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.4.1 |
+| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.4.3 |
 
 ## Values
 
@@ -66,7 +66,7 @@ Private Celo network Helm chart for Kubernetes
 | geth.diskSizeGB | int | `5` |  |
 | geth.faultyValidators | int | `0` |  |
 | geth.image.repository | string | `"us.gcr.io/celo-org/geth"` |  |
-| geth.image.tag | string | `"1.7.4"` |  |
+| geth.image.tag | string | `"1.8.0"` |  |
 | geth.light.maxpeers | int | `1000` |  |
 | geth.light.serve | int | `70` |  |
 | geth.maxpeers | int | `1150` |  |
