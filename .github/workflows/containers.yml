@@ -5,11 +5,17 @@ on:
   push:
     branches:
       - main
+    paths:
+      # Run if any of the following files are changed
+      - '**/*Dockerfile*'
+      - '**/*dockerfile*'
+  pull_request:
+    branches:
       - jcortejoso/health-checker-image
-    # paths:
-    #   # Run if any of the following files are changed
-    #   - '**/*Dockerfile*'
-    #   - '**/*dockerfile*'
+    paths:
+      # Run if any of the following files are changed
+      - '**/*Dockerfile*'
+      - '**/*dockerfile*'
 
 jobs:
   detect-files-changed:
