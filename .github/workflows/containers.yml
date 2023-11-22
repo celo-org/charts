@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - jcortejoso/health-checker-image
     paths:
       # Run if any of the following files are changed
       - '**/*Dockerfile*'
