@@ -2,7 +2,7 @@
 
 Helm chart for deploying Celo Safe Transaction Service
 
-![Version: 1.1.7](https://img.shields.io/badge/Version-1.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 1.1.8](https://img.shields.io/badge/Version-1.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 - [celo-safe-transaction-service](#celo-safe-transaction-service)
   - [Chart requirements](#chart-requirements)
@@ -20,7 +20,7 @@ Helm chart for deploying Celo Safe Transaction Service
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 11.9.11 |
-| https://charts.bitnami.com/bitnami | rabbitmq | 11.0.4 |
+| https://charts.bitnami.com/bitnami | rabbitmq | 11.16.2 |
 | https://charts.bitnami.com/bitnami | redis | 17.3.7 |
 
 ## Chart releases
