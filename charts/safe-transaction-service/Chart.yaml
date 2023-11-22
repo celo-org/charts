@@ -22,7 +22,7 @@ dependencies:
     version: 17.17.1
     repository: https://charts.bitnami.com/bitnami
   - name: postgresql
-    version: 11.9.11
+    version: 11.9.13
     repository: https://charts.bitnami.com/bitnami
   - name: rabbitmq
     version: 11.0.4
