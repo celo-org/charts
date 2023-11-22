@@ -10,7 +10,7 @@ sources:
   - https://docs.celo.org
   - https://clabs.co
   - https://github.com/celo-org
-version: 0.1.2
+version: 0.2.0
 appVersion: "0.1.0"
 maintainers:
   - name: cLabs

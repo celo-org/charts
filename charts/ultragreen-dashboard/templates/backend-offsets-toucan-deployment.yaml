@@ -25,11 +25,14 @@ spec:
       serviceAccountName: {{ include "ultragreen-dashboard.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.backend.offsetsToucan.image.repository }}:{{ .Values.backend.offsetsToucan.image.tag | default .Chart.AppVersion }}"
+          image: {{ .Values.backend.offsetsToucan.image.repository }}:{{ .Values.backend.offsetsToucan.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.backend.offsetsToucan.image.pullPolicy }}
           {{- with .Values.backend.offsetsToucan.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          command:
+           - python
+           - main.py
           env:
             {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}

@@ -25,11 +25,14 @@ spec:
       serviceAccountName: {{ include "ultragreen-dashboard.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.backend.txFees.image.repository }}:{{ .Values.backend.txFees.image.tag | default .Chart.AppVersion }}"
+          image: {{ .Values.backend.txFees.image.repository }}:{{ .Values.backend.txFees.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.backend.txFees.image.pullPolicy }}
           {{- with .Values.backend.txFees.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          command:
+           - python
+           - main.py
           env:
             {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}
