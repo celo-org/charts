@@ -1,0 +1,34 @@
+# This container is used at celo-fullnode helm chart to check if the fullnode is healthy
+FROM golang:1.21-alpine3.18 AS builder
+
+RUN apk add --no-cache git
+
+ENV HEALTH_CHECKER_VERSION=v0.0.8
+RUN git clone https://github.com/gruntwork-io/health-checker && \
+    cd health-checker && \
+    git checkout ${HEALTH_CHECKER_VERSION} && \
+    go build -o /usr/local/bin/health-checker && \
+    chmod +x /usr/local/bin/health-checker
+
+FROM alpine:3.18
+LABEL org.opencontainers.image.authors="devops@clabs.co"
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+
+# Update packages to resolve vulnerabilities
+RUN apk upgrade --no-cache && apk add --no-cache curl
+
+# # Download health-checker
+# # https://github.com/gruntwork-io/health-checker/releases
+# RUN case ${TARGETPLATFORM} in \
+#          "linux/amd64")  HEALTH_CHECKER_ARCH=linux_amd64  ;; \
+#          "linux/arm64")  HEALTH_CHECKER_ARCH=linux_arm64  ;; \
+#     esac \
+#   && curl -sSL https://github.com/gruntwork-io/health-checker/releases/download/${HEALTH_CHECKER_VERSION}/health-checker_${HEALTH_CHECKER_ARCH} -o /usr/local/bin/health-checker \
+#   && chmod +x /usr/local/bin/health-checker
+
+COPY --from=builder /usr/local/bin/health-checker /usr/local/bin/health-checker
+
+USER 1000
+ENTRYPOINT ["/usr/local/bin/health-checker"]
+

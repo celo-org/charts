@@ -1,0 +1,53 @@
+---
+name: Build and Push Containers
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      # Run if any of the following files are changed
+      - '**/*Dockerfile*'
+      - '**/*dockerfile*'
+
+jobs:
+  detect-files-changed:
+    runs-on: ubuntu-latest
+    outputs:
+      files-changed: ${{ steps.detect-files-changed.outputs.all_changed_files }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect files changed
+        id: detect-files-changed
+        uses: tj-actions/changed-files@v40
+        with:
+          separator: ','
+  
+  build-and-push-health-checker:
+    runs-on: ubuntu-latest
+    needs: detect-files-changed
+    if: contains(
+          needs.detect-files-changed.outputs.files-changed, 'charts/celo-fullnode/dockerfiles/Dockerfile.health-checker'
+        )
+    permissions:
+      contents: read
+      id-token: write
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login at GCP Artifact Registry
+        uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@main
+        with:
+          workload-id-provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-charts-main/providers/github-by-repos
+          service-account: publish-helm-charts@devopsre.iam.gserviceaccount.com
+          docker-gcp-registries: us-west1-docker.pkg.dev
+      - name: Build and push container
+        uses: celo-org/reusable-workflows/.github/actions/build-container@main
+        with:
+          platforms: linux/amd64,linux/arm64
+          registry: us-west1-docker.pkg.dev/devopsre/dev-images/health-checker
+          tags: latest
+          context: ./charts/celo-fullnode/dockerfiles
+          dockerfile: ./charts/celo-fullnode/dockerfiles/Dockerfile.health-checker
+          push: ${{ fromJSON(true) }}
+          load: ${{ fromJSON(false) }}
