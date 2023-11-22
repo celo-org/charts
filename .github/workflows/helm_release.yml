@@ -26,19 +26,19 @@ jobs:
         uses: actions/checkout@v4
 
       - name: "Install Helm"
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
         with:
           version: "${{ env.HELM_VERSION }}"
 
       - name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@ceee102ec2387dd9e844e01b530ccd4ec87ce955' # v0.8.0
+        uses: 'google-github-actions/auth@v1'
         with:
           workload_identity_provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-charts-main/providers/github-by-repos
           service_account: 'publish-helm-charts@devopsre.iam.gserviceaccount.com'
 
       # Gcloud CLI required for login to Artifact Registry
       - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v0'
+        uses: 'google-github-actions/setup-gcloud@v1'
 
       - name: Add Helm repositories
         run: |
