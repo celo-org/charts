@@ -29,7 +29,7 @@ geth:
   accountSecret: secret
   image:
     repository: us.gcr.io/celo-org/geth
-    tag: 1.7.4
+    tag: 1.8.0
   networkID: '9099000'
   staticNodes: ''
   verbosity: 1
