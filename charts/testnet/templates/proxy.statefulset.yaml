@@ -28,5 +28,5 @@
   "pvc_annotations" $.Values.pvcAnnotations.proxy
   ) }}
 ---
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}

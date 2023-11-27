@@ -1,3 +1,4 @@
+{{- if gt (int .Values.replicas.validators) 0 -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -154,8 +155,8 @@ spec:
         - name: MNEMONIC
           valueFrom:
             secretKeyRef:
-              name: {{ template "common.fullname" . }}-geth-account
-              key: mnemonic
+              name: {{ include "celo.account-secret-name" . }}
+              key: {{ include "celo.account-secret-mnemonic-key" . }}
         - name: IP_ADDRESSES
           value: {{ join "/" .Values.geth.validatorsIPAddressArray }}
         - name: BOOTNODE_IP_ADDRESS
@@ -307,4 +308,5 @@ spec:
           name: {{ template "common.fullname" . }}-geth-config
       - name: account
         secret:
-          secretName: {{ template "common.fullname" . }}-geth-account
+          secretName: {{ include "celo.account-secret-name" . }}
+{{- end -}}

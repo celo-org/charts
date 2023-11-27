@@ -42,6 +42,7 @@ spec:
 {{- end -}}
 
 {{- define "celo.full-node-statefulset" -}}
+{{- if gt (int .replicas) 0 -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -223,7 +224,8 @@ spec:
           name: {{ template "common.fullname" . }}-geth-config
       - name: account
         secret:
-          secretName: {{ template "common.fullname" . }}-geth-account
+          secretName: {{ include "celo.account-secret-name" . }}
+{{- end -}}
 {{- end -}}
 
 {{- /* This template puts a semicolon-separated pair of proxy enodes into $PROXY_ENODE_URL_PAIR. */ -}}
@@ -259,3 +261,32 @@ PROXY_ENODE_URL_PAIR=$PROXY_INTERNAL_ENODE\;$PROXY_EXTERNAL_ENODE
 {{- index .Values.geth.proxyIPAddressesPerValidatorArray .validatorIndex -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "celo.account-secret-name" -}}
+{{- $defaultSecretName := printf "%s-geth-account" (include "common.fullname" .) }}
+{{- .Values.secrets.existingSecret | default $defaultSecretName }}
+{{- end }}
+
+{{- define "celo.account-secret-bootnode-key" -}}
+{{- if .Values.secrets.existingSecret }}
+{{- .Values.secrets.bootnodePrivatekeyKey }}
+{{- else -}}
+privateKey
+{{- end }}
+{{- end }}
+
+{{- define "celo.account-secret-mnemonic-key" -}}
+{{- if .Values.secrets.existingSecret }}
+{{- .Values.secrets.mnemonicKey }}
+{{- else -}}
+mnemonic
+{{- end }}
+{{- end }}
+
+{{- define "celo.account-secret-account-secret-key" -}}
+{{- if .Values.secrets.existingSecret }}
+{{- .Values.secrets.accountSecretKey }}
+{{- else -}}
+accountSecret
+{{- end }}
+{{- end }}

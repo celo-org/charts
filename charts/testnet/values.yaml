@@ -9,11 +9,29 @@ imagePullPolicy: Always
 # ref: https://kubernetes.io/docs/user-guide/node-selection/
 nodeSelector: {}
 
-# Insecure mnemonic
-mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion rib
-  resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery
+# -- Secrets for the accounts
+secrets:
+  # Configure mnemonic and accountSecret if want to create a new secret
+  # -- Mnemonic to use for the accounts
+  mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion rib
+    resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery
+  # -- Password to use for the accounts
+  accountSecret: password
+  # -- Private key to use for the bootnode
+  bootnodePrivatekey: ""
+  # -- *Use an existing secret instead*. Name of the *existing* secret.
+  existingSecret: ""
+  # -- Key of the *existing* secret for the mnemonic.
+  mnemonicKey: mnemonic
+  # -- Key of the *existing* secret for the accountSecret.
+  accountSecretKey: secret
+  # -- Key of the *existing* secret for the bootnode private key.
+  bootnodePrivatekeyKey: ""
 
+
+# -- Bootnode configuration
 bootnode:
+  enabled: true
   image:
     repository: us.gcr.io/celo-testnet/geth-all
     tag: 21d8283af60927589566cb282ab640f1ccec6ebd
@@ -51,8 +69,7 @@ geth:
   diskSizeGB: 5
   privateTxNodediskSizeGB: 10
   ws_port: 8546
-  account:
-    secret: password
+
   static_ips: false
   validatorsIPAddressArray: []
   txNodesIPAddressArray:
@@ -83,8 +100,10 @@ geth:
   txNodePrivateAffinity: {}
   txNodePrivateNodeSelector: {}
   txNodePrivateTolerations: []
+  in_memory_discovery_table: false
   ping_ip_from_packet: false
   faultyValidators: 0
+  faultyValidatorType: ""
   rpc_gascap: 0
   maxpeers: 1150
   light:
@@ -173,7 +192,6 @@ dataSource:
   archive: {}
 
 replicaInitialCount: 0
-enableBootnode: true
 enableFornoIngress: true
 forceFornoDomain: ""
 
