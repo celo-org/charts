@@ -102,6 +102,7 @@ geth:
   txNodePrivateTolerations: []
   in_memory_discovery_table: false
   ping_ip_from_packet: false
+  tx_fee_recipient: ""
   faultyValidators: 0
   faultyValidatorType: ""
   rpc_gascap: 0

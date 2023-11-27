@@ -172,6 +172,8 @@ spec:
         "service_ip_env_var_prefix" .service_ip_env_var_prefix
         "ip_addresses" .ip_addresses
         "validator_index" .validator_index
+        "secret_name" (include "celo.account-secret-name" .)
+        "mnemonic_key" (include "celo.account-secret-mnemonic-key" .)
         ) | nindent 6 }}
       {{- if .unlock | default false }}
       {{- include "common.import-geth-account-container" .  | nindent 6 }}
@@ -233,7 +235,7 @@ spec:
 {{- /* Expects env variables MNEMONIC, RID (the validator index), and PROXY_INDEX */ -}}
 {{- define "celo.proxyenodeurlpair" -}}
 echo "Generating proxy enode url pair for proxy $PROXY_INDEX"
-PROXY_INTERNAL_IP_ENV_VAR={{ $.Release.Namespace | upper }}_VALIDATORS_${RID}_PROXY_INTERNAL_${PROXY_INDEX}_SERVICE_HOST
+PROXY_INTERNAL_IP_ENV_VAR={{ $.Release.Namespace | upper | replace "-" "_" }}_VALIDATORS_${RID}_PROXY_INTERNAL_${PROXY_INDEX}_SERVICE_HOST
 echo "PROXY_INTERNAL_IP_ENV_VAR=$PROXY_INTERNAL_IP_ENV_VAR"
 PROXY_INTERNAL_IP=`eval "echo \\${${PROXY_INTERNAL_IP_ENV_VAR}}"`
 # If $PROXY_IPS is not empty, then we use the IPs from there. Otherwise,

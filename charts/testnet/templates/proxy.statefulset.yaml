@@ -17,7 +17,7 @@
   "gcmode" "full"
   "dataSource" $.Values.dataSource.full
   "resources" (default $.Values.geth.resources $.Values.geth.proxyResources)
-  "service_ip_env_var_prefix" (printf "%s%s%d%s" ($.Release.Namespace | upper) "_VALIDATORS_" $validatorIndex "_PROXY_INTERNAL_")
+  "service_ip_env_var_prefix" (printf "%s%s%d%s" ($.Release.Namespace | upper | replace "-" "_") "_VALIDATORS_" $validatorIndex "_PROXY_INTERNAL_")
   "validator_index" $validatorIndex
   "ip_addresses" (include "celo.proxyipaddresses" (dict "Values" $.Values "validatorIndex" $validatorIndex))
   "extra_setup" $.Values.geth.proxyExtraSnippet
