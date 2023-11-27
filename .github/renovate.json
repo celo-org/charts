@@ -1,0 +1,22 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "timezone": "Europe/Berlin",
+  "schedule": "before 5am every weekday",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":rebaseStalePrs",
+    ":gitSignOff"
+  ],
+  "bumpVersion": "patch",
+  "ignorePaths": [],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": [
+      "type:security"
+    ],
+    "minimumReleaseAge": null
+  },
+  "dependencyDashboardOSVVulnerabilitySummary": "unresolved"
+}
