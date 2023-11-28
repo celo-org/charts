@@ -1,3 +1,4 @@
+{{- if gt (int .Values.replicas.validators) 0 -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -101,19 +102,25 @@ spec:
           echo -n "Generating IP address for validator: "
           cat /root/.celo/ipAddress
 
+          {{- if (or .Values.bootnode.enabled .Values.bootnode.ipAddress) }}
           celotooljs.sh generate public-key --mnemonic "$MNEMONIC" --accountType bootnode --index 0 > /root/.celo/bootnodeEnodeAddress
           echo -n "Generating Bootnode enode address for the validator: "
           cat /root/.celo/bootnodeEnodeAddress
 
-          [[ "$BOOTNODE_IP_ADDRESS" == 'none' ]] && BOOTNODE_IP_ADDRESS=${{ .Release.Namespace | upper }}_BOOTNODE_SERVICE_HOST
+          [[ "$BOOTNODE_IP_ADDRESS" == 'none' ]] && BOOTNODE_IP_ADDRESS=${{ .Release.Namespace | upper | replace "-" "_" }}_BOOTNODE_SERVICE_HOST
           echo "enode://$(cat /root/.celo/bootnodeEnodeAddress)@$BOOTNODE_IP_ADDRESS:30301" > /root/.celo/bootnodeEnode
           echo -n "Generating Bootnode enode for the validator: "
           cat /root/.celo/bootnodeEnode
+          {{- end }}
 
           # Generate a fee recipient address if available
+          {{- if not .Values.geth.tx_fee_recipient }}
           if celotooljs.sh generate address-from-env --help | grep tx_fee_recipient >/dev/null; then
             celotooljs.sh generate account-address --mnemonic "$MNEMONIC" --accountType tx_fee_recipient --index $RID > /root/.celo/feeRecipientAddress
           fi
+          {{- else }}
+          echo "{{ .Values.geth.tx_fee_recipient }}" > /root/.celo/feeRecipientAddress
+          {{- end }}
 
           # If this validator is meant to be proxied
           if [[ ! -z "$PROXY_COUNT" ]]; then
@@ -154,12 +161,14 @@ spec:
         - name: MNEMONIC
           valueFrom:
             secretKeyRef:
-              name: {{ template "common.fullname" . }}-geth-account
-              key: mnemonic
+              name: {{ include "celo.account-secret-name" . }}
+              key: {{ include "celo.account-secret-mnemonic-key" . }}
         - name: IP_ADDRESSES
           value: {{ join "/" .Values.geth.validatorsIPAddressArray }}
+        {{- if (or .Values.bootnode.enabled .Values.bootnode.ipAddress) }}
         - name: BOOTNODE_IP_ADDRESS
           value: "{{ default .Values.bootnode.defaultClusterIP .Values.bootnode.ipAddress }}"
+        {{- end }}
         volumeMounts:
         - name: data
           mountPath: /root/.celo
@@ -307,4 +316,5 @@ spec:
           name: {{ template "common.fullname" . }}-geth-config
       - name: account
         secret:
-          secretName: {{ template "common.fullname" . }}-geth-account
+          secretName: {{ include "celo.account-secret-name" . }}
+{{- end -}}
