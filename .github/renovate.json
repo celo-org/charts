@@ -10,7 +10,11 @@
     ":gitSignOff"
   ],
   "bumpVersion": "patch",
-  "ignorePaths": [],
+  "ignorePaths": [
+    "charts/safe-client-gateway/",
+    "charts/safe-config-service/",
+    "charts/safe-transaction-service/"
+  ],
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": [
