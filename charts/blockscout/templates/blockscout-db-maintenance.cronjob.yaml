@@ -7,7 +7,7 @@ metadata:
     {{- include "celo.blockscout.labels" . | nindent 4 }}
     component: blockscout-db-maintenance
 spec:
-  schedule: "0 * 1 * *"
+  schedule: {{ .Values.blockscout.dbMaintenance.schedule }}
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:

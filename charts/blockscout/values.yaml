@@ -335,6 +335,14 @@ blockscout:
       tag: metadata-crawler-77a392216d4927e85ce4b683508fc0539aa92a34
     # -- Discord server for notifications
     discordClusterName: ""
+  
+  # -- Configuraton for the database maintenance cronjob
+  dbMaintenance:
+    enabled: false
+    schedule: "0 * 1 * *"
+    image:
+      repository: us-west1-docker.pkg.dev/devopsre/db-maintenance/db-maintenance-image
+      tag: latest
 
   shared:
     # -- Enable epochRewards
