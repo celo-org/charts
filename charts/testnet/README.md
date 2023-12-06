@@ -1,6 +1,6 @@
 # testnet
 
-![Version: 0.4.4](https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Private Celo network Helm chart for Kubernetes
 
@@ -23,7 +23,7 @@ Private Celo network Helm chart for Kubernetes
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.4.1 |
+| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.5.0 |
 
 ## Values
 
@@ -33,9 +33,7 @@ Private Celo network Helm chart for Kubernetes
 | blockscout.image.indexerTag | string | `"indexer"` |  |
 | blockscout.image.repository | string | `"gcr.io/celo-testnet/blockscout"` |  |
 | blockscout.image.webTag | string | `"web"` |  |
-| bootnode.defaultClusterIP | string | `"10.0.0.12"` |  |
-| bootnode.image.repository | string | `"us.gcr.io/celo-testnet/geth-all"` |  |
-| bootnode.image.tag | string | `"21d8283af60927589566cb282ab640f1ccec6ebd"` |  |
+| bootnode | object | `{"defaultClusterIP":"10.0.0.12","enabled":true,"image":{"repository":"us.gcr.io/celo-testnet/geth-all","tag":"21d8283af60927589566cb282ab640f1ccec6ebd"}}` | Bootnode configuration |
 | celotool.image.repository | string | `"us.gcr.io/celo-testnet/celo-monorepo"` |  |
 | celotool.image.tag | string | `"celotool-dc5e5dfa07231a4ff4664816a95eae606293eae9"` |  |
 | dataSource.archive | object | `{}` |  |
@@ -48,7 +46,6 @@ Private Celo network Helm chart for Kubernetes
 | deletePodCronJob.podIndex | int | `0` | Statefulset index to delete |
 | deletePodCronJob.schedule | string | `"0 10,22 * * *"` | Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute, with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes) |
 | domain.name | string | `"celo-networks-dev"` |  |
-| enableBootnode | bool | `true` |  |
 | enableFornoIngress | bool | `true` |  |
 | extraPodLabels.proxy.mode | string | `"full"` |  |
 | extraPodLabels.secondary.mode | string | `"full"` |  |
@@ -62,11 +59,12 @@ Private Celo network Helm chart for Kubernetes
 | genesis.network | string | `"testnet"` |  |
 | genesis.networkId | int | `1110` |  |
 | genesis.useGenesisFileBase64 | bool | `false` |  |
-| geth.account.secret | string | `"password"` |  |
 | geth.diskSizeGB | int | `5` |  |
+| geth.faultyValidatorType | string | `""` |  |
 | geth.faultyValidators | int | `0` |  |
 | geth.image.repository | string | `"us.gcr.io/celo-org/geth"` |  |
-| geth.image.tag | string | `"1.7.4"` |  |
+| geth.image.tag | string | `"1.8.0"` |  |
+| geth.in_memory_discovery_table | bool | `false` |  |
 | geth.light.maxpeers | int | `1000` |  |
 | geth.light.serve | int | `70` |  |
 | geth.maxpeers | int | `1150` |  |
@@ -98,6 +96,7 @@ Private Celo network Helm chart for Kubernetes
 | geth.txNodePrivateTolerations | list | `[]` |  |
 | geth.txNodeTolerations | list | `[]` |  |
 | geth.txNodesIPAddressArray[0] | string | `"1.2.3.4"` |  |
+| geth.tx_fee_recipient | string | `""` |  |
 | geth.validatorAffinity | object | `{}` |  |
 | geth.validatorExtraSnippet | string | `"echo \"Validator\"\n"` |  |
 | geth.validatorNodeSelector | object | `{}` |  |
@@ -109,7 +108,6 @@ Private Celo network Helm chart for Kubernetes
 | imagePullPolicy | string | `"Always"` |  |
 | ingressClassName | string | `"nginx"` |  |
 | metrics.enabled | bool | `true` |  |
-| mnemonic | string | `"girl beauty clarify deliver force dynamic wonder shoe install erosion rib resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery"` |  |
 | nodeSelector | object | `{}` |  |
 | pvcAnnotations.proxy | object | `{}` |  |
 | pvcAnnotations.secondary | object | `{}` |  |
@@ -124,6 +122,14 @@ Private Celo network Helm chart for Kubernetes
 | replicas.txNodes | int | `1` |  |
 | replicas.txNodesPrivate | int | `1` |  |
 | replicas.validators | int | `3` |  |
+| secrets | object | `{"accountSecret":"password","accountSecretKey":"secret","bootnodePrivatekey":"","bootnodePrivatekeyKey":"","existingSecret":"","mnemonic":"girl beauty clarify deliver force dynamic wonder shoe install erosion rib resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery","mnemonicKey":"mnemonic"}` | Secrets for the accounts |
+| secrets.accountSecret | string | `"password"` | Password to use for the accounts |
+| secrets.accountSecretKey | string | `"secret"` | Key of the *existing* secret for the accountSecret. |
+| secrets.bootnodePrivatekey | string | `""` | Private key to use for the bootnode |
+| secrets.bootnodePrivatekeyKey | string | `""` | Key of the *existing* secret for the bootnode private key. |
+| secrets.existingSecret | string | `""` | *Use an existing secret instead*. Name of the *existing* secret. |
+| secrets.mnemonic | string | `"girl beauty clarify deliver force dynamic wonder shoe install erosion rib resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery"` | Mnemonic to use for the accounts |
+| secrets.mnemonicKey | string | `"mnemonic"` | Key of the *existing* secret for the mnemonic. |
 | updateStrategy.proxy.rollingUpdate.partition | int | `0` |  |
 | updateStrategy.proxy.type | string | `"RollingUpdate"` |  |
 | updateStrategy.secondaries.rollingUpdate.partition | int | `0` |  |

@@ -42,6 +42,7 @@ spec:
 {{- end -}}
 
 {{- define "celo.full-node-statefulset" -}}
+{{- if gt (int .replicas) 0 -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -171,6 +172,8 @@ spec:
         "service_ip_env_var_prefix" .service_ip_env_var_prefix
         "ip_addresses" .ip_addresses
         "validator_index" .validator_index
+        "secret_name" (include "celo.account-secret-name" .)
+        "mnemonic_key" (include "celo.account-secret-mnemonic-key" .)
         ) | nindent 6 }}
       {{- if .unlock | default false }}
       {{- include "common.import-geth-account-container" .  | nindent 6 }}
@@ -223,7 +226,8 @@ spec:
           name: {{ template "common.fullname" . }}-geth-config
       - name: account
         secret:
-          secretName: {{ template "common.fullname" . }}-geth-account
+          secretName: {{ include "celo.account-secret-name" . }}
+{{- end -}}
 {{- end -}}
 
 {{- /* This template puts a semicolon-separated pair of proxy enodes into $PROXY_ENODE_URL_PAIR. */ -}}
@@ -231,7 +235,7 @@ spec:
 {{- /* Expects env variables MNEMONIC, RID (the validator index), and PROXY_INDEX */ -}}
 {{- define "celo.proxyenodeurlpair" -}}
 echo "Generating proxy enode url pair for proxy $PROXY_INDEX"
-PROXY_INTERNAL_IP_ENV_VAR={{ $.Release.Namespace | upper }}_VALIDATORS_${RID}_PROXY_INTERNAL_${PROXY_INDEX}_SERVICE_HOST
+PROXY_INTERNAL_IP_ENV_VAR={{ $.Release.Namespace | upper | replace "-" "_" }}_VALIDATORS_${RID}_PROXY_INTERNAL_${PROXY_INDEX}_SERVICE_HOST
 echo "PROXY_INTERNAL_IP_ENV_VAR=$PROXY_INTERNAL_IP_ENV_VAR"
 PROXY_INTERNAL_IP=`eval "echo \\${${PROXY_INTERNAL_IP_ENV_VAR}}"`
 # If $PROXY_IPS is not empty, then we use the IPs from there. Otherwise,
@@ -259,3 +263,32 @@ PROXY_ENODE_URL_PAIR=$PROXY_INTERNAL_ENODE\;$PROXY_EXTERNAL_ENODE
 {{- index .Values.geth.proxyIPAddressesPerValidatorArray .validatorIndex -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "celo.account-secret-name" -}}
+{{- $defaultSecretName := printf "%s-geth-account" (include "common.fullname" .) }}
+{{- .Values.secrets.existingSecret | default $defaultSecretName }}
+{{- end }}
+
+{{- define "celo.account-secret-bootnode-key" -}}
+{{- if .Values.secrets.existingSecret }}
+{{- .Values.secrets.bootnodePrivatekeyKey }}
+{{- else -}}
+privateKey
+{{- end }}
+{{- end }}
+
+{{- define "celo.account-secret-mnemonic-key" -}}
+{{- if .Values.secrets.existingSecret }}
+{{- .Values.secrets.mnemonicKey }}
+{{- else -}}
+mnemonic
+{{- end }}
+{{- end }}
+
+{{- define "celo.account-secret-account-secret-key" -}}
+{{- if .Values.secrets.existingSecret }}
+{{- .Values.secrets.accountSecretKey }}
+{{- else -}}
+accountSecret
+{{- end }}
+{{- end }}

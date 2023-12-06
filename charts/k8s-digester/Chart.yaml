@@ -2,7 +2,7 @@ apiVersion: v2
 name: k8s-digester
 description: K8S Digester translates images tags to shas
 type: application
-version: 0.1.1
+version: 0.1.2
 appVersion: "v0.1.10"
 home: https://github.com/google/k8s-digester
 sources:

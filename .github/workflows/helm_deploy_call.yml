@@ -45,7 +45,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -84,7 +84,7 @@ jobs:
           location: ${{ inputs.cluster-location }}
 
       - name: Setup helmfile
-        uses: mamezou-tech/setup-helmfile@v1.2.0
+        uses: mamezou-tech/setup-helmfile@v1.3.0
 
       - name: Run helmfile
         run: helmfile --color --file ${{ inputs.helmfile }} ${{ inputs.action }} --context 10

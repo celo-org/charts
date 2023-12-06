@@ -2,7 +2,7 @@
 
 Automate celo-blockchain chain backups using PVC snapshots
 
-![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
+![Version: 0.4.6](https://img.shields.io/badge/Version-0.4.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
 
 - [celo-fullnode-backups](#celo-fullnode-backups)
   - [Chart requirements](#chart-requirements)
@@ -37,7 +37,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode-backups --version=0.4.3" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode-backups --version=0.4.6" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies

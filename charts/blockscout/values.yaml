@@ -189,7 +189,7 @@ blockscout:
         path: /api/v1/health/liveness
         port: http
         scheme: HTTP
-      initialDelaySeconds: 30
+      initialDelaySeconds: 60
       periodSeconds: 5
       successThreshold: 1
       timeoutSeconds: 5
@@ -277,7 +277,7 @@ blockscout:
         path: /api/v1/health/liveness
         port: http
         scheme: HTTP
-      initialDelaySeconds: 30
+      initialDelaySeconds: 60
       periodSeconds: 5
       successThreshold: 1
       timeoutSeconds: 5
