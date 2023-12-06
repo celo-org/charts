@@ -335,7 +335,7 @@ blockscout:
       tag: metadata-crawler-77a392216d4927e85ce4b683508fc0539aa92a34
     # -- Discord server for notifications
     discordClusterName: ""
-  
+
   # -- Configuraton for the database maintenance cronjob
   dbMaintenance:
     enabled: false
