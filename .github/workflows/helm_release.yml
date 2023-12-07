@@ -31,7 +31,7 @@ jobs:
           version: "${{ env.HELM_VERSION }}"
 
       - name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v1'
+        uses: 'google-github-actions/auth@v2'
         with:
           workload_identity_provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-charts-main/providers/github-by-repos
           service_account: 'publish-helm-charts@devopsre.iam.gserviceaccount.com'
