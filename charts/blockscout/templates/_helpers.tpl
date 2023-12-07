@@ -130,7 +130,7 @@ the `volumes` section.
 {{- /* Defines init container copying secrets-init to the specified directory. */ -}}
 {{- define "celo.blockscout.initContainer.secrets-init" -}}
 - name: secrets-init
-  image: "doitintl/secrets-init:0.4.2"
+  image: "doitintl/secrets-init:0.5.0"
   args:
     - copy
     - /secrets/
