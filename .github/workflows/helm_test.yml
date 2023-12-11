@@ -21,6 +21,7 @@ jobs:
         with:
           filters: |
             charts-change:
+              - 'charts/**/dockerfiles/**'
               - 'charts/**/templates/**'
               - 'charts/**/values.yaml'
               - 'charts/**/Chart.yaml'
