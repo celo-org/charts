@@ -47,7 +47,7 @@ jobs:
           version: "${{ env.HELM_VERSION }}"
 
       - name: "Install Python 3"
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9'
           check-latest: true
