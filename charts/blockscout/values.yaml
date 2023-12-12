@@ -410,7 +410,7 @@ infrastructure:
   # -- secrets-init configuration
   secretsInit:
     # -- exit when a provider fails or a secret is not found
-    failFast: true
+    exitEarly: true
   # -- Default affinity for the pods
   affinity: {}
   # -- Default nodeSelector for the pods
