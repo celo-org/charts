@@ -191,6 +191,10 @@ blockscout components.
 {{- define "celo.blockscout.env-vars" -}}
 {{- $user := .Values.blockscout.shared.secrets.dbUser -}}
 {{- $password := .Values.blockscout.shared.secrets.dbPassword -}}
+{{- if .Values.infrastructure.secretsInit.exitEarly -}}
+- name: EXIT_EARLY
+  value: "true"
+{{- end }}
 - name: DATABASE_USER
   value: {{ $user }}
 - name: DATABASE_PASSWORD

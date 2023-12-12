@@ -2,7 +2,7 @@
 
 Chart which is used to deploy Blockscout for Celo Networks
 
-![Version: 1.3.13](https://img.shields.io/badge/Version-1.3.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
+![Version: 1.3.14](https://img.shields.io/badge/Version-1.3.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
 
 - [blockscout](#blockscout)
   - [Chart requirements](#chart-requirements)
@@ -36,7 +36,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.3.13" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.3.14" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -148,7 +148,7 @@ helm upgrade my-blockscout -f values-alfajores-blockscout2.yaml --namespace=celo
 | blockscout.web.strategy | object | `{"rollingUpdate":{"maxSurge":1,"maxUnavailable":"20%"}}` | UpdateStrategy for web deployment |
 | blockscout.web.tokenIcons | object | `{"enabled":false}` | Show token icons |
 | changeCause | string | `""` | Add annotation with a message about the upgrade process trigger. Intended to be used by CD or deployment tool |
-| infrastructure | object | `{"affinity":{},"database":{"connectionName":"project:region:db-name","enableCloudSQLProxy":true,"name":"blockscout","port":5432,"proxy":{"host":"127.0.0.1","livenessProbe":{},"port":5432,"readinessProbe":{},"resources":{"requests":{"cpu":"10m","memory":"20Mi"}}}},"domainName":"celo-testnet.org","gcp":{"projectId":"celo-testnet-production","serviceAccount":""},"grafanaUrl":"https://clabs.grafana.net","metrics":{"enabled":false},"nodeSelector":{}}` | Infrastructure/Kubernetes shared configuration |
+| infrastructure | object | `{"affinity":{},"database":{"connectionName":"project:region:db-name","enableCloudSQLProxy":true,"name":"blockscout","port":5432,"proxy":{"host":"127.0.0.1","livenessProbe":{},"port":5432,"readinessProbe":{},"resources":{"requests":{"cpu":"10m","memory":"20Mi"}}}},"domainName":"celo-testnet.org","gcp":{"projectId":"celo-testnet-production","serviceAccount":""},"grafanaUrl":"https://clabs.grafana.net","metrics":{"enabled":false},"nodeSelector":{},"secretsInit":{"exitEarly":true}}` | Infrastructure/Kubernetes shared configuration |
 | infrastructure.affinity | object | `{}` | Default affinity for the pods |
 | infrastructure.database.proxy.livenessProbe | object | `{}` | livenessProbe for cloud-sql container |
 | infrastructure.database.proxy.readinessProbe | object | `{}` | livinessProbe for cloud-sql container |
@@ -157,6 +157,8 @@ helm upgrade my-blockscout -f values-alfajores-blockscout2.yaml --namespace=celo
 | infrastructure.grafanaUrl | string | `"https://clabs.grafana.net"` | Grafana url to use during deployment |
 | infrastructure.metrics | object | `{"enabled":false}` | Enable prometheus metrics, using annotations |
 | infrastructure.nodeSelector | object | `{}` | Default nodeSelector for the pods |
+| infrastructure.secretsInit | object | `{"exitEarly":true}` | secrets-init configuration |
+| infrastructure.secretsInit.exitEarly | bool | `true` | exit when a provider fails or a secret is not found |
 | ingressClassName | string | `"nginx"` |  |
 | network | object | `{"name":"Celo","networkID":1101,"nodes":{"archiveNodes":{"jsonrpcHttpUrl":"http://tx-nodes-private:8545","jsonrpcWsUrl":"ws://tx-nodes-private:8545"},"fullNodes":{"jsonrpcPublicHttp":""}}}` | Configuration related with the CELO network |
 | network.nodes | object | `{"archiveNodes":{"jsonrpcHttpUrl":"http://tx-nodes-private:8545","jsonrpcWsUrl":"ws://tx-nodes-private:8545"},"fullNodes":{"jsonrpcPublicHttp":""}}` | RPC/WS endpoints for the node network. Indexer requires archive data |
