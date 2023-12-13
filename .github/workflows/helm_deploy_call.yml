@@ -72,7 +72,7 @@ jobs:
 
       - name: 'Set up Cloud SDK'
         if: ${{ inputs.run-gke-credentials }}
-        uses: 'google-github-actions/setup-gcloud@v1'
+        uses: 'google-github-actions/setup-gcloud@v2'
         with:
           install_components: 'core,gke-gcloud-auth-plugin,kubectl'
           project_id: ${{ inputs.project }}
