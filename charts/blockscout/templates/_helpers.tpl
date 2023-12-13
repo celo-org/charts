@@ -130,7 +130,7 @@ the `volumes` section.
 {{- /* Defines init container copying secrets-init to the specified directory. */ -}}
 {{- define "celo.blockscout.initContainer.secrets-init" -}}
 - name: secrets-init
-  image: "doitintl/secrets-init:0.4.2"
+  image: "doitintl/secrets-init:0.5.0"
   args:
     - copy
     - /secrets/
@@ -191,6 +191,10 @@ blockscout components.
 {{- define "celo.blockscout.env-vars" -}}
 {{- $user := .Values.blockscout.shared.secrets.dbUser -}}
 {{- $password := .Values.blockscout.shared.secrets.dbPassword -}}
+{{- if .Values.infrastructure.secretsInit.exitEarly -}}
+- name: EXIT_EARLY
+  value: "true"
+{{- end }}
 - name: DATABASE_USER
   value: {{ $user }}
 - name: DATABASE_PASSWORD

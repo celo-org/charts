@@ -336,6 +336,14 @@ blockscout:
     # -- Discord server for notifications
     discordClusterName: ""
 
+  # -- Configuraton for the database maintenance cronjob
+  dbMaintenance:
+    enabled: false
+    schedule: "0 * 1 * *"
+    image:
+      repository: us-west1-docker.pkg.dev/devopsre/db-maintenance/db-maintenance-image
+      tag: latest
+
   shared:
     # -- Enable epochRewards
     epochRewards:
@@ -399,6 +407,10 @@ infrastructure:
   # -- Enable prometheus metrics, using annotations
   metrics:
     enabled: false
+  # -- secrets-init configuration
+  secretsInit:
+    # -- exit when a provider fails or a secret is not found
+    exitEarly: true
   # -- Default affinity for the pods
   affinity: {}
   # -- Default nodeSelector for the pods
