@@ -12,4 +12,4 @@
 /charts/safe-config-service/ @celo-org/devtooling @celo-org/devopsre
 /charts/safe-transaction-service/ @celo-org/devtooling @celo-org/devopsre 
 
-/charts/blockscout/ @celo-org/devtooling @celo-org/devopsre 
+/charts/blockscout/ @celo-org/devopsre 
