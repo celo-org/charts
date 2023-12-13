@@ -85,21 +85,16 @@ blockscout:
         port: health
         scheme: HTTP
       initialDelaySeconds: 30
-      periodSeconds: 5
+      periodSeconds: 10
       successThreshold: 1
       timeoutSeconds: 5
     # -- livenessProbe for indexer container
-    livenessProbe: {}
-    # livenessProbe:
-    #   failureThreshold: 5
-    #   httpGet:
-    #     path: /health/liveness
-    #     port: health
-    #     scheme: HTTP
-    #   initialDelaySeconds: 30
-    #   periodSeconds: 5
-    #   successThreshold: 1
-    #   timeoutSeconds: 5
+    livenessProbe:
+      failureThreshold: 5
+      tcpSocket:
+        port: health
+      initialDelaySeconds: 60
+      periodSeconds: 30
     # -- resources for indexer container
     resources:
       requests:
@@ -179,7 +174,7 @@ blockscout:
         port: http
         scheme: HTTP
       initialDelaySeconds: 30
-      periodSeconds: 5
+      periodSeconds: 10
       successThreshold: 1
       timeoutSeconds: 5
     # -- livenessProbe for api container
@@ -190,7 +185,7 @@ blockscout:
         port: http
         scheme: HTTP
       initialDelaySeconds: 60
-      periodSeconds: 5
+      periodSeconds: 10
       successThreshold: 1
       timeoutSeconds: 5
     # -- resources for api container
@@ -267,7 +262,7 @@ blockscout:
         port: http
         scheme: HTTP
       initialDelaySeconds: 30
-      periodSeconds: 5
+      periodSeconds: 10
       successThreshold: 1
       timeoutSeconds: 5
     # -- livenessProbe for Web container
@@ -278,7 +273,7 @@ blockscout:
         port: http
         scheme: HTTP
       initialDelaySeconds: 60
-      periodSeconds: 5
+      periodSeconds: 10
       successThreshold: 1
       timeoutSeconds: 5
     sourcify:
