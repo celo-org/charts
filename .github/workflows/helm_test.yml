@@ -82,7 +82,7 @@ jobs:
 
       - name: "Set up Cloud SDK"
         if: steps.list-changed.outputs.changed == 'true'
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: "Login to Artifact Registry"
         if: steps.list-changed.outputs.changed == 'true'
