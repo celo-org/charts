@@ -59,7 +59,7 @@ the `volumes` section.
 {{- $port := default .Values.infrastructure.database.proxy.port ((.Database).proxy).port -}}
 {{- if .Values.infrastructure.database.enableCloudSQLProxy -}}
 - name: cloudsql-proxy
-  image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
+  image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.1-alpine
   lifecycle:
     postStart:
       exec:
@@ -149,7 +149,7 @@ the `volumes` section.
 {{- if .Values.infrastructure.database.enableCloudSQLProxy -}}
 {{- $database_host := default .Values.infrastructure.database.proxy.host ((.Database).proxy).connectionName -}}
 - name: cloudsql-proxy
-  image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
+  image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.1-alpine
   lifecycle:
     postStart:
       exec:
