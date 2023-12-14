@@ -72,7 +72,7 @@ the `volumes` section.
   args:
   - -c
   - |
-    /cloud_sql_proxy \
+    /cloud-sql-proxy \
     -instances={{ include "celo.blockscout.database-connection-string" . }} &
     CHILD_PID=$!
     (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
@@ -162,7 +162,7 @@ the `volumes` section.
   - -c
   args:
   - |
-    /cloud_sql_proxy \
+    /cloud-sql-proxy \
     -instances={{ include "celo.blockscout.database-connection-string" . }} \
     -term_timeout=30s
   {{- with .Values.infrastructure.database.proxy.livenessProbe }}
