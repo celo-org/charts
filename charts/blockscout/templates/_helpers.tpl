@@ -37,7 +37,7 @@ kubernetes.io/change-cause: {{ default "No change-cause provided" .Values.change
 
 {{- define "celo.blockscout.database-connection-string" -}}
 {{- $database := default .Values.infrastructure.database .Database -}}
-{{ $database.connectionName }}=tcp:{{ $database.port }}
+{{ $database.connectionName }}
 {{- end -}}
 
 {{- define "celo.blockscout.hook-annotations" -}}
@@ -73,7 +73,7 @@ the `volumes` section.
   - -c
   - |
     /cloud-sql-proxy \
-    -instances={{ include "celo.blockscout.database-connection-string" . }} &
+    {{ include "celo.blockscout.database-connection-string" . }} &
     CHILD_PID=$!
     (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
     wait $CHILD_PID
@@ -163,8 +163,8 @@ the `volumes` section.
   args:
   - |
     /cloud-sql-proxy \
-    -instances={{ include "celo.blockscout.database-connection-string" . }} \
-    -term_timeout=30s
+    {{ include "celo.blockscout.database-connection-string" . }} \
+    --max-sigterm-delay=30s
   {{- with .Values.infrastructure.database.proxy.livenessProbe }}
   livenessProbe:
     {{- toYaml . | nindent 4 }}
