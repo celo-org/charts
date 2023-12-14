@@ -164,7 +164,7 @@ the `volumes` section.
   - |
     /cloud-sql-proxy \
     {{ include "celo.blockscout.database-connection-string" . }} \
-    -term_timeout=30s
+    --max-sigterm-delay=30s
   {{- with .Values.infrastructure.database.proxy.livenessProbe }}
   livenessProbe:
     {{- toYaml . | nindent 4 }}
