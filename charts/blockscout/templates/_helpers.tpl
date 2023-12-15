@@ -37,7 +37,7 @@ kubernetes.io/change-cause: {{ default "No change-cause provided" .Values.change
 
 {{- define "celo.blockscout.database-connection-string" -}}
 {{- $database := default .Values.infrastructure.database .Database -}}
-{{ $database.connectionName }}=tcp:{{ $database.port }}
+{{ $database.connectionName }}
 {{- end -}}
 
 {{- define "celo.blockscout.hook-annotations" -}}
@@ -59,7 +59,7 @@ the `volumes` section.
 {{- $port := default .Values.infrastructure.database.proxy.port ((.Database).proxy).port -}}
 {{- if .Values.infrastructure.database.enableCloudSQLProxy -}}
 - name: cloudsql-proxy
-  image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
+  image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.1-alpine
   lifecycle:
     postStart:
       exec:
@@ -72,8 +72,8 @@ the `volumes` section.
   args:
   - -c
   - |
-    /cloud_sql_proxy \
-    -instances={{ include "celo.blockscout.database-connection-string" . }} &
+    /cloud-sql-proxy \
+    {{ include "celo.blockscout.database-connection-string" . }} &
     CHILD_PID=$!
     (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
     wait $CHILD_PID
@@ -130,7 +130,7 @@ the `volumes` section.
 {{- /* Defines init container copying secrets-init to the specified directory. */ -}}
 {{- define "celo.blockscout.initContainer.secrets-init" -}}
 - name: secrets-init
-  image: "doitintl/secrets-init:0.5.0"
+  image: "doitintl/secrets-init:0.4.2"
   args:
     - copy
     - /secrets/
@@ -149,7 +149,7 @@ the `volumes` section.
 {{- if .Values.infrastructure.database.enableCloudSQLProxy -}}
 {{- $database_host := default .Values.infrastructure.database.proxy.host ((.Database).proxy).connectionName -}}
 - name: cloudsql-proxy
-  image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
+  image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.1-alpine
   lifecycle:
     postStart:
       exec:
@@ -162,9 +162,9 @@ the `volumes` section.
   - -c
   args:
   - |
-    /cloud_sql_proxy \
-    -instances={{ include "celo.blockscout.database-connection-string" . }} \
-    -term_timeout=30s
+    /cloud-sql-proxy \
+    {{ include "celo.blockscout.database-connection-string" . }} \
+    --max-sigterm-delay=30s
   {{- with .Values.infrastructure.database.proxy.livenessProbe }}
   livenessProbe:
     {{- toYaml . | nindent 4 }}

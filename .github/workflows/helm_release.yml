@@ -38,7 +38,7 @@ jobs:
 
       # Gcloud CLI required for login to Artifact Registry
       - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
+        uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: Add Helm repositories
         run: |
