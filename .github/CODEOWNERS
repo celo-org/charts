@@ -2,14 +2,3 @@
 # the repo. Unless a later match takes precedence,
 # they will be requested for review when someone opens a pull request.
 * @celo-org/devopsre
-
-# Helm Charts for the Celo Safe service.
-# See the following for the application code:
-#   - https://github.com/celo-org/safe-client-gateway
-#   - https://github.com/celo-org/safe-config-service
-#   - https://github.com/celo-org/safe-transaction-service
-/charts/safe-client-gateway/ @celo-org/devopsre
-/charts/safe-config-service/ @celo-org/devopsre
-/charts/safe-transaction-service/ @celo-org/devopsre 
-
-/charts/blockscout/ @celo-org/devopsre 
