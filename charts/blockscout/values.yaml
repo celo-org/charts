@@ -327,7 +327,7 @@ blockscout:
     schedule: "0 */2 * * *"
     image:
       repository: us-west1-docker.pkg.dev/devopsre/dev-images/blockscoute-metadata-crawler
-      tag: master
+      tag: latest
     # -- Discord server for notifications
     discordClusterName: ""
 
