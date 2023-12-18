@@ -2,7 +2,7 @@
 
 Chart which is used to deploy Blockscout for Celo Networks
 
-![Version: 1.3.20](https://img.shields.io/badge/Version-1.3.20-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
+![Version: 1.3.21](https://img.shields.io/badge/Version-1.3.21-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
 
 - [blockscout](#blockscout)
   - [Chart requirements](#chart-requirements)
@@ -36,7 +36,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.3.20" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.3.21" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -111,7 +111,7 @@ helm upgrade my-blockscout -f values-alfajores-blockscout2.yaml --namespace=celo
 | blockscout.indexer.strategy | object | `{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}` | UpdateStrategy for indexer deployment |
 | blockscout.indexer.terminationGracePeriodSeconds | int | `60` | termination timeout for indexer pod |
 | blockscout.indexer.tracerImplementation | string | `"call_tracer"` | tracer to use to fetch internal transactions - 'js' or 'call_tracer' |
-| blockscout.metadataCrawler | object | `{"discordClusterName":"","enabled":false,"image":{"repository":"us-west1-docker.pkg.dev/devopsre/dev-images/blockscoute-metadata-crawler","tag":"master"},"schedule":"0 */2 * * *"}` | Configuraton for the metadataCrawler component |
+| blockscout.metadataCrawler | object | `{"discordClusterName":"","enabled":false,"image":{"repository":"us-west1-docker.pkg.dev/devopsre/dev-images/blockscoute-metadata-crawler","tag":"latest"},"schedule":"0 */2 * * *"}` | Configuraton for the metadataCrawler component |
 | blockscout.metadataCrawler.discordClusterName | string | `""` | Discord server for notifications |
 | blockscout.metadataCrawler.schedule | string | `"0 */2 * * *"` | Cron schedule for the metadataCrawler |
 | blockscout.shared.db | object | `{"drop":"false"}` | Drop the database on startup |
