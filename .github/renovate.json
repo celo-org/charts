@@ -3,11 +3,8 @@
   "timezone": "Europe/Berlin",
   "schedule": "before 5am every weekday",
   "extends": [
-    "config:recommended",
-    ":dependencyDashboard",
-    ":semanticCommits",
-    ":rebaseStalePrs",
-    ":gitSignOff"
+    "local>celo-org/.github:renovate-config",
+    ":semanticCommits"
   ],
   "bumpVersion": "patch",
   "ignorePaths": [
@@ -16,10 +13,6 @@
     "charts/safe-transaction-service/"
   ],
   "vulnerabilityAlerts": {
-    "enabled": true,
-    "labels": [
-      "type:security"
-    ],
     "minimumReleaseAge": null
   },
   "dependencyDashboardOSVVulnerabilitySummary": "unresolved"
