@@ -326,7 +326,7 @@ blockscout:
     # -- Cron schedule for the metadataCrawler
     schedule: "0 */2 * * *"
     image:
-      repository: us-west1-docker.pkg.dev/devopsre/dev-images/blockscoute-metadata-crawler
+      repository: us-west1-docker.pkg.dev/devopsre/celo-monorepo/blockscout-metadata-crawler
       tag: latest
     # -- Discord server for notifications
     discordClusterName: ""
