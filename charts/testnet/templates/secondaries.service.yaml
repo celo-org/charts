@@ -1,3 +1,4 @@
+{{- if gt (int .Values.replicas.secondaries) 0 -}}
 {{- if .Values.geth.static_ips -}}
 {{- range $index, $e := until (.Values.replicas.secondaries | int) -}}
 {{- if (ge $index (len $.Values.replicas.proxiesPerValidator)) -}}
@@ -14,6 +15,7 @@
     port: 30303
     protocol: TCP
 ---
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

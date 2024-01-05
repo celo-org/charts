@@ -44,7 +44,7 @@ spec:
               containerPort: {{ include "odis-combiner.port" . }}
               protocol: TCP
           command:
-            - bash
+            - /bin/sh
             - "-c"
             {{- if .Values.command }}
             {{- with .Values.command }}

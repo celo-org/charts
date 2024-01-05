@@ -1,3 +1,4 @@
+{{- if gt (int .Values.replicas.txNodesPrivate) 0 -}}
 {{- if .Values.geth.static_ips -}}
 {{- range $index, $e := until (.Values.replicas.txNodesPrivate | int) -}}
 {{- $loadBalancerIP := default "" (index $.Values.geth (print "private_tx_nodes_" $index "IpAddress")) }}
@@ -13,5 +14,6 @@
     port: 30303
     protocol: TCP
 ---
+{{- end }}
 {{- end }}
 {{- end }}

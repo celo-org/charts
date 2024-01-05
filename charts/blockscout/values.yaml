@@ -85,21 +85,16 @@ blockscout:
         port: health
         scheme: HTTP
       initialDelaySeconds: 30
-      periodSeconds: 5
+      periodSeconds: 10
       successThreshold: 1
       timeoutSeconds: 5
     # -- livenessProbe for indexer container
-    livenessProbe: {}
-    # livenessProbe:
-    #   failureThreshold: 5
-    #   httpGet:
-    #     path: /health/liveness
-    #     port: health
-    #     scheme: HTTP
-    #   initialDelaySeconds: 30
-    #   periodSeconds: 5
-    #   successThreshold: 1
-    #   timeoutSeconds: 5
+    livenessProbe:
+      failureThreshold: 5
+      tcpSocket:
+        port: health
+      initialDelaySeconds: 60
+      periodSeconds: 30
     # -- resources for indexer container
     resources:
       requests:
@@ -179,7 +174,7 @@ blockscout:
         port: http
         scheme: HTTP
       initialDelaySeconds: 30
-      periodSeconds: 5
+      periodSeconds: 10
       successThreshold: 1
       timeoutSeconds: 5
     # -- livenessProbe for api container
@@ -190,7 +185,7 @@ blockscout:
         port: http
         scheme: HTTP
       initialDelaySeconds: 60
-      periodSeconds: 5
+      periodSeconds: 10
       successThreshold: 1
       timeoutSeconds: 5
     # -- resources for api container
@@ -267,7 +262,7 @@ blockscout:
         port: http
         scheme: HTTP
       initialDelaySeconds: 30
-      periodSeconds: 5
+      periodSeconds: 10
       successThreshold: 1
       timeoutSeconds: 5
     # -- livenessProbe for Web container
@@ -278,7 +273,7 @@ blockscout:
         port: http
         scheme: HTTP
       initialDelaySeconds: 60
-      periodSeconds: 5
+      periodSeconds: 10
       successThreshold: 1
       timeoutSeconds: 5
     sourcify:
@@ -331,10 +326,18 @@ blockscout:
     # -- Cron schedule for the metadataCrawler
     schedule: "0 */2 * * *"
     image:
-      repository: gcr.io/celo-testnet/celo-monorepo
-      tag: metadata-crawler-77a392216d4927e85ce4b683508fc0539aa92a34
+      repository: us-west1-docker.pkg.dev/devopsre/celo-monorepo/blockscout-metadata-crawler
+      tag: latest
     # -- Discord server for notifications
     discordClusterName: ""
+
+  # -- Configuraton for the database maintenance cronjob
+  dbMaintenance:
+    enabled: true
+    schedule: "0 * 1 * *"
+    image:
+      repository: us-west1-docker.pkg.dev/devopsre/db-maintenance/db-maintenance-image
+      tag: latest
 
   shared:
     # -- Enable epochRewards
@@ -399,6 +402,10 @@ infrastructure:
   # -- Enable prometheus metrics, using annotations
   metrics:
     enabled: false
+  # -- secrets-init configuration
+  secretsInit:
+    # -- exit when a provider fails or a secret is not found
+    exitEarly: true
   # -- Default affinity for the pods
   affinity: {}
   # -- Default nodeSelector for the pods

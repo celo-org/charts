@@ -1,3 +1,4 @@
+{{- if gt (int .Values.replicas.txNodes) 0 -}}
 {{- range $index, $e := until (.Values.replicas.txNodes | int) -}}
 {{- /*
 We cannot use `ternary` or other workarounds because go templates evaluates
@@ -26,4 +27,5 @@ all the expressions: https://github.com/Masterminds/sprig/issues/271
     port: 8546
     protocol: TCP
 ---
+{{- end }}
 {{- end }}
