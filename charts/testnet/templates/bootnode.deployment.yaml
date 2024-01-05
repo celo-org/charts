@@ -1,4 +1,4 @@
-{{- if .Values.enableBootnode -}}
+{{- if .Values.bootnode.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -79,7 +79,7 @@ spec:
         - name: MNEMONIC
           valueFrom:
             secretKeyRef:
-              name: {{ template "common.fullname" . }}-geth-account
+              name: {{ template "celo.account-secret-name" . }}
               key: mnemonic
         volumeMounts:
         - name: data
@@ -88,12 +88,12 @@ spec:
       volumes:
       - name: data
         emptyDir: {}
-      {{- if .Values.bootnode.privateKey }}
+      {{- if (or ( .Values.secrets.bootnodePrivatekeyKey ) ( .Values.secrets.bootnodePrivatekeyKey )) }}
       - name: bootnode-pkey
         secret:
-          secretName: {{ template "common.fullname" . }}-geth-account
+          secretName: {{ include "celo.account-secret-name" . }}
           items:
-          - key: privateKey
+          - key: {{ include "celo.account-secret-bootnode-key" . }}
             path: node.key
       {{- end }}
       {{- with .Values.nodeSelector }}

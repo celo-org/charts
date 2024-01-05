@@ -110,6 +110,8 @@ release: {{ .Release.Name }}
 {{- define "common.bootnode-flag-script" -}}
 if [[ "{{ .Values.genesis.network }}" == "alfajores" || "{{ .Values.genesis.network }}" == "baklava" ]]; then
   BOOTNODE_FLAG="--{{ .Values.genesis.network }}"
+elif [[ "{{ .Values.genesis.network }}" == "rc1" || "{{ .Values.genesis.network }}" == "mainnet" ]]; then
+  BOOTNODE_FLAG="--mainnet"
 else
   [ -f /root/.celo/bootnodeEnode ] && BOOTNODE_FLAG="--bootnodes=$(cat /root/.celo/bootnodeEnode) --networkid={{ .Values.genesis.networkId }}"
 fi
@@ -376,23 +378,27 @@ data:
       echo "/root/.celo/ipAddress"
       cat /root/.celo/ipAddress
 
+      {{- if (or .Values.bootnode.enabled .Values.bootnode.ipAddress) }}
       echo -n "Generating Bootnode enode address for node: "
       celotooljs.sh generate public-key --mnemonic "$MNEMONIC" --accountType bootnode --index 0 > /root/.celo/bootnodeEnodeAddress
 
       cat /root/.celo/bootnodeEnodeAddress
-      [[ "$BOOTNODE_IP_ADDRESS" == 'none' ]] && BOOTNODE_IP_ADDRESS=${{ .Release.Namespace | upper }}_BOOTNODE_SERVICE_HOST
+      [[ "$BOOTNODE_IP_ADDRESS" == 'none' ]] && BOOTNODE_IP_ADDRESS=${{ .Release.Namespace | upper | replace "_" "-" }}_BOOTNODE_SERVICE_HOST
 
       echo "enode://$(cat /root/.celo/bootnodeEnodeAddress)@$BOOTNODE_IP_ADDRESS:30301" > /root/.celo/bootnodeEnode
       echo -n "Generating Bootnode enode for tx node: "
       cat /root/.celo/bootnodeEnode
+      {{- end }}
   env:
   - name: POD_IP
     valueFrom:
       fieldRef:
         apiVersion: v1
         fieldPath: status.podIP
+  {{- if (or .Values.bootnode.enabled .Values.bootnode.ipAddress) }}
   - name: BOOTNODE_IP_ADDRESS
     value: "{{ default .Values.bootnode.defaultClusterIP .Values.bootnode.ipAddress }}"
+  {{- end }}
   - name: REPLICA_NAME
     valueFrom:
       fieldRef:
@@ -400,8 +406,8 @@ data:
   - name: MNEMONIC
     valueFrom:
       secretKeyRef:
-        name: {{ template "common.fullname" . }}-geth-account
-        key: mnemonic
+        name: {{ .secret_name | default (printf "%s-geth-account" (include "common.fullname" .)) }}
+        key: {{ .mnemonic_key | default "mnemonic" }}
   - name: IP_ADDRESSES
     value: {{ .ip_addresses }}
   volumeMounts:

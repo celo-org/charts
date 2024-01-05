@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "timezone": "Europe/Berlin",
+  "schedule": "before 5am every weekday",
+  "extends": [
+    "local>celo-org/.github:renovate-config",
+    ":semanticCommits"
+  ],
+  "bumpVersion": "patch",
+  "ignorePaths": [
+    "charts/safe-client-gateway/",
+    "charts/safe-config-service/",
+    "charts/safe-transaction-service/"
+  ],
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": null
+  },
+  "dependencyDashboardOSVVulnerabilitySummary": "unresolved"
+}
