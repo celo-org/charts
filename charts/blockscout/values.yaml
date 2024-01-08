@@ -334,7 +334,7 @@ blockscout:
   # -- Configuraton for the database maintenance cronjob
   dbMaintenance:
     enabled: true
-    schedule: "0 0 * * 0" # At 00:00 on Sunday
+    schedule: "0 0 * * 0"  # At 00:00 on Sunday
     image:
       repository: us-west1-docker.pkg.dev/devopsre/db-maintenance/db-maintenance-image
       tag: latest
