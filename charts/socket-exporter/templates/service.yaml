@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "socket-exporter.fullname" . }}
+  labels:
+    {{- include "socket-exporter.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9101
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "socket-exporter.selectorLabels" . | nindent 4 }}
