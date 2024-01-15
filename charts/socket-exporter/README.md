@@ -24,8 +24,8 @@ A Helm chart for socket-exporter
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| env.apiKey | string | `"socket-api-key"` | Env. Var API_KEY. Won't be used if apiKeyExistingSecret is defined |
-| env.apiKeyExistingSecret | string | `"socket-api-key"` | Existing secret for Env. Var API_KEY. |
+| env.apiToken | string | `"socket-api-key"` | Env. Var API_KEY. Won't be used if apiKeyExistingSecret is defined |
+| env.apiTokenExistingSecret | string | `"socket-api-key"` | Existing secret for Env. Var API_KEY. |
 | env.logLevel | string | `"info"` | Log level. |
 | env.period | string | `"24"` | Period for retrieving Socket.dev scores in hours. |
 | fullnameOverride | string | `""` | Chart full name override |
