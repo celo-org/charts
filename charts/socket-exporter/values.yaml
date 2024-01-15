@@ -28,7 +28,7 @@ env:
   # -- Existing secret for Env. Var API_KEY.
   apiKeyExistingSecret: socket-api-key
   # -- Period for retrieving Socket.dev scores in hours.
-  period: 24
+  period: "24"
   # -- Log level.
   logLevel: "info"
 
@@ -41,7 +41,10 @@ serviceAccount:
   name: ""
 
 # -- Custom pod annotations
-podAnnotations: {}
+podAnnotations:
+  prometheus.io/path: /metrics
+  prometheus.io/port: "9101"
+  prometheus.io/scrape: "true"
 
 # -- Custom pod security context
 podSecurityContext: {}
