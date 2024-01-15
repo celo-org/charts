@@ -24,9 +24,9 @@ imagePullSecrets: []
 
 env:
   # -- Env. Var API_KEY. Won't be used if apiKeyExistingSecret is defined
-  apiKey: "socket-api-key"
+  apiToken: "socket-api-key"
   # -- Existing secret for Env. Var API_KEY.
-  apiKeyExistingSecret: socket-api-key
+  apiTokenExistingSecret: socket-api-key
   # -- Period for retrieving Socket.dev scores in hours.
   period: "24"
   # -- Log level.

@@ -11,8 +11,8 @@ image:
   tag: "0.0.1"
 
 env:
-  apiKey: "socket-api-key"
-  apiKeyExistingSecret: null
+  apiToken: "socket-api-key"
+  apiTokenExistingSecret: null
   period: 24
   logLevel: "info"
 

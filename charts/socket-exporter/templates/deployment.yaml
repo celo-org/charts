@@ -40,14 +40,14 @@ spec:
               value: "{{ .Values.env.period }}"
             - name: LOG_LEVEL
               value: {{ .Values.env.logLevel }}
-            {{- if .Values.env.apiKeyExistingSecret }}
-            - name: API_KEY
+            {{- if .Values.env.apiTokenExistingSecret }}
+            - name: API_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.env.apiKeyExistingSecret }}
+                  name: {{ .Values.env.apiTokenExistingSecret }}
                   key: {{ include "socket-exporter.secret" . }}
-            {{- else if and (.Values.env.apiKey) (not .Values.env.apiKeyExistingSecret) }}
-            - name: API_KEY
+            {{- else if and (.Values.env.apiToken) (not .Values.env.apiTokenExistingSecret) }}
+            - name: API_TOKEN
               value: {{ .Values.env.apiKey }}
             {{- end }}
           {{- with .Values.livenessProbe }}
