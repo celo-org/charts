@@ -68,6 +68,15 @@ spec:
               port: http
             {{- end }}
           {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /metrics
+              port: http
+            {{- end }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
