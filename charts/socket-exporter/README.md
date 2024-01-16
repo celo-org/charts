@@ -45,11 +45,7 @@ A Helm chart for socket-exporter
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| startupProbe.failureThreshold | int | `30` |  |
-| startupProbe.httpGet.path | string | `"/metrics"` |  |
-| startupProbe.httpGet.port | string | `"http"` |  |
-| startupProbe.periodSeconds | int | `10` |  |
-| startupProbe.timeoutSeconds | int | `30` |  |
+| startupProbe | object | `{"failureThreshold":30,"httpGet":{"path":"/metrics","port":"http"},"periodSeconds":10,"timeoutSeconds":30}` | Startup probe configuration |
 | tolerations | list | `[]` | Kubernetes tolerations |
 
 ----------------------------------------------
