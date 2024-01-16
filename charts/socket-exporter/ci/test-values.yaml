@@ -8,7 +8,7 @@ image:
   repository: us-west1-docker.pkg.dev/devopsre/socket-exporter/socket-exporter
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.0.1"
+  tag: "0.0.2"
 
 env:
   apiToken: "socket-api-key"
