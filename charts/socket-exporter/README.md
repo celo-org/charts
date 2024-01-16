@@ -33,18 +33,23 @@ A Helm chart for socket-exporter
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/socket-exporter/socket-exporter"` | Image repository |
 | image.tag | string | `"0.0.1"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
-| livenessProbe | object | `{}` | Liveness probe configuration |
+| livenessProbe | object | `{"httpGet":{"path":"/metrics","port":"http"},"timeoutSeconds":30}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
 | podAnnotations | object | `{"prometheus.io/path":"/metrics","prometheus.io/port":"9101","prometheus.io/scrape":"true"}` | Custom pod annotations |
 | podSecurityContext | object | `{}` | Custom pod security context |
-| readinessProbe | object | `{}` | Readiness probe configuration |
+| readinessProbe | object | `{"httpGet":{"path":"/metrics","port":"http"},"timeoutSeconds":5}` | Readiness probe configuration |
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
 | securityContext | object | `{}` | Custom container security context |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| startupProbe.failureThreshold | int | `30` |  |
+| startupProbe.httpGet.path | string | `"/metrics"` |  |
+| startupProbe.httpGet.port | string | `"http"` |  |
+| startupProbe.periodSeconds | int | `10` |  |
+| startupProbe.timeoutSeconds | int | `30` |  |
 | tolerations | list | `[]` | Kubernetes tolerations |
 
 ----------------------------------------------
