@@ -73,6 +73,7 @@ readinessProbe:
     path: /metrics
     port: http
 
+# -- Startup probe configuration
 startupProbe:
   timeoutSeconds: 30
   failureThreshold: 30
