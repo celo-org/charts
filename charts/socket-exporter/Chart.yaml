@@ -1,12 +1,12 @@
 ---
 apiVersion: v2
-appVersion: "0.0.1"
+appVersion: "0.0.2"
 name: socket-exporter
 description: A Helm chart for socket-exporter
 type: application
 home: https://celo.org
 icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
-version: 0.1.0
+version: 0.1.1
 sources:
   - https://celo.org
   - https://clabs.co
