@@ -67,7 +67,7 @@ livenessProbe:
     port: http
 
 # -- Readiness probe configuration
-readinessProbe: 
+readinessProbe:
   timeoutSeconds: 5
   httpGet:
     path: /metrics
