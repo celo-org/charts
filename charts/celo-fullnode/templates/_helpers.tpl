@@ -77,7 +77,7 @@ ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --http.timeout.read 600 --http.timeout.wri
 */}}
 {{- define "celo-fullnode.health-checker-server" -}}
 - name: health-checker-server-{{ .protocol_name }}
-  image: us.gcr.io/celo-testnet/health-checker:0.0.5
+  image: us-west1-docker.pkg.dev/devopsre/dev-images/health-checker:latest
   imagePullPolicy: IfNotPresent
   args:
   - --script=/health-check.sh
