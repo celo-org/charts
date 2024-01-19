@@ -31,6 +31,10 @@ env:
   period: "24"
   # -- Log level.
   logLevel: "info"
+  # -- The timeout for requests to Socket.dev, in seconds.
+  timeout: "15"
+  # -- The number of retries for requests to Socket.dev.
+  retries: "5"
 
 serviceAccount:
   # -- Specifies whether a service account should be created
