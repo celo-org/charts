@@ -17,7 +17,7 @@ image:
   pullPolicy: IfNotPresent
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.0.2"
+  tag: "0.1.0"
 
 # -- Image pull secrets
 imagePullSecrets: []
