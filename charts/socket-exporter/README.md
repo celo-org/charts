@@ -1,6 +1,6 @@
 # socket-exporter
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.2](https://img.shields.io/badge/AppVersion-0.0.2-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 A Helm chart for socket-exporter
 
@@ -28,6 +28,8 @@ A Helm chart for socket-exporter
 | env.apiTokenExistingSecret | string | `"socket-api-key"` | Existing secret for Env. Var API_KEY. |
 | env.logLevel | string | `"info"` | Log level. |
 | env.period | string | `"24"` | Period for retrieving Socket.dev scores in hours. |
+| env.retries | string | `"5"` | The number of retries for requests to Socket.dev. |
+| env.timeout | string | `"15"` | The timeout for requests to Socket.dev, in seconds. |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/socket-exporter/socket-exporter"` | Image repository |
