@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "common.fullname" . }}-load-test-config
+  name: {{ template "common.fullname" . }}-config
   labels:
     app: load-test
     chart: load-test

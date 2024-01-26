@@ -7,8 +7,6 @@ replicas: 0
 threads: 30
 # For multi-cluster setups
 initialCount: 0
-mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion rib
-  resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery
 web3Provider: http://localhost:8545
 generatePrivateKeys: true
 useRandomRecipient: false
@@ -26,7 +24,6 @@ genesis:
   useGenesisFileBase64: false
   genesisForceUrl: https://gist.githubusercontent.com/jcortejoso/eba86918c7b7c7546589edd9a32f1f08/raw/b564a1cb50c1fb5261ea5238b0c0b2d055af9ba4/genesis.json
 geth:
-  accountSecret: secret
   image:
     repository: us.gcr.io/celo-org/geth
     tag: 1.8.0
@@ -34,3 +31,17 @@ geth:
   staticNodes: ''
   verbosity: 1
 imagePullPolicy: Always
+# -- Secrets for the accounts
+secrets:
+  # Configure mnemonic and accountSecret if want to create a new secret
+  # -- Mnemonic to use for the accounts
+  mnemonic: girl beauty clarify deliver force dynamic wonder shoe install erosion rib
+    resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery
+  # -- Password to use for the accounts
+  accountSecret: password
+  # -- *Use an existing secret instead*. Name of the *existing* secret.
+  existingSecret: ""
+  # -- Key of the *existing* secret for the mnemonic.
+  mnemonicKey: mnemonic
+  # -- Key of the *existing* secret for the accountSecret.
+  accountSecretKey: secret
