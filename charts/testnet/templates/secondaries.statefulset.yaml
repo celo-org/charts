@@ -239,7 +239,6 @@ spec:
             --password=/root/.celo/account/accountSecret \
             --unlock=${ACCOUNT_ADDRESS} \
             --mine \
-            --etherbase=${ACCOUNT_ADDRESS} \
             --syncmode=full \
             --consoleformat=json \
             --consoleoutput=stdout \
