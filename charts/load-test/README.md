@@ -1,6 +1,6 @@
 # load-test
 
-![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Chart which is used to run load test for a Celo Network
 
@@ -32,7 +32,6 @@ Chart which is used to run load test for a Celo Network
 | genesis.genesisForceUrl | string | `"https://gist.githubusercontent.com/jcortejoso/eba86918c7b7c7546589edd9a32f1f08/raw/b564a1cb50c1fb5261ea5238b0c0b2d055af9ba4/genesis.json"` |  |
 | genesis.network | string | `"globaltestnet"` |  |
 | genesis.useGenesisFileBase64 | bool | `false` |  |
-| geth.accountSecret | string | `"secret"` |  |
 | geth.image.repository | string | `"us.gcr.io/celo-org/geth"` |  |
 | geth.image.tag | string | `"1.8.0"` |  |
 | geth.networkID | string | `"9099000"` |  |
@@ -40,8 +39,13 @@ Chart which is used to run load test for a Celo Network
 | geth.verbosity | int | `1` |  |
 | imagePullPolicy | string | `"Always"` |  |
 | initialCount | int | `0` |  |
-| mnemonic | string | `"girl beauty clarify deliver force dynamic wonder shoe install erosion rib resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery"` |  |
 | replicas | int | `0` |  |
+| secrets | object | `{"accountSecret":"password","accountSecretKey":"secret","existingSecret":"","mnemonic":"girl beauty clarify deliver force dynamic wonder shoe install erosion rib resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery","mnemonicKey":"mnemonic"}` | Secrets for the accounts |
+| secrets.accountSecret | string | `"password"` | Password to use for the accounts |
+| secrets.accountSecretKey | string | `"secret"` | Key of the *existing* secret for the accountSecret. |
+| secrets.existingSecret | string | `""` | *Use an existing secret instead*. Name of the *existing* secret. |
+| secrets.mnemonic | string | `"girl beauty clarify deliver force dynamic wonder shoe install erosion rib resource cannon topple prevent slot brown zero banana exercise quiz spot mercy misery"` | Mnemonic to use for the accounts |
+| secrets.mnemonicKey | string | `"mnemonic"` | Key of the *existing* secret for the mnemonic. |
 | testMode | string | `"mixed"` |  |
 | threads | int | `30` |  |
 | useRandomRecipient | bool | `false` |  |

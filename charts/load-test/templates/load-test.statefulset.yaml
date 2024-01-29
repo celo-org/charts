@@ -1,22 +1,8 @@
 {{- $reuseClient := .Values.reuse_geth_client | default true -}}
-apiVersion: v1
-kind: Service
-metadata:
-  name: load-test
-  labels:
-    component: load-test
-spec:
-  ports:
-  - port: 80
-    name: web
-  clusterIP: None
-  selector:
-    component: load-test
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "common.fullname" . }}-load-test
+  name: {{ template "common.fullname" . }}
   labels:
     app: load-test
     chart: load-test
@@ -77,8 +63,8 @@ spec:
         - name: MNEMONIC
           valueFrom:
             secretKeyRef:
-              name: {{ template "common.fullname" . }}-load-test
-              key: mnemonic
+              name: {{ include "celo.account-secret-name" . }}
+              key: {{ include "celo.account-secret-mnemonic-key" . }}
         - name: BOOTNODE_IP_ADDRESS
           value: "{{ .Values.bootnodeIpAddress }}"
         volumeMounts:
@@ -228,13 +214,13 @@ spec:
         - name: MNEMONIC
           valueFrom:
             secretKeyRef:
-              name: {{ template "common.fullname" . }}-load-test
-              key: mnemonic
+              name: {{ include "celo.account-secret-name" . }}
+              key: {{ include "celo.account-secret-mnemonic-key" . }}
         - name: PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "common.fullname" . }}-load-test
-              key: accountSecret
+              name: {{ include "celo.account-secret-name" . }}
+              key: {{ include "celo.account-secret-account-secret-key" . }}
         volumeMounts:
         - name: data
           mountPath: /root/.celo
@@ -244,11 +230,11 @@ spec:
       {{- if .Values.geth.staticNodes }}
       - name: config
         configMap:
-          name: {{ template "common.fullname" . }}-load-test-config
+          name: {{ template "common.fullname" . }}-config
       {{- end }}
       - name: account
         secret:
-          secretName: {{ template "common.fullname" . }}-load-test
+          secretName: {{ include "celo.account-secret-name" . }}
   {{- if and $reuseClient (contains "localhost" .Values.web3Provider) }}
   volumeClaimTemplates:
   - metadata:
@@ -258,7 +244,7 @@ spec:
         resize.topolvm.io/storage_limit: 500Gi
         resize.topolvm.io/threshold: 10%
     spec:
-      storageClassName: standard-rwo
+      storageClassName: {{ .Values.geth.storageClassName | default "standard-rwo" }}
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
