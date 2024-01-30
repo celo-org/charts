@@ -7,10 +7,10 @@ nodeSelector: {}
 celostats:
   image:
     server:
-      repository: gcr.io/celo-testnet/celostats-server
+      repository: us-west1-docker.pkg.dev/devopsre/celostats-server/celostats-server
       tag: latest
     frontend:
-      repository: gcr.io/celo-testnet/celostats-frontend
+      repository: us-west1-docker.pkg.dev/devopsre/celostats-server/celostats-frontend
       tag: latest
   service:
     type: NodePort
