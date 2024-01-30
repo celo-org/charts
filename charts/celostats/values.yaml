@@ -1,0 +1,43 @@
+# -- Image pullpolicy
+imagePullPolicy: IfNotPresent
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+celostats:
+  image:
+    # -- Celostat-server image and tag
+    server:
+      repository: us-west1-docker.pkg.dev/devopsre/celostats-server/celostats-server
+      tag: latest
+    # -- Celostat-frontend image and tag
+    frontend:
+      repository: us-west1-docker.pkg.dev/devopsre/celostats-server/celostats-frontend
+      tag: latest
+  # -- Service type
+  service:
+    type: NodePort
+  # -- Trusted addresses list
+  trusted_addresses: []
+  # -- Banned addresses list
+  banned_addresses: []
+
+domain:
+  # -- Domain name
+  name: celo-testnet
+
+# -- Ingress Class name
+ingressClassName: nginx
+
+# -- Container resources
+resources:
+  # -- Server container resources
+  server: {}
+  #   requests:
+  #     cpu: 100m
+  #     memory: 250Mi
+  # -- Frontend container resources
+  frontend: {}
+  #   requests:
+  #     cpu: 250m
+  #     memory: 250Mi
