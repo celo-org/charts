@@ -1,0 +1,24 @@
+---
+imagePullPolicy: IfNotPresent
+
+# Node labels for pod assignment
+# ref: https://kubernetes.io/docs/user-guide/node-selection/
+nodeSelector: {}
+
+celostats:
+  image:
+    server:
+      repository: us-west1-docker.pkg.dev/devopsre/celostats-server/celostats-server
+      tag: latest
+    frontend:
+      repository: us-west1-docker.pkg.dev/devopsre/celostats-server/celostats-frontend
+      tag: latest
+  service:
+    type: NodePort
+  trusted_addresses: []
+  banned_addresses: []
+
+domain:
+  name: celo-testnet
+
+ingressClassName: nginx
