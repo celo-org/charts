@@ -28,13 +28,13 @@ spec:
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         env:
         - name: TRUSTED_ADDRESSES
-          value: {{ .Values.celostats.trusted_addresses }}
+          value: "{{ .Values.celostats.trusted_addresses }}"
         - name: BANNED_ADDRESSES
-          value: {{ .Values.celostats.banned_addresses }}
+          value: "{{ .Values.celostats.banned_addresses }}"
         - name: RESERVED_ADDRESSES
-          value: {{ .Values.celostats.reserved_addresses }}
+          value: "{{ .Values.celostats.reserved_addresses }}"
         - name: JSONRPC
-          value: {{ .Values.celostats.jsonrpc }}
+          value: "{{ .Values.celostats.jsonrpc }}"
         command:
         - /bin/sh
         - -c
