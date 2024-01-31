@@ -1,0 +1,17 @@
+---
+apiVersion: v2
+name: attestation-bot
+version: 0.0.1
+type: application
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+description: Chart which is used to run attestations
+keywords:
+  - Celo
+  - Blockchain
+  - Ethereum
+  - Attestation
+appVersion: 0.0.1
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co

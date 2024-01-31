@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.environment }}-attestation-bot
+  labels:
+    app: attestation-bot
+    chart: attestation-bot
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: attestation-bot
+spec:
+  serviceName: attestation-bot
+  podManagementPolicy: Parallel
+  replicas: 1
+  selector:
+    matchLabels:
+      app: attestation-bot
+      release: {{ .Release.Name }}
+      component: attestation-bot
+  template:
+    metadata:
+      labels:
+        app: attestation-bot
+        release: {{ .Release.Name }}
+        component: attestation-bot
+    spec:
+      containers:
+      - name: attestation-bot
+        image: {{ .Values.imageRepository }}:{{ .Values.imageTag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        command:
+          - bash
+          - "-c"
+          - |
+            [[ $REPLICA_NAME =~ -([0-9]+)$ ]] || exit 1
+            RID=${BASH_REMATCH[1]}
+            CELOTOOL="/celo-monorepo/packages/celotool/bin/celotooljs.sh";
+
+            exec $CELOTOOL bots auto-verify --initialWaitSeconds {{ .Values.initialWaitSeconds }} --inBetweenWaitSeconds {{ .Values.inBetweenWaitSeconds }} --attestationMax {{ .Values.maxAttestations }} --celoProvider https://{{ .Release.Namespace }}-forno.{{ .Values.domain.name }}.org --index $RID --context {{ .Release.Namespace }} {{ if ne .Values.salt "" }} --salt {{ .Values.salt }}{{ end }}
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 200m
+        env:
+        - name: REPLICA_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        {{- if or (and .Values.secrets.existingSecret .Values.secrets.mnemonicKey) .Values.secrets.mnemonic }}
+        - name: MNEMONIC
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "celo.account-secret-name" . }}
+              key: {{ include "celo.account-secret-mnemonic-key" . }}
+        {{- end }}
+        {{- if or (and .Values.secrets.existingSecret .Values.secrets.twilioAccountSid) .Values.secrets.twilioAccountSid }}
+        - name: TWILIO_ACCOUNT_SID
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "celo.account-secret-name" . }}
+              key: {{ include "celo.twilio-account-sid-secret-key" . }}
+        {{- end }}
+        {{- if or (and .Values.secrets.existingSecret .Values.secrets.twilioAuthToken) .Values.secrets.twilioAuthToken }}
+        - name: TWILIO_ACCOUNT_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "celo.account-secret-name" . }}
+              key: {{ include "celo.twilio-account-auth-token-secret-key" . }}
+        {{- end }}
+        {{- if or (and .Values.secrets.existingSecret .Values.secrets.twilioAddressSid) .Values.secrets.twilioAddressSid }}
+        - name: TWILIO_ADDRESS_SID
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "celo.account-secret-name" . }}
+              key: {{ include "celo.twilio-account-address-sid-secret-key" . }}
+        {{- end }}
+      volumes:
+      - name: data
+        emptyDir: {}
