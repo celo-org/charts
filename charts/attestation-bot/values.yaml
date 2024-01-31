@@ -32,7 +32,7 @@ secrets:
   # -- Twilio address SID
   twilioAddressSid: ""
   # -- *Use an existing secret instead*. Name of the *existing* secret.
-  existingSecret: "secret"
+  existingSecret: ""
   # -- Key of the *existing* secret for the mnemonic.
   mnemonicKey: "mnemonic"
   # -- Key of the *existing* secret for the Twilio account SID.
