@@ -11,7 +11,7 @@ metadata:
 spec:
   serviceName: attestation-bot
   podManagementPolicy: Parallel
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: attestation-bot

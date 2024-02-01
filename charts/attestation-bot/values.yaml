@@ -1,4 +1,6 @@
 ---
+# -- Number of StatefulSet replicas
+replicaCount: 1
 domain:
   # -- Forno domain name
   name: celo-testnet
