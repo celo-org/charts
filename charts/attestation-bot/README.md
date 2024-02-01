@@ -1,6 +1,6 @@
 # attestation-bot
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
 
 Chart which is used to run attestations
 
@@ -23,6 +23,7 @@ Chart which is used to run attestations
 | initialWaitSeconds | int | `1200` |  |
 | maxAttestations | int | `32` |  |
 | networkID | int | `62320` | Network ID |
+| replicaCount | int | `1` | Number of StatefulSet replicas |
 | salt | string | `"bot-$RID"` |  |
 | secrets.existingSecret | string | `""` | *Use an existing secret instead*. Name of the *existing* secret. |
 | secrets.mnemonic | string | `"mnemonic"` | Mnemonic to use for the accounts |
