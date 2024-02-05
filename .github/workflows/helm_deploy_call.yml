@@ -84,7 +84,7 @@ jobs:
           location: ${{ inputs.cluster-location }}
 
       - name: Setup helmfile
-        uses: mamezou-tech/setup-helmfile@v1.3.0
+        uses: mamezou-tech/setup-helmfile@v2.0.0
 
       - name: Run helmfile
         run: helmfile --color --file ${{ inputs.helmfile }} ${{ inputs.action }} --context 10
