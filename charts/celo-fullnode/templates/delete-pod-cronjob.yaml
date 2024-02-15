@@ -36,7 +36,7 @@ spec:
               | grep -E "^Name:.*$|^Used By:.*$" \
               | grep -B 1 "<none>" \
               | grep -E "^Name:.*$" \
-              | grep -v "{{ printf "data-%s-%d" (include "common.fullname" .) (.Values.deletePodCronJob.podIndex | int) }}" \
+              | grep -vE "{{ printf "data-%s-%d" (include "common.fullname" .) (.Values.deletePodCronJob.podIndex | int) }}$" \
               {{- range .Values.deletePodCronJob.extraSkippedPvc }}
               | grep -v "{{ printf "data-%s-%d" (include "common.fullname" $) (. | int) }}" \
               {{- end }}
