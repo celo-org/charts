@@ -53,21 +53,21 @@ spec:
               name: {{ include "celo.account-secret-name" . }}
               key: {{ include "celo.account-secret-mnemonic-key" . }}
         {{- end }}
-        {{- if or (and .Values.secrets.existingSecret .Values.secrets.twilioAccountSid) .Values.secrets.twilioAccountSid }}
+        {{- if or (and .Values.secrets.existingSecret .Values.secrets.twilioAccountSidKey) .Values.secrets.twilioAccountSid }}
         - name: TWILIO_ACCOUNT_SID
           valueFrom:
             secretKeyRef:
               name: {{ include "celo.account-secret-name" . }}
               key: {{ include "celo.twilio-account-sid-secret-key" . }}
         {{- end }}
-        {{- if or (and .Values.secrets.existingSecret .Values.secrets.twilioAuthToken) .Values.secrets.twilioAuthToken }}
+        {{- if or (and .Values.secrets.existingSecret .Values.secrets.twilioAuthTokenKey) .Values.secrets.twilioAuthToken }}
         - name: TWILIO_ACCOUNT_AUTH_TOKEN
           valueFrom:
             secretKeyRef:
               name: {{ include "celo.account-secret-name" . }}
               key: {{ include "celo.twilio-account-auth-token-secret-key" . }}
         {{- end }}
-        {{- if or (and .Values.secrets.existingSecret .Values.secrets.twilioAddressSid) .Values.secrets.twilioAddressSid }}
+        {{- if or (and .Values.secrets.existingSecret .Values.secrets.twilioAddressSidKey) .Values.secrets.twilioAddressSid }}
         - name: TWILIO_ADDRESS_SID
           valueFrom:
             secretKeyRef:
