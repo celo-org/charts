@@ -21,6 +21,10 @@ celostats:
   trusted_addresses: []
   # -- Banned addresses list
   banned_addresses: []
+  jsonrpc: "test"
+  secrets: {}
+    # existingSecretApiKey: "secret"
+    # existingSecretApiKeyKey: "key" 
 
 domain:
   # -- Domain name

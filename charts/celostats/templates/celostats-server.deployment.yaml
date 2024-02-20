@@ -35,11 +35,19 @@ spec:
           value: "{{ .Values.celostats.reserved_addresses }}"
         - name: JSONRPC
           value: "{{ .Values.celostats.jsonrpc }}"
+        {{- if (and .Values.celostats.secrets .Values.celostats.secrets.existingSecretApiKey .Values.celostats.secrets.existingSecretApiKeyKey) }}
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.celostats.secrets.existingSecretApiKey }}
+              key: {{ .Values.celostats.secrets.existingSecretApiKeyKey }}
+        {{- end }}
         command:
         - /bin/sh
         - -c
         args:
         - |
+          {{- if (and .Values.celostats.secrets .Values.celostats.secrets.existingSecretApiKey .Values.celostats.secrets.existingSecretApiKeyKey) }}{{- printf "\n" }}          JSONRPC=$JSONRPC?apikey=$API_KEY{{- end }}
           sed -i "s%###NETWORK_NAME###%{{ .Values.celostats.network_name }}%g" /celostats-server/dist/js/netstats.min.js
           sed -i "s%###BLOCKSCOUT_URL###%{{ .Values.celostats.blockscout_url }}%g" /celostats-server/dist/js/netstats.min.js
           exec npm start
