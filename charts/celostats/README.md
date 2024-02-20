@@ -1,6 +1,6 @@
 # celostats
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
 
 Chart which is used to deploy a celostats setup for a celo testnet
 
@@ -26,6 +26,7 @@ Chart which is used to deploy a celostats setup for a celo testnet
 | celostats.banned_addresses | list | `[]` | Banned addresses list |
 | celostats.image.frontend | object | `{"repository":"us-west1-docker.pkg.dev/devopsre/celostats-server/celostats-frontend","tag":"latest"}` | Celostat-frontend image and tag |
 | celostats.image.server | object | `{"repository":"us-west1-docker.pkg.dev/devopsre/celostats-server/celostats-server","tag":"latest"}` | Celostat-server image and tag |
+| celostats.secrets | object | `{}` |  |
 | celostats.service | object | `{"type":"NodePort"}` | Service type |
 | celostats.trusted_addresses | list | `[]` | Trusted addresses list |
 | domain.name | string | `"celo-testnet"` | Domain name |
