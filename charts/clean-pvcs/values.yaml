@@ -19,16 +19,33 @@ image:
   tag: "latest"
 
 cronjob:
-  # -- Cronjob schedule
-  schedule: "0 1 * * *"
-  # -- Enable checking the date
-  enable_date: true
-  # -- Filter PVCs with this substring in name
-  filter: ""
-  # -- If enabling "dry-run" mode (do not delete the pvcs and test what would be deleted)
-  dry_run: true
-  # -- Delete PVCs older than (GNU date style)
-  older: "now-4 hours"
+  enabled: false
+  # -- Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute,
+  # with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes)
+  schedule: "0 10,22 * * *"
+  # -- Component to delete. Valid values are validators, tx-nodes, fullnodes
+  component: tx-nodes
+  # -- Statefulset index to delete
+  podIndex: 0
+  # -- Extra cmd flags to pass to the delete pod command
+  extraFlagsPod: ""
+  # -- Extra cmd flags to pass to the delete pvc command
+  extraFlagsPvc: ""
+  # -- Extra PVC index(es) to skip deletion
+  extraSkippedPvc:
+    - component: validators
+      index: 0
+    - component: validators
+      index: 1
+    - component: validators
+      index: 2
+    - component: tx-nodes
+      index: 1
+  # -- Override the args expression if needed.
+  args: []
+    # - |
+    #   echo "Hi"
+    #   echo "Bye"
 
 # -- Image pull secrets
 imagePullSecrets: []

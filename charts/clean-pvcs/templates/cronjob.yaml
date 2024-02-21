@@ -34,26 +34,35 @@ spec:
             command:
             - /bin/bash
             - -c
+            {{- if .Values.cronjob.args }}
+            {{- with .Values.cronjob.args }}
             args:
-              - |
-                {{- if .Values.cronjob.enable_date }}
-                EXISTING_PVCS=$(kubectl get pvc -o go-template --template '{{`{{`}}range .items{{`}}`}}{{`{{`}}.metadata.name{{`}}`}} {{`{{`}}.metadata.creationTimestamp{{`}}`}}{{`{{`}}"\n"{{`}}`}}{{`{{`}}end{{`}}`}}' | awk '$2 <= "'$(date -d'{{ .Values.cronjob.older }}' -Ins --utc | sed 's/+0000/Z/')'" { print $1 }')
-                {{- else }}
-                EXISTING_PVCS=$(kubectl get pvc --no-headers -o custom-columns=":metadata.name")
-                {{- end }}
-                USED_PVCS=$(kubectl get pods -o=json | jq -r '.items[].spec | select( has ("volumes") ).volumes[] | select( has ("persistentVolumeClaim") ).persistentVolumeClaim.claimName')
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- else }}
+            args:
+            - |
+              # Delete pvc that are not currently used
+              extraFlagsPvc="{{ .Values.cronjob.extraFlagsPvc }}"
+              unused_pvcs="$(kubectl describe pvc \
+              | grep -E "^Name:.*$|^Used By:.*$" \
+              | grep -B 1 "<none>" \
+              | grep -E "^Name:.*$" \
+              | grep -v "{{ printf "data-%s-%s-%d" .Release.Namespace .Values.cronjob.component (.Values.cronjob.podIndex | int) }}" \
+              {{- range .Values.cronjob.extraSkippedPvc }}
+              | grep -v "{{ printf "data-%s-%s-%d" .Release.Namespace .component (.index | int) }}" \
+              {{- end }}
+              )"
+              while IFS= read -r line; do
+                pvc=$(echo $line | awk '{print $2}')
+                echo "Deleting pvc $pvc"
+                kubectl delete pvc -n {{ .Release.Namespace }} $pvc $extraFlagsPvc
+              done <<< "$unused_pvcs"
 
-                {{- if .Values.cronjob.filter }}
-                # Filter to keep PVCs with string {{ .Values.cronjob.filter }}
-                EXISTING_PVCS=$(echo "$EXISTING_PVCS" | grep "{{ .Values.cronjob.filter }}")
-                {{- end }}
-                while IFS= read -r pvc; do
-                  if [[ ! " ${USED_PVCS[*]} " =~ ${pvc} ]]; then
-                    kubectl delete pvc "$pvc" {{ if .Values.cronjob.dry_run }}--dry-run=server{{ end }}
-                  fi
-                done <<< "$EXISTING_PVCS"
-
-                exit 0
+              # Delete the pod to force geth to flush the data to disk
+              extraFlagsPod="{{ .Values.cronjob.extraFlagsPod }}"
+              kubectl delete pod -n {{ .Release.Namespace }} {{ printf "%s-%s-%d" .Release.Namespace .Values.cronjob.component (.Values.cronjob.podIndex | int) }} $extraFlagsPod
+            {{- end }}
           restartPolicy: OnFailure
           terminationGracePeriodSeconds: 30
           {{- with .Values.nodeSelector }}
