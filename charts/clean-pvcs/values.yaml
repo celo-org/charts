@@ -19,7 +19,6 @@ image:
   tag: "latest"
 
 cronjob:
-  enabled: false
   # -- Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute,
   # with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes)
   schedule: "0 10,22 * * *"
