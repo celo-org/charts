@@ -1,6 +1,6 @@
 # clean-pvcs
 
-![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 Delete PVCs not mounted for some time
 
@@ -17,11 +17,13 @@ Delete PVCs not mounted for some time
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| cronjob.dry_run | bool | `true` | If enabling "dry-run" mode (do not delete the pvcs and test what would be deleted) |
-| cronjob.enable_date | bool | `true` | Enable checking the date |
-| cronjob.filter | string | `""` | Filter PVCs with this substring in name |
-| cronjob.older | string | `"now-4 hours"` | Delete PVCs older than (GNU date style) |
-| cronjob.schedule | string | `"0 1 * * *"` | Cronjob schedule |
+| cronjob.args | list | `[]` | Override the args expression if needed. |
+| cronjob.component | string | `"tx-nodes"` | Component to delete. Valid values are validators, tx-nodes, fullnodes |
+| cronjob.extraFlagsPod | string | `""` | Extra cmd flags to pass to the delete pod command |
+| cronjob.extraFlagsPvc | string | `""` | Extra cmd flags to pass to the delete pvc command |
+| cronjob.extraSkippedPvc | list | `[{"component":"validators","index":0},{"component":"validators","index":1},{"component":"validators","index":2},{"component":"tx-nodes","index":1}]` | Extra PVC index(es) to skip deletion |
+| cronjob.podIndex | int | `0` | Statefulset index to delete |
+| cronjob.schedule | string | `"0 10,22 * * *"` | Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute, with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes) |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"bitnami/kubectl"` | Image repository |

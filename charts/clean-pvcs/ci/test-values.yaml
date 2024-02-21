@@ -1,0 +1,37 @@
+---
+cronjob:
+  # -- Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute,
+  # with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes)
+  schedule: "24 17 * * *"
+  # -- Component to delete. Valid values are validators, tx-nodes, fullnodes
+  component: fullnodes
+  # -- Statefulset index to delete
+  podIndex: 0
+  # -- Extra cmd flags to pass to the delete pod command
+  extraFlagsPod: ""
+  # -- Extra cmd flags to pass to the delete pvc command
+  extraFlagsPvc: ""
+  # -- Extra PVC index(es) to skip deletion
+  extraSkippedPvc:
+    - component: fullnodes
+      index: 1
+  args:
+    - |
+      # Delete pvc that are not currently used
+      extraFlagsPvc=""
+      unused_pvcs="$(kubectl describe pvc \
+      | grep -E "^Name:.*$|^Used By:.*$" \
+      | grep -B 1 "<none>" \
+      | grep -E "^Name:.*$" \
+      | grep "data-rc1-fullnodes" \
+      | grep -v "data-rc1-fullnodes-0" \
+      | grep -v "data-rc1-fullnodes-1" \
+      )"
+      while IFS= read -r line; do
+        pvc=$(echo $line | awk '{print $2}')
+        if [[ -z "$pvc" ]]; then
+          continue
+        fi
+        echo "Deleting pvc $pvc"
+        kubectl delete pvc -n rc1 $pvc $extraFlagsPvc
+      done <<< "$unused_pvcs"
