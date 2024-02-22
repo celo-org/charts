@@ -36,5 +36,13 @@ spec:
            - main.py
           env:
             {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}
+            {{- if (and .Values.backend.existingSecret .Values.backend.coingeckoApiKeyKey) }}
+            - name: COINGECKO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.existingSecret }}
+                  key: {{ .Values.backend.coingeckoApiKeyKey }}
+            {{- else if .Values.backend.coingeckoApiKey }}
             - name: COINGECKO_API_KEY
               value: {{ .Values.backend.coingeckoApiKey }}
+            {{- end }}

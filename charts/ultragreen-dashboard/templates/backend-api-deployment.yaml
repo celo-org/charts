@@ -37,11 +37,35 @@ spec:
           {{- end }}
           env:
             {{- include "ultragreen-dashboard.shared-env-vars" . | nindent 12 }}
+            {{- if (and .Values.backend.existingSecret .Values.backend.coingeckoApiKeyKey) }}
+            - name: COINGECKO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.existingSecret }}
+                  key: {{ .Values.backend.coingeckoApiKeyKey }}
+            {{- else if .Values.backend.coingeckoApiKey }}
             - name: COINGECKO_API_KEY
               value: {{ .Values.backend.coingeckoApiKey }}
+            {{- end }}
+            {{- if (and .Values.backend.existingSecret .Values.backend.twitterApiKeyKey) }}
+            - name: TWITTER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.existingSecret }}
+                  key: {{ .Values.backend.twitterApiKeyKey }}
+            {{- else if .Values.backend.twitterApiKey }}
             - name: TWITTER_API_KEY
               value: {{ .Values.backend.twitterApiKey }}
+            {{- end }}
+            {{- if (and .Values.backend.existingSecret .Values.backend.twitterApiSecretKey) }}
+            - name: TWITTER_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.existingSecret }}
+                  key: {{ .Values.backend.twitterApiSecretKey }}
+            {{- else if .Values.backend.twitterApiSecret }}
             - name: TWITTER_API_SECRET
               value: {{ .Values.backend.twitterApiSecret }}
+            {{- end }}
             - name: CLIENT_URL
               value:  {{ .Values.backend.clientUrl }}
