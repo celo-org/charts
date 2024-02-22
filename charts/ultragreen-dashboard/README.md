@@ -1,6 +1,6 @@
 # ultragreen-dashboard
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Celo Ultragreed Dashboard
 
@@ -46,11 +46,13 @@ Celo Ultragreed Dashboard
 | backend.api.service.type | string | `"ClusterIP"` |  |
 | backend.clientUrl | string | `""` |  |
 | backend.coingeckoApiKey | string | `""` |  |
+| backend.coingeckoApiKeyKey | string | `""` |  |
 | backend.epochRewards.image.pullPolicy | string | `"Always"` |  |
 | backend.epochRewards.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-epoch-rewards"` |  |
 | backend.epochRewards.image.tag | string | `"latest"` |  |
 | backend.epochRewards.replicaCount | int | `1` |  |
 | backend.epochRewards.resources | object | `{}` |  |
+| backend.existingSecret | string | `""` |  |
 | backend.footPrint.image.pullPolicy | string | `"Always"` |  |
 | backend.footPrint.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-footprint"` |  |
 | backend.footPrint.image.tag | string | `"latest"` |  |
@@ -72,7 +74,9 @@ Celo Ultragreed Dashboard
 | backend.tokenPrices.replicaCount | int | `1` |  |
 | backend.tokenPrices.resources | object | `{}` |  |
 | backend.twitterApiKey | string | `""` |  |
+| backend.twitterApiKeyKey | string | `""` |  |
 | backend.twitterApiSecret | string | `""` |  |
+| backend.twitterApiSecretKey | string | `""` |  |
 | backend.txFees.image.pullPolicy | string | `"Always"` |  |
 | backend.txFees.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/ultragreen-dashboard/ultragreen-dashboard-tx-fees"` |  |
 | backend.txFees.image.tag | string | `"latest"` |  |

@@ -7,6 +7,10 @@ backend:
   coingeckoApiKey: ""
   twitterApiKey: ""
   twitterApiSecret: ""
+  existingSecret: ""
+  coingeckoApiKeyKey: ""
+  twitterApiKeyKey: ""
+  twitterApiSecretKey: ""
   clientUrl: ""
   api:
     replicaCount: 1
