@@ -95,15 +95,7 @@ jobs:
       - name: "Install dependencies - ExternalSecrets CRDs"
         if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/optics-keymaster')
         run: |
-          dir=${PWD%/*}
-          mkdir /tmp/k8s-external-secrets && cd /tmp/k8s-external-secrets
-          git init
-          git remote add -f origin https://github.com/external-secrets/external-secrets
-          git config core.sparseCheckout true
-          echo "config/*" >> .git/info/sparse-checkout
-          git pull origin main
-          kubectl apply -f config/crds/bases/
-          cd $dir
+          kubectl apply --kustomize https://github.com/external-secrets/external-secrets.git/config/crds/bases\?ref\=main
   
       - name: "Authenticate to Google Cloud"
         if: steps.list-changed.outputs.changed == 'true'
