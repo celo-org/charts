@@ -1,0 +1,86 @@
+---
+replicaCount: 1
+
+image:
+  repository: gcr.io/clabs-optics/keymaster
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+keymaster:
+  config: |
+    {
+      "networks": {
+        "alfajores": {
+          "endpoint": "https://alfajores-forno.celo-testnet.org",
+          "bank": {
+            "signer": "0x0000000000000000000000000000000000000000000000000000000000000001",
+            "address": "0x7e5f4552091a69125d5dfcb7b8c2659029395bdf"
+          },
+          "threshold": 500000000000000000
+        },
+        "rinkeby": {
+          "endpoint": "https://eth-rinkeby.alchemyapi.io/v2/",
+          "bank": {
+            "signer": "0x0000000000000000000000000000000000000000000000000000000000000001",
+            "address": "0x7e5f4552091a69125d5dfcb7b8c2659029395bdf"
+          },
+          "threshold": 500000000000000000
+        }
+      },
+      "homes": {
+        "alfajores": {
+          "replicas": [
+            "rinkeby"
+          ],
+          "addresses": {
+            "kathy": "0x0000000000000000000000000000000000000001",
+            "watcher": "0x0000000000000000000000000000000000000002",
+            "updater": "0x0000000000000000000000000000000000000003",
+            "relayer": "0x0000000000000000000000000000000000000004",
+            "processor": "0x0000000000000000000000000000000000000005"
+          }
+        },
+        "rinkeby": {
+          "replicas": [
+            "alfajores"
+          ],
+          "addresses": {
+            "kathy": "0x0000000000000000000000000000000000000006",
+            "watcher": "0x0000000000000000000000000000000000000007",
+            "updater": "0x0000000000000000000000000000000000000008",
+            "relayer": "0x0000000000000000000000000000000000000009",
+            "processor": "0x000000000000000000000000000000000000000a"
+          }
+        }
+      }
+    }
+
+env: []
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations:
+  prometheus.io/scrape: 'true'
+  prometheus.io/port: '9090'
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+akeyless: {}
+  # gwApiUrl: <value_here>
+  # authSecretRef:
+  #   kubernetesAuth:
+  #     accessID: <value_here>
+  #     k8sConfName: <value_here>

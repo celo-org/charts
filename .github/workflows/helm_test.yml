@@ -73,6 +73,30 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         uses: helm/kind-action@v1.9.0
 
+      - name: "Install dependencies - Kong CRDs"
+        if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/kong-celo-fullnode')
+        # contains(join(steps.updated_files.outputs.all), 'charts/kong-celo-fullnode/')
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/Kong/kong-operator/main/helm-charts/kong/crds/custom-resource-definitions.yaml
+
+      - name: "Install dependencies - ConfigConnector CRDs"
+        if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/blockscout')
+        run: |
+          dir=${PWD%/*}
+          mkdir /tmp/k8s-config-connector && cd /tmp/k8s-config-connector
+          git init
+          git remote add -f origin https://github.com/GoogleCloudPlatform/k8s-config-connector
+          git config core.sparseCheckout true
+          echo "crds/*" >> .git/info/sparse-checkout
+          git pull origin master
+          kubectl apply -f crds/
+          cd $dir
+
+      - name: "Install dependencies - ExternalSecrets CRDs"
+        if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/optics-keymaster')
+        run: |
+          kubectl apply --kustomize https://github.com/external-secrets/external-secrets.git/config/crds/bases\?ref\=main
+  
       - name: "Authenticate to Google Cloud"
         if: steps.list-changed.outputs.changed == 'true'
         uses: google-github-actions/auth@v2
@@ -126,26 +150,6 @@ jobs:
           done
 
           echo "Done!"
-
-      - name: "Install dependencies - Kong CRDs"
-        if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/kong-celo-fullnode')
-        # contains(join(steps.updated_files.outputs.all), 'charts/kong-celo-fullnode/')
-        run: |
-          kubectl apply -f https://raw.githubusercontent.com/Kong/kong-operator/main/helm-charts/kong/crds/custom-resource-definitions.yaml
-
-      - name: "Install dependencies - ConfigConnector CRDs"
-        if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/blockscout')
-        run: |
-          dir=${PWD%/*}
-          mkdir /tmp/k8s-config-connector
-          cd /tmp/k8s-config-connector
-          git init
-          git remote add -f origin https://github.com/GoogleCloudPlatform/k8s-config-connector
-          git config core.sparseCheckout true
-          echo "crds/*" >> .git/info/sparse-checkout
-          git pull origin master
-          kubectl apply -f crds/
-          cd $dir
 
       - name: "Templating charts"
         if: steps.list-changed.outputs.changed == 'true'
