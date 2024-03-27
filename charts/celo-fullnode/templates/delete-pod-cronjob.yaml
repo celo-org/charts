@@ -38,7 +38,7 @@ spec:
               | grep -E "^Name:.*$" \
               | grep -vE "{{ printf "data-%s-%d" (include "common.fullname" .) (.Values.deletePodCronJob.podIndex | int) }}$" \
               {{- range .Values.deletePodCronJob.extraSkippedPvc }}
-              | grep -v "{{ printf "data-%s-%d" (include "common.fullname" $) (. | int) }}" \
+              | grep -v "{{ printf "data-%s-%d" (include "common.fullname" $) (. | int) }}$" \
               {{- end }}
               )"
               while IFS= read -r line; do
