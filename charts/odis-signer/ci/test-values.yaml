@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   repository: us-west1-docker.pkg.dev/devopsre/social-connect/odis-signer
   pullPolicy: Always
-  tag: "odis-signer-3.1.1"
+  tag: "odis-signer-3.1.2"
 
 imagePullSecrets: []
 
