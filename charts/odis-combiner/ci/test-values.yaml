@@ -4,7 +4,7 @@ replicaCount: 1
 image:
   repository: us-west1-docker.pkg.dev/devopsre/social-connect/odis-combiner
   pullPolicy: Always
-  tag: "odis-combiner-3.3.0"
+  tag: "odis-combiner-3.3.3"
 imagePullSecrets: []
 serviceAccount:
   create: true
