@@ -1,6 +1,6 @@
 # odis-combiner
 
-![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf](https://img.shields.io/badge/AppVersion-4c00727348979093a76a7aa5b1ba7ea7bf5ac9cf-informational?style=flat-square)
+![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: odis-combiner-3.3.3](https://img.shields.io/badge/AppVersion-odis--combiner--3.3.3-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer in AKS
 
@@ -66,7 +66,7 @@ Helm chart for deploying Celo ODIS signer in AKS
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/social-connect/odis-combiner"` | Image repository |
-| image.tag | string | `"odis-combiner-3.3.0"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"odis-combiner-3.3.3"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `"nginx"` | Ingress class name |

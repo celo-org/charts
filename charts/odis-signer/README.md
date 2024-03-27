@@ -1,6 +1,6 @@
 # odis-signer
 
-![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: odis-signer-3.1.2](https://img.shields.io/badge/AppVersion-odis--signer--3.1.2-informational?style=flat-square)
+![Version: 0.2.6](https://img.shields.io/badge/Version-0.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: odis-signer-3.1.2](https://img.shields.io/badge/AppVersion-odis--signer--3.1.2-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer
 
@@ -75,7 +75,7 @@ Helm chart for deploying Celo ODIS signer
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/social-connect/odis-signer"` | Image repository |
-| image.tag | string | `"odis-signer-3.1.1"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"odis-signer-3.1.2"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `"nginx"` | Ingress class name |
