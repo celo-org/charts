@@ -119,6 +119,8 @@ geth:
   create_network_endpoint_group: false
   # -- Geth's extra flags options (as string)
   flags: --txpool.nolocals
+  # -- Custom script (shell) that runs just before geth process is started
+  extra_setup: ""
   # -- Celo-blockchain statefulset `updateStrategy`
   updateStrategy:
     type: RollingUpdate
