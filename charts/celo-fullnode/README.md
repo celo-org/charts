@@ -2,7 +2,7 @@
 
 Helm chart for deploying a Celo fullnode. More info at https://docs.celo.org
 
-![Version: 0.6.11](https://img.shields.io/badge/Version-0.6.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.0](https://img.shields.io/badge/AppVersion-1.6.0-informational?style=flat-square)
+![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.8.2](https://img.shields.io/badge/AppVersion-1.8.2-informational?style=flat-square)
 
 - [celo-fullnode](#celo-fullnode)
   - [Chart requirements](#chart-requirements)
@@ -34,7 +34,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.6.11" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/celo-fullnode --version=0.7.0" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
@@ -66,6 +66,7 @@ helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo 
 | deletePodCronJob.extraSkippedPvc | list | `[1,2,3]` | Extra PVC index(es) to skip deletion |
 | deletePodCronJob.podIndex | int | `0` | Statefulset index to delete |
 | deletePodCronJob.schedule | string | `"0 10,22 * * *"` | Cron expression for the CronJob. As reference for mainnet, the sync speed is around ~2000 blocks/minute, with a blockTime of 5 seconds, 1 day are 17280 blocks (so one day of sync is around 9 minutes) |
+| extraInitContainers | list | `[]` | Additional initContainers to add to the statefulset |
 | extraPodLabels | object | `{}` | Labels to add to the podTemplateSpec from statefulset |
 | fullnameOverride | bool | `false` | Override default name format. Use false to use default name format, or a string to override |
 | gcp | bool | `false` | Enables gcp specific settings |
@@ -83,10 +84,11 @@ helm upgrade celo-mainnet-fullnode -f values-mainnet-node.yaml --namespace=celo 
 | geth.autoscaling.minReplicas | int | `1` | Minimum number of replicas |
 | geth.create_network_endpoint_group | bool | `false` | Use GPC's `cloud.google.com/neg` annotations to configure NEG for the RPC/WS services |
 | geth.expose_rpc_externally | bool | `false` | Expose RPC port externally in the individual replica services |
+| geth.extra_setup | string | `""` | Custom script (shell) that runs just before geth process is started |
 | geth.flags | string | `"--txpool.nolocals"` | Geth's extra flags options (as string) |
 | geth.gcmode | string | `"full"` | Blockchain garbage collection mode. Valid values are: full and archive |
 | geth.gcp_workload_idantity_email | string | `""` |  |
-| geth.image | object | `{"imagePullPolicy":"IfNotPresent","repository":"us.gcr.io/celo-testnet/geth","tag":"master"}` | Image for the celo-blockchain statefulset |
+| geth.image | object | `{"imagePullPolicy":"IfNotPresent","repository":"us.gcr.io/celo-org/geth","tag":"1.8.2"}` | Image for the celo-blockchain statefulset |
 | geth.in_memory_discovery_table | bool | `false` | Enable blockchain option `--use-in-memory-discovery-table` |
 | geth.light.maxpeers | int | `1000` | Maximum number of light clients to serve, or light servers to attach to |
 | geth.light.serve | int | `70` | Maximum percentage of time allowed for serving LES requests (multi-threaded processing allows values over 100) |
