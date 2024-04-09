@@ -10,6 +10,7 @@ jobs:
   # Only run tests and generate docs if Helm files have changed.
   helm-change:
     runs-on: 'ubuntu-latest'
+    if: ${{ ! startsWith(github.triggering_actor, 'akeyless') }}
     permissions:
       pull-requests: read
     outputs:
@@ -28,7 +29,7 @@ jobs:
 
   helm-test:
     needs: helm-change
-    if: ${{ needs.helm-change.outputs.charts-change == 'true' }}
+    if: ${{ needs.helm-change.outputs.charts-change == 'true' && ! startsWith(github.triggering_actor, 'akeyless') }}
     runs-on: 'ubuntu-latest'
     env:
       HELM_VERSION: "v3.13.1"
@@ -192,25 +193,26 @@ jobs:
 
   helm-docs:
     runs-on: 'ubuntu-latest'
+    if: ${{ ! startsWith(github.triggering_actor, 'akeyless') }}
     needs: 'helm-test'
     env:
       HELM_DOCS_VERSION: "1.12.0"
     permissions:
       id-token: write
     steps:
-      # - name: "Get GitHub Token from Akeyless"
-      #   id: get_auth_token
-      #   uses:
-      #     docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
-      #   with:
-      #     api-url: https://api.gateway.akeyless.celo-networks-dev.org
-      #     access-id: p-kf9vjzruht6l
-      #     dynamic-secrets: '{"/dynamic-secrets/keys/github/charts/contents=write,pull_requests=write":"PAT"}'
+      - name: "Get GitHub Token from Akeyless"
+        id: get_auth_token
+        uses:
+          docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+        with:
+          api-url: https://api.gateway.akeyless.celo-networks-dev.org
+          access-id: p-kf9vjzruht6l
+          dynamic-secrets: '{"/dynamic-secrets/keys/github/charts/contents=write,pull_requests=write":"PAT"}'
 
       - name: "Checkout current PR"
         uses: actions/checkout@v4
-      #  with:
-      #    token: ${{ env.PAT }}
+        with:
+          token: ${{ env.PAT }}
 
       - name: "Install helm-docs"
         run: |
