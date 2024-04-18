@@ -1,0 +1,90 @@
+# Default values for accounts-exporter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+# -- Number of deployment replicas
+replicaCount: 1
+
+geth:
+  # -- Provider RPC endpoint to read balances from
+  url: "https://rpc2.sepolia.org"
+
+# -- Adresses to get balance for. As a string, one address per line, in the format <NAME>:<PUBLIC_ADDRESS> (reported as labels "name" and "address")
+addressess: |
+  op-testnet-admin:0x19c1696408E63d670ab8177bfafB0D37e9F3ed82
+  op-testnet-batcher:0x0F82E82268FA5de5070A088e54eAbc2dec07D615
+  op-testnet-proposer:0x8D20f1E387cDF78c4AF42F61FB48B1Be72056FEb
+  op-testnet-sequencer:0xF20B236A87e26D1Ac7290D0F70f637af8145D54e
+
+image:
+  # -- Image repository
+  repository: "us-west1-docker.pkg.dev/devopsre/dev-images/ethexporter"
+  # -- Image pullpolicy
+  pullPolicy: IfNotPresent
+  # -- Image tag
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "0.1.0"
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations:
+    iam.gke.io/gcp-service-account: odis-signer0-staging@celo-testnet.iam.gserviceaccount.com
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Custom pod annotations
+podAnnotations:
+  # prometheus.io/path: /metrics
+  # prometheus.io/port: "9015"
+  # prometheus.io/scrape: "true"
+
+# -- Custom pod security context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Custom container security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # -- Service type
+  type: ClusterIP
+  # -- Service port
+  port: 80
+
+# -- Container resources
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes pod affinity
+affinity: {}
