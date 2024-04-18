@@ -20,7 +20,7 @@ A Helm chart for Kubernetes
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| addressess | string | `"alvaro-op-admin:0x19c1696408E63d670ab8177bfafB0D37e9F3ed82\nalvaro-op-batcher:0x0F82E82268FA5de5070A088e54eAbc2dec07D615\nalvaro-op-proposer:0x8D20f1E387cDF78c4AF42F61FB48B1Be72056FEb\nalvaro-op-sequencer:0xF20B236A87e26D1Ac7290D0F70f637af8145D54e\n"` | Adresses to get balance for. As a string, one address per line, in the format <NAME>:<PUBLIC_ADDRESS> (reported as labels "name" and "address") |
+| addressess | string | `"op-testnet-admin:0x19c1696408E63d670ab8177bfafB0D37e9F3ed82\nop-testnet-batcher:0x0F82E82268FA5de5070A088e54eAbc2dec07D615\nop-testnet-proposer:0x8D20f1E387cDF78c4AF42F61FB48B1Be72056FEb\nop-testnet-sequencer:0xF20B236A87e26D1Ac7290D0F70f637af8145D54e\n"` | Adresses to get balance for. As a string, one address per line, in the format <NAME>:<PUBLIC_ADDRESS> (reported as labels "name" and "address") |
 | affinity | object | `{}` | Kubernetes pod affinity |
 | fullnameOverride | string | `""` | Chart full name override |
 | geth.url | string | `"https://rpc2.sepolia.org"` | Provider RPC endpoint to read balances from |
