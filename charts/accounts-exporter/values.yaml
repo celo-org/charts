@@ -16,10 +16,10 @@ geth:
 
 # -- Adresses to get balance for. As a string, one address per line, in the format <NAME>:<PUBLIC_ADDRESS> (reported as labels "name" and "address")
 addressess: |
-  alvaro-op-admin:0x19c1696408E63d670ab8177bfafB0D37e9F3ed82
-  alvaro-op-batcher:0x0F82E82268FA5de5070A088e54eAbc2dec07D615
-  alvaro-op-proposer:0x8D20f1E387cDF78c4AF42F61FB48B1Be72056FEb
-  alvaro-op-sequencer:0xF20B236A87e26D1Ac7290D0F70f637af8145D54e
+  op-testnet-admin:0x19c1696408E63d670ab8177bfafB0D37e9F3ed82
+  op-testnet-batcher:0x0F82E82268FA5de5070A088e54eAbc2dec07D615
+  op-testnet-proposer:0x8D20f1E387cDF78c4AF42F61FB48B1Be72056FEb
+  op-testnet-sequencer:0xF20B236A87e26D1Ac7290D0F70f637af8145D54e
 
 image:
   # -- Image repository
