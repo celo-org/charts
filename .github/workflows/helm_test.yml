@@ -26,6 +26,10 @@ jobs:
               - 'charts/**/templates/**'
               - 'charts/**/values.yaml'
               - 'charts/**/Chart.yaml'
+              - 'charts-private/**/dockerfiles/**'
+              - 'charts-private/**/templates/**'
+              - 'charts-private/**/values.yaml'
+              - 'charts-private/**/Chart.yaml'
 
   helm-test:
     needs: helm-change
