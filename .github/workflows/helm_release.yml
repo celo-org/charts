@@ -87,10 +87,7 @@ jobs:
           if [ -s changed_charts ]; then
             while read chart; do
               # Skip if chart is not a directory (i.e: chart deleted)
-              echo Before continue
-              echo charts/${chart}
               [ -d charts/${chart} ] || continue
-              echo After continue
               helm dependency update --skip-refresh ./charts/${chart}
               helm package -u charts/${chart}/
               helm push ./${chart}-*.tgz oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
