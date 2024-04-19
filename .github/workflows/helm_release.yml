@@ -96,7 +96,7 @@ jobs:
               helm push ./${chart}-*.tgz oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
             done <<EOF
               $(cat changed_charts)
-            EOF
+          EOF
           fi
 
       - name: "Push private Helm Charts"
@@ -111,5 +111,5 @@ jobs:
               helm push ./${chart}-*.tgz oci://us-west1-docker.pkg.dev/devopsre/clabs-private-oci
             done <<EOF
               $(cat changed_charts)
-            EOF
+          EOF
           fi
