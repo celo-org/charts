@@ -86,6 +86,7 @@ jobs:
           echo "${{ steps.updated_files.outputs.all }}" | tr "," "\n" | grep 'charts/' | sed 's#^charts/##' | sed 's#/.*$##' | sort | uniq > changed_charts
           while read chart; do
             # Skip if chart is not a directory (i.e: chart deleted)
+            echo 'charts/${chart}'
             [ -d charts/${chart} ] || continue
             helm dependency update --skip-refresh ./charts/${chart}
             helm package -u charts/${chart}/
