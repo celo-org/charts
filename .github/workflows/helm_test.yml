@@ -233,4 +233,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: '[Automatic] - Update chart README.md'
-          file_pattern: 'charts/**/README.md'
+          file_pattern: 'charts/**/README.md charts-private/**/README.md'
