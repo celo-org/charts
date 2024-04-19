@@ -10,6 +10,12 @@ A Helm chart for Kubernetes
 | ---- | ------ | --- |
 | cLabs | <devops@clabs.co> | <https://clabs.co> |
 
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://charts.bitnami.com/bitnami | redis | 17.3.7 |
+
 ## Values
 
 | Key | Type | Default | Description |
