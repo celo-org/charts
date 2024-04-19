@@ -55,6 +55,16 @@ jobs:
             # Helm repo name is generated from a random string, as it is not persisted between executions.
             helm repo add $(openssl rand -hex 12) ${helm_repo}
           done
+          # Do the same for 'charts-private' folder
+          yq '.dependencies.[].repository' charts-private/*/Chart.yaml | awk '/^http/' | sed 's:/*$::' | sort | uniq | while read helm_repo_private; do
+            # Check if dependency is already added
+            if helm repo list | grep ${helm_repo_private} >/dev/null; then
+              echo 'Skip dependency ${helm_repo_private}'
+            else
+              # Helm repo name is generated from a random string, as it is not persisted between executions.
+              helm repo add $(openssl rand -hex 12) ${helm_repo_private}
+            fi
+          done
 
       - name: "Get Helm Charts changed"
         uses: jitterbit/get-changed-files@v1
@@ -68,7 +78,7 @@ jobs:
           gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken \
             --password-stdin https://us-west1-docker.pkg.dev
 
-      - name: "Push Helm Charts"
+      - name: "Push public Helm Charts"
         run: |
           echo "${{ steps.updated_files.outputs.all }}" | tr "," "\n" | grep 'charts/' | sed 's#^charts/##' | sed 's#/.*$##' | sort | uniq > changed_charts
           while read chart; do
@@ -77,6 +87,19 @@ jobs:
             helm dependency update --skip-refresh ./charts/${chart}
             helm package -u charts/${chart}/
             helm push ./${chart}-*.tgz oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
+          done <<EOF
+            $(cat changed_charts)
+          EOF
+
+      - name: "Push private Helm Charts"
+        run: |
+          echo "${{ steps.updated_files.outputs.all }}" | tr "," "\n" | grep 'charts-private/' | sed 's#^charts-private/##' | sed 's#/.*$##' | sort | uniq > changed_charts
+          while read chart; do
+            # Skip if chart is not a directory (i.e: chart deleted)
+            [ -d charts-private/${chart} ] || continue
+            helm dependency update --skip-refresh ./charts-private/${chart}
+            helm package -u charts-private/${chart}/
+            helm push ./${chart}-*.tgz oci://us-west1-docker.pkg.dev/devopsre/clabs-private-oci
           done <<EOF
             $(cat changed_charts)
           EOF

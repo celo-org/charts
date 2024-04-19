@@ -26,6 +26,10 @@ jobs:
               - 'charts/**/templates/**'
               - 'charts/**/values.yaml'
               - 'charts/**/Chart.yaml'
+              - 'charts-private/**/dockerfiles/**'
+              - 'charts-private/**/templates/**'
+              - 'charts-private/**/values.yaml'
+              - 'charts-private/**/Chart.yaml'
 
   helm-test:
     needs: helm-change
@@ -59,7 +63,7 @@ jobs:
       - name: "Run chart-testing (list-changed)"
         id: list-changed
         run: |
-          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }} --chart-dirs charts,charts-private)
           if [[ -n "$changed" ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
             changed=$(echo $changed | tr '\n' ' ')
@@ -68,7 +72,7 @@ jobs:
 
       - name: "Run chart-testing (lint)"
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct lint --target-branch ${{ github.event.repository.default_branch }}
+        run: ct lint --target-branch ${{ github.event.repository.default_branch }} --chart-dirs charts,charts-private
 
       - name: "Create kind cluster"
         if: steps.list-changed.outputs.changed == 'true'
@@ -187,7 +191,7 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: >
           ct install
-          --target-branch ${{ github.event.repository.default_branch }}
+          --target-branch ${{ github.event.repository.default_branch }} --chart-dirs charts,charts-private
           --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup,blockscout,akeyless-gadmin-producer,ultragreen-dashboard,kong-celo-fullnode
           --chart-repos bitnami=https://charts.bitnami.com/bitnami
 
@@ -229,4 +233,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: '[Automatic] - Update chart README.md'
-          file_pattern: 'charts/**/README.md'
+          file_pattern: 'charts/**/README.md charts-private/**/README.md'
