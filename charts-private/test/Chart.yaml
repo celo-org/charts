@@ -26,3 +26,7 @@ maintainers:
   - name: cLabs
     email: devops@clabs.co
     url: https://clabs.co
+dependencies:
+  - name: redis
+    version: 17.3.7
+    repository: https://charts.bitnami.com/bitnami
