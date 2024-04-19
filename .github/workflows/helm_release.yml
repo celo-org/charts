@@ -10,6 +10,9 @@ on:
       - 'charts/**/templates/**'
       - 'charts/**/values.yaml'
       - 'charts/**/Chart.yaml'
+      - 'charts-private/**/templates/**'
+      - 'charts-private/**/values.yaml'
+      - 'charts-private/**/Chart.yaml'
 
 env:
   HELM_VERSION: "v3.12.3"
