@@ -30,3 +30,4 @@ dependencies:
   - name: redis
     version: 17.3.7
     repository: https://charts.bitnami.com/bitnami
+
