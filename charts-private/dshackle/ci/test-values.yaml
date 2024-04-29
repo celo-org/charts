@@ -11,7 +11,7 @@ config: |
   host: 0.0.0.0
   tls:
     enabled: false
-  
+
   proxy:
     host: 0.0.0.0
     routes:
