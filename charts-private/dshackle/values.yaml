@@ -20,7 +20,7 @@ image:
 imagePullSecrets: []
 
 # dshackle config as YAML file. See https://github.com/emeraldpay/dshackle/blob/release/v0.15/docs/reference-configuration.adoc
-config: {}
+config: ""
 # |
 #   version: v1
 #   host: 0.0.0.0
