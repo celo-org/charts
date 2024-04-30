@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dshackle.fullname" . }}
+  labels:
+    {{- include "dshackle.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ include "dshackle.http-port" . }}
+      targetPort: http
+      protocol: TCP
+      name: http
+    - port: {{ include "dshackle.health-port" . }}
+      targetPort: health
+      protocol: TCP
+      name: health
+    - port: {{ include "dshackle.metrics-port" . }}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+    - port: {{ include "dshackle.grpc-port" . }}
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+  selector:
+    {{- include "dshackle.selectorLabels" . | nindent 4 }}
