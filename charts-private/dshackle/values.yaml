@@ -26,19 +26,16 @@ config: ""
 #   host: 0.0.0.0
 #   tls:
 #     enabled: false
-#
 #   proxy:
 #     host: 0.0.0.0
 #     routes:
 #       - id: sepolia
 #         blockchain: sepolia-testnet
-#
 #   health:
 #     host: 0.0.0.0
 #     blockchains:
 #       - blockchain: sepolia-testnet
-#         min-available: 0
-#
+#         min-available: 1
 #   monitoring:
 #     enabled: true
 #     jvm: false
@@ -46,18 +43,26 @@ config: ""
 #     prometheus:
 #       bind: 0.0.0.0
 #       enabled: true
-#
 #   request-log:
 #     enabled: true
-#
 #   cluster:
 #     upstreams:
 #       - id: alchemy-sepolia
 #         blockchain: sepolia-testnet
+#         validate-peers: false
+#         validation-interval: 20
 #         connection:
 #           ethereum:
 #             rpc:
 #               url: "https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_USER}"
+#       - id: public-sepolia
+#         blockchain: sepolia-testnet
+#         priority: 9
+#         validation-interval: 10
+#         connection:
+#           ethereum:
+#             rpc:
+#               url: "https://ethereum-sepolia-rpc.publicnode.com"
 
 # -- Env. vars. from secrets as <ENV_VAR_NAME>.secretName and <ENV_VAR_NAME>.secretKey
 env: {}
