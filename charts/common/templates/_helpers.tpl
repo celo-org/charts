@@ -265,6 +265,7 @@ fi
     protocol: UDP
   - name: ethereum-{{ $port }}
     containerPort: {{ $port }}
+    protocol: TCP
   {{- end }}
   {{- else }}
   - name: discovery
@@ -272,16 +273,20 @@ fi
     protocol: UDP
   - name: ethereum
     containerPort: 30303
+    protocol: TCP
   {{- end }}
   {{- if .expose }}
   - name: rpc
     containerPort: 8545
+    protocol: TCP
   - name: ws
     containerPort: {{ default .Values.geth.ws_port .ws_port }}
+    protocol: TCP
   {{- end }}
   {{- if .pprof }}
   - name: pprof
     containerPort: {{ .pprof_port }}
+    protocol: TCP
   {{- end }}
   {{- $resources := default .Values.geth.resources .resources -}}
   {{- with $resources }}

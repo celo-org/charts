@@ -23,7 +23,7 @@ version: 0.7.0
 dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
-    version: 0.5.0
+    version: 0.5.1
 maintainers:
   - name: cLabs
     email: devops@clabs.co

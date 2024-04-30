@@ -1,6 +1,6 @@
 # testnet
 
-![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.5.3](https://img.shields.io/badge/Version-0.5.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Private Celo network Helm chart for Kubernetes
 
@@ -23,7 +23,7 @@ Private Celo network Helm chart for Kubernetes
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.5.0 |
+| oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci | common | 0.5.1 |
 
 ## Values
 
