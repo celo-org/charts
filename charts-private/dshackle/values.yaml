@@ -50,7 +50,6 @@ config: ""
 #       - id: alchemy-sepolia
 #         blockchain: sepolia-testnet
 #         validate-peers: false
-#         validation-interval: 20
 #         connection:
 #           ethereum:
 #             rpc:
