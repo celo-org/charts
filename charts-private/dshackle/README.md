@@ -4,6 +4,8 @@
 
 A Helm chart for dshackle - A Fault Tolerant Load Balancer for Blockchain API.
 
+Based on [Emerald Dshackle](https://github.com/emeraldpay/dshackle).
+
 ## Maintainers
 
 | Name | Email | Url |
