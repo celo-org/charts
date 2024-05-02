@@ -39,13 +39,28 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.initContainers }}
       initContainers:
+      {{- if .Values.init.genesis.enabled }}
+      - name: download-rollup-genesis
+        image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
+        imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command: ["sh", "/scripts/download-rollup-genesis.sh"]
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: data
+          mountPath: {{ .Values.persistence.mountPath | default .Values.config.rollup.config }}
+      {{- end }}
+      {{- with .Values.initContainers }}
         {{- tpl (toYaml . | nindent 6) $ }}
       {{- end }}
       containers:
       - name: op-node
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         {{- with .Values.securityContext }}
         securityContext:
@@ -56,68 +71,82 @@ spec:
           {{- tpl (toYaml .Values.command) $ | nindent 10 }}
         {{- else }}
         command:
-        - op-node
+        - /bin/sh
+        - -c
         {{- end }}
         args:
-        - --l1={{ .Values.config.l1.url }}
-        - --l1.trustrpc={{ .Values.config.l1.trustrpc }}
-        - --l1.rpckind={{ .Values.config.l1.rpckind }}
-        {{- with .Values.config.l1.beacon }}
-        - --l1.beacon={{ . }}
-        {{- end }}
-        - --l2={{ .Values.config.l2.url }}
-        - --l2.jwt-secret=/secrets/jwt.hex
-        - --rpc.addr=0.0.0.0
-        - --rpc.port={{ .Values.config.port }}
-        - --network={{ .Values.config.network }}
-        {{- with .Values.config.rollup }}
-        - --rollup.load-protocol-versions={{ .loadProtocolVersions }}
-        {{- with .halt }}
-        - --rollup.halt={{ . }}
-        {{- end }}
-        {{- with .config }}
-        - --rollup.config={{ . }}
-        {{- end }}
-        {{- end }}
-        {{- if .Values.config.sequencer.enabled }}
-        - --sequencer.enabled
-        {{- if .Values.config.sequencer.stopped }}
-        - --sequencer.stopped
-        {{- end }}
-        {{- if kindIs "int" .Values.config.sequencer.l1Confs }}
-        - --sequencer.l1-confs={{ int .Values.config.sequencer.l1Confs }}
-        {{- end }}
-        {{- if kindIs "int" .Values.config.sequencer.maxSafeLag }}
-        - --sequencer.max-safe-lag={{ int .Values.config.sequencer.maxSafeLag }}
-        {{- end }}
-        {{- end }}
-        {{- if kindIs "float64" .Values.config.verifier.l1Confs }}
-        - --verifier.l1-confs={{ int .Values.config.verifier.l1Confs }}
-        {{- end }}
-        {{- if .Values.config.metrics.enabled }}
-        - --metrics.enabled
-        - --metrics.addr=0.0.0.0
-        - --metrics.port={{ .Values.config.metrics.port }}
-        {{- end }}
-        {{- if .Values.config.p2p.nat }}
-        - --p2p.nat
-        {{- end }}
-        {{- if .Values.config.p2p.advertiseIP }}
-        - --p2p.advertise.ip={{ .Values.config.p2p.advertiseIP }}
-        {{- end }}
-        - --p2p.listen.tcp={{ .Values.config.p2p.port }}
-        - --p2p.listen.udp={{ .Values.config.p2p.port }}
-        - --p2p.listen.ip=0.0.0.0
-        {{- with .Values.config.p2p.bootnodes }}
-        - --p2p.bootnodes={{ join "," . }}
-        {{- end }}
-        - --log.level={{ .Values.config.logLevel }}
-        {{- with .Values.config.syncmode }}
-        - --syncmode={{ . }}
-        {{- end }}
-        {{- with .Values.extraArgs }}
-        {{- tpl (toYaml .) $ | nindent 8 }}
-        {{- end }}
+        - |
+          op-node \
+            --l1={{ .Values.config.l1.url }} \
+            --l1.trustrpc={{ .Values.config.l1.trustrpc }} \
+            --l1.rpckind={{ .Values.config.l1.rpckind }} \
+            {{- with .Values.config.l1.beacon }}
+            --l1.beacon={{ . }} \
+            {{- end }}
+            --l2={{ .Values.config.l2.url }} \
+            --l2.jwt-secret=/secrets/jwt.hex \
+            --rpc.addr=0.0.0.0 \
+            --rpc.port={{ .Values.config.port }} \
+            {{- if .Values.config.enableAdmin }}
+            --rpc.enable-admin \
+            {{- end }}
+            {{- with .Values.config.network }}
+            --network={{ . }} \
+            {{- end }}
+            {{- with .Values.config.rollup }}
+            {{- if .loadProtocolVersions }}
+            --rollup.load-protocol-versions={{ .loadProtocolVersions }} \
+            {{- end }}
+            {{- with .halt }}
+            --rollup.halt={{ . }} \
+            {{- end }}
+            {{- with .config }}
+            --rollup.config={{ . }}/rollup.json \
+            {{- end }}
+            {{- end }}
+            {{- if .Values.config.sequencer.enabled }}
+            --sequencer.enabled \
+            {{- if .Values.config.sequencer.stopped }}
+            --sequencer.stopped \
+            {{- end }}
+            {{- if kindIs "int" .Values.config.sequencer.l1Confs }}
+            --sequencer.l1-confs={{ int .Values.config.sequencer.l1Confs }} \
+            {{- end }}
+            {{- if kindIs "int" .Values.config.sequencer.maxSafeLag }}
+            --sequencer.max-safe-lag={{ int .Values.config.sequencer.maxSafeLag }} \
+            {{- end }}
+            {{- end }}
+            {{- if kindIs "float64" .Values.config.verifier.l1Confs }}
+            --verifier.l1-confs={{ int .Values.config.verifier.l1Confs }} \
+            {{- end }}
+            {{- if .Values.config.metrics.enabled }}
+            --metrics.enabled \
+            --metrics.addr=0.0.0.0 \
+            --metrics.port={{ .Values.config.metrics.port }} \
+            {{- end }}
+            {{- if .Values.config.p2p.nat }}
+            --p2p.nat \
+            {{- end }}
+            {{- if .Values.config.p2p.advertiseIP }}
+            --p2p.advertise.ip={{ .Values.config.p2p.advertiseIP }} \
+            {{- end }}
+            --p2p.listen.tcp={{ .Values.config.p2p.port }} \
+            --p2p.listen.udp={{ .Values.config.p2p.port }} \
+            --p2p.listen.ip=0.0.0.0 \
+            {{- with .Values.config.p2p.bootnodes }}
+            --p2p.bootnodes={{ join "," . }} \
+            {{- end }}
+            {{- with .Values.config.p2p.sequencer.key }}
+            --p2p.sequencer.key={{ . }} \
+            {{- end }}
+            --log.level={{ .Values.config.logLevel }} \
+            {{- with .Values.config.syncmode }}
+            --syncmode={{ . }} \
+            {{- end }}
+            {{- with .Values.extraArgs }}
+            {{- tpl (toYaml .) $ | nindent 12 }}
+            {{- end }}
+
         ports:
         - name: rpc
           containerPort: {{ .Values.config.port }}
@@ -148,6 +177,8 @@ spec:
         volumeMounts:
         - name: secrets
           mountPath: /secrets
+        - name: data
+          mountPath: {{ .Values.persistence.mountPath | default .Values.config.rollup.config }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       {{- with .Values.sidecarContainers }}
@@ -157,3 +188,32 @@ spec:
       - name: secrets
         secret:
           secretName: {{ template "op-node.fullname" . }}
+      - name: data
+        emptyDir: {}
+      - name: scripts
+        configMap:
+          name: {{ template "op-node.fullname" . }}-scripts
+  {{- if eq .Values.persistence.type "pvc" }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        {{- include "op-node.selectorLabels" . | nindent 8 }}
+      {{- with .Values.persistence.pvc.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      accessModes:
+      - {{ .Values.persistence.pvc.accessMode }}
+      {{- if .Values.persistence.pvc.storageClass }}
+      {{- if eq .Values.persistence.pvc.storageClass "-" }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: {{ .Values.persistence.pvc.storageClass | quote }}
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.pvc.size | quote }}
+  {{- end }}
