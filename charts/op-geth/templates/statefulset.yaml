@@ -162,68 +162,76 @@ spec:
           {{- tpl (toYaml .) $ | nindent 10 }}
         {{- end }}
         args:
-        - --datadir={{ .Values.config.datadir }}
-        {{- with (get .Values.config "op-network") }}
-        - --op-network={{ . }}
-        {{- end }}
-        - --syncmode={{ .Values.config.syncmode }}
-        - --maxpeers={{ .Values.config.maxpeers }}
-        {{- if .Values.config.nodiscover }}
-        - --nodiscover
-        {{- end }}
-        - --authrpc.addr=0.0.0.0
-        - --authrpc.jwtsecret=/secrets/jwt.hex
-        - --authrpc.vhosts={{ join "," .Values.config.authrpc.vhosts }}
-        - --authrpc.port={{ .Values.config.authrpc.port }}
-        - --http
-        - --http.addr=0.0.0.0
-        - --http.port={{ .Values.config.http.port }}
-        - --http.api={{ join "," .Values.config.http.api }}
-        - --http.vhosts={{ join "," .Values.config.http.vhosts }}
-        - --http.corsdomain={{ join "," .Values.config.http.corsdomain }}
-        {{- if .Values.config.cache }}
-        - --cache={{ .Values.config.cache }}
-        {{- end }}
-        - --gcmode={{ .Values.config.gcmode }}
-        - --snapshot={{ .Values.config.snapshot }}
-        {{- with .Values.config.rollup }}
-        - --rollup.sequencerhttp={{ .sequencerhttp }}
-        - --rollup.disabletxpoolgossip={{ .disabletxpoolgossip }}
-        {{- with .halt }}
-        - --rollup.halt={{ . }}
-        {{- end }}
-        {{- end }}
-        - --verbosity={{ .Values.config.verbosity }}
-        {{- if .Values.config.ws.enabled }}
-        - --ws
-        - --ws.addr=0.0.0.0
-        - --ws.api={{ join "," .Values.config.ws.api }}
-        - --ws.origins={{ join "," .Values.config.ws.origins }}
-        - --ws.port={{ .Values.config.ws.port }}
-        {{- end }}
-        {{- if .Values.config.metrics.enabled }}
-        - --metrics.addr=0.0.0.0
-        - --metrics.port=6060
-        - --metrics
-        {{- if .Values.config.metrics.expensive }}
-        - --metrics.expensive
-        {{- end }}
-        {{- end }}
-        {{- with .Values.config.vmodule }}
-        - --log.vmodule={{ join "," . }}
-        {{- end }}
-        {{- with .Values.config.bootnodes }}
-        - --bootnodes={{ join "," . }}
-        {{- end }}
-        {{- if not .Values.config.nodiscover }}
-        - --port={{ .Values.config.port }}
-        - --discovery.port={{ .Values.config.discovery.port }}
-        {{- end }}
-        - --nat={{ .Values.config.nat }}
-        - --state.scheme={{ .Values.config.state.scheme }}
-        {{- with .Values.extraArgs }}
-        {{- tpl (toYaml .) $ | nindent 8 }}
-        {{- end }}
+        - |
+          geth \
+            --datadir={{ .Values.config.datadir }} \
+            {{- with (get .Values.config "op-network") }}
+            --op-network={{ . }} \
+            {{- end }}
+            {{- with .Values.config.networkid }}
+            --networkid={{ . }} \
+            {{- end }}
+            --syncmode={{ .Values.config.syncmode }} \
+            --maxpeers={{ .Values.config.maxpeers }} \
+            {{- if .Values.config.nodiscover }}
+            --nodiscover \
+            {{- end }}
+            --authrpc.addr=0.0.0.0 \
+            --authrpc.jwtsecret=/secrets/jwt.hex \
+            --authrpc.vhosts={{ join "," .Values.config.authrpc.vhosts }} \
+            --authrpc.port={{ .Values.config.authrpc.port }} \
+            --http \
+            --http.addr=0.0.0.0 \
+            --http.port={{ .Values.config.http.port }} \
+            --http.api={{ join "," .Values.config.http.api }} \
+            --http.vhosts={{ join "," .Values.config.http.vhosts }} \
+            --http.corsdomain={{ join "," .Values.config.http.corsdomain }} \
+            {{- if .Values.config.cache }}
+            --cache={{ .Values.config.cache }} \
+            {{- end }}
+            --gcmode={{ .Values.config.gcmode }} \
+            --snapshot={{ .Values.config.snapshot }} \
+            {{- with .Values.config.rollup }}
+            {{- if .sequencerhttp }}
+            --rollup.sequencerhttp={{ .sequencerhttp }} \
+            {{- end }}
+            --rollup.disabletxpoolgossip={{ .disabletxpoolgossip }} \
+            {{- with .halt }}
+            --rollup.halt={{ . }} \
+            {{- end }}
+            {{- end }}
+            --verbosity={{ .Values.config.verbosity }} \
+            {{- if .Values.config.ws.enabled }}
+            --ws \
+            --ws.addr=0.0.0.0 \
+            --ws.api={{ join "," .Values.config.ws.api }} \
+            --ws.origins={{ join "," .Values.config.ws.origins }} \
+            --ws.port={{ .Values.config.ws.port }} \
+            {{- end }}
+            {{- if .Values.config.metrics.enabled }}
+            --metrics.addr=0.0.0.0 \
+            --metrics.port=6060 \
+            --metrics \
+            {{- if .Values.config.metrics.expensive }}
+            --metrics.expensive \
+            {{- end }}
+            {{- end }}
+            {{- with .Values.config.vmodule }}
+            --log.vmodule={{ join "," . }} \
+            {{- end }}
+            {{- with .Values.config.bootnodes }}
+            --bootnodes={{ join "," . }} \
+            {{- end }}
+            {{- if not .Values.config.nodiscover }}
+            --port={{ .Values.config.port }} \
+            --discovery.port={{ .Values.config.discovery.port }} \
+            {{- end }}
+            --nat={{ .Values.config.nat }} \
+            --state.scheme={{ .Values.config.state.scheme }} \
+            {{- with .Values.extraArgs }}
+            {{- tpl (toYaml .) $ | nindent 8 }}
+            {{- end }}
+
         ports:
         - name: http
           containerPort: {{ .Values.config.http.port }}
