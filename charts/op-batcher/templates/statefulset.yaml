@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "op-batcher.fullname" . }}
+  labels:
+    {{- include "op-batcher.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ template "op-batcher.name" . }}
+  updateStrategy:
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "op-batcher.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "op-batcher.selectorLabels" . | nindent 8 }}
+    spec:
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "op-batcher.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+      {{- with .Values.initContainers }}
+        {{- tpl (toYaml . | nindent 6) $ }}
+      {{- end }}
+      containers:
+      - name: op-batcher
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- if .Values.command }}
+        command:
+          {{- tpl (toYaml .Values.command) $ | nindent 10 }}
+        {{- else }}
+        command:
+        - /bin/sh
+        - -c
+        {{- end }}
+        args:
+        - |
+          op-batcher \
+            --l2-eth-rpc={{ .Values.config.l2Url }} \
+            --rollup-rpc={{ .Values.config.rollupUrl }} \
+            --poll-interval={{ .Values.config.pollInterval }} \
+            --sub-safety-margin={{ .Values.config.subSafetyMargin }} \
+            --num-confirmations={{ .Values.config.numConfirmations }} \
+            --safe-abort-nonce-too-low-count={{ .Values.config.safeAbortNonceTooLowCount }} \
+            --resubmission-timeout={{ .Values.config.resubmissionTimeout }} \
+            {{- if .Values.config.rpc.enableAdmin }}
+            --rpc.enable-admin \
+            --rpc.addr={{ .Values.config.rpc.addr }} \
+            --rpc.port={{ .Values.config.rpc.port }} \
+            {{- end }}
+            --max-channel-duration={{ .Values.config.maxChannelDuration }} \
+            --l1-eth-rpc={{ .Values.config.l1Url }} \
+            --private-key=$(cat /secrets/privateKey) \
+            {{- if .Values.config.metrics }}
+            --metrics.enabled \
+            --metrics.addr={{ .Values.config.metrics.addr }} \
+            --metrics.port={{ .Values.services.metrics.port }} \
+            {{- end }}
+            --log.level={{ .Values.config.logs.level }} \
+            --log.format={{ .Values.config.logs.format }} \
+            --log.color={{ .Values.config.logs.color }} \
+        ports:
+        - name: rpc
+          containerPort: {{ .Values.services.rpc.port }}
+        {{- if .Values.config.metrics }}
+        - name: metrics
+          containerPort: {{ .Values.config.metrics.port }}
+        {{- end }}
+        {{- if .Values.livenessProbe.enabled }}
+        livenessProbe:
+          {{- include "op-batcher.healthcheck" (list $ .Values.livenessProbe) | nindent 10 }}
+        {{- end }}
+        {{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          {{- include "op-batcher.healthcheck" (list $ .Values.readinessProbe) | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+        - name: secrets
+          mountPath: /secrets
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      {{- with .Values.sidecarContainers }}
+        {{- tpl (toYaml . | nindent 6) $ }}
+      {{- end }}
+      volumes:
+      - name: secrets
+        secret:
+          secretName: {{ template "op-batcher.fullname" . }}

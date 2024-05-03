@@ -1,0 +1,144 @@
+---
+image:
+  repository: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-proposer
+  tag: latest
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+updateStrategy:
+  type: RollingUpdate
+
+terminationGracePeriodSeconds: 300
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  allowPrivilegeEscalation: false
+  privileged: false
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  # runAsGroup: 1000
+
+## Override op-node command (can be templated)
+command: []
+
+## Extra op-node arguments (can be templated)
+extraArgs: []
+
+## Extra init containers, can be templated
+initContainers: []
+
+## Sidecar containers, can be templated
+sidecarContainers: []
+
+## Services config
+services:
+  rpc:
+    enabled: true
+    type: ClusterIP
+    port: 8560
+    annotations: {}
+  metrics:
+    enabled: true
+    type: ClusterIP
+    port: 7300
+    annotations: {}
+    publishNotReadyAddresses: true
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts: []
+    # - host: op-node.examplerpc.com
+    #   paths:
+    #     - path: /
+    #       pathType: ImplementationSpecific
+  tls: []
+    # - secretName: op-node-tls
+    #   hosts:
+    #     - op-node.examplerpc.com
+
+# Create Prometheus Operator serviceMonitor
+serviceMonitor:
+  enabled: false
+  # interval: 10s
+  # scrapeTimeout: 2s
+  # honorLabels: true
+  # relabelings: []
+  # metricRelabelings: []
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  successThreshold: 1
+  failureThreshold: 3
+  timeoutSeconds: 5
+  httpGet:
+    path: /healthz
+    port: rpc
+
+readinessProbe:
+  enabled: false
+  # initialDelaySeconds: 60
+  # periodSeconds: 30
+  # successThreshold: 1
+  # failureThreshold: 3
+  # timeoutSeconds: 5
+  # httpGet:
+  #   path: /healthz
+  #   port: rpc
+
+resources: {}
+
+affinity: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+## Main op-proposer config
+config:
+  l1Url: ""                                                                 # HTTP provider URL for L1
+  l2Url: ""                                                                 # HTTP provider URL for the L2 engine. If multiple URLs are provided, they should match the number of rollup-rpcs
+  rollupUrl: ""                                                             # HTTP provider URL for rollup node. If multiple URLs are provided, they should match the number of l2-eth-rpcs
+  pollInterval: 1s                                                          # How frequently to poll L2 for new blocks
+  subSafetyMargin: 6                                                        # Safety margin (in #L1blocks) for batch transaction submission to ensure safe channel inclusion on L1.
+  numConfirmations: 1                                                       # Number of confirmations which we will wait after sending a transaction
+  safeAbortNonceTooLowCount: 3                                              # Number of ErrNonceTooLow observations required to give up on a tx at a particular nonce without receiving confirmation
+  resubmissionTimeout: 30s                                                  # Duration we will wait before resubmitting a transaction to L1
+  maxChannelDuration: 1                                                     # The maximum duration of L1-blocks to keep a channel open. 0 to disable.
+  privateKey: ""                                                            # The private key to use with the service. Must not be used with mnemonic.
+  logs:
+    level: info                                                              # Log level
+    format: json                                                             # Log format
+    color: false                                                            # Enable colored logs
+  rpc:
+    enableAdmin: false                                                      # Enable the RPC admin API
+    addr: 0.0.0.0                                                           # RPC listening address
+    port: 8545                                                              # RPC listening port
+  metrics:
+    enabled: false
+    addr: 0.0.0.0
+    port: 7300
