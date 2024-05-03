@@ -76,7 +76,7 @@ jobs:
 
       - name: "Create kind cluster"
         if: steps.list-changed.outputs.changed == 'true'
-        uses: helm/kind-action@v1.9.0
+        uses: helm/kind-action@v1.10.0
 
       - name: "Install dependencies - Kong CRDs"
         if: steps.list-changed.outputs.changed == 'true' && contains(steps.list-changed.outputs.changed_charts, 'charts/kong-celo-fullnode')
