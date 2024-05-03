@@ -74,7 +74,15 @@ spec:
             --rpc.addr={{ .Values.config.rpc.addr }} \
             --rpc.port={{ .Values.config.rpc.port }} \
             {{- end }}
+            --data-availability-type={{ .Values.config.dataAvailabilityType }} \
             --max-channel-duration={{ .Values.config.maxChannelDuration }} \
+            --fee-limit-multiplier={{ .Values.config.feeLimitMultiplier }} \
+            --txmgr.fee-limit-threshold={{ .Values.config.txmgr.feeLimitThreshold }} \
+            --txmgr.min-basefee={{ .Values.config.txmgr.minBaseFee }} \
+            --txmgr.min-tip-cap={{ .Values.config.txmgr.minTipCap }} \
+            --txmgr.not-in-mempool-timeout={{ .Values.config.txmgr.notInMempoolTimeout }} \
+            --txmgr.receipt-query-interval={{ .Values.config.txmgr.receiptQueryInterval }} \
+            --txmgr.send-timeout={{ .Values.config.txmgr.sendTimeout }} \
             --l1-eth-rpc={{ .Values.config.l1Url }} \
             --private-key=$(cat /secrets/privateKey) \
             {{- if .Values.config.metrics }}
