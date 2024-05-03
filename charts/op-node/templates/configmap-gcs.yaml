@@ -1,0 +1,11 @@
+{{- if or .Values.initFromGCS.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "op-node.fullname" . }}-gcs-config
+data:
+  DATA_DIR: {{ tpl .Values.gcsConfig.local.datadir . | quote }}
+  INITIALIZED_FILE: {{ tpl .Values.gcsConfig.local.initializedFile . | quote }}
+  GCS_BASE_URL: {{ tpl .Values.gcsConfig.remote.baseUrl . }}
+  FORCE_INIT: {{ ternary "True" "False" .Values.initFromGcs.force | quote }}
+{{- end }}

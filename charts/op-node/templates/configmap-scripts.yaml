@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "op-node.fullname" . }}-scripts
+  labels:
+    {{- include "op-node.labels" . | nindent 4 }}
+data:
+  download-rollup-genesis.sh: |-
+    {{- include (print $.Template.BasePath "/scripts/_download-rollup-genesis.tpl") . | nindent 4 }}
+{{- if or .Values.initFromGCS.enabled }}
+  gcs-env.sh: |-
+    {{- include (print $.Template.BasePath "/scripts/_gcs-env.tpl") . | nindent 4 }}
+  pull-rollup-config-from-gcs.sh: |-
+    {{- include (print $.Template.BasePath "/scripts/_pull-rollup-config-from-gcs.tpl") . | nindent 4 }}
+{{- end }}

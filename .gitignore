@@ -12,3 +12,6 @@ requirements.lock
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Test values files
+**/*.values.yaml

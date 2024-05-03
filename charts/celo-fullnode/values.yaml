@@ -43,6 +43,9 @@ tolerations: []
 #   operator: Equal
 #   value: spot
 
+# -- Additional initContainers to add to the statefulset
+extraInitContainers: []
+
 storage:
   # -- Enable persistent storage for the celo-blockchain statefulset
   enable: true
@@ -67,8 +70,8 @@ storage:
 geth:
   # -- Image for the celo-blockchain statefulset
   image:
-    repository: us.gcr.io/celo-testnet/geth
-    tag: master
+    repository: us.gcr.io/celo-org/geth
+    tag: 1.8.2
     imagePullPolicy: IfNotPresent
   # -- Resources for `geth` container
   resources:
@@ -116,6 +119,8 @@ geth:
   create_network_endpoint_group: false
   # -- Geth's extra flags options (as string)
   flags: --txpool.nolocals
+  # -- Custom script (shell) that runs just before geth process is started
+  extra_setup: ""
   # -- Celo-blockchain statefulset `updateStrategy`
   updateStrategy:
     type: RollingUpdate
