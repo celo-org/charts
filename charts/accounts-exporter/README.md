@@ -1,6 +1,6 @@
 # accounts-exporter
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -20,7 +20,7 @@ A Helm chart for Kubernetes
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| addressess | string | `"op-testnet-admin:0x19c1696408E63d670ab8177bfafB0D37e9F3ed82\nop-testnet-batcher:0x0F82E82268FA5de5070A088e54eAbc2dec07D615\nop-testnet-proposer:0x8D20f1E387cDF78c4AF42F61FB48B1Be72056FEb\nop-testnet-sequencer:0xF20B236A87e26D1Ac7290D0F70f637af8145D54e\n"` | Adresses to get balance for. As a string, one address per line, in the format <NAME>:<PUBLIC_ADDRESS> (reported as labels "name" and "address") |
+| addressess | string | `""` | Adresses to get balance for. As a string, one address per line, in the format <NAME>:<PUBLIC_ADDRESS> (reported as labels "name" and "address") |
 | affinity | object | `{}` | Kubernetes pod affinity |
 | fullnameOverride | string | `""` | Chart full name override |
 | geth.url | string | `"https://rpc2.sepolia.org"` | Provider RPC endpoint to read balances from |
@@ -30,14 +30,14 @@ A Helm chart for Kubernetes
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
-| podAnnotations | string | `nil` | Custom pod annotations |
+| podAnnotations | object | `{"prometheus.io/path":"/metrics","prometheus.io/port":"9015","prometheus.io/scrape":"true"}` | Custom pod annotations |
 | podSecurityContext | object | `{}` | Custom pod security context |
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
 | securityContext | object | `{}` | Custom container security context |
 | service.port | int | `80` | Service port |
 | service.type | string | `"ClusterIP"` | Service type |
-| serviceAccount.annotations | object | `{"iam.gke.io/gcp-service-account":"odis-signer0-staging@celo-testnet.iam.gserviceaccount.com"}` | Annotations to add to the service account |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | tolerations | list | `[]` | Kubernetes tolerations |
