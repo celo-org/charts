@@ -1,0 +1,140 @@
+---
+image:
+  repository: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-proposer
+  tag: v1.7.4
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+updateStrategy:
+  type: RollingUpdate
+
+terminationGracePeriodSeconds: 300
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  allowPrivilegeEscalation: false
+  privileged: false
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  # runAsGroup: 1000
+
+## Override op-node command (can be templated)
+command: []
+
+## Extra op-node arguments (can be templated)
+extraArgs: []
+
+## Extra init containers, can be templated
+initContainers: []
+
+## Sidecar containers, can be templated
+sidecarContainers: []
+
+## Services config
+services:
+  rpc:
+    enabled: true
+    type: ClusterIP
+    port: 8560
+    annotations: {}
+  metrics:
+    enabled: true
+    type: ClusterIP
+    port: 7300
+    annotations: {}
+    publishNotReadyAddresses: true
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts: []
+    # - host: op-node.examplerpc.com
+    #   paths:
+    #     - path: /
+    #       pathType: ImplementationSpecific
+  tls: []
+    # - secretName: op-node-tls
+    #   hosts:
+    #     - op-node.examplerpc.com
+
+# Create Prometheus Operator serviceMonitor
+serviceMonitor:
+  enabled: false
+  # interval: 10s
+  # scrapeTimeout: 2s
+  # honorLabels: true
+  # relabelings: []
+  # metricRelabelings: []
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  successThreshold: 1
+  failureThreshold: 3
+  timeoutSeconds: 5
+  httpGet:
+    path: /healthz
+    port: rpc
+
+readinessProbe:
+  enabled: false
+  # initialDelaySeconds: 60
+  # periodSeconds: 30
+  # successThreshold: 1
+  # failureThreshold: 3
+  # timeoutSeconds: 5
+  # httpGet:
+  #   path: /healthz
+  #   port: rpc
+
+resources: {}
+
+affinity: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+## Main op-proposer config
+config:
+  L2OutputOracle: ""                                                         # Address of the L2OutputOracle contract
+  pollInterval: 12s                                                          # How frequently to poll L2 for new blocks
+  rollupRpc: http://localhost:8547                                           # HTTP provider URL for the rollup node. A comma-separated list for multiple providers
+  activeSecuencerCheckDuration: 2m0s                                         # How frequently to check if the sequencer is active (if multiple provided)
+  l1Url: ""                                                                  # HTTP provider URL for L1
+  privateKey: ""                                                             # Private key for the proposer
+  logs:
+    level: info                                                              # Log level
+    format: json                                                             # Log format
+    color: false                                                             # Enable colored logs
+  rpc:
+    enabledAdmin: false                                                      # Enable the RPC server
+    addr: 0.0.0.0                                                            # RPC listening address
+    port: 8545                                                               # RPC listening port
+  metrics:
+    enabled: false                                                           # Enable the metrics server
+    addr: 0.0.0.0                                                            # Metrics listening address
+    port: 7300                                                               # Metrics listening port
