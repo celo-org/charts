@@ -19,6 +19,14 @@ spec:
         checksum/s3-secret: {{ include (print $.Template.BasePath "/s3-secret.yaml") . | sha256sum }}
         checksum/s3-configmap: {{ include (print $.Template.BasePath "/s3-configmap.yaml") . | sha256sum }}
         {{- end }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.config.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "6060"
+        prometheus.io/path: "/metrics"
+        {{- end }}
       labels:
         {{- include "op-geth.selectorLabels" . | nindent 8 }}
         {{- with .Values.podStatusLabels }}
@@ -163,15 +171,17 @@ spec:
         {{- end }}
         args:
         - |
-          geth \
+          exec geth \
             --datadir={{ .Values.config.datadir }} \
             {{- with (get .Values.config "op-network") }}
             --op-network={{ . }} \
             {{- end }}
             {{- with .Values.config.networkid }}
-            --networkid={{ . }} \
+            --networkid={{ int . }} \
             {{- end }}
             --syncmode={{ .Values.config.syncmode }} \
+            --gcmode={{ .Values.config.gcmode }} \
+            --snapshot={{ .Values.config.snapshot }} \
             --maxpeers={{ .Values.config.maxpeers }} \
             {{- if .Values.config.nodiscover }}
             --nodiscover \
@@ -189,8 +199,6 @@ spec:
             {{- if .Values.config.cache }}
             --cache={{ .Values.config.cache }} \
             {{- end }}
-            --gcmode={{ .Values.config.gcmode }} \
-            --snapshot={{ .Values.config.snapshot }} \
             {{- with .Values.config.rollup }}
             {{- if .sequencerhttp }}
             --rollup.sequencerhttp={{ .sequencerhttp }} \
@@ -200,7 +208,6 @@ spec:
             --rollup.halt={{ . }} \
             {{- end }}
             {{- end }}
-            --verbosity={{ .Values.config.verbosity }} \
             {{- if .Values.config.ws.enabled }}
             --ws \
             --ws.addr=0.0.0.0 \
@@ -216,9 +223,11 @@ spec:
             --metrics.expensive \
             {{- end }}
             {{- end }}
+            --verbosity={{ .Values.config.verbosity }} \
             {{- with .Values.config.vmodule }}
             --log.vmodule={{ join "," . }} \
             {{- end }}
+            --log.format={{ .Values.config.logFormat }} \
             {{- with .Values.config.bootnodes }}
             --bootnodes={{ join "," . }} \
             {{- end }}
@@ -227,9 +236,11 @@ spec:
             --discovery.port={{ .Values.config.discovery.port }} \
             {{- end }}
             --nat={{ .Values.config.nat }} \
-            --state.scheme={{ .Values.config.state.scheme }} \
+            {{- with .Values.config.state.scheme }}
+            --state.scheme={{ . }} \
+            {{- end }}
             {{- with .Values.extraArgs }}
-            {{- tpl (toYaml .) $ | nindent 8 }}
+            {{- tpl (toYaml .) $ | nindent 8 }} \
             {{- end }}
 
         ports:

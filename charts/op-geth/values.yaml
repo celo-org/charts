@@ -32,6 +32,9 @@ podLabels: {}
 podStatusLabels: {}
   # manualstatus: in-service
 
+## Extra pod annotations
+podAnnotations: {}
+
 podSecurityContext:
   fsGroup: 10001
 
@@ -286,7 +289,7 @@ config:
     port: 8551
     vhosts: ["*"]
   state:
-    scheme: path            # possible values are: "path", "hash". "hash" is going to be deprecated soon
+    scheme: ""              # possible values are: "path", "hash". "hash" is going to be deprecated soon
   cache: 0                  # disable by default, let geth automatically set proper value https://blog.ethereum.org/2023/09/12/geth-v1-13-0
   syncmode: snap            # possible values are: "snap", "full"
   gcmode: full              # possible values are: "full", "archive"
@@ -302,6 +305,7 @@ config:
   bootnodes: []             # built-in bootnodes are used when empty
   verbosity: 3              # global log verbosity
   vmodule: []               # per-module log verbosity
+  logFormat: "json"         # log format
   # - rpc=5
   metrics:
     enabled: false
