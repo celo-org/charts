@@ -17,34 +17,22 @@ geth:
 # -- Config as string. Minimal example at https://github.com/llamanodes/web3-proxy/blob/main/config/minimal.toml
 config: ""
 # |
-# [app]
-# chain_id = 1
+#  [app]
+#  chain_id = 17000
 #
-# min_sum_soft_limit = 1
-# min_synced_rpcs = 1
+#  min_sum_soft_limit = 1
+#  min_synced_rpcs = 0
 #
-# response_cache_max_bytes = 1_000_000_000
+#  response_cache_max_bytes = 1_000_000_000
 #
-# [balanced_rpcs]
+#  [balanced_rpcs]
 #
-#     [balanced_rpcs.llama_public_both]
-#     disabled = false
-#     display_name = "LlamaNodes Both"
-#     ws_url = "wss://eth.llamarpc.com/"
-#     http_url = "https://eth.llamarpc.com/"
-#     soft_limit = 1_000
-#
-#     [balanced_rpcs.llama_public_https]
-#     disabled = false
-#     display_name = "LlamaNodes HTTPS"
-#     http_url = "https://eth.llamarpc.com/"
-#     soft_limit = 1_000
-#
-#     [balanced_rpcs.llama_public_wss]
-#     disabled = false
-#     display_name = "LlamaNodes WSS"
-#     ws_url = "wss://eth.llamarpc.com/"
-#     soft_limit = 1_000
+#      [balanced_rpcs.holesky_drpc_public]
+#      disabled = false
+#      display_name = "Holesky DRPC"
+#      block_data_limit = "archive"
+#      http_url = "https://ethereum-holesky-rpc.publicnode.com"
+#      soft_limit = 1_000
 
 image:
   # -- Image repository
