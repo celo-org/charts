@@ -1,8 +1,8 @@
-# op-batcher
+# op-proposer
 
-![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
-Celo implementation for op-batcher client (Optimism Rollup)
+Celo implementation for op-proposer client (Optimism Rollup)
 
 **Homepage:** <https://clabs.co>
 
@@ -25,39 +25,25 @@ Celo implementation for op-batcher client (Optimism Rollup)
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | command | list | `[]` |  |
-| config.batchType | string | `""` |  |
-| config.dataAvailabilityType | string | `"calldata"` |  |
-| config.feeLimitMultiplier | int | `5` |  |
+| config.L2OutputOracle | string | `""` |  |
+| config.activeSecuencerCheckDuration | string | `"2m0s"` |  |
 | config.l1Url | string | `""` |  |
-| config.l2Url | string | `""` |  |
 | config.logs.color | bool | `false` |  |
 | config.logs.format | string | `"json"` |  |
 | config.logs.level | string | `"info"` |  |
-| config.maxChannelDuration | string | `""` |  |
-| config.maxL1TxSizeBytes | string | `""` |  |
 | config.metrics.addr | string | `"0.0.0.0"` |  |
 | config.metrics.enabled | bool | `false` |  |
 | config.metrics.port | int | `7300` |  |
-| config.numConfirmations | int | `1` |  |
-| config.pollInterval | string | `"1s"` |  |
+| config.pollInterval | string | `"12s"` |  |
 | config.privateKey | string | `""` |  |
-| config.resubmissionTimeout | string | `"30s"` |  |
-| config.rollupUrl | string | `""` |  |
+| config.rollupRpc | string | `"http://localhost:8547"` |  |
 | config.rpc.addr | string | `"0.0.0.0"` |  |
-| config.rpc.enableAdmin | bool | `false` |  |
+| config.rpc.enabledAdmin | bool | `false` |  |
 | config.rpc.port | int | `8545` |  |
-| config.safeAbortNonceTooLowCount | int | `3` |  |
-| config.subSafetyMargin | int | `6` |  |
-| config.txmgr.feeLimitThreshold | string | `""` |  |
-| config.txmgr.minBasefee | string | `""` |  |
-| config.txmgr.minTipCap | string | `""` |  |
-| config.txmgr.notInMempoolTimeout | string | `""` |  |
-| config.txmgr.receiptQueryInterval | string | `""` |  |
-| config.txmgr.sendTimeout | string | `""` |  |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"us-docker.pkg.dev/oplabs-tools-artifacts/images/op-batcher"` |  |
+| image.repository | string | `"us-docker.pkg.dev/oplabs-tools-artifacts/images/op-proposer"` |  |
 | image.tag | string | `"v1.7.4"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
@@ -70,7 +56,7 @@ Celo implementation for op-batcher client (Optimism Rollup)
 | livenessProbe.failureThreshold | int | `3` |  |
 | livenessProbe.httpGet.path | string | `"/healthz"` |  |
 | livenessProbe.httpGet.port | string | `"rpc"` |  |
-| livenessProbe.initialDelaySeconds | int | `120` |  |
+| livenessProbe.initialDelaySeconds | int | `60` |  |
 | livenessProbe.periodSeconds | int | `30` |  |
 | livenessProbe.successThreshold | int | `1` |  |
 | livenessProbe.timeoutSeconds | int | `5` |  |
@@ -93,7 +79,7 @@ Celo implementation for op-batcher client (Optimism Rollup)
 | services.metrics.type | string | `"ClusterIP"` |  |
 | services.rpc.annotations | object | `{}` |  |
 | services.rpc.enabled | bool | `true` |  |
-| services.rpc.port | int | `8545` |  |
+| services.rpc.port | int | `8560` |  |
 | services.rpc.type | string | `"ClusterIP"` |  |
 | sidecarContainers | list | `[]` |  |
 | statefulset.annotations | object | `{}` |  |
