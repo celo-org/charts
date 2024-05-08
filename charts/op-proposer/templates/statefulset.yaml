@@ -4,6 +4,10 @@ metadata:
   name: {{ template "op-proposer.fullname" . }}
   labels:
     {{- include "op-proposer.labels" . | nindent 4 }}
+  {{- with .Values.statefulset.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   serviceName: {{ template "op-proposer.name" . }}
   updateStrategy:
@@ -15,6 +19,15 @@ spec:
     metadata:
       labels:
         {{- include "op-proposer.selectorLabels" . | nindent 8 }}
+      annotations:
+      {{- with .Values.statefulset.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.config.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.config.metrics.port }}"
+        prometheus.io/path: "/metrics"
+      {{- end }}
     spec:
       enableServiceLinks: false
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}

@@ -20,6 +20,12 @@ serviceAccount:
 updateStrategy:
   type: RollingUpdate
 
+statefulset:
+  # Annotations to add to the statefulset
+  annotations: {}
+  # Annotations to add to the pod template
+  podAnnotations: {}
+
 terminationGracePeriodSeconds: 300
 
 podSecurityContext: {}
