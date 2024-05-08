@@ -2,6 +2,10 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ template "op-node.fullname" . }}
+  {{- with .Values.statefulset.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "op-node.labels" . | nindent 4 }}
 spec:
@@ -15,6 +19,15 @@ spec:
     metadata:
       labels:
         {{- include "op-node.selectorLabels" . | nindent 8 }}
+      annotations:
+      {{- with .Values.statefulset.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.config.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.config.metrics.port }}"
+        prometheus.io/path: "/metrics"
+      {{- end }}
     spec:
       enableServiceLinks: false
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
@@ -76,7 +89,7 @@ spec:
         {{- end }}
         args:
         - |
-          op-node \
+          exec op-node \
             --l1={{ .Values.config.l1.url }} \
             --l1.trustrpc={{ .Values.config.l1.trustrpc }} \
             --l1.rpckind={{ .Values.config.l1.rpckind }} \

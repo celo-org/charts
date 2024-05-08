@@ -1,6 +1,6 @@
 # op-geth
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-geth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -41,6 +41,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.http.port | int | `8545` |  |
 | config.http.vhosts[0] | string | `"*"` |  |
 | config.jwt | string | `""` |  |
+| config.logFormat | string | `"json"` |  |
 | config.maxpeers | int | `50` |  |
 | config.metrics.enabled | bool | `false` |  |
 | config.metrics.expensive | bool | `false` |  |
@@ -53,7 +54,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.rollup.halt | string | `"major"` |  |
 | config.rollup.sequencerhttp | string | `"https://mainnet-sequencer.optimism.io/"` |  |
 | config.snapshot | bool | `true` |  |
-| config.state.scheme | string | `"path"` |  |
+| config.state.scheme | string | `""` |  |
 | config.syncmode | string | `"snap"` |  |
 | config.useHostPort | bool | `false` |  |
 | config.verbosity | int | `3` |  |
@@ -112,6 +113,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | persistence.pvc.size | string | `"5Gi"` |  |
 | persistence.pvc.storageClass | string | `""` |  |
 | persistence.type | string | `"pvc"` |  |
+| podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | podSecurityContext.fsGroup | int | `10001` |  |
 | podStatusLabels | object | `{}` |  |
