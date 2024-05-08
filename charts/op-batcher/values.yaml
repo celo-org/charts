@@ -1,7 +1,7 @@
 ---
 image:
-  repository: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-proposer
-  tag: latest
+  repository: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-batcher
+  tag: v1.7.4
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -19,6 +19,12 @@ serviceAccount:
 
 updateStrategy:
   type: RollingUpdate
+
+statefulset:
+  # Annotations to add to the statefulset
+  annotations: {}
+  # Annotations to add to the pod template
+  podAnnotations: {}
 
 terminationGracePeriodSeconds: 300
 
@@ -53,7 +59,7 @@ services:
   rpc:
     enabled: true
     type: ClusterIP
-    port: 8560
+    port: 8545
     annotations: {}
   metrics:
     enabled: true
@@ -90,7 +96,7 @@ serviceMonitor:
 
 livenessProbe:
   enabled: true
-  initialDelaySeconds: 60
+  initialDelaySeconds: 120
   periodSeconds: 30
   successThreshold: 1
   failureThreshold: 3
@@ -118,11 +124,12 @@ nodeSelector: {}
 
 tolerations: []
 
-## Main op-proposer config
+## Main op-batcher config
 config:
   l1Url: ""                                                                 # HTTP provider URL for L1
   l2Url: ""                                                                 # HTTP provider URL for the L2 engine. If multiple URLs are provided, they should match the number of rollup-rpcs
   dataAvailabilityType: calldata                                            # The data availability type to use for submitting batches to the L1. Valid options: calldata, blobs
+  batchType: ""                                                             # The batch type. 0 for SingularBatch and 1 for SpanBatch
   rollupUrl: ""                                                             # HTTP provider URL for rollup node. If multiple URLs are provided, they should match the number of l2-eth-rpcs
   pollInterval: 1s                                                          # How frequently to poll L2 for new blocks
   subSafetyMargin: 6                                                        # Safety margin (in #L1blocks) for batch transaction submission to ensure safe channel inclusion on L1.
@@ -130,15 +137,22 @@ config:
   safeAbortNonceTooLowCount: 3                                              # Number of ErrNonceTooLow observations required to give up on a tx at a particular nonce without receiving confirmation
   resubmissionTimeout: 30s                                                  # Duration we will wait before resubmitting a transaction to L1
   privateKey: ""                                                            # The private key to use with the service. Must not be used with mnemonic.
-  maxChannelDuration: 1500                                                  # The maximum duration of L1-blocks to keep a channel open. 0 to disable.
+  maxL1TxSizeBytes: ""                                                      # The maximum size of an L1 transaction in bytes. 120000 by default
+  maxChannelDuration: ""                                                    # The maximum duration of L1-blocks to keep a channel open. 0 to disable.
   feeLimitMultiplier: 5                                                     # The multiplier to apply to the gas price when submitting transactions to L1
   txmgr:
-    feeLimitThreshold: 10                                                   # The minimum threshold (in GWei) at which fee bumping starts to be capped
-    minBaseFee: 0                                                           # Enforces a minimum base fee (in GWei) to assume when determining tx fees. Off by default
-    minTipCap: 0                                                            # Enforces a minimum tip cap (in GWei) to assume when determining tx fees. Off by default
-    notInMempoolTimeout: 2m0s                                               # Timeout for aborting a tx send if the tx does not make it to the mempool
-    receiptQueryInterval: 12s                                               # Frequency to poll for receipts
-    sendTimeout: 2m0s                                                       # Timeout for sending a tx. 0 to disable
+    feeLimitThreshold: ""                                                   # The minimum threshold (in GWei) at which fee bumping starts to be capped
+    minBasefee: ""                                                          # Enforces a minimum base fee (in GWei) to assume when determining tx fees. Off by default
+    minTipCap: ""                                                           # Enforces a minimum tip cap (in GWei) to assume when determining tx fees. Off by default
+    notInMempoolTimeout: ""                                                 # Timeout for aborting a tx send if the tx does not make it to the mempool
+    receiptQueryInterval: ""                                                # Frequency to poll for receipts
+    sendTimeout: ""                                                         # Timeout for sending a tx. 0 to disable
+    # feeLimitThreshold: 10                                                   # The minimum threshold (in GWei) at which fee bumping starts to be capped
+    # minBaseFee: 0                                                           # Enforces a minimum base fee (in GWei) to assume when determining tx fees. Off by default
+    # minTipCap: 0                                                            # Enforces a minimum tip cap (in GWei) to assume when determining tx fees. Off by default
+    # notInMempoolTimeout: 2m0s                                               # Timeout for aborting a tx send if the tx does not make it to the mempool
+    # receiptQueryInterval: 12s                                               # Frequency to poll for receipts
+    # sendTimeout: 2m0s                                                       # Timeout for sending a tx. 0 to disable
   logs:
     level: info                                                              # Log level
     format: json                                                             # Log format

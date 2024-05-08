@@ -4,6 +4,10 @@ metadata:
   name: {{ template "op-batcher.fullname" . }}
   labels:
     {{- include "op-batcher.labels" . | nindent 4 }}
+  {{- with .Values.statefulset.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   serviceName: {{ template "op-batcher.name" . }}
   updateStrategy:
@@ -15,6 +19,15 @@ spec:
     metadata:
       labels:
         {{- include "op-batcher.selectorLabels" . | nindent 8 }}
+      annotations:
+      {{- with .Values.statefulset.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.config.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.config.metrics.port }}"
+        prometheus.io/path: "/metrics"
+      {{- end }}
     spec:
       enableServiceLinks: false
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
@@ -61,31 +74,46 @@ spec:
         {{- end }}
         args:
         - |
-          op-batcher \
+          exec op-batcher \
             --l2-eth-rpc={{ .Values.config.l2Url }} \
             --rollup-rpc={{ .Values.config.rollupUrl }} \
             --poll-interval={{ .Values.config.pollInterval }} \
-            --sub-safety-margin={{ .Values.config.subSafetyMargin }} \
             --num-confirmations={{ .Values.config.numConfirmations }} \
             --safe-abort-nonce-too-low-count={{ .Values.config.safeAbortNonceTooLowCount }} \
             --resubmission-timeout={{ .Values.config.resubmissionTimeout }} \
-            {{- if .Values.config.rpc.enableAdmin }}
+            {{- if .Values.config.rpc.enabledAdmin }}
             --rpc.enable-admin \
             --rpc.addr={{ .Values.config.rpc.addr }} \
             --rpc.port={{ .Values.config.rpc.port }} \
             {{- end }}
             --data-availability-type={{ .Values.config.dataAvailabilityType }} \
-            --max-channel-duration={{ .Values.config.maxChannelDuration }} \
-            --fee-limit-multiplier={{ .Values.config.feeLimitMultiplier }} \
-            --txmgr.fee-limit-threshold={{ .Values.config.txmgr.feeLimitThreshold }} \
-            --txmgr.min-basefee={{ .Values.config.txmgr.minBaseFee }} \
-            --txmgr.min-tip-cap={{ .Values.config.txmgr.minTipCap }} \
-            --txmgr.not-in-mempool-timeout={{ .Values.config.txmgr.notInMempoolTimeout }} \
-            --txmgr.receipt-query-interval={{ .Values.config.txmgr.receiptQueryInterval }} \
-            --txmgr.send-timeout={{ .Values.config.txmgr.sendTimeout }} \
+            {{- with .Values.config.batchType }}
+            --batch-type={{ . }} \
+            {{- end }}
+            {{- with .Values.config.maxChannelDuration }}
+            --max-channel-duration={{ . }} \
+            {{- end }}
+            {{- with .Values.config.maxL1TxSizeBytes }}
+            --max-l1-tx-size-bytes={{ . }} \
+            {{- end }}
+            {{- with .Values.config.subSafetyMargin }}
+            --sub-safety-margin={{ . }} \
+            {{- end }}
+            {{- with .Values.config.feeLimitMultiplier }}
+            --fee-limit-multiplier={{ . }} \
+            {{- end }}
+            {{- range $key, $value := .Values.config.txmgr }}
+            {{- if kindIs "string" $value }}
+            {{- if ne $value "" }}
+            --txmgr.{{ $key | snakecase | replace "_" "-" }}={{ $value }} \
+            {{- end }}
+            {{- else }}
+            --txmgr.{{ $key | snakecase | replace "_" "-" }}={{ default 0 $value }} \
+            {{- end }}
+            {{- end }}
             --l1-eth-rpc={{ .Values.config.l1Url }} \
             --private-key=$(cat /secrets/privateKey) \
-            {{- if .Values.config.metrics }}
+            {{- if .Values.config.metrics.enabled }}
             --metrics.enabled \
             --metrics.addr={{ .Values.config.metrics.addr }} \
             --metrics.port={{ .Values.services.metrics.port }} \
@@ -95,7 +123,7 @@ spec:
             --log.color={{ .Values.config.logs.color }} \
         ports:
         - name: rpc
-          containerPort: {{ .Values.services.rpc.port }}
+          containerPort: {{ .Values.config.rpc.port }}
         {{- if .Values.config.metrics }}
         - name: metrics
           containerPort: {{ .Values.config.metrics.port }}
