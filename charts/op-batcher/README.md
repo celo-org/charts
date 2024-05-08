@@ -1,6 +1,6 @@
 # op-batcher
 
-![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-batcher client (Optimism Rollup)
 
@@ -25,12 +25,14 @@ Celo implementation for op-batcher client (Optimism Rollup)
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | command | list | `[]` |  |
+| config.dataAvailabilityType | string | `"calldata"` |  |
+| config.feeLimitMultiplier | int | `5` |  |
 | config.l1Url | string | `""` |  |
 | config.l2Url | string | `""` |  |
 | config.logs.color | bool | `false` |  |
 | config.logs.format | string | `"json"` |  |
 | config.logs.level | string | `"info"` |  |
-| config.maxChannelDuration | int | `1` |  |
+| config.maxChannelDuration | int | `1500` |  |
 | config.metrics.addr | string | `"0.0.0.0"` |  |
 | config.metrics.enabled | bool | `false` |  |
 | config.metrics.port | int | `7300` |  |
@@ -44,6 +46,12 @@ Celo implementation for op-batcher client (Optimism Rollup)
 | config.rpc.port | int | `8545` |  |
 | config.safeAbortNonceTooLowCount | int | `3` |  |
 | config.subSafetyMargin | int | `6` |  |
+| config.txmgr.feeLimitThreshold | int | `10` |  |
+| config.txmgr.minBaseFee | int | `0` |  |
+| config.txmgr.minTipCap | int | `0` |  |
+| config.txmgr.notInMempoolTimeout | string | `"2m0s"` |  |
+| config.txmgr.receiptQueryInterval | string | `"12s"` |  |
+| config.txmgr.sendTimeout | string | `"2m0s"` |  |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
