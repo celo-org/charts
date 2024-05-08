@@ -1,6 +1,6 @@
 # op-geth
 
-![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-geth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -181,7 +181,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | syncToS3.cronjob.enabled | bool | `false` |  |
 | syncToS3.cronjob.image.pullPolicy | string | `"IfNotPresent"` |  |
 | syncToS3.cronjob.image.repository | string | `"dysnix/kubectl"` |  |
-| syncToS3.cronjob.image.tag | string | `"v1.27"` |  |
+| syncToS3.cronjob.image.tag | string | `"v1.29"` |  |
 | syncToS3.cronjob.schedule | string | `"0 2 * * *"` |  |
 | syncToS3.enabled | bool | `false` |  |
 | terminationGracePeriodSeconds | int | `300` |  |
