@@ -33,10 +33,13 @@ spec:
             name: {{ include "llama-web3-proxy.fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
-          args:
-          - "--config"
-          - "/llama/web3-proxy.toml"
-          - "proxyd"
+          command: 
+            - /bin/bash
+            - -c
+          args: 
+            - |
+              envsubst < /llama/web3-proxy-tmp.toml > /llama/web3-proxy.toml
+              web3_proxy_cli --config /llama/web3-proxy.toml proxyd
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -45,6 +48,24 @@ spec:
             - name: http
               containerPort: {{ include "llama-web3-proxy.http-port" . }}
               protocol: TCP
+          {{- if or (.Values.env) (.Values.secretEnv) }}
+          env:
+          {{- with .Values.secretEnv }}
+            {{- range $key, $value := . }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $value.secretName }}
+                  key: {{ $value.secretKey }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.env }}
+            {{- range $key, $value := . }}
+            - name: {{ $key }}
+              value: {{ $value }}
+            {{- end }}
+          {{- end }}
+          {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -55,7 +76,7 @@ spec:
           {{- end }}
           volumeMounts:
           - name: config
-            mountPath: /llama/web3-proxy.toml
+            mountPath: /llama/web3-proxy-tmp.toml
             subPath: config
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

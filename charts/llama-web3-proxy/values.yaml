@@ -10,9 +10,15 @@ fullnameOverride: ""
 # -- Number of deployment replicas
 replicaCount: 1
 
-geth:
-  # -- Provider RPC endpoint to read balances from
-  url: "https://rpc2.sepolia.org"
+# -- Env Vars. mounted from a secret
+secretEnv: {}
+  # INFURA_URL:
+  #   secretName: "test"
+  #   secretKey: "test"
+
+# -- Direct Env Vars. as <NAME>: "<VALUE>"
+env: {}
+  # RUST_LOG: "info,web3_proxy=debug,ethers_providers::rpc=off"
 
 # -- Config as string. Minimal example at https://github.com/llamanodes/web3-proxy/blob/main/config/minimal.toml
 config: ""
