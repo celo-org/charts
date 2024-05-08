@@ -24,8 +24,8 @@ Based on [llamanodes web3-proxy](https://github.com/llamanodes/web3-proxy).
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
 | config | string | `""` | Config as string. Minimal example at https://github.com/llamanodes/web3-proxy/blob/main/config/minimal.toml |
+| env | object | `{}` | Direct Env Vars. as <NAME>: "<VALUE>" |
 | fullnameOverride | string | `""` | Chart full name override |
-| geth.url | string | `"https://rpc2.sepolia.org"` | Provider RPC endpoint to read balances from |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/llama-web3-proxy"` | Image repository |
 | image.tag | string | `"test"` | Image tag Overrides the image tag whose default is the chart appVersion. |
@@ -38,6 +38,7 @@ Based on [llamanodes web3-proxy](https://github.com/llamanodes/web3-proxy).
 | readinessProbe | object | `{}` | Readiness probe configuration |
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
+| secretEnv | object | `{}` | Env Vars. mounted from a secret |
 | securityContext | object | `{}` | Custom container security context |
 | service.type | string | `"ClusterIP"` | Service type |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
