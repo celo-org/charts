@@ -5,5 +5,5 @@ metadata:
   labels:
     {{- include "llama-web3-proxy.labels" . | nindent 4 }}
 data:
-  addressess: |
+  config: |
     {{- tpl .Values.config . | nindent 4 }}

@@ -33,6 +33,10 @@ spec:
             name: {{ include "llama-web3-proxy.fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
+          args:
+          - "--config"
+          - "/llama/web3-proxy.toml"
+          - "proxyd"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -51,8 +55,8 @@ spec:
           {{- end }}
           volumeMounts:
           - name: config
-            mountPath: /web3-proxy.toml
-            subPath: web3-proxy
+            mountPath: /llama/web3-proxy.toml
+            subPath: config
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

@@ -12,21 +12,8 @@ config: |
 
   [balanced_rpcs]
 
-      [balanced_rpcs.llama_public_both]
+      [balanced_rpcs.holesky_drpc_public]
       disabled = false
-      display_name = "LlamaNodes Both"
-      ws_url = "wss://eth.llamarpc.com/"
-      http_url = "https://eth.llamarpc.com/"
-      soft_limit = 1_000
-
-      [balanced_rpcs.llama_public_https]
-      disabled = false
-      display_name = "LlamaNodes HTTPS"
-      http_url = "https://eth.llamarpc.com/"
-      soft_limit = 1_000
-
-      [balanced_rpcs.llama_public_wss]
-      disabled = false
-      display_name = "LlamaNodes WSS"
-      ws_url = "wss://eth.llamarpc.com/"
+      display_name = "Holesky DRPC"
+      http_url = "https://holesky.drpc.org"
       soft_limit = 1_000
