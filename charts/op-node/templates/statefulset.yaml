@@ -149,6 +149,9 @@ spec:
             {{- with .Values.config.p2p.bootnodes }}
             --p2p.bootnodes={{ join "," . }} \
             {{- end }}
+            {{- with .Values.config.p2p.static }}
+            --p2p.static={{ join "," . }} \
+            {{- end }}
             {{- with .Values.config.p2p.sequencer.key }}
             --p2p.sequencer.key={{ . }} \
             {{- end }}
