@@ -21,3 +21,6 @@ config: |
       block_data_limit = "archive"
       http_url = "https://ethereum-holesky-rpc.publicnode.com"
       soft_limit = 1_000
+
+redis:
+  enabled: true

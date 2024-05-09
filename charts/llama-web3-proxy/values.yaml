@@ -123,6 +123,7 @@ affinity: {}
 
 # -- Redis dependency, see Bitnami redis chart
 redis:
+  enabled: false
   architecture: "standalone"
   auth:
     enabled: false
