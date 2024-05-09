@@ -8,6 +8,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# Number of op-node replicas. Must be 1 if sequencer is enabled
+replicaCount: 1
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -59,7 +62,9 @@ services:
   p2p:
     enabled: true
     type: NodePort
-    loadBalancerIP: ""
+    loadBalancerIPs: []
+    clusterIPs: []
+    nodePorts: []
     port: 9222
     # it's better to set nodePort equal to .Values.config.node.p2p.port when the svc type is "NodePort"
     # nodePort: 9222

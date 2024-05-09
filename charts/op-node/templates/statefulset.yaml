@@ -9,6 +9,7 @@ metadata:
   labels:
     {{- include "op-node.labels" . | nindent 4 }}
 spec:
+  replicas: {{ .Values.replicaCount }}
   serviceName: {{ template "op-node.name" . }}
   updateStrategy:
     {{- toYaml .Values.updateStrategy | nindent 4 }}
@@ -68,6 +69,21 @@ spec:
         - name: data
           mountPath: {{ .Values.persistence.mountPath | default .Values.config.rollup.config }}
       {{- end }}
+      - name: split-jwt
+        image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
+        imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command: ["sh", "/scripts/split-jwt.sh"]
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: secrets
+          mountPath: /secrets
+        - name: data
+          mountPath: {{ .Values.persistence.mountPath | default .Values.config.rollup.config }}
       {{- with .Values.initContainers }}
         {{- tpl (toYaml . | nindent 6) $ }}
       {{- end }}
@@ -97,7 +113,7 @@ spec:
             --l1.beacon={{ . }} \
             {{- end }}
             --l2={{ .Values.config.l2.url }} \
-            --l2.jwt-secret=/secrets/jwt.hex \
+            --l2.jwt-secret={{ .Values.persistence.mountPath | default .Values.config.rollup.config }}/jwt.hex \
             --rpc.addr=0.0.0.0 \
             --rpc.port={{ .Values.config.port }} \
             {{- if .Values.config.enableAdmin }}
@@ -191,8 +207,6 @@ spec:
           {{- include "op-node.healthcheck" (list $ .Values.readinessProbe) | nindent 10 }}
         {{- end }}
         volumeMounts:
-        - name: secrets
-          mountPath: /secrets
         - name: data
           mountPath: {{ .Values.persistence.mountPath | default .Values.config.rollup.config }}
         resources:
