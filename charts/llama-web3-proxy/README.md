@@ -1,6 +1,6 @@
 # llama-web3-proxy
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -17,6 +17,12 @@ Based on [llamanodes web3-proxy](https://github.com/llamanodes/web3-proxy).
 ## Source Code
 
 * <https://github.com/llamanodes/web3-proxy>
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| oci://registry-1.docker.io/bitnamicharts | redis | 19.3.0 |
 
 ## Values
 
@@ -36,6 +42,7 @@ Based on [llamanodes web3-proxy](https://github.com/llamanodes/web3-proxy).
 | podAnnotations | object | `{}` | Custom pod annotations |
 | podSecurityContext | object | `{}` | Custom pod security context |
 | readinessProbe | object | `{}` | Readiness probe configuration |
+| redis | object | `{"architecture":"standalone","auth":{"enabled":false}}` | Redis dependency, see Bitnami redis chart |
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
 | secretEnv | object | `{}` | Env Vars. mounted from a secret |
