@@ -121,7 +121,7 @@ tolerations: []
 # -- Kubernetes pod affinity
 affinity: {}
 
-# -- Redis dependency, see Bitnami redis chart 
+# -- Redis dependency, see Bitnami redis chart
 redis:
   architecture: "standalone"
   auth:
