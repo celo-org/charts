@@ -42,7 +42,7 @@ Based on [llamanodes web3-proxy](https://github.com/llamanodes/web3-proxy).
 | podAnnotations | object | `{}` | Custom pod annotations |
 | podSecurityContext | object | `{}` | Custom pod security context |
 | readinessProbe | object | `{}` | Readiness probe configuration |
-| redis | object | `{"architecture":"standalone","auth":{"enabled":false}}` | Redis dependency, see Bitnami redis chart |
+| redis | object | `{"architecture":"standalone","auth":{"enabled":false},"enabled":false}` | Redis dependency, see Bitnami redis chart |
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
 | secretEnv | object | `{}` | Env Vars. mounted from a secret |
