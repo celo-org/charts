@@ -1,6 +1,6 @@
 # op-node
 
-![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-node consensus engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree/main/dysnix/op-node).
@@ -42,6 +42,7 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | config.p2p.nat | bool | `false` |  |
 | config.p2p.port | int | `9222` |  |
 | config.p2p.sequencer.key | string | `""` |  |
+| config.p2p.static | list | `[]` |  |
 | config.p2p.useHostPort | bool | `false` |  |
 | config.port | int | `9545` |  |
 | config.rollup.config | string | `"/celo"` |  |
@@ -117,12 +118,6 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | services.p2p.port | int | `9222` |  |
 | services.p2p.publishNotReadyAddresses | bool | `true` |  |
 | services.p2p.type | string | `"NodePort"` |  |
-| services.p2pDiscovery.annotations | object | `{}` |  |
-| services.p2pDiscovery.enabled | bool | `true` |  |
-| services.p2pDiscovery.loadBalancerIP | string | `""` |  |
-| services.p2pDiscovery.port | int | `9222` |  |
-| services.p2pDiscovery.publishNotReadyAddresses | bool | `true` |  |
-| services.p2pDiscovery.type | string | `"NodePort"` |  |
 | services.rpc.annotations | object | `{}` |  |
 | services.rpc.enabled | bool | `true` |  |
 | services.rpc.port | int | `9545` |  |

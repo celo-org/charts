@@ -65,15 +65,6 @@ services:
     # nodePort: 9222
     annotations: {}
     publishNotReadyAddresses: true
-  p2pDiscovery:
-    enabled: true
-    type: NodePort
-    loadBalancerIP: ""
-    port: 9222
-    # it's better to set nodePort equal to .Values.config.node.p2p.port when the svc type is "NodePort"
-    # nodePort: 9222
-    annotations: {}
-    publishNotReadyAddresses: true
   rpc:
     enabled: true
     type: ClusterIP
@@ -202,6 +193,7 @@ config:
     port: 9222
     useHostPort: false                 # use hostPort for p2p traffic instead of dedicated k8s svc
     bootnodes: []                      # override bootnodes
+    static: []                         # static peers
     sequencer:
       key: ""                            # sequencer key
 
