@@ -29,6 +29,9 @@ config: ""
 #  min_sum_soft_limit = 1
 #  min_synced_rpcs = 0
 #
+#  volatile_redis_max_connections = 300
+#  volatile_redis_url = "redis://{{ .Release.Name }}-redis-master:6379/"
+#
 #  response_cache_max_bytes = 1_000_000_000
 #
 #  [balanced_rpcs]
@@ -117,3 +120,9 @@ tolerations: []
 
 # -- Kubernetes pod affinity
 affinity: {}
+
+# -- Redis dependency, see Bitnami redis chart 
+redis:
+  architecture: "standalone"
+  auth:
+    enabled: false
