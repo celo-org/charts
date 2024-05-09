@@ -1,0 +1,119 @@
+# Default values for llama-web3-proxy.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+# -- Number of deployment replicas
+replicaCount: 1
+
+# -- Env Vars. mounted from a secret
+secretEnv: {}
+  # INFURA_URL:
+  #   secretName: "test"
+  #   secretKey: "test"
+
+# -- Direct Env Vars. as <NAME>: "<VALUE>"
+env: {}
+  # RUST_LOG: "info,web3_proxy=debug,ethers_providers::rpc=off"
+
+# -- Config as string. Minimal example at https://github.com/llamanodes/web3-proxy/blob/main/config/minimal.toml
+config: ""
+# |
+#  [app]
+#  chain_id = 17000
+#
+#  min_sum_soft_limit = 1
+#  min_synced_rpcs = 0
+#
+#  response_cache_max_bytes = 1_000_000_000
+#
+#  [balanced_rpcs]
+#
+#      [balanced_rpcs.holesky_drpc_public]
+#      disabled = false
+#      display_name = "Holesky DRPC"
+#      block_data_limit = "archive"
+#      http_url = "https://ethereum-holesky-rpc.publicnode.com"
+#      soft_limit = 1_000
+
+image:
+  # -- Image repository
+  repository: "us-west1-docker.pkg.dev/devopsre/dev-images/llama-web3-proxy"
+  # -- Image pullpolicy
+  pullPolicy: IfNotPresent
+  # -- Image tag
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "test"
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+    # iam.gke.io/gcp-service-account: odis-signer0-staging@celo-testnet.iam.gserviceaccount.com
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Custom pod annotations
+podAnnotations: {}
+  # prometheus.io/path: /metrics
+  # prometheus.io/port: "9015"
+  # prometheus.io/scrape: "true"
+
+# -- Custom pod security context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Custom container security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # -- Service type
+  type: ClusterIP
+
+# -- Liveness probe configuration
+livenessProbe: {}
+#   httpGet:
+#     path: /health
+#     port: health
+
+# -- Readiness probe configuration
+readinessProbe: {}
+#   httpGet:
+#     path: /health
+#     port: health
+
+# -- Container resources
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes pod affinity
+affinity: {}

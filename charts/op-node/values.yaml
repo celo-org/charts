@@ -1,7 +1,7 @@
 ---
 image:
   repository: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node
-  tag: latest
+  tag: v1.7.4
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -19,6 +19,12 @@ serviceAccount:
 
 updateStrategy:
   type: RollingUpdate
+
+statefulset:
+  # Annotations to add to the statefulset
+  annotations: {}
+  # Annotations to add to the pod template
+  podAnnotations: {}
 
 terminationGracePeriodSeconds: 300
 
@@ -172,7 +178,7 @@ config:
   l1:
     url: https://1rpc.io/eth                              # eth L1 node rpc url, can also be ws://
     trustrpc: false                                       # enable if you trust L1 provider and want to fetch data from it faster
-    rpckind: any                                          # can be: alchemy, quicknode, infura, parity, nethermind, debug_geth, erigon, basic, any, standard
+    rpckind: any                                          # Valid options: alchemy, quicknode, infura, parity, nethermind, debug_geth, erigon, basic, any, standard
     beacon: https://ethereum-beacon-api.publicnode.com    # endpoint for L1 beacon node, used for retrieving EIP-4844 blob transactions
   l2:
     url: http://op-geth-authrpc:8551  # authrpc addr of op-geth L2 node, can also be ws://
@@ -197,7 +203,7 @@ config:
     useHostPort: false                 # use hostPort for p2p traffic instead of dedicated k8s svc
     bootnodes: []                      # override bootnodes
     sequencer:
-      key: ""                          # sequencer key
+      key: ""                            # sequencer key
 
 ## GCS Rollup sync config
 gcsConfig:
