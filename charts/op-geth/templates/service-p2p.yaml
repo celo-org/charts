@@ -36,6 +36,13 @@ spec:
       {{- with .nodePort }}
       nodePort: {{ . }}
       {{- end }}
+    - name: p2p-udp
+      port: {{ .port }}
+      targetPort: p2p-udp
+      protocol: UDP
+      {{- with .nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
   selector:
     {{- include "op-geth.selectorLabels" $ | nindent 4 }}
 {{- end }}

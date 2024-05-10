@@ -8,6 +8,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+replicaCount: 1
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -125,6 +126,8 @@ services:
   authrpc:
     enabled: true
     type: ClusterIP
+    loadBalancerIPs: []
+    clusterIPs: []
     port: 8551
     publishNotReadyAddresses: true
   metrics:
@@ -140,15 +143,6 @@ services:
     # nodePort: 30303   # exposed port of the node, must be unique across multiple node deployments
     annotations: {}
     publishNotReadyAddresses: true
-  p2pDiscovery:
-    enabled: true       # disable if you are not using "snap" syncmode
-    type: NodePort
-    loadBalancerIP: ""
-    port: 30301
-    # nodePort: 30301   # exposed port of the node, must be unique across multiple node deployments
-    annotations: {}
-    publishNotReadyAddresses: true
-
 ingress:
   http:
     enabled: false
@@ -298,8 +292,6 @@ config:
   nodiscover: false         # enable if you don't use "snap" syncmode
   networkid: ""             # network id. Empty string for known networks, custom id for custom rollups
   port: 30303               # TCP port for P2P communication
-  discovery:
-    port: 30301             # UDP port for P2P discovery
   useHostPort: false        # allocate hostPorts for P2P communication instead of K8S service
   nat: "any"                # try to auto-detect node IP, refer to `geth --help` for other options
   bootnodes: []             # built-in bootnodes are used when empty
@@ -317,13 +309,18 @@ init:
     enabled: false
     image:
       repository: alpine
-      tag: 3.18
+      tag: 3.19
       pullPolicy: IfNotPresent
   genesis:
     enabled: false
     url: ""
   rollup:
     url: ""
+  jwt:
+    image:
+      repository: alpine
+      tag: 3.19
+      pullPolicy: IfNotPresent
 
 ## S3 snapshot sync config
 s3config:
