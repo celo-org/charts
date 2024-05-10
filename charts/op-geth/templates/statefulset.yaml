@@ -279,9 +279,9 @@ spec:
           {{- end }}
           protocol: TCP
         - name: p2p-udp
-          containerPort: {{ .Values.config.discovery.port }}
+          containerPort: {{ .Values.config.port }}
           {{- if .Values.config.useHostPort }}
-          hostPort: {{ .Values.config.discovery.port }}
+          hostPort: {{ .Values.config.port }}
           {{- end }}
           protocol: UDP
         {{- end }}
