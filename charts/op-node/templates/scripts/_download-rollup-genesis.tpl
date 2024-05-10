@@ -1,10 +1,11 @@
 #!/usr/bin/env sh
 set -e
 
-if [ ! -f /celo/.initialized ]; then
-    wget -qO /celo/genesis.json "{{ .Values.init.genesis.url }}"
-    wget -qO /celo/rollup.json "{{ .Values.init.rollup.url }}"
-    touch /celo/.initialized
+datadir="{{ .Values.persistence.mountPath | default .Values.config.rollup.config }}"
+if [ ! -f $datadir/.initialized ]; then
+    wget -qO $datadir/genesis.json "{{ .Values.init.genesis.url }}"
+    wget -qO $datadir/rollup.json "{{ .Values.init.rollup.url }}"
+    touch $datadir/.initialized
     echo "Successfully downloaded genesis and rollup files"
 else
     echo "Already downloaded, skipping."
