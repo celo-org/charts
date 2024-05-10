@@ -2,14 +2,14 @@
 {{ range $index, $e := until (int $replicas) }}
 {{- with $.Values.services.p2p }}
 {{- if and .enabled (not $.Values.config.p2p.useHostPort) }}
-{{- $loadBalancerIp := "" }}
-{{- $clusterIp := "" }}
+{{- $loadBalancerIP := "" }}
+{{- $clusterIP := "" }}
 {{- $nodePort := "" }}
 {{- if lt $index (len .loadBalancerIPs) }}
-  {{- $loadBalancerIp = index .loadBalancerIPs $index }}
+  {{- $loadBalancerIP = index .loadBalancerIPs $index }}
 {{- end }}
 {{- if lt $index (len .clusterIPs) }}
-  {{- $clusterIp = index .clusterIPs $index }}
+  {{- $clusterIP = index .clusterIPs $index }}
 {{- end }}
 {{- if lt $index (len .nodePorts) }}
   {{- $nodePort = index .nodePorts $index }}
@@ -28,10 +28,10 @@ metadata:
     {{- include "op-node.labels" $ | nindent 4 }}
 spec:
   type: {{ .type }}
-  {{- with $loadBalancerIp }}
+  {{- with $loadBalancerIP }}
   loadBalancerIP: {{ . }}
   {{- end }}
-  {{- with $clusterIp }}
+  {{- with $clusterIP }}
   clusterIP: {{ . }}
   {{- end }}
   {{- with .externalTrafficPolicy }}
