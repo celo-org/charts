@@ -110,6 +110,7 @@ spec:
           if [ -f $datadir/advertiseIP ]; then
             advertiseIpFlag="--p2p.advertise.ip=$(cat $datadir/advertiseIP)"
           fi
+
           exec op-node \
             --l1={{ .Values.config.l1.url }} \
             --l1.trustrpc={{ .Values.config.l1.trustrpc }} \
@@ -117,7 +118,7 @@ spec:
             {{- with .Values.config.l1.beacon }}
             --l1.beacon={{ . }} \
             {{- end }}
-            --l2={{ .Values.config.l2.url }} \
+            --l2=$(cat $datadir/l2Url) \
             --l2.jwt-secret={{ .Values.persistence.mountPath | default .Values.config.rollup.config }}/jwt.hex \
             --rpc.addr=0.0.0.0 \
             --rpc.port={{ .Values.config.port }} \

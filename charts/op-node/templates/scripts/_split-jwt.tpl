@@ -17,3 +17,13 @@ if [ -n "$advertiseIp" ]; then
   echo "Setting advertise address to $advertiseIp"
   echo "$advertiseIp" > "$datadir/advertiseIP"
 fi
+
+# Get the L2 url
+l2Url=""
+if [ -n "{{ .Values.config.l2.url }}" ]; then
+  l2Url="{{ .Values.config.l2.url }}"
+else
+  l2Url="{{ .Values.config.l2.protocol }}://{{ .Values.config.l2.namePattern }}-$RID:{{ .Values.config.l2.port }}"
+fi
+echo "Setting L2 url to $l2Url"
+echo "$l2Url" > "$datadir/l2Url"
