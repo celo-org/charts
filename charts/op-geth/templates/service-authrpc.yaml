@@ -45,6 +45,7 @@ spec:
       targetPort: authrpc
   selector:
     {{- include "op-geth.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-geth.fullname" $ }}-{{ $index }}
 {{- end }}
 {{- end }}
 {{- end }}
