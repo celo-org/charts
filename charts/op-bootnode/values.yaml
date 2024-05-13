@@ -47,6 +47,17 @@ services:
     annotations: {}
     publishNotReadyAddresses: true
 
+pvc:
+  enabled: true
+  storageClassName: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  annotations:
+    resize.topolvm.io/increase: 1Gi
+    resize.topolvm.io/storage_limit: 5Gi
+    resize.topolvm.io/threshold: 90%
+    resize.topolvm.io/inodes-threshold: 90%
+
 config:
   network: ""
   p2p:
@@ -55,7 +66,8 @@ config:
       ip: ""                             # The IP address to advertise in Discv5, put into the ENR of the node. This may also be a hostname / domain name to resolve to an IP.
       tcp: ""
       udp: ""
-    useHostPort: false                 # use hostPort for p2p traffic instead of dedicated k8s svc
+    useHostPort: false
+    keys: ""
 
   logs:
     level: info

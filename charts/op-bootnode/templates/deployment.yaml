@@ -16,6 +16,12 @@ spec:
     metadata:
       labels:
         {{- include "op-bootnode.selectorLabels" . | nindent 8 }}
+      annotations:
+      {{- if .Values.config.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "7300"
+        prometheus.io/path: "/metrics"
+      {{- end }}
     spec:
       enableServiceLinks: {{ .Values.enableServiceLinks }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
@@ -77,15 +83,29 @@ spec:
               {{- with .Values.config.network }}
               --network={{ .id }} \
               {{- end }}
-              --rollup.config=/data/rollup.json
+              --rollup.config=/data/rollup.json \
+              --p2p.priv.path=/secrets/p2p.hex \
+              --p2p.peerstore.path=/data/opnode_peerstore_db \
+              --p2p.discovery.path=/data/opnode_discovery_db
         volumeMounts:
         - name: data
           mountPath: /data
+        - name: secrets
+          mountPath: /secrets
         ports:
         - containerPort: {{ .Values.service.port }}
       volumes:
+      {{- if .Values.pvc.enabled }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ template "op-bootnode.fullname" . }}
+      {{- else }}
       - name: data
         emptyDir: {}
+      {{- end }}
       - name: scripts
         configMap:
           name: {{ template "op-bootnode.fullname" . }}-scripts
+      - name: secrets
+        secret:
+          secretName: {{ template "op-bootnode.fullname" . }}
