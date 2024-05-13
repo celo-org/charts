@@ -1,0 +1,91 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "op-bootnode.fullname" . }}
+  labels:
+    {{- include "op-bootnode.labels" . | nindent 4 }}
+spec:
+  strategy:
+    {{- toYaml .Values.strategy | nindent 4 }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "op-bootnode.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "op-bootnode.selectorLabels" . | nindent 8 }}
+    spec:
+      enableServiceLinks: {{ .Values.enableServiceLinks }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+      - name: download-rollup-config
+        image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
+        imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command: ["sh", "/scripts/download-rollup-config.sh"]
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: data
+          mountPath: /data
+      containers:
+      - name: op-bootnode
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command:
+          - /bin/sh
+          - -c
+        args:
+          - |
+            exec op-bootnode \
+              --log.level={{ .Values.config.logs.level }} \
+              --log.format={{ .Values.config.logs.format }} \
+              {{- if .Values.config.metrics.enabled }}
+              --metrics.enabled \
+              --metrics.port=7300 \
+              --metrics.addr="0.0.0.0" \
+              {{- end }}
+              {{- with .Values.config.network }}
+              --network={{ .id }} \
+              {{- end }}
+              --rollup.config=/data/rollup.json
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        ports:
+        - containerPort: {{ .Values.service.port }}
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: scripts
+        configMap:
+          name: {{ template "op-bootnode.fullname" . }}-scripts

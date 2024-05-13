@@ -1,0 +1,64 @@
+---
+replicaCount: 1
+image:
+  repository: jcortejoso/op-bootnode
+  tag: v1.7.4
+  pullPolicy: Always
+service:
+  port: 8080
+
+strategy:
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+  type: RollingUpdate
+
+enableServiceLinks: true
+terminationGracePeriodSeconds: 10
+imagePullSecrets: []
+podSecurityContext: {}
+securityContext: {}
+
+resources: {}
+affinity: {}
+nodeSelector: {}
+tolerations: []
+
+## initContainers configuration
+init:
+  image:
+    repository: alpine
+    tag: 3.19
+    pullPolicy: IfNotPresent
+  rollup:
+    url: ""
+
+## Services config
+services:
+  p2p:
+    enabled: true
+    type: ClusterIP
+    loadBalancerIP: ""
+    clusterIP: ""
+    nodePort: ""
+    port: 9222
+    # it's better to set nodePort equal to .Values.config.node.p2p.port when the svc type is "NodePort"
+    # nodePort: 9222
+    annotations: {}
+    publishNotReadyAddresses: true
+
+config:
+  network: ""
+  p2p:
+    disable: false                       # Disable the P2P network
+    advertise:
+      ip: ""                             # The IP address to advertise in Discv5, put into the ENR of the node. This may also be a hostname / domain name to resolve to an IP.
+      tcp: ""
+      udp: ""
+    useHostPort: false                 # use hostPort for p2p traffic instead of dedicated k8s svc
+
+  logs:
+    level: info
+    format: json
+  metrics:
+    enabled: true
