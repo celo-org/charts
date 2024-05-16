@@ -7,8 +7,8 @@ metadata:
 data:
   download-rollup-genesis.sh: |-
     {{- include (print $.Template.BasePath "/scripts/_download-rollup-genesis.tpl") . | nindent 4 }}
-  split-jwt.sh: |-
-    {{- include (print $.Template.BasePath "/scripts/_split-jwt.tpl") . | nindent 4 }}
+  split-config-parameters.sh: |-
+    {{- include (print $.Template.BasePath "/scripts/_split-config-parameters.tpl") . | nindent 4 }}
 {{- if or .Values.initFromGCS.enabled }}
   gcs-env.sh: |-
     {{- include (print $.Template.BasePath "/scripts/_gcs-env.tpl") . | nindent 4 }}
