@@ -165,7 +165,7 @@ init:
 
 ## Main op-node config
 config:
-  jwt: ""                              # REQUIRED for communication with op-geth
+  jwt: ""                              # REQUIRED for communication with op-geth. In case of multiReplica, comma separated list of JWTs (or shared)
   network: op-mainnet                  # which network to use
   port: 9545
   logLevel: INFO
@@ -202,6 +202,7 @@ config:
     useHostPort: false                 # use hostPort for p2p traffic instead of dedicated k8s svc
     bootnodes: []                      # override bootnodes
     static: []                         # static peers
+    keys: ""                           # comma separated list of keys to use for p2p
     sequencer:
       key: ""                            # sequencer key
 
