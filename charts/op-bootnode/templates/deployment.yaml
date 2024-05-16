@@ -7,7 +7,14 @@ metadata:
     {{- include "op-bootnode.labels" . | nindent 4 }}
 spec:
   strategy:
-    {{- toYaml .Values.strategy | nindent 4 }}
+  {{- if .Values.pvc.enabled }}
+    type: Recreate
+  {{- else }}
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  {{- end }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -84,6 +91,9 @@ spec:
               --network={{ .id }} \
               {{- end }}
               --rollup.config=/data/rollup.json \
+              {{- with .Values.config.p2p.advertise.ip }}
+              --p2p.advertise.ip={{ . }} \
+              {{- end }}
               --p2p.priv.path=/secrets/p2p.hex \
               --p2p.peerstore.path=/data/opnode_peerstore_db \
               --p2p.discovery.path=/data/opnode_discovery_db
@@ -93,7 +103,18 @@ spec:
         - name: secrets
           mountPath: /secrets
         ports:
-        - containerPort: {{ .Values.service.port }}
+        - name: p2p-tcp
+          containerPort: 9222
+          protocol: TCP
+          {{- if .Values.config.p2p.useHostPort }}
+          hostPort: 9222
+          {{- end }}
+        - name: p2p-udp
+          containerPort: 9222
+          protocol: UDP
+          {{- if .Values.config.p2p.useHostPort }}
+          hostPort: 9222
+          {{- end }}
       volumes:
       {{- if .Values.pvc.enabled }}
       - name: data

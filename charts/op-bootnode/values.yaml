@@ -4,14 +4,6 @@ image:
   repository: jcortejoso/op-bootnode
   tag: v1.7.4
   pullPolicy: Always
-service:
-  port: 8080
-
-strategy:
-  rollingUpdate:
-    maxSurge: 25%
-    maxUnavailable: 25%
-  type: RollingUpdate
 
 enableServiceLinks: true
 terminationGracePeriodSeconds: 10
@@ -64,8 +56,6 @@ config:
     disable: false                       # Disable the P2P network
     advertise:
       ip: ""                             # The IP address to advertise in Discv5, put into the ENR of the node. This may also be a hostname / domain name to resolve to an IP.
-      tcp: ""
-      udp: ""
     useHostPort: false
     keys: ""
 
