@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "op-bootnode.fullname" . }}-scripts
+  labels:
+    {{- include "op-bootnode.labels" . | nindent 4 }}
+data:
+  download-rollup-config.sh: |-
+    {{- include (print $.Template.BasePath "/scripts/_download-rollup-config.tpl") . | nindent 4 }}

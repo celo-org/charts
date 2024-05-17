@@ -1,0 +1,132 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "op-bootnode.fullname" . }}
+  labels:
+    {{- include "op-bootnode.labels" . | nindent 4 }}
+spec:
+  strategy:
+  {{- if .Values.pvc.enabled }}
+    type: Recreate
+  {{- else }}
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  {{- end }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "op-bootnode.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "op-bootnode.selectorLabels" . | nindent 8 }}
+      annotations:
+      {{- if .Values.config.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "7300"
+        prometheus.io/path: "/metrics"
+      {{- end }}
+    spec:
+      enableServiceLinks: {{ .Values.enableServiceLinks }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+      - name: download-rollup-config
+        image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
+        imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command: ["sh", "/scripts/download-rollup-config.sh"]
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: data
+          mountPath: /data
+      containers:
+      - name: op-bootnode
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command:
+          - /bin/sh
+          - -c
+        args:
+          - |
+            exec op-bootnode \
+              --log.level={{ .Values.config.logs.level }} \
+              --log.format={{ .Values.config.logs.format }} \
+              {{- if .Values.config.metrics.enabled }}
+              --metrics.enabled \
+              --metrics.port=7300 \
+              --metrics.addr="0.0.0.0" \
+              {{- end }}
+              {{- with .Values.config.network }}
+              --network={{ .id }} \
+              {{- end }}
+              --rollup.config=/data/rollup.json \
+              {{- with .Values.config.p2p.advertise.ip }}
+              --p2p.advertise.ip={{ . }} \
+              {{- end }}
+              --p2p.priv.path=/secrets/p2p.hex \
+              --p2p.peerstore.path=/data/opnode_peerstore_db \
+              --p2p.discovery.path=/data/opnode_discovery_db
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: secrets
+          mountPath: /secrets
+        ports:
+        - name: p2p-tcp
+          containerPort: 9222
+          protocol: TCP
+          {{- if .Values.config.p2p.useHostPort }}
+          hostPort: 9222
+          {{- end }}
+        - name: p2p-udp
+          containerPort: 9222
+          protocol: UDP
+          {{- if .Values.config.p2p.useHostPort }}
+          hostPort: 9222
+          {{- end }}
+      volumes:
+      {{- if .Values.pvc.enabled }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ template "op-bootnode.fullname" . }}
+      {{- else }}
+      - name: data
+        emptyDir: {}
+      {{- end }}
+      - name: scripts
+        configMap:
+          name: {{ template "op-bootnode.fullname" . }}-scripts
+      - name: secrets
+        secret:
+          secretName: {{ template "op-bootnode.fullname" . }}
