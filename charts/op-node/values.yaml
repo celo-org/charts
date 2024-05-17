@@ -155,7 +155,7 @@ persistence:
 init:
   image:
     repository: alpine
-    tag: 3.18
+    tag: 3.19
     pullPolicy: IfNotPresent
   genesis:
     enabled: false
