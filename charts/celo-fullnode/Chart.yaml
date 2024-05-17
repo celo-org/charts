@@ -1,6 +1,6 @@
 ---
 apiVersion: v2
-appVersion: "1.8.2"
+appVersion: "1.8.4"
 description: Helm chart for deploying a Celo fullnode.
   More info at https://docs.celo.org
 type: application
@@ -19,7 +19,7 @@ keywords:
   - Validator
   - Ethereum
   - Proof-of-Stake
-version: 0.7.0
+version: 0.7.1
 dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci

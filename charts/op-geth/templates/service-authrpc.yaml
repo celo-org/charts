@@ -1,9 +1,20 @@
-{{- with .Values.services.authrpc }}
+{{- $replicas := .Values.replicaCount }}
+{{ range $index, $e := until (int $replicas) }}
+{{- with $.Values.services.authrpc }}
 {{- if .enabled }}
+{{- $loadBalancerIP := "" }}
+{{- $clusterIP := "" }}
+{{- if lt $index (len .loadBalancerIPs) }}
+  {{- $loadBalancerIP = index .loadBalancerIPs $index }}
+{{- end }}
+{{- if lt $index (len .clusterIPs) }}
+  {{- $clusterIP = index .clusterIPs $index }}
+{{- end }}
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "op-geth.fullname" $ }}-authrpc
+  name: {{ include "op-geth.fullname" $ }}-authrpc-{{ $index }}
   {{- with .annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -13,10 +24,10 @@ metadata:
     {{- include "op-geth.labels" $ | nindent 4 }}
 spec:
   type: {{ .type }}
-  {{- with .loadBalancerIP }}
+  {{- with $loadBalancerIP }}
   loadBalancerIP: {{ . }}
   {{- end }}
-  {{- with .clusterIP }}
+  {{- with $clusterIP }}
   clusterIP: {{ . }}
   {{- end }}
   {{- with .externalTrafficPolicy }}
@@ -34,5 +45,7 @@ spec:
       targetPort: authrpc
   selector:
     {{- include "op-geth.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-geth.fullname" $ }}-{{ $index }}
+{{- end }}
 {{- end }}
 {{- end }}

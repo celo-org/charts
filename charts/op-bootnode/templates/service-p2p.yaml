@@ -1,16 +1,17 @@
-{{- with .Values.services.p2pDiscovery }}
-{{- if and .enabled (not $.Values.config.useHostPort) }}
+{{- with .Values.services.p2p }}
+{{- if and .enabled (not $.Values.config.p2p.useHostPort) }}
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "op-geth.fullname" $ }}-p2p-discovery
+  name: {{ include "op-bootnode.fullname" $ }}-p2p
   {{- with .annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-    service-type: p2p-discovery
-    {{- include "op-geth.labels" $ | nindent 4 }}
+    service-type: p2p
+    {{- include "op-bootnode.labels" $ | nindent 4 }}
 spec:
   type: {{ .type }}
   {{- with .loadBalancerIP }}
@@ -29,6 +30,13 @@ spec:
   publishNotReadyAddresses: {{ . }}
   {{- end }}
   ports:
+    - name: p2p-tcp
+      port: {{ .port }}
+      targetPort: p2p-tcp
+      protocol: TCP
+      {{- with .nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
     - name: p2p-udp
       port: {{ .port }}
       targetPort: p2p-udp
@@ -37,6 +45,6 @@ spec:
       nodePort: {{ . }}
       {{- end }}
   selector:
-    {{- include "op-geth.selectorLabels" $ | nindent 4 }}
+    {{- include "op-bootnode.selectorLabels" $ | nindent 4 }}
 {{- end }}
 {{- end }}

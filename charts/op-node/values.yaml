@@ -8,6 +8,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# Number of op-node replicas. Must be 1 if sequencer is enabled
+replicaCount: 1
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -59,16 +62,9 @@ services:
   p2p:
     enabled: true
     type: NodePort
-    loadBalancerIP: ""
-    port: 9222
-    # it's better to set nodePort equal to .Values.config.node.p2p.port when the svc type is "NodePort"
-    # nodePort: 9222
-    annotations: {}
-    publishNotReadyAddresses: true
-  p2pDiscovery:
-    enabled: true
-    type: NodePort
-    loadBalancerIP: ""
+    loadBalancerIPs: []
+    clusterIPs: []
+    nodePorts: []
     port: 9222
     # it's better to set nodePort equal to .Values.config.node.p2p.port when the svc type is "NodePort"
     # nodePort: 9222
@@ -169,7 +165,7 @@ init:
 
 ## Main op-node config
 config:
-  jwt: ""                              # REQUIRED for communication with op-geth
+  jwt: ""                              # REQUIRED for communication with op-geth. In case of multiReplica, comma separated list of JWTs (or shared)
   network: op-mainnet                  # which network to use
   port: 9545
   logLevel: INFO
@@ -181,7 +177,10 @@ config:
     rpckind: any                                          # Valid options: alchemy, quicknode, infura, parity, nethermind, debug_geth, erigon, basic, any, standard
     beacon: https://ethereum-beacon-api.publicnode.com    # endpoint for L1 beacon node, used for retrieving EIP-4844 blob transactions
   l2:
-    url: http://op-geth-authrpc:8551  # authrpc addr of op-geth L2 node, can also be ws://
+    url: http://op-geth-authrpc:8551         # authrpc addr of op-geth L2 node, can also be ws://
+    protocol: ""                             # Used for multiReplica. Leave url empty if using multiReplica
+    namePattern: ""                          # Used for multiReplica. Set to the op-geth sts name pattern. Example: "op-geth-validator-authrpc"
+    port: ""                                 # authrpc port of op-geth L2 node with multiReplica
   rollup:
     config: "/celo"                         # path to rollup config json folder
     loadProtocolVersions: true         # load superchain contract
@@ -202,6 +201,8 @@ config:
     port: 9222
     useHostPort: false                 # use hostPort for p2p traffic instead of dedicated k8s svc
     bootnodes: []                      # override bootnodes
+    static: []                         # static peers
+    keys: ""                           # comma separated list of keys to use for p2p
     sequencer:
       key: ""                            # sequencer key
 

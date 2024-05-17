@@ -6,6 +6,7 @@ metadata:
     {{- include "op-geth.labels" . | nindent 4 }}
 spec:
   serviceName: {{ template "op-geth.name" . }}
+  replicas: {{ .Values.replicaCount }}
   updateStrategy:
     {{- toYaml .Values.updateStrategy | nindent 4 }}
   selector:
@@ -25,7 +26,7 @@ spec:
         {{- if .Values.config.metrics.enabled }}
         prometheus.io/scrape: "true"
         prometheus.io/port: "6060"
-        prometheus.io/path: "/metrics"
+        prometheus.io/path: "/debug/metrics/prometheus"
         {{- end }}
       labels:
         {{- include "op-geth.selectorLabels" . | nindent 8 }}
@@ -154,6 +155,21 @@ spec:
       {{- end }}
       {{- end }}
       {{- end }}
+      - name: split-jwt
+        image: "{{ .Values.init.jwt.image.repository }}:{{ .Values.init.jwt.image.tag }}"
+        imagePullPolicy: {{ .Values.init.jwt.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command: ["sh", "/scripts/split-jwt.sh"]
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: secrets
+          mountPath: /secrets
+        - name: data
+          mountPath: {{ .Values.persistence.mountPath | default .Values.config.datadir }}
       {{- with .Values.extraInitContainers }}
         {{- tpl (toYaml . | nindent 6) $ }}
       {{- end }}
@@ -187,7 +203,7 @@ spec:
             --nodiscover \
             {{- end }}
             --authrpc.addr=0.0.0.0 \
-            --authrpc.jwtsecret=/secrets/jwt.hex \
+            --authrpc.jwtsecret={{ .Values.persistence.mountPath | default .Values.config.datadir }}/jwt.hex \
             --authrpc.vhosts={{ join "," .Values.config.authrpc.vhosts }} \
             --authrpc.port={{ .Values.config.authrpc.port }} \
             --http \
@@ -233,7 +249,6 @@ spec:
             {{- end }}
             {{- if not .Values.config.nodiscover }}
             --port={{ .Values.config.port }} \
-            --discovery.port={{ .Values.config.discovery.port }} \
             {{- end }}
             --nat={{ .Values.config.nat }} \
             {{- with .Values.config.state.scheme }}
@@ -264,9 +279,9 @@ spec:
           {{- end }}
           protocol: TCP
         - name: p2p-udp
-          containerPort: {{ .Values.config.discovery.port }}
+          containerPort: {{ .Values.config.port }}
           {{- if .Values.config.useHostPort }}
-          hostPort: {{ .Values.config.discovery.port }}
+          hostPort: {{ .Values.config.port }}
           {{- end }}
           protocol: UDP
         {{- end }}
@@ -285,8 +300,6 @@ spec:
         volumeMounts:
         - name: data
           mountPath: {{ .Values.persistence.mountPath | default .Values.config.datadir }}
-        - name: secrets
-          mountPath: /secrets
         - name: scripts
           mountPath: /scripts
         {{- with .Values.extraVolumeMounts }}

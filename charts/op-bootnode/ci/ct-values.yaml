@@ -1,0 +1,7 @@
+---
+config:
+  p2p:
+    keys: "1010101010101010101010101010101010101010101010101010101010101010"
+init:
+  rollup:
+    url: "https://storage.googleapis.com/cel2-rollup-files/jctestnet/rollup.json"

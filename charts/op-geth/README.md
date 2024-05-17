@@ -1,6 +1,6 @@
 # op-geth
 
-![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-geth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -32,7 +32,6 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.bootnodes | list | `[]` |  |
 | config.cache | int | `0` |  |
 | config.datadir | string | `"/celo"` |  |
-| config.discovery.port | int | `30301` |  |
 | config.gcmode | string | `"full"` |  |
 | config.http.api[0] | string | `"eth"` |  |
 | config.http.api[1] | string | `"net"` |  |
@@ -88,9 +87,12 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | init.chownData.enabled | bool | `false` |  |
 | init.chownData.image.pullPolicy | string | `"IfNotPresent"` |  |
 | init.chownData.image.repository | string | `"alpine"` |  |
-| init.chownData.image.tag | float | `3.18` |  |
+| init.chownData.image.tag | float | `3.19` |  |
 | init.genesis.enabled | bool | `false` |  |
 | init.genesis.url | string | `""` |  |
+| init.jwt.image.pullPolicy | string | `"IfNotPresent"` |  |
+| init.jwt.image.repository | string | `"alpine"` |  |
+| init.jwt.image.tag | float | `3.19` |  |
 | init.rollup.url | string | `""` |  |
 | initFromS3.enabled | bool | `false` |  |
 | initFromS3.force | bool | `false` |  |
@@ -126,6 +128,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | readinessProbe.periodSeconds | int | `10` |  |
 | readinessProbe.successThreshold | int | `1` |  |
 | readinessProbe.timeoutSeconds | int | `5` |  |
+| replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | s3config.image.pullPolicy | string | `"IfNotPresent"` |  |
 | s3config.image.repository | string | `"peakcom/s5cmd"` |  |
@@ -146,7 +149,9 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
 | serviceMonitor.enabled | bool | `false` |  |
+| services.authrpc.clusterIPs | list | `[]` |  |
 | services.authrpc.enabled | bool | `true` |  |
+| services.authrpc.loadBalancerIPs | list | `[]` |  |
 | services.authrpc.port | int | `8551` |  |
 | services.authrpc.publishNotReadyAddresses | bool | `true` |  |
 | services.authrpc.type | string | `"ClusterIP"` |  |
@@ -160,12 +165,6 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | services.p2p.port | int | `30303` |  |
 | services.p2p.publishNotReadyAddresses | bool | `true` |  |
 | services.p2p.type | string | `"NodePort"` |  |
-| services.p2pDiscovery.annotations | object | `{}` |  |
-| services.p2pDiscovery.enabled | bool | `true` |  |
-| services.p2pDiscovery.loadBalancerIP | string | `""` |  |
-| services.p2pDiscovery.port | int | `30301` |  |
-| services.p2pDiscovery.publishNotReadyAddresses | bool | `true` |  |
-| services.p2pDiscovery.type | string | `"NodePort"` |  |
 | services.rpc.enabled | bool | `true` |  |
 | services.rpc.httpPort | int | `8545` |  |
 | services.rpc.type | string | `"ClusterIP"` |  |

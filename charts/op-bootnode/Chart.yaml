@@ -1,8 +1,8 @@
 ---
-name: op-geth
+name: op-bootnode
 apiVersion: v2
-version: 0.0.5
-description: Celo implementation for op-geth execution engine (Optimism Rollup)
+version: 0.0.1
+description: Celo implementation for op-bootnode (Optimism Rollup)
 home: https://clabs.co
 sources:
   - https://celo.org

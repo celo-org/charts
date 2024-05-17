@@ -1,6 +1,6 @@
 # op-node
 
-![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.6](https://img.shields.io/badge/Version-0.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-node consensus engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree/main/dysnix/op-node).
@@ -32,6 +32,9 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | config.l1.rpckind | string | `"any"` |  |
 | config.l1.trustrpc | bool | `false` |  |
 | config.l1.url | string | `"https://1rpc.io/eth"` |  |
+| config.l2.namePattern | string | `""` |  |
+| config.l2.port | string | `""` |  |
+| config.l2.protocol | string | `""` |  |
 | config.l2.url | string | `"http://op-geth-authrpc:8551"` |  |
 | config.logLevel | string | `"INFO"` |  |
 | config.metrics.enabled | bool | `false` |  |
@@ -39,9 +42,11 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | config.network | string | `"op-mainnet"` |  |
 | config.p2p.advertiseIP | string | `""` |  |
 | config.p2p.bootnodes | list | `[]` |  |
+| config.p2p.keys | string | `""` |  |
 | config.p2p.nat | bool | `false` |  |
 | config.p2p.port | int | `9222` |  |
 | config.p2p.sequencer.key | string | `""` |  |
+| config.p2p.static | list | `[]` |  |
 | config.p2p.useHostPort | bool | `false` |  |
 | config.port | int | `9545` |  |
 | config.rollup.config | string | `"/celo"` |  |
@@ -98,6 +103,7 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | persistence.type | string | `"pvc"` |  |
 | podSecurityContext | object | `{}` |  |
 | readinessProbe.enabled | bool | `false` |  |
+| replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
@@ -112,17 +118,13 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | services.metrics.publishNotReadyAddresses | bool | `true` |  |
 | services.metrics.type | string | `"ClusterIP"` |  |
 | services.p2p.annotations | object | `{}` |  |
+| services.p2p.clusterIPs | list | `[]` |  |
 | services.p2p.enabled | bool | `true` |  |
-| services.p2p.loadBalancerIP | string | `""` |  |
+| services.p2p.loadBalancerIPs | list | `[]` |  |
+| services.p2p.nodePorts | list | `[]` |  |
 | services.p2p.port | int | `9222` |  |
 | services.p2p.publishNotReadyAddresses | bool | `true` |  |
 | services.p2p.type | string | `"NodePort"` |  |
-| services.p2pDiscovery.annotations | object | `{}` |  |
-| services.p2pDiscovery.enabled | bool | `true` |  |
-| services.p2pDiscovery.loadBalancerIP | string | `""` |  |
-| services.p2pDiscovery.port | int | `9222` |  |
-| services.p2pDiscovery.publishNotReadyAddresses | bool | `true` |  |
-| services.p2pDiscovery.type | string | `"NodePort"` |  |
 | services.rpc.annotations | object | `{}` |  |
 | services.rpc.enabled | bool | `true` |  |
 | services.rpc.port | int | `9545` |  |
