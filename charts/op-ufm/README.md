@@ -24,7 +24,7 @@ A Helm chart for OP User Facing Monitoring
 | livenessProbe | object | `{"httpGet":{"path":"/healthz","port":"health"}}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
-| podAnnotations | string | `nil` | Custom pod annotations |
+| podAnnotations | object | `{}` | Custom pod annotations |
 | podLabels | object | `{}` | Custom pod labels |
 | podSecurityContext | object | `{}` | Custom pod security context |
 | readinessProbe | object | `{"httpGet":{"path":"/healthz","port":"health"}}` | Readiness probe configuration |
