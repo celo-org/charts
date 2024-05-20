@@ -107,9 +107,9 @@ secretEnv: {}
   #   secretKey: "gsAdminPrivateKey"
 
 # -- Custom pod annotations
-podAnnotations:
+podAnnotations: {}
   # prometheus.io/path: /metrics
-  # prometheus.io/port: "8081"
+  # prometheus.io/port: "9761"
   # prometheus.io/scrape: "true"
 
 # -- Custom pod labels
