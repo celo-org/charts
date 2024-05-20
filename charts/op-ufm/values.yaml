@@ -25,7 +25,7 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-config: {}
+config: ""
 # |
 #  # Log level.
 #  # Possible values: trace | debug | info | warn | error | crit
