@@ -1,0 +1,10 @@
+apiVersion: v2
+name: op-ufm
+description: A Helm chart for OP User Facing Monitoring
+type: application
+version: 0.1.0
+appVersion: "v0.2.4"
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
