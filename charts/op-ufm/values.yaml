@@ -26,7 +26,7 @@ serviceAccount:
   name: ""
 
 config: {}
-#|
+# |
 #  # Log level.
 #  # Possible values: trace | debug | info | warn | error | crit
 #  # Default: debug
