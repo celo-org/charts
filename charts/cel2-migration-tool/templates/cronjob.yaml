@@ -1,0 +1,117 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "cel2-migration-tool.labels" . | nindent 4 }}
+    component: blockscout-metadata-crawler
+spec:
+  schedule: "{{ .Values.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            {{- include "cel2-migration-tool.labels" . | nindent 12 }}
+        spec:
+          serviceAccountName: {{ include "cel2-migration-tool.serviceAccountName" . }}
+          initContainers:
+          - name: download-dependencies
+            image: alpine:3.19
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              mkdir -p /output/config
+              wget -O /output/config/config.json {{ .Values.download.config }}
+              wget -O /output/config/deployment-l1.json {{ .Values.download.deploymentL1 }}
+            volumeMounts:
+            - mountPath: /output
+              name: output
+          - name: chain-ops
+            image: jcortejoso/op-chain-ops:latest
+            imagePullPolicy: Always
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              echo "Starting chain operations"
+              echo "Copying chaindata to /output/celo/chaindata"
+              cp -rp /input/celo /output/
+
+              echo "Migrating chaindata"
+              celo-dbmigrate \
+                -oldDB /output/celo/chaindata \
+                -newDB /output/celo/chaindata_migrated \
+                -clear-all \
+                -memoryLimit 20000
+              
+              rm -f /output/celo/chaindata
+              mv /output/celo/chaindata_migrated /output/celo/chaindata
+
+              echo "Migrating state"
+              celo-migrate \
+                --deploy-config /output/config/config.json \
+                --l1-deployments /output/config/deployment-l1.json \
+                --l1-rpc {{ .Values.l1Url }} \
+                --db-path /output \
+                --outfile.l2 /output/config/op-state-log.json \
+                --outfile.rollup /output/config/rollup-config.json
+
+              mv /output/celo /output/geth
+            volumeMounts:
+            - mountPath: /output
+              name: output
+            - mountPath: /input
+              name: input
+          - name: geth-load
+            image: {{ .Values.opGeth.image.repository }}:{{ .Values.opGeth.image.tag }}
+            imagePullPolicy: {{ .Values.opGeth.image.pullPolicy }}
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              tail -f /dev/null
+              geth \
+               --datadir="/output" \
+               --verbosity=3 \
+               --syncmode=full \
+               --gcmode=full \
+               --nodiscover \
+               --exitwhensynced \
+               --maxpeers=0 &
+
+              while true; do
+                if [ -f /output/.done ]; then
+                  break
+                fi
+                sleep 5
+              done
+            volumeMounts:
+            - mountPath: /output
+              name: output
+          containers:
+          - name: compress-and-upload
+            image: alpine:3.19
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              tail -f /dev/null
+            volumeMounts:
+          volumes:
+            - name: input
+              persistentVolumeClaim:
+                claimName: {{ .Values.pvc.input }}
+            - name: output
+              persistentVolumeClaim:
+                claimName: {{ .Values.pvc.output }}
+          restartPolicy: Never

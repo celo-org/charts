@@ -1,0 +1,17 @@
+---
+serviceAccount:
+  create: true
+  annotations: {}
+schedule: "0 0 30 2 0"
+l1Url: https://ethereum-holesky-rpc.publicnode.com
+download:
+  config: https://storage.googleapis.com/cel2-rollup-files/jctestnet/config.json
+  deploymentL1: https://storage.googleapis.com/cel2-rollup-files/jctestnet/deployment-l1.json
+pvc:
+  input: alfajores-input
+  output: alfajores-output
+opGeth:
+  image:
+    repository: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth
+    tag: 3d6a0e48e00137e581ee064db9cafa8300598771
+    pullPolicy: Always
