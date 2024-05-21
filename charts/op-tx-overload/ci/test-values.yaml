@@ -1,0 +1,7 @@
+---
+command:
+  - |
+    echo "Done testing"
+    tail -f /dev/null
+metrics:
+  enabled: false
