@@ -1,7 +1,7 @@
 ---
 name: cel2-migration-tool
 apiVersion: v2
-version: 0.0.1
+version: 0.0.2
 description: Node migration tool for Cel2 network
 home: https://clabs.co
 sources:
