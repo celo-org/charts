@@ -3,13 +3,15 @@ serviceAccount:
   create: true
   annotations: {}
 schedule: "0 0 30 2 0"
+cel2NetworkName: myNetwork  # Reference name for the tar.zstd file
+gcsBucket: cel2-node-files/  # GCS bucket to store the tar.zstd file
 l1Url: https://ethereum-holesky-rpc.publicnode.com
 download:
   config: https://storage.googleapis.com/cel2-rollup-files/jctestnet/config.json
   deploymentL1: https://storage.googleapis.com/cel2-rollup-files/jctestnet/deployment-l1.json
 pvc:
-  input: alfajores-input
-  output: alfajores-output
+  input: myNetwork-input
+  output: myNetwork-output
 opGeth:
   image:
     repository: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth
