@@ -1,0 +1,25 @@
+apiVersion: v2
+name: op-proxyd
+description: Celo implementation for OP proxyd
+type: application
+version: 0.1.0
+appVersion: "v4.5.4"
+home: https://clabs.co
+sources:
+  - https://celo.org
+  - https://docs.celo.org
+  - https://clabs.co
+  - https://github.com/celo-org
+keywords:
+  - celo
+  - blockchain
+  - optimism
+  - rollup
+  - ethereum
+  - layer2
+  - op-stack
+  - proxyd
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
