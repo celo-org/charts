@@ -24,7 +24,7 @@ imagePullSecrets: []
 
 # -- Config as string. Minimal example at https://github.com/ethereum-optimism/optimism/blob/develop/proxyd/example.config.toml
 config: ""
-#|
+# |
 #  [server]
 #  rpc_host = "0.0.0.0"
 #  rpc_port = {{ .Values.service.rpcPort | default 8080 }}
