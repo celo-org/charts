@@ -42,7 +42,7 @@ spec:
             - |
               echo "Starting chain operations"
               echo "Copying chaindata to /output/celo/chaindata"
-              cp -rp /input/celo /output/
+              rsync -ah --progress /input/celo /output/
 
               echo "Migrating chaindata"
               celo-dbmigrate \
@@ -69,7 +69,7 @@ spec:
               name: output
             - mountPath: /input
               name: input
-          - name: geth-load
+          - name: op-geth
             image: {{ .Values.opGeth.image.repository }}:{{ .Values.opGeth.image.tag }}
             imagePullPolicy: {{ .Values.opGeth.image.pullPolicy }}
             command:
@@ -105,22 +105,22 @@ spec:
             - -c
             args:
             - |
-              tail -f /dev/null
               # Install dependencies
-              apk add --no-cache tar zstd curl bash python3
+              apk add --no-cache tar zstd curl bash python3 pv
 
               # Install gcloud cli
               curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts
               source /root/google-cloud-sdk/path.bash.inc
+              /root/google-cloud-sdk/bin/gcloud components install alpha
 
               # Delete jwt and nodekey
               rm -f /output/geth/nodekey /output/geth/jwtsecret
 
               # Compress the node data using zstd
-              tar -I 'zstd -T0' -cf /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd /output/geth
+              tar -I 'zstd -T0' -cf - /output/geth | pv -s $(du -sb /output/geth | awk '{print $1}') > /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd
 
               # Upload the compressed data to the bucket
-              gcloud alpha storage cp /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-cel2.tar.zstd
+              /root/google-cloud-sdk/bin/gcloud alpha storage cp /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-cel2.tar.zstd
             volumeMounts:
             - mountPath: /output
               name: output
