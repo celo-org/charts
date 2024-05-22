@@ -35,7 +35,8 @@ config: |
   backends = ["public"]
 
   [rpc_method_mappings]
-  eth_sendRawTransaction = "sequencer"
+  eth_sendRawTransaction = "main"
+  eth_getBlockByNumber = "main"
 
 podAnnotations:
   prometheus.io/path: /metrics

@@ -33,6 +33,8 @@ config: ""
 #    "eth_sendRawTransaction"
 #  ]
 #
+#  ws_backend_group = "sequencer"
+#
 #  [server]
 #  rpc_host = "0.0.0.0"
 #  rpc_port = {{ .Values.service.rpcPort | default 8080 }}
@@ -72,6 +74,7 @@ config: ""
 #
 #  [rpc_method_mappings]
 #  eth_sendRawTransaction = "sequencer"
+#  eth_getBlockByNumber = "replicas"
 
 serviceAccount:
   # -- Specifies whether a service account should be created
