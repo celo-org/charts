@@ -1,5 +1,15 @@
 ---
 config: |
+  ws_method_whitelist = [
+    "eth_subscribe",
+    "eth_call",
+    "eth_chainId",
+    "eth_getBlockByNumber",
+    "eth_sendRawTransaction"
+  ]
+
+  ws_backend_group = "main"
+
   [server]
   rpc_host = "0.0.0.0"
   rpc_port = {{ .Values.service.rpcPort | default 8080 }}
