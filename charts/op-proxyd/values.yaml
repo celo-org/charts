@@ -23,46 +23,47 @@ image:
 imagePullSecrets: []
 
 # -- Config as string. Minimal example at https://github.com/ethereum-optimism/optimism/blob/develop/proxyd/example.config.toml
-config: |
-  [server]
-  rpc_host = "0.0.0.0"
-  rpc_port = {{ .Values.service.rpcPort | default 8080 }}
-  ws_host = "0.0.0.0"
-  ws_port = {{ .Values.service.wsPort | default 8085 }}
-  max_body_size_bytes = 10485760
-  max_concurrent_rpcs = 1000
-  log_level = "debug"
-
-  [metrics]
-  enabled = {{ .Values.metrics.enabled }}
-  host = "0.0.0.0"
-  port = {{ .Values.metrics.port | default 9761 }}
-
-  [backend]
-  response_timeout_seconds = 5
-  max_response_size_bytes = 5242880
-  max_retries = 3
-  out_of_service_seconds = 600
-  max_latency_threshold = "30s"
-  max_degraded_latency_threshold = "10s"
-  max_error_rate_threshold = 0.3
-
-  [backends]
-  [backends.sequencer]
-  rpc_url = "http://op-geth:8545"
-  max_rps = 3
-  [backends.replica]
-  rpc_url = "http://op-geth-replica:8545"
-  max_rps = 3
-
-  [backend_groups]
-  [backend_groups.sequencer]
-  backends = ["sequencer"]
-  [backend_groups.replicas]
-  backends = ["replica"]
-
-  [rpc_method_mappings]
-  eth_sendRawTransaction = "sequencer"
+config: ""
+#|
+#  [server]
+#  rpc_host = "0.0.0.0"
+#  rpc_port = {{ .Values.service.rpcPort | default 8080 }}
+#  ws_host = "0.0.0.0"
+#  ws_port = {{ .Values.service.wsPort | default 8085 }}
+#  max_body_size_bytes = 10485760
+#  max_concurrent_rpcs = 1000
+#  log_level = "debug"
+#
+#  [metrics]
+#  enabled = {{ .Values.metrics.enabled }}
+#  host = "0.0.0.0"
+#  port = {{ .Values.metrics.port | default 9761 }}
+#
+#  [backend]
+#  response_timeout_seconds = 5
+#  max_response_size_bytes = 5242880
+#  max_retries = 3
+#  out_of_service_seconds = 600
+#  max_latency_threshold = "30s"
+#  max_degraded_latency_threshold = "10s"
+#  max_error_rate_threshold = 0.3
+#
+#  [backends]
+#  [backends.sequencer]
+#  rpc_url = "http://op-geth:8545"
+#  max_rps = 3
+#  [backends.replica]
+#  rpc_url = "http://op-geth-replica:8545"
+#  max_rps = 3
+#
+#  [backend_groups]
+#  [backend_groups.sequencer]
+#  backends = ["sequencer"]
+#  [backend_groups.replicas]
+#  backends = ["replica"]
+#
+#  [rpc_method_mappings]
+#  eth_sendRawTransaction = "sequencer"
 
 serviceAccount:
   # -- Specifies whether a service account should be created

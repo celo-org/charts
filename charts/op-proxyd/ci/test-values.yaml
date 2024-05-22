@@ -24,6 +24,9 @@ config: |
   [backend_groups.main]
   backends = ["public"]
 
+  [rpc_method_mappings]
+  eth_sendRawTransaction = "sequencer"
+
 podAnnotations:
   prometheus.io/path: /metrics
   prometheus.io/port: "9761"
