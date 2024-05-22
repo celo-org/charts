@@ -111,6 +111,7 @@ spec:
               # Install gcloud cli
               curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts
               source /root/google-cloud-sdk/path.bash.inc
+              /root/google-cloud-sdk/bin/gcloud components install alpha
 
               # Delete jwt and nodekey
               rm -f /output/geth/nodekey /output/geth/jwtsecret
@@ -119,7 +120,7 @@ spec:
               tar -I 'zstd -T0' -cf - /output/geth | pv -s $(du -sb /output/geth | awk '{print $1}') > /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd
 
               # Upload the compressed data to the bucket
-              gcloud alpha storage cp /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-cel2.tar.zstd
+              /root/google-cloud-sdk/bin/gcloud alpha storage cp /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-cel2.tar.zstd
             volumeMounts:
             - mountPath: /output
               name: output
