@@ -122,7 +122,7 @@ services:
     enabled: true
     type: ClusterIP
     httpPort: 8545
-    wsPort: 8546
+    wsPort: 8545
   authrpc:
     enabled: true
     type: ClusterIP
@@ -137,10 +137,10 @@ services:
     publishNotReadyAddresses: true
   p2p:
     enabled: true       # disable if you are not using "snap" syncmode
-    type: NodePort
-    loadBalancerIP: ""
+    type: ClusterIP
+    loadBalancerIPs: []
+    clusterIPs: []
     port: 30303
-    # nodePort: 30303   # exposed port of the node, must be unique across multiple node deployments
     annotations: {}
     publishNotReadyAddresses: true
 ingress:
@@ -276,7 +276,7 @@ config:
     api: ["eth", "net", "web3"]
   ws:
     enabled: false
-    port: 8546
+    port: 8545
     origins: ["*"]
     api: ["eth", "net", "web3"]
   authrpc:
@@ -315,6 +315,7 @@ init:
     enabled: false
     url: ""
   rollup:
+    enabled: false
     url: ""
   jwt:
     image:

@@ -73,7 +73,7 @@ spec:
         - name: data
           mountPath: /data
       {{- end }}
-      {{- if .Values.init.genesis.enabled }}
+      {{- if or .Values.init.genesis.enabled .Values.init.rollup.enabled }}
       - name: init-genesis
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
@@ -263,7 +263,7 @@ spec:
           containerPort: {{ .Values.config.http.port }}
         - name: authrpc
           containerPort: {{ .Values.config.authrpc.port }}
-        {{- if .Values.config.ws.enabled }}
+        {{- if and .Values.config.ws.enabled (ne .Values.config.http.port .Values.config.ws.port) }}
         - name: ws
           containerPort: {{ .Values.config.ws.port }}
         {{- end }}

@@ -32,7 +32,7 @@ spec:
     - name: http
       port: {{ .httpPort }}
       targetPort: http
-    {{- if $.Values.config.ws.enabled }}
+    {{- if and $.Values.config.ws.enabled (and (ne .httpPort .wsPort) (ne .Values.config.http.port .Values.config.http.port)) }}
     - name: ws
       port: {{ .wsPort }}
       targetPort: ws

@@ -1,9 +1,19 @@
-{{- with .Values.services.p2p }}
+{{- $replicas := .Values.replicaCount }}
+{{ range $index, $e := until (int $replicas) }}
+{{- with $.Values.services.p2p }}
 {{- if and .enabled (not $.Values.config.useHostPort) }}
+{{- $loadBalancerIP := "" }}
+{{- $clusterIP := "" }}
+{{- if lt $index (len .loadBalancerIPs) }}
+  {{- $loadBalancerIP = index .loadBalancerIPs $index }}
+{{- end }}
+{{- if lt $index (len .clusterIPs) }}
+  {{- $clusterIP = index .clusterIPs $index }}
+{{- end }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "op-geth.fullname" $ }}-p2p
+  name: {{ include "op-geth.fullname" $ }}-p2p-{{ $index }}
   {{- with .annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -13,10 +23,10 @@ metadata:
     {{- include "op-geth.labels" $ | nindent 4 }}
 spec:
   type: {{ .type }}
-  {{- with .loadBalancerIP }}
+  {{- with $loadBalancerIP }}
   loadBalancerIP: {{ . }}
   {{- end }}
-  {{- with .clusterIP }}
+  {{- with $clusterIP }}
   clusterIP: {{ . }}
   {{- end }}
   {{- with .externalTrafficPolicy }}
@@ -33,17 +43,12 @@ spec:
       port: {{ .port }}
       targetPort: p2p-tcp
       protocol: TCP
-      {{- with .nodePort }}
-      nodePort: {{ . }}
-      {{- end }}
     - name: p2p-udp
       port: {{ .port }}
       targetPort: p2p-udp
       protocol: UDP
-      {{- with .nodePort }}
-      nodePort: {{ . }}
-      {{- end }}
   selector:
     {{- include "op-geth.selectorLabels" $ | nindent 4 }}
+{{- end }}
 {{- end }}
 {{- end }}
