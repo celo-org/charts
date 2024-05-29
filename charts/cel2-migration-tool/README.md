@@ -1,6 +1,6 @@
 # cel2-migration-tool
 
-![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Node migration tool for Cel2 network
 
@@ -33,6 +33,7 @@ Node migration tool for Cel2 network
 | opGeth.image.tag | string | `"3d6a0e48e00137e581ee064db9cafa8300598771"` |  |
 | pvc.input | string | `"myNetwork-input"` |  |
 | pvc.output | string | `"myNetwork-output"` |  |
+| pvc.useOuptutAsInput | bool | `true` |  |
 | schedule | string | `"0 0 30 2 0"` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
