@@ -11,6 +11,7 @@ download:
   deploymentL1: https://storage.googleapis.com/cel2-rollup-files/jctestnet/deployment-l1.json
 pvc:
   input: myNetwork-input
+  useOuptutAsInput: true  # Only one PVC required. This operation is not idempotent
   output: myNetwork-output
 opGeth:
   image:
