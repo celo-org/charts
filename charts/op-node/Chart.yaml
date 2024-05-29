@@ -1,7 +1,7 @@
 ---
 name: op-node
 apiVersion: v2
-version: 0.0.7
+version: 0.1.0
 description: Celo implementation for op-node consensus engine (Optimism Rollup)
 home: https://clabs.co
 sources:

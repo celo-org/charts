@@ -54,15 +54,15 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
-      {{- if .Values.init.genesis.enabled }}
-      - name: download-rollup-genesis
+      {{- if .Values.init.rollup.enabled }}
+      - name: download-rollup
         image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
         imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
         {{- with .Values.securityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        command: ["sh", "/scripts/download-rollup-genesis.sh"]
+        command: ["sh", "/scripts/download-rollup.sh"]
         volumeMounts:
         - name: scripts
           mountPath: /scripts

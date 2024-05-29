@@ -157,10 +157,8 @@ init:
     repository: alpine
     tag: 3.19
     pullPolicy: IfNotPresent
-  genesis:
-    enabled: false
-    url: ""
   rollup:
+    enabled: false
     url: ""
 
 ## Main op-node config

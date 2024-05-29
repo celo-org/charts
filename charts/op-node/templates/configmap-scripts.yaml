@@ -5,8 +5,8 @@ metadata:
   labels:
     {{- include "op-node.labels" . | nindent 4 }}
 data:
-  download-rollup-genesis.sh: |-
-    {{- include (print $.Template.BasePath "/scripts/_download-rollup-genesis.tpl") . | nindent 4 }}
+  download-rollup.sh: |-
+    {{- include (print $.Template.BasePath "/scripts/_download-rollup.tpl") . | nindent 4 }}
   split-config-parameters.sh: |-
     {{- include (print $.Template.BasePath "/scripts/_split-config-parameters.tpl") . | nindent 4 }}
 {{- if or .Values.initFromGCS.enabled }}
