@@ -1,6 +1,6 @@
 # op-geth
 
-![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-geth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -63,7 +63,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.ws.api[2] | string | `"web3"` |  |
 | config.ws.enabled | bool | `false` |  |
 | config.ws.origins[0] | string | `"*"` |  |
-| config.ws.port | int | `8546` |  |
+| config.ws.port | int | `8545` |  |
 | enableServiceLinks | bool | `false` |  |
 | extraArgs | list | `[]` |  |
 | extraInitContainers | list | `[]` |  |
@@ -93,6 +93,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | init.jwt.image.pullPolicy | string | `"IfNotPresent"` |  |
 | init.jwt.image.repository | string | `"alpine"` |  |
 | init.jwt.image.tag | float | `3.19` |  |
+| init.rollup.enabled | bool | `false` |  |
 | init.rollup.url | string | `""` |  |
 | initFromS3.enabled | bool | `false` |  |
 | initFromS3.force | bool | `false` |  |
@@ -160,15 +161,16 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | services.metrics.publishNotReadyAddresses | bool | `true` |  |
 | services.metrics.type | string | `"ClusterIP"` |  |
 | services.p2p.annotations | object | `{}` |  |
+| services.p2p.clusterIPs | list | `[]` |  |
 | services.p2p.enabled | bool | `true` |  |
-| services.p2p.loadBalancerIP | string | `""` |  |
+| services.p2p.loadBalancerIPs | list | `[]` |  |
 | services.p2p.port | int | `30303` |  |
 | services.p2p.publishNotReadyAddresses | bool | `true` |  |
-| services.p2p.type | string | `"NodePort"` |  |
+| services.p2p.type | string | `"ClusterIP"` |  |
 | services.rpc.enabled | bool | `true` |  |
 | services.rpc.httpPort | int | `8545` |  |
 | services.rpc.type | string | `"ClusterIP"` |  |
-| services.rpc.wsPort | int | `8546` |  |
+| services.rpc.wsPort | int | `8545` |  |
 | sidecarContainers | list | `[]` |  |
 | startupProbe.enabled | bool | `false` |  |
 | startupProbe.exec.command[0] | string | `"sh"` |  |
