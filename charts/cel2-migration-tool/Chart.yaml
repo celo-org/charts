@@ -1,0 +1,26 @@
+---
+name: cel2-migration-tool
+apiVersion: v2
+version: 0.0.3
+description: Node migration tool for Cel2 network
+home: https://clabs.co
+sources:
+  - https://celo.org
+  - https://docs.celo.org
+  - https://clabs.co
+  - https://github.com/celo-org
+keywords:
+  - celo
+  - blockchain
+  - optimism
+  - rollup
+  - ethereum
+  - layer2
+  - op-stack
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
+type: application
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+appVersion: v1.0.0

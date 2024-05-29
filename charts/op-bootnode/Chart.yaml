@@ -1,0 +1,26 @@
+---
+name: op-bootnode
+apiVersion: v2
+version: 0.0.1
+description: Celo implementation for op-bootnode (Optimism Rollup)
+home: https://clabs.co
+sources:
+  - https://celo.org
+  - https://docs.celo.org
+  - https://clabs.co
+  - https://github.com/celo-org
+keywords:
+  - celo
+  - blockchain
+  - optimism
+  - rollup
+  - ethereum
+  - layer2
+  - op-stack
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
+type: application
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+appVersion: v1.0.0

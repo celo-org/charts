@@ -1,0 +1,256 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "op-node.fullname" . }}
+  {{- with .Values.statefulset.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "op-node.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  serviceName: {{ template "op-node.name" . }}
+  updateStrategy:
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "op-node.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "op-node.selectorLabels" . | nindent 8 }}
+      annotations:
+      {{- with .Values.statefulset.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.config.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.config.metrics.port }}"
+        prometheus.io/path: "/metrics"
+      {{- end }}
+    spec:
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "op-node.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+      {{- if .Values.init.genesis.enabled }}
+      - name: download-rollup-genesis
+        image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
+        imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command: ["sh", "/scripts/download-rollup-genesis.sh"]
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: data
+          mountPath: {{ .Values.persistence.mountPath | default .Values.config.rollup.config }}
+      {{- end }}
+      - name: split-config-parameters
+        image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
+        imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command: ["sh", "/scripts/split-config-parameters.sh"]
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: secrets
+          mountPath: /secrets
+        - name: data
+          mountPath: {{ .Values.persistence.mountPath | default .Values.config.rollup.config }}
+      {{- with .Values.initContainers }}
+        {{- tpl (toYaml . | nindent 6) $ }}
+      {{- end }}
+      containers:
+      - name: op-node
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- if .Values.command }}
+        command:
+          {{- tpl (toYaml .Values.command) $ | nindent 10 }}
+        {{- else }}
+        command:
+        - /bin/sh
+        - -c
+        {{- end }}
+        args:
+        - |
+          datadir="{{ .Values.persistence.mountPath | default .Values.config.rollup.config }}"
+          advertiseIpFlag=""
+          if [ -f $datadir/advertiseIP ]; then
+            advertiseIpFlag="--p2p.advertise.ip=$(cat $datadir/advertiseIP)"
+          fi
+
+          exec op-node \
+            --l1={{ .Values.config.l1.url }} \
+            --l1.trustrpc={{ .Values.config.l1.trustrpc }} \
+            --l1.rpckind={{ .Values.config.l1.rpckind }} \
+            {{- with .Values.config.l1.beacon }}
+            --l1.beacon={{ . }} \
+            {{- end }}
+            --l2=$(cat $datadir/l2Url) \
+            --l2.jwt-secret=$datadir/jwt.hex \
+            --rpc.addr=0.0.0.0 \
+            --rpc.port={{ .Values.config.port }} \
+            {{- if .Values.config.enableAdmin }}
+            --rpc.enable-admin \
+            {{- end }}
+            {{- with .Values.config.network }}
+            --network={{ . }} \
+            {{- end }}
+            {{- with .Values.config.rollup }}
+            {{- if .loadProtocolVersions }}
+            --rollup.load-protocol-versions={{ .loadProtocolVersions }} \
+            {{- end }}
+            {{- with .halt }}
+            --rollup.halt={{ . }} \
+            {{- end }}
+            {{- with .config }}
+            --rollup.config={{ . }}/rollup.json \
+            {{- end }}
+            {{- end }}
+            {{- if .Values.config.sequencer.enabled }}
+            --sequencer.enabled \
+            {{- if .Values.config.sequencer.stopped }}
+            --sequencer.stopped \
+            {{- end }}
+            {{- if kindIs "int" .Values.config.sequencer.l1Confs }}
+            --sequencer.l1-confs={{ int .Values.config.sequencer.l1Confs }} \
+            {{- end }}
+            {{- if kindIs "int" .Values.config.sequencer.maxSafeLag }}
+            --sequencer.max-safe-lag={{ int .Values.config.sequencer.maxSafeLag }} \
+            {{- end }}
+            {{- end }}
+            {{- if kindIs "float64" .Values.config.verifier.l1Confs }}
+            --verifier.l1-confs={{ int .Values.config.verifier.l1Confs }} \
+            {{- end }}
+            {{- if .Values.config.metrics.enabled }}
+            --metrics.enabled \
+            --metrics.addr=0.0.0.0 \
+            --metrics.port={{ .Values.config.metrics.port }} \
+            {{- end }}
+            {{- if .Values.config.p2p.nat }}
+            --p2p.nat \
+            {{- end }}
+            $advertiseIpFlag \
+            --p2p.listen.tcp={{ .Values.config.p2p.port }} \
+            --p2p.listen.udp={{ .Values.config.p2p.port }} \
+            --p2p.listen.ip=0.0.0.0 \
+            {{- with .Values.config.p2p.bootnodes }}
+            --p2p.bootnodes={{ join "," . }} \
+            {{- end }}
+            {{- with .Values.config.p2p.static }}
+            --p2p.static={{ join "," . }} \
+            {{- end }}
+            {{- with .Values.config.p2p.sequencer.key }}
+            --p2p.sequencer.key={{ . }} \
+            {{- end }}
+            {{- with .Values.config.p2p.keys }}
+            --p2p.priv.path=$datadir/opnode_p2p_priv.txt \
+            {{- end }}
+            --log.level={{ .Values.config.logLevel }} \
+            {{- with .Values.config.syncmode }}
+            --syncmode={{ . }} \
+            {{- end }}
+            {{- with .Values.extraArgs }}
+            {{- tpl (toYaml .) $ | nindent 12 }}
+            {{- end }}
+
+        ports:
+        - name: rpc
+          containerPort: {{ .Values.config.port }}
+        {{- if .Values.config.metrics }}
+        - name: metrics
+          containerPort: 7300
+        {{- end }}
+        - name: p2p-tcp
+          containerPort: {{ .Values.config.p2p.port }}
+          protocol: TCP
+          {{- if .Values.config.p2p.useHostPort }}
+          hostPort: {{ .Values.config.p2p.port }}
+          {{- end }}
+        - name: p2p-udp
+          containerPort: {{ .Values.config.p2p.port }}
+          protocol: UDP
+          {{- if .Values.config.p2p.useHostPort }}
+          hostPort: {{ .Values.config.p2p.port }}
+          {{- end }}
+        {{- if .Values.livenessProbe.enabled }}
+        livenessProbe:
+          {{- include "op-node.healthcheck" (list $ .Values.livenessProbe) | nindent 10 }}
+        {{- end }}
+        {{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          {{- include "op-node.healthcheck" (list $ .Values.readinessProbe) | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+        - name: data
+          mountPath: {{ .Values.persistence.mountPath | default .Values.config.rollup.config }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      {{- with .Values.sidecarContainers }}
+        {{- tpl (toYaml . | nindent 6) $ }}
+      {{- end }}
+      volumes:
+      - name: secrets
+        secret:
+          secretName: {{ template "op-node.fullname" . }}
+      - name: data
+        emptyDir: {}
+      - name: scripts
+        configMap:
+          name: {{ template "op-node.fullname" . }}-scripts
+  {{- if eq .Values.persistence.type "pvc" }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        {{- include "op-node.selectorLabels" . | nindent 8 }}
+      {{- with .Values.persistence.pvc.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      accessModes:
+      - {{ .Values.persistence.pvc.accessMode }}
+      {{- if .Values.persistence.pvc.storageClass }}
+      {{- if eq .Values.persistence.pvc.storageClass "-" }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: {{ .Values.persistence.pvc.storageClass | quote }}
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.pvc.size | quote }}
+  {{- end }}

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "llama-web3-proxy.fullname" . }}
+  labels:
+    {{- include "llama-web3-proxy.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ include "llama-web3-proxy.http-port" . }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "llama-web3-proxy.selectorLabels" . | nindent 4 }}

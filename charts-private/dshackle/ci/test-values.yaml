@@ -1,0 +1,55 @@
+---
+replicaCount: 1
+
+image:
+  repository: emeraldpay/dshackle
+  pullPolicy: IfNotPresent
+  tag: "0.15.1"
+
+config: |
+  version: v1
+  host: 0.0.0.0
+  tls:
+    enabled: false
+
+  proxy:
+    host: 0.0.0.0
+    routes:
+      - id: sepolia
+        blockchain: sepolia-testnet
+
+  health:
+    host: 0.0.0.0
+    blockchains:
+      - blockchain: sepolia-testnet
+        min-available: 0
+
+  monitoring:
+    enabled: true
+    jvm: false
+    extended: false
+    prometheus:
+      bind: 0.0.0.0
+      enabled: true
+
+  request-log:
+    enabled: true
+
+  cluster:
+    upstreams:
+      - id: alchemy-sepolia
+        blockchain: sepolia-testnet
+        connection:
+          ethereum:
+            rpc:
+              url: "https://ethereum-sepolia-rpc.publicnode.com"
+
+env: {}
+
+podAnnotations:
+  prometheus.io/path: /metrics
+  prometheus.io/port: "8081"
+  prometheus.io/scrape: "true"
+
+ingress:
+  enabled: false

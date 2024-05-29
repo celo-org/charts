@@ -1,0 +1,26 @@
+---
+replicaCount: 1
+
+config: |
+  [app]
+  chain_id = 17000
+
+  min_sum_soft_limit = 1
+  min_synced_rpcs = 0
+
+  response_cache_max_bytes = 1_000_000_000
+
+  volatile_redis_max_connections = 300
+  volatile_redis_url = "redis://{{ .Release.Name }}-redis-master:6379/"
+
+  [balanced_rpcs]
+
+      [balanced_rpcs.holesky_drpc_public]
+      disabled = false
+      display_name = "Holesky DRPC"
+      block_data_limit = "archive"
+      http_url = "https://ethereum-holesky-rpc.publicnode.com"
+      soft_limit = 1_000
+
+redis:
+  enabled: true

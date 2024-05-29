@@ -1,0 +1,134 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "cel2-migration-tool.labels" . | nindent 4 }}
+    component: blockscout-metadata-crawler
+spec:
+  schedule: "{{ .Values.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            {{- include "cel2-migration-tool.labels" . | nindent 12 }}
+        spec:
+          serviceAccountName: {{ include "cel2-migration-tool.serviceAccountName" . }}
+          initContainers:
+          - name: download-dependencies
+            image: alpine:3.19
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              mkdir -p /output/config
+              wget -O /output/config/config.json {{ .Values.download.config }}
+              wget -O /output/config/deployment-l1.json {{ .Values.download.deploymentL1 }}
+            volumeMounts:
+            - mountPath: /output
+              name: output
+          - name: chain-ops
+            image: jcortejoso/op-chain-ops:latest
+            imagePullPolicy: Always
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              echo "Starting chain operations"
+              echo "Copying chaindata to /output/celo/chaindata"
+              rsync -ah --progress /input/celo /output/
+
+              echo "Migrating chaindata"
+              celo-dbmigrate \
+                -oldDB /output/celo/chaindata \
+                -newDB /output/celo/chaindata_migrated \
+                -clear-all \
+                -memoryLimit 20000
+              
+              rm -f /output/celo/chaindata
+              mv /output/celo/chaindata_migrated /output/celo/chaindata
+
+              echo "Migrating state"
+              celo-migrate \
+                --deploy-config /output/config/config.json \
+                --l1-deployments /output/config/deployment-l1.json \
+                --l1-rpc {{ .Values.l1Url }} \
+                --db-path /output \
+                --outfile.l2 /output/config/op-state-log.json \
+                --outfile.rollup /output/config/rollup-config.json
+
+              mv /output/celo /output/geth
+            volumeMounts:
+            - mountPath: /output
+              name: output
+            - mountPath: /input
+              name: input
+          - name: op-geth
+            image: {{ .Values.opGeth.image.repository }}:{{ .Values.opGeth.image.tag }}
+            imagePullPolicy: {{ .Values.opGeth.image.pullPolicy }}
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              geth \
+               --datadir="/output" \
+               --verbosity=3 \
+               --syncmode=full \
+               --gcmode=full \
+               --nodiscover \
+               --exitwhensynced \
+               --maxpeers=0 &
+
+              while true; do
+                if [ -f /output/.finished ]; then
+                  pkill -s 15 -f geth
+                  break
+                fi
+                sleep 5
+              done
+            volumeMounts:
+            - mountPath: /output
+              name: output
+          containers:
+          - name: compress-and-upload
+            image: alpine:3.19
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              # Install dependencies
+              apk add --no-cache tar zstd curl bash python3 pv
+
+              # Install gcloud cli
+              curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts
+              source /root/google-cloud-sdk/path.bash.inc
+              /root/google-cloud-sdk/bin/gcloud components install alpha
+
+              # Delete jwt and nodekey
+              rm -f /output/geth/nodekey /output/geth/jwtsecret
+
+              # Compress the node data using zstd
+              tar -I 'zstd -T0' -cf - /output/geth | pv -s $(du -sb /output/geth | awk '{print $1}') > /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd
+
+              # Upload the compressed data to the bucket
+              /root/google-cloud-sdk/bin/gcloud alpha storage cp /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-cel2.tar.zstd
+            volumeMounts:
+            - mountPath: /output
+              name: output
+          volumes:
+            - name: input
+              persistentVolumeClaim:
+                claimName: {{ .Values.pvc.input }}
+            - name: output
+              persistentVolumeClaim:
+                claimName: {{ .Values.pvc.output }}
+          restartPolicy: Never

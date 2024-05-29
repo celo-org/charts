@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dshackle.fullname" . }}
+  labels:
+    {{- include "dshackle.labels" . | nindent 4 }}
+data:
+  config: |
+    {{- tpl .Values.config . | nindent 4 }}

@@ -1,0 +1,51 @@
+{{- $replicas := .Values.replicaCount }}
+{{ range $index, $e := until (int $replicas) }}
+{{- with $.Values.services.authrpc }}
+{{- if .enabled }}
+{{- $loadBalancerIP := "" }}
+{{- $clusterIP := "" }}
+{{- if lt $index (len .loadBalancerIPs) }}
+  {{- $loadBalancerIP = index .loadBalancerIPs $index }}
+{{- end }}
+{{- if lt $index (len .clusterIPs) }}
+  {{- $clusterIP = index .clusterIPs $index }}
+{{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "op-geth.fullname" $ }}-authrpc-{{ $index }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    service-type: authrpc
+    {{- include "op-geth.labels" $ | nindent 4 }}
+spec:
+  type: {{ .type }}
+  {{- with $loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with $clusterIP }}
+  clusterIP: {{ . }}
+  {{- end }}
+  {{- with .externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .internalTrafficPolicy }}
+  internalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .publishNotReadyAddresses }}
+  publishNotReadyAddresses: {{ . }}
+  {{- end }}
+  ports:
+    - name: authrpc
+      port: {{ .port }}
+      targetPort: authrpc
+  selector:
+    {{- include "op-geth.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-geth.fullname" $ }}-{{ $index }}
+{{- end }}
+{{- end }}
+{{- end }}

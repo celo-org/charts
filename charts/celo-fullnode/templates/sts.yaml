@@ -93,6 +93,9 @@ spec:
               fieldRef:
                 fieldPath: metadata.name
       {{- end }}
+      {{- with .Values.geth.extra_init_containers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         {{- include "common.full-node-container" (dict
           "Values" $.Values

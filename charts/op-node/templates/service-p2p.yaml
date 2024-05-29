@@ -1,0 +1,66 @@
+{{- $replicas := .Values.replicaCount }}
+{{ range $index, $e := until (int $replicas) }}
+{{- with $.Values.services.p2p }}
+{{- if and .enabled (not $.Values.config.p2p.useHostPort) }}
+{{- $loadBalancerIP := "" }}
+{{- $clusterIP := "" }}
+{{- $nodePort := "" }}
+{{- if lt $index (len .loadBalancerIPs) }}
+  {{- $loadBalancerIP = index .loadBalancerIPs $index }}
+{{- end }}
+{{- if lt $index (len .clusterIPs) }}
+  {{- $clusterIP = index .clusterIPs $index }}
+{{- end }}
+{{- if lt $index (len .nodePorts) }}
+  {{- $nodePort = index .nodePorts $index }}
+{{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "op-node.fullname" $ }}-p2p-{{ $index }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    service-type: p2p
+    {{- include "op-node.labels" $ | nindent 4 }}
+spec:
+  type: {{ .type }}
+  {{- with $loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with $clusterIP }}
+  clusterIP: {{ . }}
+  {{- end }}
+  {{- with .externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .internalTrafficPolicy }}
+  internalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .publishNotReadyAddresses }}
+  publishNotReadyAddresses: {{ . }}
+  {{- end }}
+  ports:
+    - name: p2p-tcp
+      port: {{ .port }}
+      targetPort: p2p-tcp
+      protocol: TCP
+      {{- with $nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
+    - name: p2p-udp
+      port: {{ .port }}
+      targetPort: p2p-udp
+      protocol: UDP
+      {{- with $nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
+  selector:
+    {{- include "op-node.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-node.fullname" $ }}-{{ $index }}
+{{- end }}
+{{- end }}
+{{- end }}
