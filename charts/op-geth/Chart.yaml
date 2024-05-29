@@ -1,7 +1,7 @@
 ---
 name: op-geth
 apiVersion: v2
-version: 0.0.5
+version: 0.1.0
 description: Celo implementation for op-geth execution engine (Optimism Rollup)
 home: https://clabs.co
 sources:

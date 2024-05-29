@@ -3,8 +3,12 @@ set -e
 
 datadir="{{ .Values.persistence.mountPath | default .Values.config.datadir }}"
 if [ ! -f $datadir/.initialized ]; then
-    wget -qO $datadir/genesis.json "{{ .Values.init.genesis.url }}"
+    {{- if .Values.init.rollup.enabled }}
     wget -qO $datadir/rollup.json "{{ .Values.init.rollup.url }}"
+    echo "Successfully downloaded rollup.json"
+    {{- end }}
+    {{- if .Values.init.genesis.enabled }}
+    wget -qO $datadir/genesis.json "{{ .Values.init.genesis.url }}"
     {{- $stateScheme := "" }}
     {{- if .Values.config.state }}
     {{- if .Values.config.state.scheme }}
@@ -12,8 +16,9 @@ if [ ! -f $datadir/.initialized ]; then
     {{- end }}
     {{- end }}
     geth --datadir={{ .Values.config.datadir }}{{ $stateScheme }} init $datadir/genesis.json
-    touch $datadir/.initialized
     echo "Successfully initialized from genesis file"
+    {{- end }}
+    touch $datadir/.initialized
 else
     echo "Already initialized, skipping."
 fi
