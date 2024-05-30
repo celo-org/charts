@@ -65,7 +65,7 @@ NAT_FLAG="--nat=extip:${PUBLIC_IP}"
 {{- if .Values.geth.increase_timeouts }}
 ADDITIONAL_FLAGS="${ADDITIONAL_FLAGS} --http.timeout.read 600 --http.timeout.write 600 --http.timeout.idle 2400"
 {{- end }}
-{{- .Values.geth.extra_setup }}
+{{ .Values.geth.extra_setup }}
 {{- end }}
 
 {{/*
