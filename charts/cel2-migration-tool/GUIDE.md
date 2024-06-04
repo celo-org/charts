@@ -6,7 +6,7 @@ This guide is intended to help you migrate a Celo L1 node to a Celo L2 (CEL2) no
 
 Before you begin, you should have the following available:
 
-- A Celo L1 datadir to migrate
+- A Celo L1 datadir to migrate. Directory must be from a full node (archive node as origin is not required). It can be used as "archive" once migrated.
 - Cel2 Rollup config.json file (for well-known networks like Alfajores, Baklava, and Mainnet this will be provided)
 - Cel2 L1 contract addresses (for well-known networks like Alfajores, Baklava, and Mainnet this will be provided)
 
@@ -183,4 +183,3 @@ eth.getTransactionCount("0x...")
 ```bash
 touch /output/.finished
 ```
-
