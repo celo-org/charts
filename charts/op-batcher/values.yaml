@@ -125,12 +125,12 @@ nodeSelector: {}
 tolerations: []
 
 secrets:
-  # Private Key for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  # Private Key for the batcher. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   privateKey:
     value: ""
     secretName: ""
     secretKey: ""
-  # L1 URL for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  # L1 URL for the batcher. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   l1Url:
     value: ""
     secretName: ""
