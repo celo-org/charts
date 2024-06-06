@@ -1,6 +1,6 @@
 # op-batcher
 
-![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-batcher client (Optimism Rollup)
 
@@ -28,7 +28,6 @@ Celo implementation for op-batcher client (Optimism Rollup)
 | config.batchType | string | `""` |  |
 | config.dataAvailabilityType | string | `"calldata"` |  |
 | config.feeLimitMultiplier | int | `5` |  |
-| config.l1Url | string | `""` |  |
 | config.l2Url | string | `""` |  |
 | config.logs.color | bool | `false` |  |
 | config.logs.format | string | `"json"` |  |
@@ -40,7 +39,6 @@ Celo implementation for op-batcher client (Optimism Rollup)
 | config.metrics.port | int | `7300` |  |
 | config.numConfirmations | int | `1` |  |
 | config.pollInterval | string | `"1s"` |  |
-| config.privateKey | string | `""` |  |
 | config.resubmissionTimeout | string | `"30s"` |  |
 | config.rollupUrl | string | `""` |  |
 | config.rpc.addr | string | `"0.0.0.0"` |  |
@@ -79,6 +77,12 @@ Celo implementation for op-batcher client (Optimism Rollup)
 | podSecurityContext | object | `{}` |  |
 | readinessProbe.enabled | bool | `false` |  |
 | resources | object | `{}` |  |
+| secrets.l1Url.secretKey | string | `""` |  |
+| secrets.l1Url.secretName | string | `""` |  |
+| secrets.l1Url.value | string | `""` |  |
+| secrets.privateKey.secretKey | string | `""` |  |
+| secrets.privateKey.secretName | string | `""` |  |
+| secrets.privateKey.value | string | `""` |  |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.privileged | bool | `false` |  |
