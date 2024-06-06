@@ -138,7 +138,6 @@ secrets:
 
 ## Main op-batcher config
 config:
-  l1Url: ""                                                                 # HTTP provider URL for L1
   l2Url: ""                                                                 # HTTP provider URL for the L2 engine. If multiple URLs are provided, they should match the number of rollup-rpcs
   dataAvailabilityType: calldata                                            # The data availability type to use for submitting batches to the L1. Valid options: calldata, blobs
   batchType: ""                                                             # The batch type. 0 for SingularBatch and 1 for SpanBatch
@@ -148,7 +147,6 @@ config:
   numConfirmations: 1                                                       # Number of confirmations which we will wait after sending a transaction
   safeAbortNonceTooLowCount: 3                                              # Number of ErrNonceTooLow observations required to give up on a tx at a particular nonce without receiving confirmation
   resubmissionTimeout: 30s                                                  # Duration we will wait before resubmitting a transaction to L1
-  privateKey: ""                                                            # The private key to use with the service. Must not be used with mnemonic.
   maxL1TxSizeBytes: ""                                                      # The maximum size of an L1 transaction in bytes. 120000 by default
   maxChannelDuration: ""                                                    # The maximum duration of L1-blocks to keep a channel open. 0 to disable.
   feeLimitMultiplier: 5                                                     # The multiplier to apply to the gas price when submitting transactions to L1
