@@ -80,9 +80,9 @@ spec:
             --rollup-rpc={{ .Values.config.rollupRpc }} \
             --l2oo-address={{ .Values.config.L2OutputOracle }} \
             {{- if .Values.config.privateKey }}
-            --private-key=$(cat /secrets/privateKey) \
+            --private-key=$PRIVATE_KEY \
             {{- end }}
-            --l1-eth-rpc={{ .Values.config.l1Url }} \
+            --l1-eth-rpc=$L1_URL \
             {{- if .Values.config.metrics.enabled }}
             --metrics.enabled \
             --metrics.addr={{ .Values.config.metrics.addr }} \
@@ -91,7 +91,17 @@ spec:
             --log.level={{ .Values.config.logs.level }} \
             --log.format={{ .Values.config.logs.format }} \
             --log.color={{ .Values.config.logs.color }} \
-
+        env:
+        - name: PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ ternary (include "op-proposer.fullname" .) .Values.secrets.privateKey.secretName (not (empty .Values.secrets.privateKey.value)) }}
+              key: {{ ternary "privateKey" .Values.secrets.privateKey.secretKey (not (empty .Values.secrets.privateKey.value)) }}
+        - name: L1_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ ternary (include "op-proposer.fullname" .) .Values.secrets.l1Url.secretName (not (empty .Values.secrets.l1Url.value)) }}
+              key: {{ ternary "l1Url" .Values.secrets.l1Url.secretKey (not (empty .Values.secrets.l1Url.value)) }}
         ports:
         - name: rpc
           containerPort: {{ .Values.config.rpc.port }}
@@ -108,14 +118,13 @@ spec:
           {{- include "op-proposer.healthcheck" (list $ .Values.readinessProbe) | nindent 10 }}
         {{- end }}
         volumeMounts:
-        - name: secrets
-          mountPath: /secrets
+        - name: contracts
+          mountPath: /contracts
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       {{- with .Values.sidecarContainers }}
         {{- tpl (toYaml . | nindent 6) $ }}
       {{- end }}
       volumes:
-      - name: secrets
-        secret:
-          secretName: {{ template "op-proposer.fullname" . }}
+      - name: contracts
+        emptyDir: {}
