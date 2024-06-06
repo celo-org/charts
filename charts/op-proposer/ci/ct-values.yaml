@@ -2,7 +2,7 @@
 secrets:
   # Private Key for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   privateKey:
-    secretName: privateKeySecret
+    secretName: private-key-secret
     secretKey: privateKeyKey
   # L1 URL for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   l1Url:
