@@ -1,6 +1,4 @@
 ---
-config:
-  l1Url: 
 secrets:
   # Private Key for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   privateKey:
