@@ -124,6 +124,18 @@ nodeSelector: {}
 
 tolerations: []
 
+secrets:
+  # Private Key for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  privateKey:
+    value: ""
+    secretName: ""
+    secretKey: ""
+  # L1 URL for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  l1Url:
+    value: ""
+    secretName: ""
+    secretKey: ""
+
 ## Main op-batcher config
 config:
   l1Url: ""                                                                 # HTTP provider URL for L1

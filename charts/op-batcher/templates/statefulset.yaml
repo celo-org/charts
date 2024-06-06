@@ -111,8 +111,8 @@ spec:
             --txmgr.{{ $key | snakecase | replace "_" "-" }}={{ default 0 $value }} \
             {{- end }}
             {{- end }}
-            --l1-eth-rpc={{ .Values.config.l1Url }} \
-            --private-key=$(cat /secrets/privateKey) \
+            --l1-eth-rpc=$L1_URL \
+            --private-key=$PRIVATE_KEY \
             {{- if .Values.config.metrics.enabled }}
             --metrics.enabled \
             --metrics.addr={{ .Values.config.metrics.addr }} \
@@ -120,7 +120,18 @@ spec:
             {{- end }}
             --log.level={{ .Values.config.logs.level }} \
             --log.format={{ .Values.config.logs.format }} \
-            --log.color={{ .Values.config.logs.color }} \
+            --log.color={{ .Values.config.logs.color }}
+        env:
+        - name: PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ ternary (include "op-batcher.fullname" .) .Values.secrets.privateKey.secretName (not (empty .Values.secrets.privateKey.value)) }}
+              key: {{ ternary "privateKey" .Values.secrets.privateKey.secretKey (not (empty .Values.secrets.privateKey.value)) }}
+        - name: L1_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ ternary (include "op-batcher.fullname" .) .Values.secrets.l1Url.secretName (not (empty .Values.secrets.l1Url.value)) }}
+              key: {{ ternary "l1Url" .Values.secrets.l1Url.secretKey (not (empty .Values.secrets.l1Url.value)) }}
         ports:
         - name: rpc
           containerPort: {{ .Values.config.rpc.port }}
@@ -136,15 +147,8 @@ spec:
         readinessProbe:
           {{- include "op-batcher.healthcheck" (list $ .Values.readinessProbe) | nindent 10 }}
         {{- end }}
-        volumeMounts:
-        - name: secrets
-          mountPath: /secrets
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       {{- with .Values.sidecarContainers }}
         {{- tpl (toYaml . | nindent 6) $ }}
       {{- end }}
-      volumes:
-      - name: secrets
-        secret:
-          secretName: {{ template "op-batcher.fullname" . }}
