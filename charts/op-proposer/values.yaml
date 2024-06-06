@@ -124,6 +124,15 @@ nodeSelector: {}
 
 tolerations: []
 
+init:
+  contracts:
+    enabled: false
+    image:
+      repository: alpine
+      tag: 3.19
+      pullPolicy: IfNotPresent
+    url: ""
+
 ## Main op-proposer config
 config:
   L2OutputOracle: ""                                                         # Address of the L2OutputOracle contract

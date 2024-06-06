@@ -53,6 +53,24 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
+      {{- if .Values.init.contracts.enabled }}
+      - name: contracts
+        image: {{ .Values.init.contracts.image.repository }}:{{ .Values.init.contracts.image.tag }}
+        imagePullPolicy: {{ .Values.init.contracts.image.pullPolicy | quote }}
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - |
+          datadir=/contracts
+          wget -qO $datadir/deployment-l1.json "{{ .Values.init.contracts.url }}"
+          L2OutputOracleProxy=$(cat $datadir/deployment-l1.json | grep L2OutputOracleProxy | cut -d'"' -f4)
+          echo $L2OutputOracleProxy > $datadir/L2OutputOracleProxy
+          echo "L2OutputOracleProxy: $L2OutputOracleProxy"
+        volumeMounts:
+        - name: contracts
+          mountPath: /contracts
+      {{- end }}
       {{- with .Values.initContainers }}
         {{- tpl (toYaml . | nindent 6) $ }}
       {{- end }}
@@ -74,11 +92,12 @@ spec:
         {{- end }}
         args:
         - |
+          [ -f /contracts/L2OutputOracleProxy ] && L2OutputOracleProxy=$(cat /contracts/L2OutputOracleProxy) || L2OutputOracleProxy={{ .Values.config.L2OutputOracle }}
           exec op-proposer \
             --poll-interval={{ .Values.config.pollInterval }} \
             --rpc.port={{ .Values.config.rpc.port }} \
             --rollup-rpc={{ .Values.config.rollupRpc }} \
-            --l2oo-address={{ .Values.config.L2OutputOracle }} \
+            --l2oo-address=$L2OutputOracleProxy \
             {{- if .Values.config.privateKey }}
             --private-key=$(cat /secrets/privateKey) \
             {{- end }}
@@ -110,6 +129,8 @@ spec:
         volumeMounts:
         - name: secrets
           mountPath: /secrets
+        - name: contracts
+          mountPath: /contracts
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       {{- with .Values.sidecarContainers }}
@@ -119,3 +140,5 @@ spec:
       - name: secrets
         secret:
           secretName: {{ template "op-proposer.fullname" . }}
+      - name: contracts
+        emptyDir: {}
