@@ -133,14 +133,24 @@ init:
       pullPolicy: IfNotPresent
     url: ""
 
+secrets:
+  # Private Key for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  privateKey:
+    value: ""
+    secretName: ""
+    secretKey: ""
+  # L1 URL for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  l1Url:
+    value: ""
+    secretName: ""
+    secretKey: ""
+
 ## Main op-proposer config
 config:
   L2OutputOracle: ""                                                         # Address of the L2OutputOracle contract
   pollInterval: 12s                                                          # How frequently to poll L2 for new blocks
   rollupRpc: http://localhost:8547                                           # HTTP provider URL for the rollup node. A comma-separated list for multiple providers
   activeSecuencerCheckDuration: 2m0s                                         # How frequently to check if the sequencer is active (if multiple provided)
-  l1Url: ""                                                                  # HTTP provider URL for L1
-  privateKey: ""                                                             # Private key for the proposer
   logs:
     level: info                                                              # Log level
     format: json                                                             # Log format

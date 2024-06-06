@@ -1,6 +1,6 @@
 # op-proposer
 
-![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-proposer client (Optimism Rollup)
 
@@ -27,7 +27,6 @@ Celo implementation for op-proposer client (Optimism Rollup)
 | command | list | `[]` |  |
 | config.L2OutputOracle | string | `""` |  |
 | config.activeSecuencerCheckDuration | string | `"2m0s"` |  |
-| config.l1Url | string | `""` |  |
 | config.logs.color | bool | `false` |  |
 | config.logs.format | string | `"json"` |  |
 | config.logs.level | string | `"info"` |  |
@@ -35,7 +34,6 @@ Celo implementation for op-proposer client (Optimism Rollup)
 | config.metrics.enabled | bool | `false` |  |
 | config.metrics.port | int | `7300` |  |
 | config.pollInterval | string | `"12s"` |  |
-| config.privateKey | string | `""` |  |
 | config.rollupRpc | string | `"http://localhost:8547"` |  |
 | config.rpc.addr | string | `"0.0.0.0"` |  |
 | config.rpc.enabledAdmin | bool | `false` |  |
@@ -70,6 +68,12 @@ Celo implementation for op-proposer client (Optimism Rollup)
 | podSecurityContext | object | `{}` |  |
 | readinessProbe.enabled | bool | `false` |  |
 | resources | object | `{}` |  |
+| secrets.l1Url.secretKey | string | `""` |  |
+| secrets.l1Url.secretName | string | `""` |  |
+| secrets.l1Url.value | string | `""` |  |
+| secrets.privateKey.secretKey | string | `""` |  |
+| secrets.privateKey.secretName | string | `""` |  |
+| secrets.privateKey.value | string | `""` |  |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.privileged | bool | `false` |  |
