@@ -195,7 +195,7 @@ config:
     port: 7300
   p2p:
     nat: false                         # use NAT to get external IP
-    advertiseIP: ""                    # override announced p2p IP
+    advertiseIPs: ""                   # override announced p2p IP. Commas separated list of IPs
     port: 9222
     useHostPort: false                 # use hostPort for p2p traffic instead of dedicated k8s svc
     bootnodes: []                      # override bootnodes
