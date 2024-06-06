@@ -25,7 +25,7 @@ if [ -f /secrets/sequencer.hex ]; then
 fi
 
 # Split the advertised addresses based on the comma and get the $RID-th key
-advertiseIp=$(echo "{{ .Values.config.p2p.advertiseIP }}" | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n')
+advertiseIp=$(echo "{{ .Values.config.p2p.advertiseIPs }}" | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n')
 # Check if not empty
 if [ -n "$advertiseIp" ]; then
   echo "Setting advertise address to $advertiseIp"
