@@ -188,11 +188,11 @@ spec:
         args:
         - |
           datadir="{{ .Values.persistence.mountPath | default .Values.config.datadir }}"
-          if [ -f datadir/announce_ip ]; then
-            natFlag="--nat=extip:$(cat datadir/announce_ip)"
-          else
-            natFlag="--nat={{ .Values.config.nat }}"
-          fi
+          {{- if .Values.config.nat }}
+          natFlag="--nat={{ .Values.config.nat }}"
+          {{- else }}
+          natFlag="--nat=extip:$(cat datadir/announce_ip)"
+          {{- end }}
           exec geth \
             --datadir={{ .Values.config.datadir }} \
             {{- with (get .Values.config "op-network") }}

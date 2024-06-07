@@ -293,7 +293,7 @@ config:
   networkid: ""             # network id. Empty string for known networks, custom id for custom rollups
   port: 30303               # TCP port for P2P communication
   useHostPort: false        # allocate hostPorts for P2P communication instead of K8S service
-  nat: "any"                # try to auto-detect node IP, refer to `geth --help` for other options
+  nat: ""                   # Override the p2p service ip/pod ips. refer to `geth --help` for other options
   bootnodes: []             # built-in bootnodes are used when empty
   verbosity: 3              # global log verbosity
   vmodule: []               # per-module log verbosity
