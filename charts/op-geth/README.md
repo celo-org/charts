@@ -1,6 +1,6 @@
 # op-geth
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-geth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -44,7 +44,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.maxpeers | int | `50` |  |
 | config.metrics.enabled | bool | `false` |  |
 | config.metrics.expensive | bool | `false` |  |
-| config.nat | string | `"any"` |  |
+| config.nat | string | `""` |  |
 | config.networkid | string | `""` |  |
 | config.nodiscover | bool | `false` |  |
 | config.op-network | string | `"op-mainnet"` |  |
@@ -90,9 +90,9 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | init.chownData.image.tag | float | `3.19` |  |
 | init.genesis.enabled | bool | `false` |  |
 | init.genesis.url | string | `""` |  |
-| init.jwt.image.pullPolicy | string | `"IfNotPresent"` |  |
-| init.jwt.image.repository | string | `"alpine"` |  |
-| init.jwt.image.tag | float | `3.19` |  |
+| init.parameters.image.pullPolicy | string | `"IfNotPresent"` |  |
+| init.parameters.image.repository | string | `"alpine"` |  |
+| init.parameters.image.tag | float | `3.19` |  |
 | init.rollup.enabled | bool | `false` |  |
 | init.rollup.url | string | `""` |  |
 | initFromS3.enabled | bool | `false` |  |
