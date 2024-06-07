@@ -317,7 +317,7 @@ init:
   rollup:
     enabled: false
     url: ""
-  jwt:
+  parameters:
     image:
       repository: alpine
       tag: 3.19
