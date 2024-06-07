@@ -155,14 +155,14 @@ spec:
       {{- end }}
       {{- end }}
       {{- end }}
-      - name: split-jwt
-        image: "{{ .Values.init.jwt.image.repository }}:{{ .Values.init.jwt.image.tag }}"
-        imagePullPolicy: {{ .Values.init.jwt.image.pullPolicy | quote }}
+      - name: split-parameters
+        image: "{{ .Values.init.parameters.image.repository }}:{{ .Values.init.parameters.image.tag }}"
+        imagePullPolicy: {{ .Values.init.parameters.image.pullPolicy | quote }}
         {{- with .Values.securityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        command: ["sh", "/scripts/split-jwt.sh"]
+        command: ["sh", "/scripts/split-parameters.sh"]
         volumeMounts:
         - name: scripts
           mountPath: /scripts
@@ -187,6 +187,12 @@ spec:
         {{- end }}
         args:
         - |
+          datadir="{{ .Values.persistence.mountPath | default .Values.config.datadir }}"
+          {{- if .Values.config.nat }}
+          natFlag="--nat={{ .Values.config.nat }}"
+          {{- else }}
+          natFlag="--nat=extip:$(cat datadir/announce_ip)"
+          {{- end }}
           exec geth \
             --datadir={{ .Values.config.datadir }} \
             {{- with (get .Values.config "op-network") }}
@@ -203,7 +209,7 @@ spec:
             --nodiscover \
             {{- end }}
             --authrpc.addr=0.0.0.0 \
-            --authrpc.jwtsecret={{ .Values.persistence.mountPath | default .Values.config.datadir }}/jwt.hex \
+            --authrpc.jwtsecret=$datadir/jwt.hex \
             --authrpc.vhosts={{ join "," .Values.config.authrpc.vhosts }} \
             --authrpc.port={{ .Values.config.authrpc.port }} \
             --http \
@@ -250,7 +256,7 @@ spec:
             {{- if not .Values.config.nodiscover }}
             --port={{ .Values.config.port }} \
             {{- end }}
-            --nat={{ .Values.config.nat }} \
+            $natFlag \
             {{- with .Values.config.state.scheme }}
             --state.scheme={{ . }} \
             {{- end }}
