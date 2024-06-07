@@ -98,9 +98,6 @@ spec:
             --rpc.port={{ .Values.config.rpc.port }} \
             --rollup-rpc={{ .Values.config.rollupRpc }} \
             --l2oo-address=$L2OutputOracleProxy \
-            {{- if .Values.config.privateKey }}
-            --private-key=$PRIVATE_KEY \
-            {{- end }}
             --l1-eth-rpc=$L1_URL \
             {{- if .Values.config.metrics.enabled }}
             --metrics.enabled \
@@ -109,9 +106,9 @@ spec:
             {{- end }}
             --log.level={{ .Values.config.logs.level }} \
             --log.format={{ .Values.config.logs.format }} \
-            --log.color={{ .Values.config.logs.color }} \
+            --log.color={{ .Values.config.logs.color }}
         env:
-        - name: PRIVATE_KEY
+        - name: OP_PROPOSER_PRIVATE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ ternary (include "op-proposer.fullname" .) .Values.secrets.privateKey.secretName (not (empty .Values.secrets.privateKey.value)) }}

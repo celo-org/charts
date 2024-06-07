@@ -1,7 +1,7 @@
 ---
 name: op-proposer
 apiVersion: v2
-version: 0.1.0
+version: 0.1.1
 description: Celo implementation for op-proposer client (Optimism Rollup)
 home: https://clabs.co
 sources:

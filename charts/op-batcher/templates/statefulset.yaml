@@ -112,7 +112,6 @@ spec:
             {{- end }}
             {{- end }}
             --l1-eth-rpc=$L1_URL \
-            --private-key=$PRIVATE_KEY \
             {{- if .Values.config.metrics.enabled }}
             --metrics.enabled \
             --metrics.addr={{ .Values.config.metrics.addr }} \
@@ -122,7 +121,7 @@ spec:
             --log.format={{ .Values.config.logs.format }} \
             --log.color={{ .Values.config.logs.color }}
         env:
-        - name: PRIVATE_KEY
+        - name: OP_BATCHER_PRIVATE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ ternary (include "op-batcher.fullname" .) .Values.secrets.privateKey.secretName (not (empty .Values.secrets.privateKey.value)) }}
