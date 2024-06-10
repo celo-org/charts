@@ -1,6 +1,6 @@
 # op-bootnode
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-bootnode (Optimism Rollup)
 
@@ -30,7 +30,6 @@ Celo implementation for op-bootnode (Optimism Rollup)
 | config.network | string | `""` |  |
 | config.p2p.advertise.ip | string | `""` |  |
 | config.p2p.disable | bool | `false` |  |
-| config.p2p.keys | string | `""` |  |
 | config.p2p.useHostPort | bool | `false` |  |
 | enableServiceLinks | bool | `true` |  |
 | image.pullPolicy | string | `"Always"` |  |
@@ -53,6 +52,9 @@ Celo implementation for op-bootnode (Optimism Rollup)
 | pvc.storageClassName | string | `""` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
+| secrets.p2pKey.secretKey | string | `""` |  |
+| secrets.p2pKey.secretName | string | `""` |  |
+| secrets.p2pKey.value | string | `""` |  |
 | securityContext | object | `{}` |  |
 | services.p2p.annotations | object | `{}` |  |
 | services.p2p.clusterIP | string | `""` |  |
