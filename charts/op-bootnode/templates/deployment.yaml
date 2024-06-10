@@ -102,6 +102,7 @@ spec:
           mountPath: /data
         - name: secrets
           mountPath: /secrets
+          readOnly: true
         ports:
         - name: p2p-tcp
           containerPort: 9222
@@ -129,4 +130,7 @@ spec:
           name: {{ template "op-bootnode.fullname" . }}-scripts
       - name: secrets
         secret:
-          secretName: {{ template "op-bootnode.fullname" . }}
+          secretName: {{ ternary (include "op-bootnode.fullname" .) .Values.secrets.p2pKey.secretName (not (empty .Values.secrets.p2pKey.value)) }}
+          items:
+          - key: {{ ternary "p2p.hex" .Values.secrets.p2pKey.secretKey (not (empty .Values.secrets.p2pKey.value)) }}
+            path: p2p.hex
