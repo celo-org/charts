@@ -12,7 +12,7 @@ if [ ! -s "$datadir/jwt.hex" ]; then
 fi
 
 # Split the p2p keys based on the comma and get the $RID-th key
-echo $P2P_KEYS | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' > "$datadir/opnode_p2p_priv.txt"
+echo $P2P_KEYS | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' | sed 's/^0x//' > "$datadir/opnode_p2p_priv.txt"
 # If the p2p is not defined for this index, fail
 if [ ! -s "$datadir/opnode_p2p_priv.txt" ]; then
   echo "P2P key not found for replica $RID"
