@@ -4,10 +4,10 @@
 RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
 datadir="{{ .Values.persistence.mountPath | default .Values.config.datadir }}"
 # Split the jwt keys based on the comma and get the $RID-th key
-cat /secrets/jwt.hex | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' > "$datadir/jwt.hex"
+echo $JWT | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' > "$datadir/jwt.hex"
 # If the jwt is not defined for this index, use the first jwt key
 if [ ! -s "$datadir/jwt.hex" ]; then
-  cat /secrets/jwt.hex | tr ',' '\n' | head -n 1 | tr -d '\n' > "$datadir/jwt.hex"
+  echo $JWT | tr ',' '\n' | head -n 1 | tr -d '\n' > "$datadir/jwt.hex"
 fi
 
 # Saving the announce ip address to a file
@@ -24,4 +24,9 @@ elif [ -n "$clusterIps" ]; then
 # If none of the above are defined, use the hostname
 else
   echo $(hostname -i) > "$datadir/announce_ip"
+fi
+
+# Saving the p2p private key (nodeKey) to a file
+if [ -n "$NODEKEYS" ]; then
+  echo "$NODEKEYS" | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' > "$datadir/nodeKey"
 fi
