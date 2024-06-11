@@ -1,5 +1,4 @@
 ---
-config:
-  jwt: 43970166a3e2c62cad0cfc923853ba9ee56c29d31439179947a0e7b3cb455ae6
-  p2p:
-    keys: "a21318f1d376bae28e982ebd91cd71c5848db0d42c03bb7d905c6d9efeb02795"
+secrets:
+  jwt:
+    value: 43970166a3e2c62cad0cfc923853ba9ee56c29d31439179947a0e7b3cb455ae6

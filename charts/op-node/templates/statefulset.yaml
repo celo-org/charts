@@ -77,6 +77,17 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         command: ["sh", "/scripts/split-config-parameters.sh"]
+        env:
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ ternary (include "op-node.fullname" .) .Values.secrets.jwt.secretName (not (empty .Values.secrets.jwt.value)) }}
+              key: {{ ternary "jwt" .Values.secrets.jwt.secretKey (not (empty .Values.secrets.jwt.value)) }}
+        - name: P2P_KEYS
+          valueFrom:
+            secretKeyRef:
+              name: {{ ternary (include "op-node.fullname" .) .Values.secrets.p2pKeys.secretName (not (empty .Values.secrets.p2pKeys.value)) }}
+              key: {{ ternary "p2pKeys" .Values.secrets.p2pKeys.secretKey (not (empty .Values.secrets.p2pKeys.value)) }}
         volumeMounts:
         - name: scripts
           mountPath: /scripts
@@ -112,11 +123,11 @@ spec:
           fi
 
           exec op-node \
-            --l1={{ .Values.config.l1.url }} \
+            --l1=$L1_URL \
             --l1.trustrpc={{ .Values.config.l1.trustrpc }} \
             --l1.rpckind={{ .Values.config.l1.rpckind }} \
-            {{- with .Values.config.l1.beacon }}
-            --l1.beacon={{ . }} \
+            {{- if or .Values.secrets.l1BeaconUrl.value .Values.secrets.l1BeaconUrl.secretName }}
+            --l1.beacon=$L1_BEACON_URL \
             {{- end }}
             --l2=$(cat $datadir/l2Url) \
             --l2.jwt-secret=$datadir/jwt.hex \
@@ -172,9 +183,6 @@ spec:
             {{- with .Values.config.p2p.static }}
             --p2p.static={{ join "," . }} \
             {{- end }}
-            {{- with .Values.config.p2p.sequencer.key }}
-            --p2p.sequencer.key={{ . }} \
-            {{- end }}
             {{- with .Values.config.p2p.keys }}
             --p2p.priv.path=$datadir/opnode_p2p_priv.txt \
             {{- end }}
@@ -186,6 +194,26 @@ spec:
             {{- tpl (toYaml .) $ | nindent 12 }}
             {{- end }}
 
+        env:
+        {{- if .Values.config.sequencer.enabled }}
+        - name: OP_NODE_P2P_SEQUENCER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ ternary (include "op-node.fullname" .) .Values.secrets.sequencerSigningKey.secretName (not (empty .Values.secrets.sequencerSigningKey.value)) }}
+              key: {{ ternary "sequencerSigningKey" .Values.secrets.sequencerSigningKey.secretKey (not (empty .Values.secrets.sequencerSigningKey.value)) }}
+        {{- end }}
+        - name: L1_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ ternary (include "op-node.fullname" .) .Values.secrets.l1Url.secretName (not (empty .Values.secrets.l1Url.value)) }}
+              key: {{ ternary "l1Url" .Values.secrets.l1Url.secretKey (not (empty .Values.secrets.l1Url.value)) }}
+        {{- if or .Values.secrets.l1BeaconUrl.value .Values.secrets.l1BeaconUrl.secretName }}
+        - name: L1_BEACON_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ ternary (include "op-node.fullname" .) .Values.secrets.l1BeaconUrl.secretName (not (empty .Values.secrets.l1BeaconUrl.value)) }}
+              key: {{ ternary "l1BeaconUrl" .Values.secrets.l1BeaconUrl.secretKey (not (empty .Values.secrets.l1BeaconUrl.value)) }}
+        {{- end }}
         ports:
         - name: rpc
           containerPort: {{ .Values.config.port }}
