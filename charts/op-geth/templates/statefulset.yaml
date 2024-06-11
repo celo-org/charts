@@ -202,7 +202,7 @@ spec:
           {{- if .Values.config.nat }}
           natFlag="--nat={{ .Values.config.nat }}"
           {{- else }}
-          natFlag="--nat=extip:$(cat datadir/announce_ip)"
+          natFlag="--nat=extip:$(cat $datadir/announce_ip)"
           {{- end }}
           [ -f $datadir/nodeKey ] && nodeKeyFlag="--nodekey=$datadir/nodeKey" || nodeKeyFlag=""
           exec geth \
