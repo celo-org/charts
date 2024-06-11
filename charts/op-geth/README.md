@@ -1,6 +1,6 @@
 # op-geth
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-geth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -39,7 +39,6 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.http.corsdomain[0] | string | `"*"` |  |
 | config.http.port | int | `8545` |  |
 | config.http.vhosts[0] | string | `"*"` |  |
-| config.jwt | string | `""` |  |
 | config.logFormat | string | `"json"` |  |
 | config.maxpeers | int | `50` |  |
 | config.metrics.enabled | bool | `false` |  |
@@ -140,6 +139,12 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | s3config.remote.baseUrl | string | `"my-snapshot-bucket/{{ .Release.Name }}"` |  |
 | s3config.remote.endpointUrl | string | `""` |  |
 | s3config.remote.secretAccessKey | string | `"REPLACEME"` |  |
+| secrets.jwt.secretKey | string | `""` |  |
+| secrets.jwt.secretName | string | `""` |  |
+| secrets.jwt.value | string | `""` |  |
+| secrets.nodeKey.secretKey | string | `""` |  |
+| secrets.nodeKey.secretName | string | `""` |  |
+| secrets.nodeKey.value | string | `""` |  |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.privileged | bool | `false` |  |
