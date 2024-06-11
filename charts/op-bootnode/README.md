@@ -1,6 +1,6 @@
 # op-bootnode
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-bootnode (Optimism Rollup)
 
@@ -31,7 +31,8 @@ Celo implementation for op-bootnode (Optimism Rollup)
 | config.p2p.advertise.ip | string | `""` |  |
 | config.p2p.disable | bool | `false` |  |
 | config.p2p.useHostPort | bool | `false` |  |
-| enableServiceLinks | bool | `true` |  |
+| config.rpc.useHostPort | bool | `false` |  |
+| enableServiceLinks | bool | `false` |  |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"jcortejoso/op-bootnode"` |  |
 | image.tag | string | `"v1.7.4"` |  |
@@ -64,6 +65,14 @@ Celo implementation for op-bootnode (Optimism Rollup)
 | services.p2p.port | int | `9222` |  |
 | services.p2p.publishNotReadyAddresses | bool | `true` |  |
 | services.p2p.type | string | `"ClusterIP"` |  |
+| services.rpc.annotations | object | `{}` |  |
+| services.rpc.clusterIP | string | `""` |  |
+| services.rpc.enabled | bool | `false` |  |
+| services.rpc.loadBalancerIP | string | `""` |  |
+| services.rpc.nodePort | string | `""` |  |
+| services.rpc.port | int | `8545` |  |
+| services.rpc.publishNotReadyAddresses | bool | `true` |  |
+| services.rpc.type | string | `"ClusterIP"` |  |
 | terminationGracePeriodSeconds | int | `10` |  |
 | tolerations | list | `[]` |  |
 
