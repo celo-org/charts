@@ -28,5 +28,5 @@ fi
 
 # Saving the p2p private key (nodeKey) to a file
 if [ -n "$NODEKEYS" ]; then
-  echo "$NODEKEYS" | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' > "$datadir/nodeKey"
+  echo "$NODEKEYS" | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' | sed 's/^0x//' > "$datadir/nodeKey"
 fi
