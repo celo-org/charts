@@ -1,6 +1,6 @@
 # op-node
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-node consensus engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree/main/dysnix/op-node).
@@ -107,10 +107,10 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | secrets.jwt.value | string | `""` |  |
 | secrets.l1BeaconUrl.secretKey | string | `""` |  |
 | secrets.l1BeaconUrl.secretName | string | `""` |  |
-| secrets.l1BeaconUrl.value | string | `"https://ethereum-beacon-api.publicnode.com"` |  |
+| secrets.l1BeaconUrl.value | string | `""` |  |
 | secrets.l1Url.secretKey | string | `""` |  |
 | secrets.l1Url.secretName | string | `""` |  |
-| secrets.l1Url.value | string | `"https://1rpc.io/eth"` |  |
+| secrets.l1Url.value | string | `""` |  |
 | secrets.p2pKeys.secretKey | string | `""` |  |
 | secrets.p2pKeys.secretName | string | `""` |  |
 | secrets.p2pKeys.value | string | `""` |  |

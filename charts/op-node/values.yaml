@@ -181,12 +181,12 @@ secrets:
     secretKey: ""
   # REQUIRED: L1 URL. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   l1Url:
-    value: https://1rpc.io/eth                              # eth L1 node rpc url, can also be ws://
+    value: ""                              # eth L1 node rpc url, can also be ws://
     secretName: ""
     secretKey: ""
   # L1 Beacon URL. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   l1BeaconUrl:
-    value: https://ethereum-beacon-api.publicnode.com    # endpoint for L1 beacon node, used for retrieving EIP-4844 blob transactions
+    value: ""                             # endpoint for L1 beacon node, used for retrieving EIP-4844 blob transactions
     secretName: ""
     secretKey: ""
 
