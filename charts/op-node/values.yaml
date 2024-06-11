@@ -162,7 +162,7 @@ init:
     url: ""
 
 secrets:
-  # JWT for communication with op-geth. In case of multiReplica, comma separated list of JWTs (or shared)
+  # REQUIRED: JWT for communication with op-geth. In case of multiReplica, comma separated list of JWTs (or shared)
   # Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   jwt:
     value: ""
@@ -173,13 +173,13 @@ secrets:
     value: ""
     secretName: ""
     secretKey: ""
-  # Private Key for the p2p. Comma separated list of keys if multiple replicas
+  # REQUIRED: Private Key for the p2p. Comma separated list of keys if multiple replicas
   # Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   p2pKeys:
     value: ""
     secretName: ""
     secretKey: ""
-  # L1 URL. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  # REQUIRED: L1 URL. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   l1Url:
     value: https://1rpc.io/eth                              # eth L1 node rpc url, can also be ws://
     secretName: ""
