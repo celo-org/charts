@@ -1,6 +1,6 @@
 # op-node
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-node consensus engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree/main/dysnix/op-node).
@@ -28,10 +28,8 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | command | list | `[]` |  |
 | config.enableAdmin | bool | `false` |  |
 | config.jwt | string | `""` |  |
-| config.l1.beacon | string | `"https://ethereum-beacon-api.publicnode.com"` |  |
 | config.l1.rpckind | string | `"any"` |  |
 | config.l1.trustrpc | bool | `false` |  |
-| config.l1.url | string | `"https://1rpc.io/eth"` |  |
 | config.l2.namePattern | string | `""` |  |
 | config.l2.port | string | `""` |  |
 | config.l2.protocol | string | `""` |  |
@@ -104,6 +102,21 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | readinessProbe.enabled | bool | `false` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
+| secrets.jwt.secretKey | string | `""` |  |
+| secrets.jwt.secretName | string | `""` |  |
+| secrets.jwt.value | string | `""` |  |
+| secrets.l1BeaconUrl.secretKey | string | `""` |  |
+| secrets.l1BeaconUrl.secretName | string | `""` |  |
+| secrets.l1BeaconUrl.value | string | `""` |  |
+| secrets.l1Url.secretKey | string | `""` |  |
+| secrets.l1Url.secretName | string | `""` |  |
+| secrets.l1Url.value | string | `""` |  |
+| secrets.p2pKeys.secretKey | string | `""` |  |
+| secrets.p2pKeys.secretName | string | `""` |  |
+| secrets.p2pKeys.value | string | `""` |  |
+| secrets.sequencerSigningKey.secretKey | string | `""` |  |
+| secrets.sequencerSigningKey.secretName | string | `""` |  |
+| secrets.sequencerSigningKey.value | string | `""` |  |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.privileged | bool | `false` |  |

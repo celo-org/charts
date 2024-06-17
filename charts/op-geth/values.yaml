@@ -260,9 +260,22 @@ readinessProbe:
       - /scripts/readiness.sh
       - "60"
 
+secrets:
+  # REQUIRED: JWT for communication with op-geth. In case of multiReplica, comma separated list of JWTs (or shared)
+  # Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  jwt:
+    value: ""
+    secretName: ""
+    secretKey: ""
+  # REQUIRED: Private Key for the p2p. Comma separated list of keys if multiple replicas
+  # Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  nodeKey:
+    value: ""
+    secretName: ""
+    secretKey: ""
+
 ## Main op-geth config
 config:
-  jwt: ""                                                   # REQUIRED for authentication with op-node
   op-network: op-mainnet                                    # must be an empty string if you are using custom genesis (f.e. when network is not in superchain-registry)
   datadir: /celo                                            # data directory
   rollup:

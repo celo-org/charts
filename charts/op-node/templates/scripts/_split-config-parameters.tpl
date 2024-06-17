@@ -5,14 +5,14 @@ RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
 datadir="{{ .Values.persistence.mountPath | default .Values.config.rollup.config }}"
 
 # Split the jwt keys based on the comma and get the $RID-th key
-cat /secrets/jwt.hex | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' > "$datadir/jwt.hex"
+echo $JWT_SECRET | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' > "$datadir/jwt.hex"
 # If the jwt is not defined for this index, use the first jwt key
 if [ ! -s "$datadir/jwt.hex" ]; then
-  cat /secrets/jwt.hex | tr ',' '\n' | head -n 1 | tr -d '\n' > "$datadir/jwt.hex"
+  cat $JWT_SECRET | tr ',' '\n' | head -n 1 | tr -d '\n' > "$datadir/jwt.hex"
 fi
 
 # Split the p2p keys based on the comma and get the $RID-th key
-cat /secrets/p2p.hex | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' > "$datadir/opnode_p2p_priv.txt"
+echo $P2P_KEYS | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' | sed 's/^0x//' > "$datadir/opnode_p2p_priv.txt"
 # If the p2p is not defined for this index, fail
 if [ ! -s "$datadir/opnode_p2p_priv.txt" ]; then
   echo "P2P key not found for replica $RID"

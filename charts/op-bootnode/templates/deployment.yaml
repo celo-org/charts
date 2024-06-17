@@ -116,6 +116,12 @@ spec:
           {{- if .Values.config.p2p.useHostPort }}
           hostPort: 9222
           {{- end }}
+        - name: rpc-tcp  # raw "rpc" name can collision with expected op-bootnode env vars (i.e.: OP_BOOTNODE_RPC_PORT)
+          containerPort: 8545
+          protocol: TCP
+          {{- if .Values.config.rpc.useHostPort }}
+          hostPort: 8545
+          {{- end }}
       volumes:
       {{- if .Values.pvc.enabled }}
       - name: data

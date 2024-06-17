@@ -5,7 +5,7 @@ image:
   tag: v1.7.4
   pullPolicy: Always
 
-enableServiceLinks: true
+enableServiceLinks: false
 terminationGracePeriodSeconds: 10
 imagePullSecrets: []
 podSecurityContext: {}
@@ -38,6 +38,17 @@ services:
     # nodePort: 9222
     annotations: {}
     publishNotReadyAddresses: true
+  rpc:
+    enabled: false
+    type: ClusterIP
+    loadBalancerIP: ""
+    clusterIP: ""
+    nodePort: ""
+    port: 8545
+    # it's better to set nodePort equal to .Values.config.node.p2p.port when the svc type is "NodePort"
+    # nodePort: 8545
+    annotations: {}
+    publishNotReadyAddresses: true
 
 pvc:
   enabled: true
@@ -63,6 +74,8 @@ config:
     disable: false                       # Disable the P2P network
     advertise:
       ip: ""                             # The IP address to advertise in Discv5, put into the ENR of the node. This may also be a hostname / domain name to resolve to an IP.
+    useHostPort: false
+  rpc:
     useHostPort: false
   logs:
     level: info
