@@ -1,7 +1,7 @@
 ---
 name: op-batcher
 apiVersion: v2
-version: 0.1.1
+version: 0.1.2
 description: Celo implementation for op-batcher client (Optimism Rollup)
 home: https://clabs.co
 sources:
