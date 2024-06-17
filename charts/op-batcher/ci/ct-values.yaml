@@ -10,3 +10,5 @@ secrets:
     value: https://ethereum-holesky-rpc.publicnode.com
 extraArgs:
   - --wait-node-sync=true
+config:
+  l2Url: http://op-node:8545
