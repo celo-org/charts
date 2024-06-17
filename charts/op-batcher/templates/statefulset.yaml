@@ -132,6 +132,9 @@ spec:
             --target-num-frames={{ . }} \
             {{- end }}
             {{- end }}
+            {{- with .Values.extraArgs }}
+            {{- tpl (.) $ | nindent 12 }} \
+            {{- end }}
         env:
         - name: OP_BATCHER_PRIVATE_KEY
           valueFrom:

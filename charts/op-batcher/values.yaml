@@ -42,10 +42,7 @@ securityContext:
   # runAsUser: 1000
   # runAsGroup: 1000
 
-## Override op-node command (can be templated)
-command: []
-
-## Extra op-node arguments (can be templated)
+## Extra op-batcher arguments (can be templated)
 extraArgs: []
 
 ## Extra init containers, can be templated
@@ -76,14 +73,14 @@ ingress:
     # kubernetes.io/tls-acme: "true"
     # cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts: []
-    # - host: op-node.examplerpc.com
+    # - host: op-batcher.examplerpc.com
     #   paths:
     #     - path: /
     #       pathType: ImplementationSpecific
   tls: []
-    # - secretName: op-node-tls
+    # - secretName: op-batcher-tls
     #   hosts:
-    #     - op-node.examplerpc.com
+    #     - op-batcher.examplerpc.com
 
 # Create Prometheus Operator serviceMonitor
 serviceMonitor:
