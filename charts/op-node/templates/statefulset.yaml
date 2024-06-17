@@ -190,6 +190,11 @@ spec:
             {{- with .Values.config.syncmode }}
             --syncmode={{ . }} \
             {{- end }}
+            {{- if .Values.config.plasma.enabled }}
+            --plasma.enabled=true \
+            --plasma.da-server={{ .Values.config.plasma.daServer }} \
+            --plasma.verify-on-read={{ .Values.config.plasma.verifyOnRead }} \
+            {{- end }}
             {{- with .Values.extraArgs }}
             {{- tpl (toYaml .) $ | nindent 12 }}
             {{- end }}
@@ -208,7 +213,7 @@ spec:
               name: {{ ternary (include "op-node.fullname" .) .Values.secrets.l1Url.secretName (not (empty .Values.secrets.l1Url.value)) }}
               key: {{ ternary "l1Url" .Values.secrets.l1Url.secretKey (not (empty .Values.secrets.l1Url.value)) }}
         {{- if or .Values.secrets.l1BeaconUrl.value .Values.secrets.l1BeaconUrl.secretName }}
-        - name: L1_BEACON_URL
+        - name: OP_NODE_L1_BEACON
           valueFrom:
             secretKeyRef:
               name: {{ ternary (include "op-node.fullname" .) .Values.secrets.l1BeaconUrl.secretName (not (empty .Values.secrets.l1BeaconUrl.value)) }}
