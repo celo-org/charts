@@ -126,9 +126,6 @@ spec:
             --l1=$L1_URL \
             --l1.trustrpc={{ .Values.config.l1.trustrpc }} \
             --l1.rpckind={{ .Values.config.l1.rpckind }} \
-            {{- if or .Values.secrets.l1BeaconUrl.value .Values.secrets.l1BeaconUrl.secretName }}
-            --l1.beacon=$L1_BEACON_URL \
-            {{- end }}
             --l2=$(cat $datadir/l2Url) \
             --l2.jwt-secret=$datadir/jwt.hex \
             --rpc.addr=0.0.0.0 \
@@ -196,7 +193,9 @@ spec:
             --plasma.verify-on-read={{ .Values.config.plasma.verifyOnRead }} \
             {{- end }}
             {{- with .Values.extraArgs }}
-            {{- tpl (toYaml .) $ | nindent 12 }}
+            {{- range . }}
+            {{- tpl (.) $ | nindent 12 }} \
+            {{- end }}
             {{- end }}
 
         env:
