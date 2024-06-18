@@ -10,6 +10,7 @@ terminationGracePeriodSeconds: 10
 imagePullSecrets: []
 podSecurityContext: {}
 securityContext: {}
+extraArgs: []
 
 resources: {}
 affinity: {}

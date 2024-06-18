@@ -96,7 +96,13 @@ spec:
               {{- end }}
               --p2p.priv.path=/secrets/p2p.hex \
               --p2p.peerstore.path=/data/opnode_peerstore_db \
-              --p2p.discovery.path=/data/opnode_discovery_db
+              --p2p.discovery.path=/data/opnode_discovery_db \
+              {{- with .Values.extraArgs }}
+              {{- range . }}
+              {{- tpl (.) $ | nindent 14 }} \
+              {{- end }}
+              {{- end }}
+
         volumeMounts:
         - name: data
           mountPath: /data

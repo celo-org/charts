@@ -274,7 +274,9 @@ spec:
             --state.scheme={{ . }} \
             {{- end }}
             {{- with .Values.extraArgs }}
-            {{- tpl (toYaml .) $ | nindent 8 }} \
+            {{- range . }}
+            {{- tpl (.) $ | nindent 12 }} \
+            {{- end }}
             {{- end }}
 
         ports:
