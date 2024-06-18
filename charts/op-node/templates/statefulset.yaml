@@ -196,7 +196,9 @@ spec:
             --plasma.verify-on-read={{ .Values.config.plasma.verifyOnRead }} \
             {{- end }}
             {{- with .Values.extraArgs }}
-            {{- tpl (toYaml .) $ | nindent 12 }}
+            {{- range . }}
+            {{- tpl (.) $ | nindent 12 }} \
+            {{- end }}
             {{- end }}
 
         env:

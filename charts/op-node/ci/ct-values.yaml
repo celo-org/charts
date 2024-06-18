@@ -8,3 +8,5 @@ secrets:
     value: https://1rpc.io/eth
   l1BeaconUrl:
     value: https://ethereum-beacon-api.publicnode.com
+extraArgs:
+  - --log.format=terminal
