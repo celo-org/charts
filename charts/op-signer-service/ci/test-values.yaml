@@ -1,0 +1,8 @@
+---
+env:
+  PROJECT_ID: "blockchaintestsglobaltestnet"
+  LOCATION_ID: "global"
+  KEYRING_ID: "alvaro-test"
+  KEY_ID: "batcher"
+  KEY_VERSION: "1"
+  LOG_LEVEL: "3"
