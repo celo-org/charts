@@ -112,6 +112,7 @@ spec:
             {{- tpl (.) $ | nindent 12 }} \
             {{- end }}
             {{- end }}
+
         env:
         - name: OP_PROPOSER_PRIVATE_KEY
           valueFrom:
