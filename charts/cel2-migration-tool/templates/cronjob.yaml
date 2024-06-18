@@ -29,9 +29,17 @@ spec:
               mkdir -p /output/config
               wget -O /output/config/config.json {{ .Values.download.config }}
               wget -O /output/config/deployment-l1.json {{ .Values.download.deploymentL1 }}
+              {{- if not .Values.pvc.useOuptutAsInput }}
+              echo "Copying chaindata to /output/celo/chaindata"
+              rsync -ah --progress2 /input/celo /output/
+              {{- end }}
             volumeMounts:
             - mountPath: /output
               name: output
+            {{- if not .Values.pvc.useOuptutAsInput }}
+            - mountPath: /input
+              name: input
+            {{- end }}
           - name: chain-ops
             image: jcortejoso/op-chain-ops:latest
             imagePullPolicy: Always
@@ -41,8 +49,6 @@ spec:
             args:
             - |
               echo "Starting chain operations"
-              echo "Copying chaindata to /output/celo/chaindata"
-              rsync -ah --progress /input/celo /output/
 
               echo "Migrating chaindata"
               celo-dbmigrate \
@@ -51,7 +57,7 @@ spec:
                 -clear-all \
                 -memoryLimit 20000
               
-              rm -f /output/celo/chaindata
+              rm -rf /output/celo/chaindata
               mv /output/celo/chaindata_migrated /output/celo/chaindata
 
               echo "Migrating state"
@@ -67,8 +73,6 @@ spec:
             volumeMounts:
             - mountPath: /output
               name: output
-            - mountPath: /input
-              name: input
           - name: op-geth
             image: {{ .Values.opGeth.image.repository }}:{{ .Values.opGeth.image.tag }}
             imagePullPolicy: {{ .Values.opGeth.image.pullPolicy }}
@@ -111,13 +115,17 @@ spec:
               # Install gcloud cli
               curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts
               source /root/google-cloud-sdk/path.bash.inc
-              /root/google-cloud-sdk/bin/gcloud components install alpha
+              /root/google-cloud-sdk/bin/gcloud components install alpha -q
+
+              # Uplaod rollup config
+              /root/google-cloud-sdk/bin/gcloud alpha storage cp /output/config/rollup-config.json gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-rollup.json
 
               # Delete jwt and nodekey
               rm -f /output/geth/nodekey /output/geth/jwtsecret
 
               # Compress the node data using zstd
-              tar -I 'zstd -T0' -cf - /output/geth | pv -s $(du -sb /output/geth | awk '{print $1}') > /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd
+              echo "Compressing the node data. Progress is referenced to the uncompressed size, so you can expect it won't reach 100%"
+              cd /output && tar -I 'zstd -T0' -cf - geth | pv -s $(du -sb /output/geth | awk '{print $1}') > {{ .Values.cel2NetworkName }}-cel2.tar.zstd
 
               # Upload the compressed data to the bucket
               /root/google-cloud-sdk/bin/gcloud alpha storage cp /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-cel2.tar.zstd
@@ -125,9 +133,11 @@ spec:
             - mountPath: /output
               name: output
           volumes:
+            {{- if not .Values.pvc.useOuptutAsInput }}
             - name: input
               persistentVolumeClaim:
                 claimName: {{ .Values.pvc.input }}
+            {{- end }}
             - name: output
               persistentVolumeClaim:
                 claimName: {{ .Values.pvc.output }}
