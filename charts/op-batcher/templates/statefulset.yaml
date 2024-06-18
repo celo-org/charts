@@ -86,7 +86,6 @@ spec:
             --rpc.addr={{ .Values.config.rpc.addr }} \
             --rpc.port={{ .Values.config.rpc.port }} \
             {{- end }}
-            --data-availability-type={{ .Values.config.dataAvailabilityType }} \
             {{- with .Values.config.batchType }}
             --batch-type={{ . }} \
             {{- end }}
@@ -95,6 +94,9 @@ spec:
             {{- end }}
             {{- with .Values.config.maxL1TxSizeBytes }}
             --max-l1-tx-size-bytes={{ . }} \
+            {{- end }}
+            {{- with .Values.config.maxPendingTransactions }}
+            --max-pending-tx={{ . }} \
             {{- end }}
             {{- with .Values.config.subSafetyMargin }}
             --sub-safety-margin={{ . }} \
@@ -119,7 +121,22 @@ spec:
             {{- end }}
             --log.level={{ .Values.config.logs.level }} \
             --log.format={{ .Values.config.logs.format }} \
-            --log.color={{ .Values.config.logs.color }}
+            --log.color={{ .Values.config.logs.color }} \
+            {{- if .Values.config.plasma.enabled }}
+            --plasma.enabled=true
+            --plasma.da-server={{ .Values.config.plasma.daServer }} \
+            --plasma.da-service={{ .Values.config.plasma.daService }} \
+            {{- else }}
+            --data-availability-type={{ .Values.config.dataAvailabilityType }} \
+            {{- with .Values.config.blobTargetNumFrames }}
+            --target-num-frames={{ . }} \
+            {{- end }}
+            {{- end }}
+            {{- with .Values.extraArgs }}
+            {{- range . }}
+            {{- tpl (.) $ | nindent 12 }} \
+            {{- end }}
+            {{- end }}
         env:
         - name: OP_BATCHER_PRIVATE_KEY
           valueFrom:

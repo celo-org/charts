@@ -8,3 +8,7 @@ secrets:
   # L1 URL for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   l1Url:
     value: https://ethereum-holesky-rpc.publicnode.com
+extraArgs:
+  - --wait-node-sync=true
+config:
+  l2Url: http://op-node:8545

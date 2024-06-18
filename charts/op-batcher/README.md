@@ -1,6 +1,6 @@
 # op-batcher
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-batcher client (Optimism Rollup)
 
@@ -24,8 +24,8 @@ Celo implementation for op-batcher client (Optimism Rollup)
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| command | list | `[]` |  |
 | config.batchType | string | `""` |  |
+| config.blobTargetNumFrames | string | `""` |  |
 | config.dataAvailabilityType | string | `"calldata"` |  |
 | config.feeLimitMultiplier | int | `5` |  |
 | config.l2Url | string | `""` |  |
@@ -34,10 +34,14 @@ Celo implementation for op-batcher client (Optimism Rollup)
 | config.logs.level | string | `"info"` |  |
 | config.maxChannelDuration | string | `""` |  |
 | config.maxL1TxSizeBytes | string | `""` |  |
+| config.maxPendingTransactions | string | `""` |  |
 | config.metrics.addr | string | `"0.0.0.0"` |  |
 | config.metrics.enabled | bool | `false` |  |
 | config.metrics.port | int | `7300` |  |
 | config.numConfirmations | int | `1` |  |
+| config.plasma.daServer | string | `""` |  |
+| config.plasma.daService | bool | `false` |  |
+| config.plasma.enabled | bool | `true` |  |
 | config.pollInterval | string | `"1s"` |  |
 | config.resubmissionTimeout | string | `"30s"` |  |
 | config.rollupUrl | string | `""` |  |
