@@ -42,9 +42,6 @@ securityContext:
   # runAsUser: 1000
   # runAsGroup: 1000
 
-## Override op-node command (can be templated)
-command: []
-
 ## Extra op-node arguments (can be templated)
 extraArgs: []
 

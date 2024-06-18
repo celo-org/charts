@@ -106,7 +106,12 @@ spec:
             {{- end }}
             --log.level={{ .Values.config.logs.level }} \
             --log.format={{ .Values.config.logs.format }} \
-            --log.color={{ .Values.config.logs.color }}
+            --log.color={{ .Values.config.logs.color }} \
+            {{- with .Values.extraArgs }}
+            {{- range . }}
+            {{- tpl (.) $ | nindent 12 }} \
+            {{- end }}
+            {{- end }}
         env:
         - name: OP_PROPOSER_PRIVATE_KEY
           valueFrom:
