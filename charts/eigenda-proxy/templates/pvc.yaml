@@ -1,17 +1,17 @@
----
+{{- if .Values.persistence.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  {{- with .Values.persistence.annotations }}
   annotations:
-    resize.topolvm.io/increase: 10%
-    resize.topolvm.io/inodes-threshold: 90%
-    resize.topolvm.io/storage_limit: 50Gi
-    resize.topolvm.io/threshold: 90%
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   name: data-{{ include "eigenda-proxy.fullname" . }}
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 12Gi
-  storageClassName: standard-rwo
+      storage: {{ .Values.persistence.size }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+{{- end }}

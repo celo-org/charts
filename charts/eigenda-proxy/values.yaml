@@ -107,6 +107,16 @@ tolerations: []
 
 affinity: {}
 
+persistence:
+  enabled: true
+  storageClass: ""
+  size: 12Gi
+  annotations: {}
+    # resize.topolvm.io/increase: 10%
+    # resize.topolvm.io/inodes-threshold: 90%
+    # resize.topolvm.io/storage_limit: 50Gi
+    # resize.topolvm.io/threshold: 90%
+
 config:
   disperser:
     rpc: disperser-holesky.eigenda.xyz:443

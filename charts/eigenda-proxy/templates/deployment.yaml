@@ -139,5 +139,9 @@ spec:
         type: Recreate
       volumes:
         - name: data
+        {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: data-{{ include "eigenda-proxy.fullname" . }}
+        {{ else }}
+          emptyDir: {}
+        {{- end }}
