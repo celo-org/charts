@@ -1,6 +1,6 @@
 # op-proposer
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-proposer client (Optimism Rollup)
 
@@ -24,7 +24,6 @@ Celo implementation for op-proposer client (Optimism Rollup)
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| command | list | `[]` |  |
 | config.L2OutputOracle | string | `""` |  |
 | config.activeSecuencerCheckDuration | string | `"2m0s"` |  |
 | config.logs.color | bool | `false` |  |

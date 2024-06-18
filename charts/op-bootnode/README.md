@@ -1,6 +1,6 @@
 # op-bootnode
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-bootnode (Optimism Rollup)
 
@@ -33,6 +33,7 @@ Celo implementation for op-bootnode (Optimism Rollup)
 | config.p2p.useHostPort | bool | `false` |  |
 | config.rpc.useHostPort | bool | `false` |  |
 | enableServiceLinks | bool | `false` |  |
+| extraArgs | list | `[]` |  |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"jcortejoso/op-bootnode"` |  |
 | image.tag | string | `"v1.7.4"` |  |
