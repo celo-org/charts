@@ -1,0 +1,21 @@
+{{- with .Values.services.metrics }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "eigenda-proxy.fullname" $ }}-metrics
+  labels:
+    {{- include "eigenda-proxy.labels" $ | nindent 4 }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .type }}
+  ports:
+    - port: {{ .port }}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    {{- include "eigenda-proxy.selectorLabels" $ | nindent 4 }}
+{{- end }}
