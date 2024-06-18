@@ -6,4 +6,4 @@ secrets:
   p2pKey:
     value: "1010101010101010101010101010101010101010101010101010101010101010"
 extraArgs:
-  --log.color=true
+  - --log.color=true
