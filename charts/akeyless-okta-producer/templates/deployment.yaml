@@ -38,6 +38,12 @@ spec:
               value: {{ required "Require .Values.env.akeylessAccessID" .Values.env.akeylessAccessID }}
             - name: SECRET_PATH_REGEX
               value: {{ required "Require .Values.env.secretPathRegex" .Values.env.secretPathRegex }}
+          {{- with .Values.extraEnvVars }}
+            {{- range $key, $value := . }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

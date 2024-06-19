@@ -2,7 +2,7 @@
 
 A Helm chart for Kubernetes
 
-![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.1.10](https://img.shields.io/badge/Version-0.1.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 - [akeyless-okta-producer](#akeyless-okta-producer)
   - [Chart requirements](#chart-requirements)
@@ -38,6 +38,7 @@ and [helm_test.yml](../../.github/workflows/helm_test.yml) files.
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | CPU target utilization |
 | env.akeylessAccessID | string | `"p-smsrwoolrzwo"` | Akeyless Access ID (for authentication) |
 | env.secretPathRegex | string | `"^\\/dynamic-secrets\\/cloud-user-access\\/okta.*"` | Secret Allowed Path |
+| extraEnvVars | object | `{}` | New Env. vars. |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"Always"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/akeyless/akeyless-okta-producer"` | Image repository |
