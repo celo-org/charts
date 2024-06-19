@@ -72,6 +72,13 @@ env:
   # -- Secret Allowed Path
   secretPathRegex: '^\/dynamic-secrets\/cloud-user-access\/okta.*'
 
+# -- New Env. vars.
+extraEnvVars: {}
+  # MASTER_ACCESS_ID: "test"
+  # K8S_AUTH_CONFIG: "test"
+  # MASTER_KEY_PATH: "test"
+  # AKEYLESS_GATEWAY_API_URL: "test"
+
 autoscaling:
   # -- Enable autoscaling
   enabled: false
