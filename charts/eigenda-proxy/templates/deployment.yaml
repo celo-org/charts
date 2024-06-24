@@ -8,13 +8,18 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "eigenda-proxy.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: {{ quote .Values.services.metrics.port }}
+        prometheus.io/scrape: "true"
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
@@ -88,16 +93,16 @@ spec:
             - |
               mkdir -p /data/resources
               exec /app/eigenda-proxy \
-                --addr 0.0.0.0 \
-                --port {{ .Values.services.api.port }} \
-                --eigenda-rpc {{ .Values.config.disperser.rpc }} \
-                --eigenda-status-query-timeout 45m \
-                --eigenda-g1-path /data/resources/g1.point \
-                --eigenda-g2-tau-path /data/resources/g2.point.powerOf2 \
-                --eigenda-disable-tls false \
-                --metrics.enabled \
-                --metrics.addr 0.0.0.0 \
-                --metrics.port {{ .Values.services.metrics.port }}
+                --addr=0.0.0.0 \
+                --port={{ .Values.services.api.port }} \
+                --eigenda-rpc={{ .Values.config.disperser.rpc }} \
+                --eigenda-status-query-timeout=45m \
+                --eigenda-g1-path=/data/resources/g1.point \
+                --eigenda-g2-tau-path=/data/resources/g2.point.powerOf2 \
+                --eigenda-disable-tls=false \
+                --metrics.enabled=true \
+                --metrics.addr=0.0.0.0 \
+                --metrics.port={{ .Values.services.metrics.port }}
           env:
             - name: EIGENDA_PROXY_SIGNER_PRIVATE_KEY_HEX
               value: {{ toString .Values.config.privateKey }}
