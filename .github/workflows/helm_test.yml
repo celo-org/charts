@@ -193,8 +193,8 @@ jobs:
           ct install
           --target-branch ${{ github.event.repository.default_branch }} --chart-dirs charts,charts-private
           --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup,blockscout,akeyless-gadmin-producer,ultragreen-dashboard,kong-celo-fullnode,eigenda-proxy
-          --chart-repos bitnami=https://charts.bitnami.com/bitnami
-
+          --chart-repos bitnami=https://charts.bitnami.com/bitnami \
+          --chart-repos stakewise=https://charts.stakewise.io/
   helm-docs:
     runs-on: 'ubuntu-latest'
     if: ${{ ! startsWith(github.triggering_actor, 'akeyless') }}
