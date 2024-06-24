@@ -9,10 +9,21 @@ l1Url: https://ethereum-holesky-rpc.publicnode.com
 download:
   config: https://storage.googleapis.com/cel2-rollup-files/jctestnet/config.json
   deploymentL1: https://storage.googleapis.com/cel2-rollup-files/jctestnet/deployment-l1.json
+  l2Allocs: https://storage.googleapis.com/cel2-rollup-files/jctestnet/l2-allocs.json
 pvc:
   input: myNetwork-input
   useOuptutAsInput: true  # Only one PVC required. This operation is not idempotent
   output: myNetwork-output
+migrationTool:
+  image:
+    repository: us-west1-docker.pkg.dev/devopsre/dev-images/cel2-migration-tool
+    tag: 8bdebc03a0526b6474dfba468884116ee1366907
+    pullPolicy: Always
+  resources: {}
+  config:
+    batchSize: 5000
+    memoryLimit: 20000
+  extraArgs: []
 opGeth:
   image:
     repository: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth

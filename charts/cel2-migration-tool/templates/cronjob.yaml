@@ -10,7 +10,7 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
-      backoffLimit: 1
+      backoffLimit: 0
       template:
         metadata:
           labels:
@@ -29,6 +29,7 @@ spec:
               mkdir -p /output/config
               wget -O /output/config/config.json {{ .Values.download.config }}
               wget -O /output/config/deployment-l1.json {{ .Values.download.deploymentL1 }}
+              wget -O /output/config/l2-allocs.json {{ .Values.download.l2Allocs }}
               {{- if not .Values.pvc.useOuptutAsInput }}
               echo "Copying chaindata to /output/celo/chaindata"
               rsync -ah --progress2 /input/celo /output/
@@ -40,8 +41,8 @@ spec:
             - mountPath: /input
               name: input
             {{- end }}
-          - name: chain-ops
-            image: jcortejoso/op-chain-ops:latest
+          - name: migration
+            image: {{ .Values.migrationTool.image.repository }}:{{ .Values.migrationTool.image.tag }}
             imagePullPolicy: Always
             command:
             - /bin/sh
@@ -50,26 +51,25 @@ spec:
             - |
               echo "Starting chain operations"
 
-              echo "Migrating chaindata"
-              celo-dbmigrate \
-                -oldDB /output/celo/chaindata \
-                -newDB /output/celo/chaindata_migrated \
-                -clear-all \
-                -memoryLimit 20000
-              
-              rm -rf /output/celo/chaindata
-              mv /output/celo/chaindata_migrated /output/celo/chaindata
-
-              echo "Migrating state"
-              celo-migrate \
+              time celo-migrate full \
                 --deploy-config /output/config/config.json \
                 --l1-deployments /output/config/deployment-l1.json \
-                --l1-rpc {{ .Values.l1Url }} \
-                --db-path /output \
-                --outfile.l2 /output/config/op-state-log.json \
-                --outfile.rollup /output/config/rollup-config.json
+                --l2-allocs /output/config/l2-allocs.json \
+                --l1-rpc {{ .Values.l1Url | quote }} \
+                --outfile.rollup-config /output/config/rollup-config.json \
+                --old-db /output/celo/chaindata \
+                --new-db /output/celo/chaindata_migrated \
+                --memory-limit {{ .Values.migrationTool.config.memoryLimit }} \
+                --batch-size {{ .Values.migrationTool.config.batchSize }} \
+                {{- range .Values.migrationTool.extraArgs }}
+                {{ tpl (.) $ }} \
+                {{- end }}
 
               mv /output/celo /output/geth
+            {{- with .Values.migrationTool.resources }}
+            resources:
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
             volumeMounts:
             - mountPath: /output
               name: output
