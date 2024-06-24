@@ -110,7 +110,7 @@ spec:
             args:
             - |
               # Install dependencies
-              apk add --no-cache tar zstd curl bash python3 pv
+              apk add --no-cache tar zstd curl bash python3 pv rsync
 
               # Install gcloud cli
               curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts
