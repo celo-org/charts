@@ -1,6 +1,6 @@
 # cel2-migration-tool
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Node migration tool for Cel2 network
 
@@ -26,8 +26,16 @@ Node migration tool for Cel2 network
 | cel2NetworkName | string | `"myNetwork"` |  |
 | download.config | string | `"https://storage.googleapis.com/cel2-rollup-files/jctestnet/config.json"` |  |
 | download.deploymentL1 | string | `"https://storage.googleapis.com/cel2-rollup-files/jctestnet/deployment-l1.json"` |  |
+| download.l2Allocs | string | `"https://storage.googleapis.com/cel2-rollup-files/jctestnet/l2-allocs.json"` |  |
 | gcsBucket | string | `"cel2-node-files/"` |  |
 | l1Url | string | `"https://ethereum-holesky-rpc.publicnode.com"` |  |
+| migrationTool.config.batchSize | int | `5000` |  |
+| migrationTool.config.memoryLimit | int | `20000` |  |
+| migrationTool.extraArgs | list | `[]` |  |
+| migrationTool.image.pullPolicy | string | `"Always"` |  |
+| migrationTool.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/cel2-migration-tool"` |  |
+| migrationTool.image.tag | string | `"8bdebc03a0526b6474dfba468884116ee1366907"` |  |
+| migrationTool.resources | object | `{}` |  |
 | opGeth.image.pullPolicy | string | `"Always"` |  |
 | opGeth.image.repository | string | `"us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth"` |  |
 | opGeth.image.tag | string | `"3d6a0e48e00137e581ee064db9cafa8300598771"` |  |
