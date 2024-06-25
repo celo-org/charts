@@ -10,6 +10,10 @@ metadata:
     component: celostats-server
   annotations:
     kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_uri ~* "^/config") {
+        return 403;
+      }
 spec:
   ingressClassName: {{ default "nginx" .Values.ingressClassName }}
   tls:
