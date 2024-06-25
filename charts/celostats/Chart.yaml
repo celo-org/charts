@@ -1,7 +1,7 @@
 ---
 name: celostats
 apiVersion: v2
-version: 0.1.1
+version: 0.1.2
 description: Chart which is used to deploy a celostats setup for a celo testnet
 home: https://clabs.co
 sources:
