@@ -32,7 +32,7 @@ spec:
               wget -O /output/config/l2-allocs.json {{ .Values.download.l2Allocs }}
               {{- if not .Values.pvc.useOuptutAsInput }}
               echo "Copying chaindata to /output/celo/chaindata"
-              rsync -ah --progress2 /input/celo /output/
+              rsync -ah --progress /input/celo /output/
               {{- end }}
             volumeMounts:
             - mountPath: /output
@@ -56,7 +56,7 @@ spec:
                 --l1-deployments /output/config/deployment-l1.json \
                 --l2-allocs /output/config/l2-allocs.json \
                 --l1-rpc {{ .Values.l1Url | quote }} \
-                --outfile.rollup-config /output/config/rollup-config.json \
+                --outfile.rollup-config /output/config/rollup.json \
                 --old-db /output/celo/chaindata \
                 --new-db /output/celo/chaindata_migrated \
                 --memory-limit {{ .Values.migrationTool.config.memoryLimit }} \
@@ -65,38 +65,14 @@ spec:
                 {{ tpl (.) $ }} \
                 {{- end }}
 
-              mv /output/celo /output/geth
+              rm -rf /output/celo/chaindata
+              mv /output/celo/chaindata_migrated /output/celo/chaindata
+              mv /output/celo /output/
+              tail -f /dev/null
             {{- with .Values.migrationTool.resources }}
             resources:
               {{- toYaml . | nindent 12 }}
             {{- end }}
-            volumeMounts:
-            - mountPath: /output
-              name: output
-          - name: op-geth
-            image: {{ .Values.opGeth.image.repository }}:{{ .Values.opGeth.image.tag }}
-            imagePullPolicy: {{ .Values.opGeth.image.pullPolicy }}
-            command:
-            - /bin/sh
-            - -c
-            args:
-            - |
-              geth \
-               --datadir="/output" \
-               --verbosity=3 \
-               --syncmode=full \
-               --gcmode=full \
-               --nodiscover \
-               --exitwhensynced \
-               --maxpeers=0 &
-
-              while true; do
-                if [ -f /output/.finished ]; then
-                  pkill -s 15 -f geth
-                  break
-                fi
-                sleep 5
-              done
             volumeMounts:
             - mountPath: /output
               name: output
