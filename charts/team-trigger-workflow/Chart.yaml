@@ -1,0 +1,10 @@
+apiVersion: v2
+name: team-trigger-workflow
+description: A Helm chart to run team-trigger-workflow at cLabs
+type: application
+version: 0.1.0
+appVersion: "latest"
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
