@@ -86,13 +86,13 @@ resources: {}
 # -- Liveness probe
 livenessProbe:
   httpGet:
-    path: /
+    path: /hook
     port: http
 
 # -- Readiness probe
 readinessProbe:
   httpGet:
-    path: /
+    path: /hook
     port: http
 
 # -- Kubernetes node selector
