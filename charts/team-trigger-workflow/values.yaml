@@ -58,15 +58,15 @@ ingress:
 
   # -- List of hosts to expose safe-config-service. See values.yaml for an example.
   hosts: []
-    # - host: config-service.celo-safe.io
+    # - host: team-trigger-workflow.akeyless.celo-networks-dev.org
     #   paths:
     #     - path: /
 
   # -- TLS secret for exposing safe-config-service with https. See values.yaml for an example.
   tls: []
-    # - secretName: chart-example-tls
+    # - secretName: cteam-trigger-workflow-tls
     #   hosts:
-    #      - config-service.celo-safe.io
+    #      - team-trigger-workflow.akeyless.celo-networks-dev.org
 
 # -- Custom pod annotations
 podAnnotations: {}
