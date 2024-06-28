@@ -1,6 +1,6 @@
 # team-trigger-workflow
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
 
 A Helm chart to run team-trigger-workflow at cLabs
 
@@ -21,6 +21,11 @@ A Helm chart to run team-trigger-workflow at cLabs
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/team-trigger-workflow/team-trigger-workflow"` | Image repository |
 | image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
+| ingress.annotations | object | `{}` | Custom Ingress annotations |
+| ingress.className | string | `"nginx"` | Ingress class name |
+| ingress.enabled | bool | `false` | Ingress enabled |
+| ingress.hosts | list | `[]` | List of hosts to expose safe-config-service. See values.yaml for an example. |
+| ingress.tls | list | `[]` | TLS secret for exposing safe-config-service with https. See values.yaml for an example. |
 | livenessProbe | object | `{"httpGet":{"path":"/hook","port":"http"}}` | Liveness probe |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
