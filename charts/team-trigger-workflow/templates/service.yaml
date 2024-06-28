@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "team-trigger-workflow.fullname" . }}
+  labels:
+    {{- include "team-trigger-workflow.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ include "team-trigger-workflow.port" . }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "team-trigger-workflow.selectorLabels" . | nindent 4 }}
