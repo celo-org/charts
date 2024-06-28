@@ -180,9 +180,7 @@ spec:
             {{- with .Values.config.p2p.static }}
             --p2p.static={{ join "," . }} \
             {{- end }}
-            {{- with .Values.config.p2p.keys }}
             --p2p.priv.path=$datadir/opnode_p2p_priv.txt \
-            {{- end }}
             --log.level={{ .Values.config.logLevel }} \
             {{- with .Values.config.syncmode }}
             --syncmode={{ . }} \
