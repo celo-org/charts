@@ -10,6 +10,7 @@
 {{- if lt $index (len .clusterIPs) }}
   {{- $clusterIP = index .clusterIPs $index }}
 {{- end }}
+---
 apiVersion: v1
 kind: Service
 metadata:
