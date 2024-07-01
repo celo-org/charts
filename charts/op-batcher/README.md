@@ -1,6 +1,6 @@
 # op-batcher
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-batcher client (Optimism Rollup)
 
@@ -41,7 +41,7 @@ Celo implementation for op-batcher client (Optimism Rollup)
 | config.numConfirmations | int | `1` |  |
 | config.plasma.daServer | string | `""` |  |
 | config.plasma.daService | bool | `false` |  |
-| config.plasma.enabled | bool | `true` |  |
+| config.plasma.enabled | bool | `false` |  |
 | config.pollInterval | string | `"1s"` |  |
 | config.resubmissionTimeout | string | `"30s"` |  |
 | config.rollupUrl | string | `""` |  |
