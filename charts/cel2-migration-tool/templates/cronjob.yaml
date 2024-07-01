@@ -31,16 +31,9 @@ spec:
               wget -O /output/config/deployment-l1.json {{ .Values.download.deploymentL1 }}
               wget -O /output/config/l2-allocs.json {{ .Values.download.l2Allocs }}
               {{- if not .Values.pvc.useOuptutAsInput }}
+              apk add -U rsync
               echo "Copying chaindata to /output/celo/chaindata"
-<<<<<<< Updated upstream
               rsync -ah --progress /input/celo /output/
-=======
-<<<<<<< Updated upstream
-              rsync -ah --progress2 /input/celo /output/
-=======
-              rsync -ah --progress /input/celo /output/geth
->>>>>>> Stashed changes
->>>>>>> Stashed changes
               {{- end }}
             volumeMounts:
             - mountPath: /output
