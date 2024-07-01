@@ -123,7 +123,7 @@ spec:
             --log.format={{ .Values.config.logs.format }} \
             --log.color={{ .Values.config.logs.color }} \
             {{- if .Values.config.plasma.enabled }}
-            --plasma.enabled=true
+            --plasma.enabled=true \
             --plasma.da-server={{ .Values.config.plasma.daServer }} \
             --plasma.da-service={{ .Values.config.plasma.daService }} \
             {{- else }}
