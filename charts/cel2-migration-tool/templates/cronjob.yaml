@@ -31,6 +31,7 @@ spec:
               wget -O /output/config/deployment-l1.json {{ .Values.download.deploymentL1 }}
               wget -O /output/config/l2-allocs.json {{ .Values.download.l2Allocs }}
               {{- if not .Values.pvc.useOuptutAsInput }}
+              apk add -U rsync
               echo "Copying chaindata to /output/celo/chaindata"
               rsync -ah --progress /input/celo /output/
               {{- end }}
@@ -67,7 +68,7 @@ spec:
 
               rm -rf /output/celo/chaindata
               mv /output/celo/chaindata_migrated /output/celo/chaindata
-              mv /output/celo /output/
+              mv /output/celo /output/geth
               tail -f /dev/null
             {{- with .Values.migrationTool.resources }}
             resources:
