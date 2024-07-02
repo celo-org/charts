@@ -104,16 +104,16 @@ resources: {}
   #   memory: 128Mi
 
 # -- Liveness probe
-livenessProbe:
-  httpGet:
-    path: /hook
-    port: http
+livenessProbe: {}
+  # httpGet:
+  #   path: /hook
+  #   port: http
 
 # -- Readiness probe
-readinessProbe:
-  httpGet:
-    path: /hook
-    port: http
+readinessProbe: {}
+  # httpGet:
+  #   path: /hook
+  #   port: http
 
 # -- Kubernetes node selector
 nodeSelector: {}
