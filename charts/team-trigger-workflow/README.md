@@ -1,6 +1,6 @@
 # team-trigger-workflow
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
 
 A Helm chart to run team-trigger-workflow at cLabs
 
@@ -26,13 +26,13 @@ A Helm chart to run team-trigger-workflow at cLabs
 | ingress.enabled | bool | `false` | Ingress enabled |
 | ingress.hosts | list | `[]` | List of hosts to expose safe-config-service. See values.yaml for an example. |
 | ingress.tls | list | `[]` | TLS secret for exposing safe-config-service with https. See values.yaml for an example. |
-| livenessProbe | object | `{"httpGet":{"path":"/hook","port":"http"}}` | Liveness probe |
+| livenessProbe | object | `{}` | Liveness probe |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
 | podAnnotations | object | `{}` | Custom pod annotations |
 | podLabels | object | `{}` | Custom pod labels |
 | podSecurityContext | object | `{}` | Custom pod security context |
-| readinessProbe | object | `{"httpGet":{"path":"/hook","port":"http"}}` | Readiness probe |
+| readinessProbe | object | `{}` | Readiness probe |
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
 | secretEnv | object | `{}` | Env Vars. coming form a secret. |
