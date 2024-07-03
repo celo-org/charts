@@ -102,7 +102,12 @@ spec:
                 --eigenda-disable-tls=false \
                 --metrics.enabled=true \
                 --metrics.addr=0.0.0.0 \
-                --metrics.port={{ .Values.services.metrics.port }}
+                --metrics.port={{ .Values.services.metrics.port }} \
+                {{- with .Values.extraArgs }}
+                {{- range . }}
+                {{- tpl (.) $ | nindent 16 }} \
+                {{- end }}
+                {{- end }}
           env:
             - name: EIGENDA_PROXY_SIGNER_PRIVATE_KEY_HEX
               value: {{ toString .Values.config.privateKey }}
