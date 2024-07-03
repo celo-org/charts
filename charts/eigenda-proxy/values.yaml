@@ -107,9 +107,11 @@ tolerations: []
 
 affinity: {}
 
+extraArgs: []
+
 persistence:
   enabled: true
-  storageClass: ""
+  # storageClass: ""
   size: 12Gi
   annotations: {}
     # resize.topolvm.io/increase: 10%

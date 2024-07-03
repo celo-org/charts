@@ -123,9 +123,10 @@ spec:
             --log.format={{ .Values.config.logs.format }} \
             --log.color={{ .Values.config.logs.color }} \
             {{- if .Values.config.plasma.enabled }}
-            --plasma.enabled=true
+            --plasma.enabled=true \
             --plasma.da-server={{ .Values.config.plasma.daServer }} \
             --plasma.da-service={{ .Values.config.plasma.daService }} \
+            --plasma.verify-on-read={{ .Values.config.plasma.verifyOnRead }} \
             {{- else }}
             --data-availability-type={{ .Values.config.dataAvailabilityType }} \
             {{- with .Values.config.blobTargetNumFrames }}

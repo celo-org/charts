@@ -1,0 +1,7 @@
+---
+env:
+  workflowFileName: "workload-id-tf.yaml"
+  organization: "celo-org"
+  repo: "infrastructure"
+
+secretEnv: {}

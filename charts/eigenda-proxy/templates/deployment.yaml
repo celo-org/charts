@@ -95,14 +95,19 @@ spec:
               exec /app/eigenda-proxy \
                 --addr=0.0.0.0 \
                 --port={{ .Values.services.api.port }} \
-                --eigenda-rpc={{ .Values.config.disperser.rpc }} \
+                --eigenda-disperser-rpc={{ .Values.config.disperser.rpc }} \
                 --eigenda-status-query-timeout=45m \
                 --eigenda-g1-path=/data/resources/g1.point \
                 --eigenda-g2-tau-path=/data/resources/g2.point.powerOf2 \
                 --eigenda-disable-tls=false \
                 --metrics.enabled=true \
                 --metrics.addr=0.0.0.0 \
-                --metrics.port={{ .Values.services.metrics.port }}
+                --metrics.port={{ .Values.services.metrics.port }} \
+                {{- with .Values.extraArgs }}
+                {{- range . }}
+                {{- tpl (.) $ | nindent 16 }} \
+                {{- end }}
+                {{- end }}
           env:
             - name: EIGENDA_PROXY_SIGNER_PRIVATE_KEY_HEX
               value: {{ toString .Values.config.privateKey }}
