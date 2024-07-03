@@ -188,6 +188,7 @@ spec:
             {{- if .Values.config.plasma.enabled }}
             --plasma.enabled=true \
             --plasma.da-server={{ .Values.config.plasma.daServer }} \
+            --plasma.da-service={{ .Values.config.plasma.daService }} \
             --plasma.verify-on-read={{ .Values.config.plasma.verifyOnRead }} \
             {{- end }}
             {{- with .Values.extraArgs }}
