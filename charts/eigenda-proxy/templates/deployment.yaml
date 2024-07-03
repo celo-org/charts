@@ -95,7 +95,7 @@ spec:
               exec /app/eigenda-proxy \
                 --addr=0.0.0.0 \
                 --port={{ .Values.services.api.port }} \
-                --eigenda-rpc={{ .Values.config.disperser.rpc }} \
+                --eigenda-disperser-rpc={{ .Values.config.disperser.rpc }} \
                 --eigenda-status-query-timeout=45m \
                 --eigenda-g1-path=/data/resources/g1.point \
                 --eigenda-g2-tau-path=/data/resources/g2.point.powerOf2 \
