@@ -14,7 +14,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "op-geth.fullname" $ }}-p2p-{{ $index }}
+  name: {{ include "op-geth.fullname" $ }}-p2p-{{ $index }}-tcp
   {{- with .annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -44,6 +44,38 @@ spec:
       port: {{ .port }}
       targetPort: p2p-tcp
       protocol: TCP
+  selector:
+    {{- include "op-geth.selectorLabels" $ | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "op-geth.fullname" $ }}-p2p-{{ $index }}-udp
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    service-type: p2p
+    {{- include "op-geth.labels" $ | nindent 4 }}
+spec:
+  type: {{ .type }}
+  {{- with $loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with $clusterIP }}
+  clusterIP: {{ . }}
+  {{- end }}
+  {{- with .externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .internalTrafficPolicy }}
+  internalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .publishNotReadyAddresses }}
+  publishNotReadyAddresses: {{ . }}
+  {{- end }}
+  ports:
     - name: p2p-udp
       port: {{ .port }}
       targetPort: p2p-udp
