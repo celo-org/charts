@@ -69,7 +69,7 @@ spec:
               # Any time we download the file, validate hashes
               if [ "$DOWNLOADED_FILE" = true ]; then
                 echo "validating hashes of g1 and g2 points This could take upto 5 minutes"
-                wget https://github.com/Layr-Labs/eigenda-operator-setup/blob/master/resources/srssha256sums.txt --output-document=/data/resources/srssha256sums.txt
+                wget https://raw.githubusercontent.com/Layr-Labs/eigenda-operator-setup/master/resources/srssha256sums.txt --output-document=/data/resources/srssha256sums.txt
                 if (cd /data/resources && sha256sum -c srssha256sums.txt); then
                   echo "Checksums match. Verification successful."
                 else
