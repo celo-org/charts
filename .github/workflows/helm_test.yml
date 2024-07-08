@@ -166,7 +166,8 @@ jobs:
                 # Skipping clean-pvcs as .Release.Namespace does not exist in helm template
                 if [ "${chart}" != "charts/clean-pvcs" ]; then
                   echo "Templating ${chart}."
-                  helm template "./${chart}/" -f "./${chart}/values.yaml"
+                  [ -f "./${chart}/ci/ct-values.yaml" ] && extra_values="-f ./${chart}/ci/ct-values.yaml" || extra_values=""
+                  helm template "./${chart}/" -f "./${chart}/values.yaml" "${extra_values}"
                   # Skipping celo-fullnode-backups as kind has not volumesnapshot and gemini cannot be installed
                   if [ "${chart}" != "charts/celo-fullnode-backups" ]; then
                     echo "Validating ${chart} templates."
