@@ -1,0 +1,24 @@
+apiVersion: v2
+name: prysm
+version: 5.0.3
+appVersion: v5.0.3
+kubeVersion: "^1.18.0-0"
+description: Go implementation of Ethereum proof of stake.
+type: application
+icon: https://storage.googleapis.com/stakewise-charts/stakewise.png
+keywords:
+  - ethereum
+  - blockchain
+  - prysm
+  - p2p
+home: https://www.ethereum.org/
+sources:
+  - https://github.com/prysmaticlabs/prysm
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
+dependencies:
+  - name: common
+    repository: https://charts.stakewise.io/
+    version: 1.x.x
