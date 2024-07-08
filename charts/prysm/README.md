@@ -11,7 +11,7 @@ Initially based on [stakewise/helm-charts/prysm](https://github.com/stakewise/he
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Dmitri Tsumak | <dmitri@stakewise.io> |  |
+| cLabs | <devops@clabs.co> | <https://clabs.co> |
 
 ## Source Code
 
@@ -36,7 +36,7 @@ Kubernetes: `^1.18.0-0`
 | extraFlags[0] | string | `"--p2p-max-peers=160"` |  |
 | extraFlags[1] | string | `"--enable-peer-scorer"` |  |
 | fullnameOverride | string | `""` |  |
-| global.JWTSecret | string | `""` |  |
+| global.JWTSecret | string | `"1010101010101010101010101010101010101010101010101010101010101010"` |  |
 | global.executionEndpoints | list | `[]` |  |
 | global.imagePullSecrets | list | `[]` |  |
 | global.livenessProbe.enabled | bool | `true` |  |
