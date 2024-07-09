@@ -15,7 +15,7 @@ on:
       - 'charts-private/**/Chart.yaml'
 
 env:
-  HELM_VERSION: "v3.12.3"
+  HELM_VERSION: "v3.14.1"
 
 jobs:
   helm-release:
