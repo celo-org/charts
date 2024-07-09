@@ -125,4 +125,4 @@ config:
   privateKey:
     value: ""
     # secretName: test
-    # secretKey: test 
+    # secretKey: test
