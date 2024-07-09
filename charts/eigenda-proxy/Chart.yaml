@@ -1,7 +1,7 @@
 ---
 name: eigenda-proxy
 apiVersion: v2
-version: 0.1.4
+version: 0.1.5
 description: https://github.com/Layr-Labs/eigenda-proxy/tree/main
 home: https://clabs.co
 sources:
