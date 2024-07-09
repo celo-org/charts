@@ -36,7 +36,7 @@ jobs:
     if: ${{ needs.helm-change.outputs.charts-change == 'true' && ! startsWith(github.triggering_actor, 'akeyless') }}
     runs-on: 'ubuntu-latest'
     env:
-      HELM_VERSION: "v3.13.1"
+      HELM_VERSION: "v3.14.1"
     permissions:
       contents: read
       id-token: write
