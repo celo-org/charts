@@ -6,10 +6,9 @@
 replicaCount: 1
 
 image:
-  repository: jcortejoso/eigenda-proxy
+  repository: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/eigenda-proxy
   pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: latest
+  tag: v1.2.0
 
 imagePullSecrets: []
 nameOverride: ""
@@ -105,7 +104,18 @@ nodeSelector: {}
 
 tolerations: []
 
-affinity: {}
+affinity:
+  podAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - op-batcher
+          topologyKey: "kubernetes.io/hostname"
 
 extraArgs: []
 
