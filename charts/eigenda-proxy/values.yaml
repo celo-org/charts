@@ -122,4 +122,7 @@ persistence:
 config:
   disperser:
     rpc: disperser-holesky.eigenda.xyz:443
-  privateKey: ""
+  privateKey:
+    value: ""
+    # secretName: test
+    # secretKey: test 

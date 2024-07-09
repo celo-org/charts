@@ -110,7 +110,14 @@ spec:
                 {{- end }}
           env:
             - name: EIGENDA_PROXY_SIGNER_PRIVATE_KEY_HEX
-              value: {{ toString .Values.config.privateKey }}
+            {{- if and (.Values.config.privateKey.secretName) (.Values.config.privateKey.secretKey) }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ toString .Values.config.privateKey.secretName }}
+                  key: {{ toString .Values.config.privateKey.secretKey }}
+            {{- else }}
+              value: {{ toString .Values.config.privateKey.value }}
+            {{- end }}
           ports:
             - name: api
               containerPort: {{ .Values.services.api.port }}
