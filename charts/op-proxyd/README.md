@@ -1,6 +1,6 @@
 # op-proxyd
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v4.5.4](https://img.shields.io/badge/AppVersion-v4.5.4-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.0.1](https://img.shields.io/badge/AppVersion-v0.0.1-informational?style=flat-square)
 
 Celo implementation for OP proxyd
 
@@ -28,8 +28,8 @@ Celo implementation for OP proxyd
 | config | string | `""` | Config as string. Minimal example at https://github.com/ethereum-optimism/optimism/blob/develop/proxyd/example.config.toml |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-docker.pkg.dev/oplabs-tools-artifacts/images/proxyd"` | Image repository |
-| image.tag | string | `"v4.5.4"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/proxyd"` | Image repository |
+| image.tag | string | `"test"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `"nginx"` |  |
@@ -47,6 +47,7 @@ Celo implementation for OP proxyd
 | readinessProbe | object | `{"httpGet":{"path":"/healthz","port":"rpc"}}` | Readiness probe configuration |
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
+| secretEnv | object | `{}` | Env Vars. mounted from a secret |
 | securityContext | object | `{}` | Custom container security context |
 | service.rpcPort | int | `8080` | RPC port |
 | service.type | string | `"ClusterIP"` | K8S service type |
