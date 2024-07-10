@@ -33,6 +33,13 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          command: 
+            - /bin/bash
+            - -c
+          args: 
+            - |
+              envsubst < /etc/proxyd/proxyd-tmp.toml > /etc/proxyd/proxyd.toml
+              /bin/entrypoint.sh /bin/proxyd /etc/proxyd/proxyd.toml
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -53,6 +60,18 @@ spec:
               containerPort: {{ .Values.metrics.port }}
               protocol: TCP
             {{- end }}
+          {{- if .Values.secretEnv }}
+          env:
+          {{- with .Values.secretEnv }}
+            {{- range $key, $value := . }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $value.secretName }}
+                  key: {{ $value.secretKey }}
+            {{- end }}
+          {{- end }}
+          {{- end }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
@@ -61,7 +80,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config
-              mountPath: /etc/proxyd/proxyd.toml
+              mountPath: /etc/proxyd/proxyd-tmp.toml
               subPath: config
       volumes:
         - name: config

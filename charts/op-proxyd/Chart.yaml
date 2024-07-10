@@ -2,8 +2,8 @@ apiVersion: v2
 name: op-proxyd
 description: Celo implementation for OP proxyd
 type: application
-version: 0.1.0
-appVersion: "v4.5.4"
+version: 0.1.1
+appVersion: "v0.0.1"
 home: https://clabs.co
 sources:
   - https://celo.org
