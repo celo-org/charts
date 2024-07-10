@@ -38,7 +38,7 @@ Node migration tool for Cel2 network
 | migrationTool.resources | object | `{}` |  |
 | pvc.input | string | `"myNetwork-input"` |  |
 | pvc.output | string | `"myNetwork-output"` |  |
-| pvc.useOuptutAsInput | bool | `true` |  |
+| pvc.useOutputAsInput | bool | `true` |  |
 | schedule | string | `"0 0 30 2 0"` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |

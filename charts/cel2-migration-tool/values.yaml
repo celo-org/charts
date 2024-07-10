@@ -12,7 +12,7 @@ download:
   l2Allocs: https://storage.googleapis.com/cel2-rollup-files/jctestnet/l2-allocs.json
 pvc:
   input: myNetwork-input
-  useOuptutAsInput: true  # Only one PVC required. This operation is not idempotent
+  useOutputAsInput: true  # Only one PVC required. This operation is not idempotent
   output: myNetwork-output
 downloadDeps:
   image:
