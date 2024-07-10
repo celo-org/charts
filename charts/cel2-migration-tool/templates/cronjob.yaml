@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}
   labels:
     {{- include "cel2-migration-tool.labels" . | nindent 4 }}
-    component: blockscout-metadata-crawler
+    component: cel2-migration-tool
 spec:
   schedule: "{{ .Values.schedule }}"
   concurrencyPolicy: Forbid
@@ -19,8 +19,8 @@ spec:
           serviceAccountName: {{ include "cel2-migration-tool.serviceAccountName" . }}
           initContainers:
           - name: download-dependencies
-            image: alpine:3.19
-            imagePullPolicy: IfNotPresent
+            image: {{ .Values.downloadDeps.image.repository }}:{{ .Values.downloadDeps.image.tag }}
+            imagePullPolicy: {{ .Values.downloadDeps.image.pullPolicy }}
             command:
             - /bin/sh
             - -c
@@ -44,7 +44,7 @@ spec:
             {{- end }}
           - name: migration
             image: {{ .Values.migrationTool.image.repository }}:{{ .Values.migrationTool.image.tag }}
-            imagePullPolicy: Always
+            imagePullPolicy: {{ .Values.migrationTool.image.pullPolicy }}
             command:
             - /bin/sh
             - -c

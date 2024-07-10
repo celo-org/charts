@@ -14,6 +14,11 @@ pvc:
   input: myNetwork-input
   useOuptutAsInput: true  # Only one PVC required. This operation is not idempotent
   output: myNetwork-output
+downloadDeps:
+  image:
+    repository: alpine
+    tag: 3.19
+    pullPolicy: IfNotPresent
 migrationTool:
   image:
     repository: us-west1-docker.pkg.dev/devopsre/dev-images/cel2-migration-tool
