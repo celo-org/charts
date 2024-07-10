@@ -19,6 +19,11 @@ downloadDeps:
     repository: alpine
     tag: 3.19
     pullPolicy: IfNotPresent
+compressAndUpload:
+  image:
+    repository: alpine
+    tag: 3.19
+    pullPolicy: IfNotPresent
 migrationTool:
   image:
     repository: us-west1-docker.pkg.dev/devopsre/dev-images/cel2-migration-tool
