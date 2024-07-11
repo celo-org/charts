@@ -1,6 +1,6 @@
 # cel2-migration-tool
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Node migration tool for Cel2 network
 
@@ -24,9 +24,15 @@ Node migration tool for Cel2 network
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | cel2NetworkName | string | `"myNetwork"` |  |
+| compressAndUpload.image.pullPolicy | string | `"IfNotPresent"` |  |
+| compressAndUpload.image.repository | string | `"alpine"` |  |
+| compressAndUpload.image.tag | float | `3.19` |  |
 | download.config | string | `"https://storage.googleapis.com/cel2-rollup-files/jctestnet/config.json"` |  |
 | download.deploymentL1 | string | `"https://storage.googleapis.com/cel2-rollup-files/jctestnet/deployment-l1.json"` |  |
 | download.l2Allocs | string | `"https://storage.googleapis.com/cel2-rollup-files/jctestnet/l2-allocs.json"` |  |
+| downloadDeps.image.pullPolicy | string | `"IfNotPresent"` |  |
+| downloadDeps.image.repository | string | `"alpine"` |  |
+| downloadDeps.image.tag | float | `3.19` |  |
 | gcsBucket | string | `"cel2-node-files/"` |  |
 | l1Url | string | `"https://ethereum-holesky-rpc.publicnode.com"` |  |
 | migrationTool.config.batchSize | int | `5000` |  |
