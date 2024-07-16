@@ -51,6 +51,7 @@ blockscout:
 
   # -- Configuraton for the indexer component
   indexer:
+    replicas: 1
     # -- termination timeout for indexer pod
     terminationGracePeriodSeconds: 60
     port: 4001
