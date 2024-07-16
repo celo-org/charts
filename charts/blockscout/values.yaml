@@ -51,6 +51,8 @@ blockscout:
 
   # -- Configuraton for the indexer component
   indexer:
+    # -- Number of replicas for indexer deployment. Should not be bigger than 1
+    replicas: 1
     # -- termination timeout for indexer pod
     terminationGracePeriodSeconds: 60
     port: 4001
@@ -121,6 +123,8 @@ blockscout:
 
   # -- Configuraton for the api component
   api:
+    # -- Number of replicas for api deployment. Won't be used if autoscaling.enabled is true
+    replicas: 1
     # -- Hostname for api ingress endpoint
     hostname: ""
     # -- If api component is served at rootPath
@@ -201,6 +205,8 @@ blockscout:
 
   # -- Configuraton for the web component
   web:
+    # -- Number of replicas for web deployment. Won't be used if autoscaling.enabled is true
+    replicas: 1
     # -- Hostname for web ingress endpoint (also applies to api at /(graphql|graphiql|api)).
     # If empty, will be generated based on release name and domainName.
     hostname: ""
