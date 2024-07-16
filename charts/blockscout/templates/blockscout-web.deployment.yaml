@@ -8,6 +8,9 @@ metadata:
   annotations:
     {{- include "celo.blockscout.annotations" . | nindent 4 }}
 spec:
+  {{- if not .Values.blockscout.web.autoscaling.enabled }}
+  replicas: {{ .Values.blockscout.web.replicas | default 1 }}
+  {{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -25,7 +28,7 @@ spec:
         prometheus.io/path: /metrics
         prometheus.io/port: "4000"
         prometheus.io/scrape: "true"
-      {{- end}}
+      {{- end }}
       labels:
         app: blockscout
         release: {{ .Release.Name }}

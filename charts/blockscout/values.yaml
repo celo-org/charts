@@ -135,6 +135,7 @@ blockscout:
         maxUnavailable: 20%
     # -- HPA configuration for api deployment
     autoscaling:
+      enabled: true
       maxReplicas: 10
       minReplicas: 2
       target:
@@ -230,6 +231,7 @@ blockscout:
         maxUnavailable: 20%
     # -- HPA configuration for web deployment
     autoscaling:
+      enabled: true
       maxReplicas: 5
       minReplicas: 2
       target:

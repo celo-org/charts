@@ -1,3 +1,4 @@
+{{- if .Values.blockscout.api.autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -40,3 +41,4 @@ spec:
         value: 2
         periodSeconds: 30
       selectPolicy: Max
+{{- end }}
