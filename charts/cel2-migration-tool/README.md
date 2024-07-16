@@ -41,6 +41,7 @@ Node migration tool for Cel2 network
 | migrationTool.image.pullPolicy | string | `"Always"` |  |
 | migrationTool.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/cel2-migration-tool"` |  |
 | migrationTool.image.tag | string | `"8bdebc03a0526b6474dfba468884116ee1366907"` |  |
+| migrationTool.pauseOnCompletion | bool | `false` |  |
 | migrationTool.resources | object | `{}` |  |
 | pvc.input | string | `"myNetwork-input"` |  |
 | pvc.output | string | `"myNetwork-output"` |  |
