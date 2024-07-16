@@ -16,7 +16,7 @@ download:
 pvc:
   input: myNetwork-input
   # -- Only one PVC required. This operation is not idempotent
-  useOutputAsInput: true  
+  useOutputAsInput: true
   output: myNetwork-output
 downloadDeps:
   image:
@@ -39,4 +39,4 @@ migrationTool:
     memoryLimit: 20000
   extraArgs: []
   # -- Run `tail -f /dev/null` to keep the migration job alive after completion
-  pauseOnCompletion: false  
+  pauseOnCompletion: false
