@@ -34,3 +34,4 @@ migrationTool:
     batchSize: 5000
     memoryLimit: 20000
   extraArgs: []
+  pauseOnCompletion: false # Run `tail -f /dev/null` to keep the migration job alive after completion

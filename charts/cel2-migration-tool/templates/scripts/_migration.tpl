@@ -9,12 +9,15 @@ time celo-migrate full \
   --old-db /output/celo/chaindata \
   --new-db /output/celo/chaindata_migrated \
   --memory-limit {{ .Values.migrationTool.config.memoryLimit }} \
-  --batch-size {{ .Values.migrationTool.config.batchSize }} \
-{{- range .Values.migrationTool.extraArgs }}
-{{ tpl (.) $ }} \
-{{- end }}
+  --batch-size {{ .Values.migrationTool.config.batchSize }}{{ if .Values.migrationTool.extraArgs }} \{{ end }}
+  {{- $length := len .Values.migrationTool.extraArgs }}
+  {{- range $index, $value := .Values.migrationTool.extraArgs }}
+  {{ tpl $value $ }}{{ if lt $index (sub $length 1) }} \{{ end }}
+  {{- end }}
 
 rm -rf /output/celo/chaindata
 mv /output/celo/chaindata_migrated /output/celo/chaindata
 mv /output/celo /output/geth
+{{ if .Values.migrationTool.pauseOnCompletion }}
 tail -f /dev/null
+{{- end }}
