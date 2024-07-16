@@ -9,7 +9,7 @@ metadata:
     {{- include "celo.blockscout.annotations" . | nindent 4 }}
 spec:
   {{- if not .Values.blockscout.web.autoscaling.enabled }}
-  replicas: {{ .Values.blockscout.web.replicas | default 1 }}
+  replicas: {{ .Values.blockscout.web.replicas }}
   {{- end }}
   strategy:
     type: RollingUpdate
