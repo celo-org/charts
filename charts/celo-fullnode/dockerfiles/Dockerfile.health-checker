@@ -1,5 +1,5 @@
 # This container is used at celo-fullnode helm chart to check if the fullnode is healthy
-FROM golang:1.21-alpine3.18 AS builder
+FROM golang:1.22-alpine3.18 AS builder
 
 RUN apk add --no-cache git
 
