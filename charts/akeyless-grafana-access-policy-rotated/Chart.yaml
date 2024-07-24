@@ -1,6 +1,6 @@
 apiVersion: v2
 name: akeyless-grafana-access-policy-rotated
-description: A Helm chart for Kubernetes
+description: Deploys Akeyless Grafana access policy rotator.
 
 # A chart can be either an 'application' or a 'library' chart.
 #

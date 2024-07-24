@@ -1,6 +1,6 @@
 apiVersion: v2
 name: accounts-exporter
-description: A Helm chart for Kubernetes
+description: Exports ethereum wallet balances to Prometheus.
 type: application
 version: 0.1.1
 appVersion: "0.1.0"

@@ -1,9 +1,12 @@
 apiVersion: v2
 name: op-tx-overload
-description: A Helm chart for Kubernetes
+description: Generate load on Optimism Bedrock using transactions with random calldata.
 type: application
 version: 0.1.0
 appVersion: "test"
+sources:
+  - https://github.com/celo-org/tx-overload
+  - https://github.com/ethereum-optimism/tx-overload
 maintainers:
   - name: cLabs
     email: devops@clabs.co

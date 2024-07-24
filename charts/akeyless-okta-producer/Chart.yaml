@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
 name: akeyless-okta-producer
-description: A Helm chart for Kubernetes
+description: Deploys Akeyless Okta custom producer.
 
 # A chart can be either an 'application' or a 'library' chart.
 #

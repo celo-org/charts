@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
 name: akeyless-gcp-producer
-description: A Helm chart for Kubernetes
+description: Deploys Akeyless GCP custom producer.
 
 # A chart can be either an 'application' or a 'library' chart.
 #
