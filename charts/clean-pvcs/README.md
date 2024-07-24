@@ -1,6 +1,6 @@
 # clean-pvcs
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 Delete PVCs not mounted for some time
 
@@ -11,6 +11,10 @@ Delete PVCs not mounted for some time
 | Name | Email | Url |
 | ---- | ------ | --- |
 | cLabs | <devops@clabs.co> | <https://clabs.co> |
+
+## Source Code
+
+* <https://github.com/celo-org/charts/blob/main/charts/clean-pvcs/templates/cronjob.yaml>
 
 ## Values
 

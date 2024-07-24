@@ -1,6 +1,6 @@
 # load-test
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Chart which is used to run load test for a Celo Network
 
@@ -9,6 +9,11 @@ Chart which is used to run load test for a Celo Network
 | Name | Email | Url |
 | ---- | ------ | --- |
 | cLabs | <devops@clabs.co> | <https://clabs.co> |
+
+## Source Code
+
+* <https://github.com/celo-org/charts/tree/main/charts/load-test>
+* <https://github.com/celo-org/charts/tree/main/charts/celo-fullnode>
 
 ## Requirements
 

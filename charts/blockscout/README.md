@@ -1,8 +1,8 @@
 # blockscout
 
-Chart which is used to deploy Blockscout for Celo Networks
+Helm chart for deploying the Blockscout-based Celo Explorer.
 
-![Version: 1.3.27](https://img.shields.io/badge/Version-1.3.27-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
+![Version: 1.3.28](https://img.shields.io/badge/Version-1.3.28-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.0.4-beta](https://img.shields.io/badge/AppVersion-v2.0.4--beta-informational?style=flat-square)
 
 - [blockscout](#blockscout)
   - [Chart requirements](#chart-requirements)
@@ -36,7 +36,7 @@ To install/manage a release named `celo-mainnet-fullnode` connected to `mainnet`
 
 ```bash
 # Select the chart release to use
-CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.3.27" # Use remote chart and specific version
+CHART_RELEASE="oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci/blockscout --version=1.3.28" # Use remote chart and specific version
 CHART_RELEASE="./" # Use this local folder
 
 # (Only for local chart) Sync helm dependencies
