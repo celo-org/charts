@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}
   labels:
     {{- include "cel2-migration-tool.labels" . | nindent 4 }}
-    component: blockscout-metadata-crawler
+    component: cel2-migration-tool
 spec:
   schedule: "{{ .Values.schedule }}"
   concurrencyPolicy: Forbid
@@ -19,57 +19,30 @@ spec:
           serviceAccountName: {{ include "cel2-migration-tool.serviceAccountName" . }}
           initContainers:
           - name: download-dependencies
-            image: alpine:3.19
-            imagePullPolicy: IfNotPresent
+            image: {{ .Values.downloadDeps.image.repository }}:{{ .Values.downloadDeps.image.tag }}
+            imagePullPolicy: {{ .Values.downloadDeps.image.pullPolicy }}
             command:
             - /bin/sh
             - -c
             args:
             - |
-              mkdir -p /output/config
-              wget -O /output/config/config.json {{ .Values.download.config }}
-              wget -O /output/config/deployment-l1.json {{ .Values.download.deploymentL1 }}
-              wget -O /output/config/l2-allocs.json {{ .Values.download.l2Allocs }}
-              {{- if not .Values.pvc.useOuptutAsInput }}
-              apk add -U rsync
-              echo "Copying chaindata to /output/celo/chaindata"
-              rsync -ah --progress /input/celo /output/
-              {{- end }}
+              {{- include (print $.Template.BasePath "/scripts/_download-deps.tpl") . | nindent 14 }}
             volumeMounts:
             - mountPath: /output
               name: output
-            {{- if not .Values.pvc.useOuptutAsInput }}
+            {{- if not .Values.pvc.useOutputAsInput }}
             - mountPath: /input
               name: input
             {{- end }}
           - name: migration
             image: {{ .Values.migrationTool.image.repository }}:{{ .Values.migrationTool.image.tag }}
-            imagePullPolicy: Always
+            imagePullPolicy: {{ .Values.migrationTool.image.pullPolicy }}
             command:
             - /bin/sh
             - -c
             args:
             - |
-              echo "Starting chain operations"
-
-              time celo-migrate full \
-                --deploy-config /output/config/config.json \
-                --l1-deployments /output/config/deployment-l1.json \
-                --l2-allocs /output/config/l2-allocs.json \
-                --l1-rpc {{ .Values.l1Url | quote }} \
-                --outfile.rollup-config /output/config/rollup.json \
-                --old-db /output/celo/chaindata \
-                --new-db /output/celo/chaindata_migrated \
-                --memory-limit {{ .Values.migrationTool.config.memoryLimit }} \
-                --batch-size {{ .Values.migrationTool.config.batchSize }} \
-                {{- range .Values.migrationTool.extraArgs }}
-                {{ tpl (.) $ }} \
-                {{- end }}
-
-              rm -rf /output/celo/chaindata
-              mv /output/celo/chaindata_migrated /output/celo/chaindata
-              mv /output/celo /output/geth
-              tail -f /dev/null
+              {{- include (print $.Template.BasePath "/scripts/_migration.tpl") . | nindent 14 }}
             {{- with .Values.migrationTool.resources }}
             resources:
               {{- toYaml . | nindent 12 }}
@@ -79,38 +52,19 @@ spec:
               name: output
           containers:
           - name: compress-and-upload
-            image: alpine:3.19
-            imagePullPolicy: IfNotPresent
+            image: {{ .Values.compressAndUpload.image.repository }}:{{ .Values.compressAndUpload.image.tag }}
+            imagePullPolicy: {{ .Values.compressAndUpload.image.pullPolicy }}
             command:
             - /bin/sh
             - -c
             args:
             - |
-              # Install dependencies
-              apk add --no-cache tar zstd curl bash python3 pv
-
-              # Install gcloud cli
-              curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts
-              source /root/google-cloud-sdk/path.bash.inc
-              /root/google-cloud-sdk/bin/gcloud components install alpha -q
-
-              # Uplaod rollup config
-              /root/google-cloud-sdk/bin/gcloud alpha storage cp /output/config/rollup-config.json gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-rollup.json
-
-              # Delete jwt and nodekey
-              rm -f /output/geth/nodekey /output/geth/jwtsecret
-
-              # Compress the node data using zstd
-              echo "Compressing the node data. Progress is referenced to the uncompressed size, so you can expect it won't reach 100%"
-              cd /output && tar -I 'zstd -T0' -cf - geth | pv -s $(du -sb /output/geth | awk '{print $1}') > {{ .Values.cel2NetworkName }}-cel2.tar.zstd
-
-              # Upload the compressed data to the bucket
-              /root/google-cloud-sdk/bin/gcloud alpha storage cp /output/{{ .Values.cel2NetworkName }}-cel2.tar.zstd gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-cel2.tar.zstd
+              {{- include (print $.Template.BasePath "/scripts/_compress-and-upload.tpl") . | nindent 14 }}
             volumeMounts:
             - mountPath: /output
               name: output
           volumes:
-            {{- if not .Values.pvc.useOuptutAsInput }}
+            {{- if not .Values.pvc.useOutputAsInput }}
             - name: input
               persistentVolumeClaim:
                 claimName: {{ .Values.pvc.input }}
