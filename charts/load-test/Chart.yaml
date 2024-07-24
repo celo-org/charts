@@ -16,6 +16,9 @@ maintainers:
   - name: cLabs
     email: devops@clabs.co
     url: https://clabs.co
+sources:
+  - https://github.com/celo-org/charts/tree/main/charts/load-test
+  - https://github.com/celo-org/charts/tree/main/charts/celo-fullnode
 dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci

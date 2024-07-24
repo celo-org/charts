@@ -8,3 +8,5 @@ maintainers:
   - name: cLabs
     email: devops@clabs.co
     url: https://clabs.co
+sources:
+  - https://github.com/celo-org/optimism/tree/celo7/op-ufm

@@ -11,6 +11,8 @@ keywords:
   - Ethereum
   - Proof-of-Stake
 appVersion: v0.1.0
+sources: 
+  - https://github.com/celo-org/image-annotator-webhook
 maintainers:
   - name: cLabs
     email: devops@clabs.co

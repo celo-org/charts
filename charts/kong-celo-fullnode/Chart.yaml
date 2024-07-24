@@ -15,6 +15,9 @@ dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
     version: "~0.2.0"
+sources:
+  - https://github.com/celo-org/charts/tree/main/charts/kong-celo-fullnode
+  - https://github.com/celo-org/charts/tree/main/charts/celo-fullnode
 maintainers:
   - name: cLabs
     email: devops@clabs.co

@@ -9,6 +9,8 @@ description: Helm chart with helper templates and functions for Celo nodes.
   Import into your chart with `dependencies` and use the templates and functions
 keywords:
   - celo
+sources:
+  - https://github.com/celo-org/charts/tree/main/charts/common
 maintainers:
   - name: cLabs
     email: devops@clabs.co

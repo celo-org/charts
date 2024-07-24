@@ -10,6 +10,9 @@ keywords:
   - Kong
   - Konga
 appVersion: 1.1.0
+sources:
+  - https://github.com/pantsel/konga
+  - https://github.com/celo-org/charts/tree/main/charts/konga
 maintainers:
   - name: cLabs
     email: devops@clabs.co

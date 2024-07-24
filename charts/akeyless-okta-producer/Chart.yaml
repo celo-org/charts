@@ -18,6 +18,9 @@ type: application
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 0.1.11
 
+sources:
+  - https://github.com/celo-org/akeyless/tree/main/custom-producers/akeyless-okta-producer
+
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
