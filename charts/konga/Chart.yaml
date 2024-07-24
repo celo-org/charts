@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
 name: konga
-version: 0.0.1
+version: 0.0.2
 type: application
 icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
 description: Chart which is used to run konga for Kong ingress

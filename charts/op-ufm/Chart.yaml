@@ -2,7 +2,7 @@ apiVersion: v2
 name: op-ufm
 description: A Helm chart for OP User Facing Monitoring
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "op-ufm-79d95418291ba39f0a183f103893a7b7f49e0263"
 maintainers:
   - name: cLabs

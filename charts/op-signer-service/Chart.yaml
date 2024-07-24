@@ -2,7 +2,7 @@ apiVersion: v2
 name: op-signer-service
 description: A Helm chart for OP signer service
 type: application
-version: 0.1.1
+version: 0.1.2
 appVersion: "v0.0.3"
 maintainers:
   - name: cLabs
