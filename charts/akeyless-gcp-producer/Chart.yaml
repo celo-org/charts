@@ -18,7 +18,7 @@ type: application
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 0.1.10
 
-sources: 
+sources:
   - https://github.com/celo-org/akeyless/tree/main/custom-producers/akeyless-gcp-producer
 
 # This is the version number of the application being deployed. This version number should be
