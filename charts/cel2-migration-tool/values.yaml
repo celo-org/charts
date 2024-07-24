@@ -3,8 +3,11 @@ serviceAccount:
   create: true
   annotations: {}
 schedule: "0 0 30 2 0"
-cel2NetworkName: myNetwork  # Reference name for the tar.zstd file
-gcsBucket: cel2-node-files/  # GCS bucket to store the tar.zstd file
+# -- Reference name for the tar.zstd file
+cel2NetworkName: myNetwork
+# -- GCS bucket to store the tar.zstd file
+gcsBucket: cel2-node-files/
+# -- RPC URL for L1 blockchain
 l1Url: https://ethereum-holesky-rpc.publicnode.com
 download:
   config: https://storage.googleapis.com/cel2-rollup-files/jctestnet/config.json
@@ -12,8 +15,19 @@ download:
   l2Allocs: https://storage.googleapis.com/cel2-rollup-files/jctestnet/l2-allocs.json
 pvc:
   input: myNetwork-input
-  useOuptutAsInput: true  # Only one PVC required. This operation is not idempotent
+  # -- Only one PVC required. This operation is not idempotent
+  useOutputAsInput: true
   output: myNetwork-output
+downloadDeps:
+  image:
+    repository: alpine
+    tag: 3.19
+    pullPolicy: IfNotPresent
+compressAndUpload:
+  image:
+    repository: alpine
+    tag: 3.19
+    pullPolicy: IfNotPresent
 migrationTool:
   image:
     repository: us-west1-docker.pkg.dev/devopsre/dev-images/cel2-migration-tool
@@ -24,3 +38,5 @@ migrationTool:
     batchSize: 5000
     memoryLimit: 20000
   extraArgs: []
+  # -- Run `tail -f /dev/null` to keep the migration job alive after completion
+  pauseOnCompletion: false
