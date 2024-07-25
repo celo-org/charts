@@ -5,15 +5,14 @@ This is a collection of Helm charts for Kubernetes. The charts are used by cLabs
 The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci`. OCI registries are a new standard for container registries, and are supported by Helm 3+, and enabled by default in Helm 3.8.0+.
 
 ## List of charts
-
 - [accounts-exporter](./charts/accounts-exporter/README.md) - Exports ethereum wallet balances to Prometheus.
 - [akeyless-gadmin-producer](./charts/akeyless-gadmin-producer/README.md) - Deploys Akeyless Google Admin producer.
-- [akeyless-gcp-producer](./charts/akeyless-gcp-producer/README.md) - Deploys Akeyless GCP custom producer.
+- [akeyless-gcp-producer](./charts/akeyless-gcp-producer/README.md) - Deploys Akeyless GCP custom producer
 - [akeyless-grafana-access-policy-producer](./charts/akeyless-grafana-access-policy-producer/README.md) - Helm Chart for Grafana Access Policy Producer
 - [akeyless-grafana-access-policy-rotated](./charts/akeyless-grafana-access-policy-rotated/README.md) - Deploys Akeyless Grafana access policy rotator.
 - [akeyless-grafana-sa-producer](./charts/akeyless-grafana-sa-producer/README.md) - Deploys Akeyless Grafana Service Account producer.
 - [akeyless-okta-producer](./charts/akeyless-okta-producer/README.md) - Deploys Akeyless Okta custom producer.
-- [attestation-bot](./charts/attestation-bot/README.md) - Chart which is used to run attestations
+- [attestation-bot](./charts/attestation-bot/README.md) - Chart which is used to run attestations (celotool.js)
 - [blockscout](./charts/blockscout/README.md) - Helm chart for deploying the Blockscout-based Celo Explorer.
 - [cel2-migration-tool](./charts/cel2-migration-tool/README.md) - Node migration tool for Cel2 network
 - [celo-fullnode](./charts/celo-fullnode/README.md) - Helm chart for deploying a Celo fullnode. More info at https://docs.celo.org
@@ -52,7 +51,6 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [team-trigger-workflow](./charts/team-trigger-workflow/README.md) - A Helm chart to run team-trigger-workflow at cLabs
 - [testnet](./charts/testnet/README.md) - Private Celo network Helm chart for Kubernetes
 - [ultragreen-dashboard](./charts/ultragreen-dashboard/README.md) - Celo Ultragreed Dashboard
-
 ## Helm charts best practices
 
 A list of best practices when writing Helm charts can be found in the [`docs/` folder](docs/helm-best-practices.md).
