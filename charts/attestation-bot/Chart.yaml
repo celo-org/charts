@@ -1,16 +1,18 @@
 ---
 apiVersion: v2
 name: attestation-bot
-version: 0.0.3
+version: 0.0.4
 type: application
 icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
-description: Chart which is used to run attestations
+description: Chart which is used to run attestations (celotool.js)
 keywords:
   - Celo
   - Blockchain
   - Ethereum
   - Attestation
 appVersion: 0.0.1
+sources:
+  - https://github.com/celo-org/celo-monorepo/tree/master/packages/celotool
 maintainers:
   - name: cLabs
     email: devops@clabs.co

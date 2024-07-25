@@ -2,9 +2,11 @@ apiVersion: v2
 name: op-signer-service
 description: A Helm chart for OP signer service
 type: application
-version: 0.1.1
+version: 0.1.2
 appVersion: "v0.0.3"
 maintainers:
   - name: cLabs
     email: devops@clabs.co
     url: https://clabs.co
+sources:
+  - https://github.com/celo-org/op-signer-service

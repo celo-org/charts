@@ -2,9 +2,9 @@
 apiVersion: v2
 appVersion: "1.0"
 description: Chart wrapper over celo-fullnode chart to adapt to Forno.
-  It requires a Kong controller, kong ingressClass and kong crds installed in the cluster.
+  It requires a Kong controller, kong ingressClass and kong crds installed in the cluster, and creates the Kong consumers, plugins and rate limits.
 name: kong-celo-fullnode
-version: 0.5.4
+version: 0.5.5
 icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
 type: application
 dependencies:
@@ -15,6 +15,9 @@ dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
     version: "~0.2.0"
+sources:
+  - https://github.com/celo-org/charts/tree/main/charts/kong-celo-fullnode
+  - https://github.com/celo-org/charts/tree/main/charts/celo-fullnode
 maintainers:
   - name: cLabs
     email: devops@clabs.co

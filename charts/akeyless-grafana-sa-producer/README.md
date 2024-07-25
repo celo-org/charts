@@ -1,14 +1,18 @@
 # akeyless-grafana-sa-producer
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
-A Helm chart for Kubernetes
+Deploys Akeyless Grafana Service Account producer.
 
 ## Maintainers
 
 | Name | Email | Url |
 | ---- | ------ | --- |
 | cLabs | <devops@clabs.co> | <https://clabs.co> |
+
+## Source Code
+
+* <https://github.com/celo-org/akeyless/tree/main/custom-producers/akeyless-grafana-sa-producer>
 
 ## Values
 

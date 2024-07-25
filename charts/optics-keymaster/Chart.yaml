@@ -4,9 +4,11 @@ name: optics-keymaster
 description: Optics Keymaster
 type: application
 icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
-version: 0.2.0
+version: 0.2.1
 appVersion: "1.16.0"
 maintainers:
   - name: cLabs
     email: devops@clabs.co
     url: https://clabs.co
+sources:
+  - https://github.com/celo-org/optics-monorepo/tree/main/tools/keymaster

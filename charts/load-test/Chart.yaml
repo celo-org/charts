@@ -3,7 +3,7 @@ apiVersion: v2
 name: load-test
 type: application
 icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
-version: 0.4.1
+version: 0.4.2
 description: Chart which is used to run load test for a Celo Network
 keywords:
   - Celo
@@ -16,6 +16,9 @@ maintainers:
   - name: cLabs
     email: devops@clabs.co
     url: https://clabs.co
+sources:
+  - https://github.com/celo-org/charts/tree/main/charts/load-test
+  - https://github.com/celo-org/charts/tree/main/charts/celo-fullnode
 dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
