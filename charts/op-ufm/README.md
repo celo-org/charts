@@ -1,6 +1,6 @@
 # op-ufm
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: op-ufm-79d95418291ba39f0a183f103893a7b7f49e0263](https://img.shields.io/badge/AppVersion-op--ufm--79d95418291ba39f0a183f103893a7b7f49e0263-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: op-ufm-79d95418291ba39f0a183f103893a7b7f49e0263](https://img.shields.io/badge/AppVersion-op--ufm--79d95418291ba39f0a183f103893a7b7f49e0263-informational?style=flat-square)
 
 A Helm chart for OP User Facing Monitoring
 
@@ -9,6 +9,10 @@ A Helm chart for OP User Facing Monitoring
 | Name | Email | Url |
 | ---- | ------ | --- |
 | cLabs | <devops@clabs.co> | <https://clabs.co> |
+
+## Source Code
+
+* <https://github.com/celo-org/optimism/tree/celo7/op-ufm>
 
 ## Values
 

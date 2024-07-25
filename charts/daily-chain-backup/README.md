@@ -2,7 +2,7 @@
 
 A Helm chart for deploying cron job to periodically run chain backups and upload to GCS
 
-![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
 - [daily-chain-backup](#daily-chain-backup)
   - [Chart releases](#chart-releases)
@@ -23,7 +23,7 @@ To import this chart into your chart, add the following to your `requirements.ya
 dependencies:
   - name: daily-chain-backup
     repository: oci://us-west1-docker.pkg.dev/celo-testnet/clabs-public-oci
-    version: 1.0.2
+    version: 1.0.3
 ```
 
 ## Values

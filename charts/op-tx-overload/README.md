@@ -1,14 +1,19 @@
 # op-tx-overload
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: test](https://img.shields.io/badge/AppVersion-test-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: test](https://img.shields.io/badge/AppVersion-test-informational?style=flat-square)
 
-A Helm chart for Kubernetes
+Generate load on Optimism Bedrock using transactions with random calldata.
 
 ## Maintainers
 
 | Name | Email | Url |
 | ---- | ------ | --- |
 | cLabs | <devops@clabs.co> | <https://clabs.co> |
+
+## Source Code
+
+* <https://github.com/celo-org/tx-overload>
+* <https://github.com/ethereum-optimism/tx-overload>
 
 ## Values
 
