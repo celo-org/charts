@@ -231,8 +231,37 @@ jobs:
         run: |
           helm-docs
 
+      - name: Install YQ
+        uses: dcarbone/install-yq-action@v1.1.1
+
+      - name: "Regenerate list of charts"
+        run: |
+          # Function to generate the list of charts
+          generate_chart_list() {
+            local chart_list=""
+            for file in $(find ./charts -type d -maxdepth 1 ! -name 'charts' | sort); do
+              desc=$(cat "$file/Chart.yaml" | yq .description)
+              chart_list+="- [$(basename "$file")]($file/README.md) - $desc"$'\n'
+            done
+            echo "$chart_list"
+          }
+
+          # Main script
+          update_markdown() {
+            local markdown_file=$1
+
+            # Generate chart list
+            chart_list=$(generate_chart_list)
+
+            sed -i.bak '/## List of charts/{:a;N;/## Helm charts best practices/!ba;d}' "$markdown_file"
+            sed -i '/## List of charts/r /dev/stdin' "$markdown_file" <<< "$chart_list"
+          }
+
+          # Run the update_markdown function with the specified markdown file
+          update_markdown "README.md"
+
       - name: "Commit updated README.md to the branch if changed"
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: '[Automatic] - Update chart README.md'
-          file_pattern: 'charts/**/README.md charts-private/**/README.md'
+          file_pattern: 'README.md charts/**/README.md charts-private/**/README.md'
