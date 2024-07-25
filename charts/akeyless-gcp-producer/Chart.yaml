@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
 name: akeyless-gcp-producer
-description: Deploys Akeyless GCP custom producer  + test output.
+description: Deploys Akeyless GCP custom producer
 
 # A chart can be either an 'application' or a 'library' chart.
 #
