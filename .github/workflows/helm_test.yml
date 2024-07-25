@@ -250,11 +250,18 @@ jobs:
           update_markdown() {
             local markdown_file=$1
 
+            START_HEADING="## List of charts"
+            END_HEADING="## Helm charts best practices"
+
             # Generate chart list
             chart_list=$(generate_chart_list)
 
-            sed -i.bak '/## List of charts/{:a;N;/## Helm charts best practices/!ba;d}' "$markdown_file"
-            sed -i '/## List of charts/r /dev/stdin' "$markdown_file" <<< "$chart_list"
+            TEMP_FILE=$(mktemp)
+
+            printf '%s\n' "$chart_list"  > $TEMP_FILE
+
+          sed -i "/$START_HEADING/,/$END_HEADING/{//!d; /$START_HEADING/r $TEMP_FILE
+          }" $markdown_file
           }
 
           # Run the update_markdown function with the specified markdown file
