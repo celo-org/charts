@@ -18,11 +18,11 @@ keywords:
   - Validator
   - Ethereum
   - Proof-of-Stake
-version: 0.4.8
+version: 0.4.9
 dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci
-    version: 0.5.1
+    version: 0.5.2
   - name: gemini
     repository: https://charts.fairwinds.com/stable
     version: 2.1.3
