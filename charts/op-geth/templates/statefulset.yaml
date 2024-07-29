@@ -279,6 +279,9 @@ spec:
             {{- end }}
             {{- end }}
 
+        env:
+        - name: GETH_DATADIR
+          value: {{ .Values.config.datadir }}
         ports:
         - name: http
           containerPort: {{ .Values.config.http.port }}
