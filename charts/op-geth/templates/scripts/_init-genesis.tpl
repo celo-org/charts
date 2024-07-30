@@ -15,7 +15,14 @@ if [ ! -f $datadir/.initialized ]; then
     {{- $stateScheme = printf " --state.scheme=%s" .Values.config.state.scheme }}
     {{- end }}
     {{- end }}
-    geth --datadir={{ .Values.config.datadir }}{{ $stateScheme }} init $datadir/genesis.json
+    geth \
+      --datadir={{ .Values.config.datadir }}{{ $stateScheme }} \
+      {{- with .Values.init.extraArgs }}
+      {{- range . }}
+      {{- tpl (.) $ | nindent 6 }} \
+      {{- end }}
+      {{- end }}
+      init $datadir/genesis.json
     echo "Successfully initialized from genesis file"
     {{- end }}
     touch $datadir/.initialized
