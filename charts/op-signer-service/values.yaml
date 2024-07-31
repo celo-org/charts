@@ -17,7 +17,7 @@ image:
   pullPolicy: IfNotPresent
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v0.0.3"
+  tag: "v0.0.4"
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -36,6 +36,8 @@ serviceAccount:
 service:
   # -- Application port
   port: 3000
+  # -- Application TLS port. Unused if tls.enabled is false.
+  tlsPort: 3001
 
 # -- Env Vars. for the pod.
 env: {}
@@ -45,6 +47,19 @@ env: {}
   # KEY_ID: "batcher"
   # KEY_VERSION: "1"
   # LOG_LEVEL: "3"
+
+# -- TLS config
+tls:
+  # -- Enable TLS
+  enabled: false
+  # -- Secret name for the TLS certificate
+  tlsSecretName: "test-secret"
+  # -- Secret key for the TLS certificate
+  tlsSecretCertKey: "certificate.pem"
+  # -- Secret key for the TLS key
+  tlsSecretKeyKey: "key.pem"
+  # -- Secret key for the TLS CA
+  tlsSecretCaKey: "ca.pem"
 
 # -- Custom pod annotations
 podAnnotations: {}

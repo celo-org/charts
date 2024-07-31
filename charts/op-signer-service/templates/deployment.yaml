@@ -38,13 +38,28 @@ spec:
             - name: http
               containerPort: {{ include "op-signer-service.port" . }}
               protocol: TCP
-          {{- if .Values.env }}
+            {{- if .Values.tls.enabled}}
+            - name: https
+              containerPort: {{ include "op-signer-service.tls-port" . }}
+              protocol: TCP
+            {{- end}}
+          {{- if or (.Values.env) (.Values.tls.enabled) }}
           env:
           {{- with .Values.env }}
             {{- range $key, $value := . }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
+          {{- end }}
+          {{- if .Values.tls.enabled}}
+            - name: TLS_ENABLED
+              value: "true"
+            - name: SECRET_CERT_KEY
+              value: {{ .Values.tls.tlsSecretCertKey | quote }}
+            - name: SECRET_KEY_KEY
+              value: {{ .Values.tls.tlsSecretKeyKey | quote }}
+            - name: SECRET_CA_KEY
+              value: {{ .Values.tls.tlsSecretCaKey | quote }}
           {{- end }}
           {{- end }}
           livenessProbe:
@@ -53,6 +68,16 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.tls.enabled}}
+          volumeMounts:
+            - mountPath: "/app/certs"
+              name: pki
+              readOnly: true
+      volumes:
+        - name: pki
+          secret:
+            secretName: {{ .Values.tls.tlsSecretName }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
