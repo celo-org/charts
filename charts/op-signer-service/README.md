@@ -1,6 +1,6 @@
 # op-signer-service
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.0.3](https://img.shields.io/badge/AppVersion-v0.0.3-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.0.4](https://img.shields.io/badge/AppVersion-v0.0.4-informational?style=flat-square)
 
 A Helm chart for OP signer service
 
@@ -23,7 +23,7 @@ A Helm chart for OP signer service
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/op-signer-service/op-signer-service"` | Image repository |
-| image.tag | string | `"v0.0.3"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"v0.0.4"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{"httpGet":{"path":"/","port":"http"}}` | Liveness probe |
 | nameOverride | string | `""` | Chart name override |
@@ -36,10 +36,17 @@ A Helm chart for OP signer service
 | resources | object | `{}` | Container resources |
 | securityContext | object | `{}` | Custom container security context |
 | service.port | int | `3000` | Application port |
+| service.tlsPort | int | `3001` | Application TLS port. Unused if tls.enabled is false. |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| tls | object | `{"enabled":false,"tlsSecretCaKey":"ca.pem","tlsSecretCertKey":"certificate.pem","tlsSecretKeyKey":"key.pem","tlsSecretName":"test-secret"}` | TLS config |
+| tls.enabled | bool | `false` | Enable TLS |
+| tls.tlsSecretCaKey | string | `"ca.pem"` | Secret key for the TLS CA |
+| tls.tlsSecretCertKey | string | `"certificate.pem"` | Secret key for the TLS certificate |
+| tls.tlsSecretKeyKey | string | `"key.pem"` | Secret key for the TLS key |
+| tls.tlsSecretName | string | `"test-secret"` | Secret name for the TLS certificate |
 | tolerations | list | `[]` | Kubernetes tolerations |
 
 ----------------------------------------------
