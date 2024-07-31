@@ -71,3 +71,14 @@ Container signer port
 3000
 {{- end }}
 {{- end }}
+
+{{/*
+Container TLS signer port
+*/}}
+{{- define "op-signer-service.tls-port" -}}
+{{- if .Values.service.tlsPort }}
+{{- .Values.service.tlsPort }}
+{{- else }}
+3001
+{{- end }}
+{{- end }}
