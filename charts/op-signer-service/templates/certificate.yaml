@@ -1,3 +1,4 @@
+{{- if .Values.tls.certManager.enabled }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -32,3 +33,4 @@ spec:
     name: {{ .Values.tls.certManager.issuerName }}
     kind: {{ .Values.tls.certManager.issuerKind }}
     group: {{ .Values.tls.certManager.issuerGroup }}
+{{- end }}
