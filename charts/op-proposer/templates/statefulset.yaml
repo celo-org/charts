@@ -63,7 +63,10 @@ spec:
         args:
         - |
           datadir=/contracts
-          wget -qO $datadir/deployment-l1.json "{{ .Values.init.contracts.url }}"
+          while ! wget -qO $datadir/deployment-l1.json "{{ .Values.init.contracts.url }}"; do
+            echo "wget failed, retrying..."
+            sleep 5 # Wait for 5 seconds before retrying
+          done
           L2OutputOracleProxy=$(cat $datadir/deployment-l1.json | grep L2OutputOracleProxy | cut -d'"' -f4)
           echo $L2OutputOracleProxy > $datadir/L2OutputOracleProxy
           echo "L2OutputOracleProxy: $L2OutputOracleProxy"

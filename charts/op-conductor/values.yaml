@@ -1,0 +1,93 @@
+---
+replicaCount: 1
+
+init:
+  image:
+    repository: alpine
+    tag: 3.19
+    pullPolicy: IfNotPresent
+  rollup:
+    url: https://storage.googleapis.com/cel2-rollup-files/dango/rollup.json
+
+image:
+  repository: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-conductor
+  tag: v1.8.0
+  pullPolicy: IfNotPresent
+statefulset:
+  annotations: {}
+  podAnnotations: {}
+
+config:
+  execution:
+    # execution engine (op-geth) rpc endpoint
+    rpc: http://op-geth:8545
+  node:
+    rpc: http://op-node:8547
+  consensus:
+    # Address to listen for consensus connections
+    addr: 0.0.0.0
+    port: 50050
+  raft:
+    bootstrap: false
+    server:
+      id: 1
+    storage:
+      dir: /raft
+  rpc:
+    enableAdmin: false
+    enableProxy: true
+    addr: 0.0.0.0
+    port: 8545
+  healthcheck:
+    interval: 0
+    minPeerCount: 0
+    safeEnabled: false
+    safeInterval: 1200
+    unsafeInterval: 0
+  log:
+    format: json
+    level: INFO
+  metrics:
+    enabled: true
+    addr: 0.0.0.0
+    port: 7300
+  network: ""
+  paused: false
+podSecurityContext: {}
+
+persistence:
+  type: pvc
+  pvc:
+    size: 1Gi
+    accessMode: ReadWriteOnce
+    storageClass: ""
+    annotations:
+      # resize.topolvm.io/increase: 1Gi
+      # resize.topolvm.io/storage_limit: 5Gi
+      # resize.topolvm.io/threshold: 90%
+      # resize.topolvm.io/inodes-threshold: 90%
+  mountPath: /raft
+
+services:
+  rpc:
+    type: ClusterIP
+    loadBalancerIPs: []
+    clusterIPs: []
+    port: 8545
+    annotations: {}
+    publishNotReadyAddresses: true
+  consensus:
+    type: ClusterIP
+    loadBalancerIPs: []
+    clusterIPs: []
+    port: 50050
+    annotations: {}
+    publishNotReadyAddresses: true
+
+secrets:
+  # REQUIRED: JWT for communication with op-geth and op-node. In case of multiReplica, comma separated list of JWTs (or shared)
+  # Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  jwt:
+    value: ""
+    secretName: ""
+    secretKey: ""
