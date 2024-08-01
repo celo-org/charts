@@ -1,6 +1,6 @@
 # op-signer-service
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.0.4](https://img.shields.io/badge/AppVersion-v0.0.4-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.0.4](https://img.shields.io/badge/AppVersion-v0.0.4-informational?style=flat-square)
 
 A Helm chart for OP signer service
 
@@ -41,12 +41,16 @@ A Helm chart for OP signer service
 | serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| tls | object | `{"enabled":false,"tlsSecretCaKey":"ca.pem","tlsSecretCertKey":"certificate.pem","tlsSecretKeyKey":"key.pem","tlsSecretName":"test-secret"}` | TLS config |
+| tls | object | `{"certManager":{"enabled":false,"issuerGroup":"","issuerKind":"Issuer","issuerName":"test-issuer"},"enabled":false,"externalSecret":{"tlsSecretCaKey":"ca.pem","tlsSecretCertKey":"certificate.pem","tlsSecretKeyKey":"key.pem","tlsSecretName":"test-secret"}}` | TLS config |
+| tls.certManager.enabled | bool | `false` | Enable creating certificates through certmanager. This takes precedence over externalSecret. |
+| tls.certManager.issuerGroup | string | `""` | Issuer group |
+| tls.certManager.issuerKind | string | `"Issuer"` | Issuer kind |
+| tls.certManager.issuerName | string | `"test-issuer"` | Issuer name |
 | tls.enabled | bool | `false` | Enable TLS |
-| tls.tlsSecretCaKey | string | `"ca.pem"` | Secret key for the TLS CA |
-| tls.tlsSecretCertKey | string | `"certificate.pem"` | Secret key for the TLS certificate |
-| tls.tlsSecretKeyKey | string | `"key.pem"` | Secret key for the TLS key |
-| tls.tlsSecretName | string | `"test-secret"` | Secret name for the TLS certificate |
+| tls.externalSecret.tlsSecretCaKey | string | `"ca.pem"` | Secret key for the TLS CA |
+| tls.externalSecret.tlsSecretCertKey | string | `"certificate.pem"` | Secret key for the TLS certificate |
+| tls.externalSecret.tlsSecretKeyKey | string | `"key.pem"` | Secret key for the TLS key |
+| tls.externalSecret.tlsSecretName | string | `"test-secret"` | Secret name for the secret containing an already created TLS certificate |
 | tolerations | list | `[]` | Kubernetes tolerations |
 
 ----------------------------------------------

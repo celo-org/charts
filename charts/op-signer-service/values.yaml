@@ -52,14 +52,24 @@ env: {}
 tls:
   # -- Enable TLS
   enabled: false
-  # -- Secret name for the TLS certificate
-  tlsSecretName: "test-secret"
-  # -- Secret key for the TLS certificate
-  tlsSecretCertKey: "certificate.pem"
-  # -- Secret key for the TLS key
-  tlsSecretKeyKey: "key.pem"
-  # -- Secret key for the TLS CA
-  tlsSecretCaKey: "ca.pem"
+  certManager:
+    # -- Enable creating certificates through certmanager. This takes precedence over externalSecret.
+    enabled: false
+    # -- Issuer name
+    issuerName: "test-issuer"
+    # -- Issuer kind
+    issuerKind: "Issuer"
+    # -- Issuer group
+    issuerGroup: ""
+  externalSecret:
+    # -- Secret name for the secret containing an already created TLS certificate
+    tlsSecretName: "test-secret"
+    # -- Secret key for the TLS certificate
+    tlsSecretCertKey: "certificate.pem"
+    # -- Secret key for the TLS key
+    tlsSecretKeyKey: "key.pem"
+    # -- Secret key for the TLS CA
+    tlsSecretCaKey: "ca.pem"
 
 # -- Custom pod annotations
 podAnnotations: {}

@@ -54,12 +54,21 @@ spec:
           {{- if .Values.tls.enabled}}
             - name: TLS_ENABLED
               value: "true"
+          {{- if .Values.tls.certManager.enabled }} 
             - name: SECRET_CERT_KEY
-              value: {{ .Values.tls.tlsSecretCertKey | quote }}
+              value: tls.crt
             - name: SECRET_KEY_KEY
-              value: {{ .Values.tls.tlsSecretKeyKey | quote }}
+              value: tls.key
             - name: SECRET_CA_KEY
-              value: {{ .Values.tls.tlsSecretCaKey | quote }}
+              value: ca.crt
+          {{- else }}
+            - name: SECRET_CERT_KEY
+              value: {{ .Values.tls.externalSecret.tlsSecretCertKey | quote }}
+            - name: SECRET_KEY_KEY
+              value: {{ .Values.tls.externalSecret.tlsSecretKeyKey | quote }}
+            - name: SECRET_CA_KEY
+              value: {{ .Values.tls.externalSecret.tlsSecretCaKey | quote }}
+          {{- end }}
           {{- end }}
           {{- end }}
           livenessProbe:
@@ -68,7 +77,7 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.tls.enabled}}
+          {{- if .Values.tls.enabled }}
           volumeMounts:
             - mountPath: "/app/certs"
               name: pki
@@ -76,7 +85,7 @@ spec:
       volumes:
         - name: pki
           secret:
-            secretName: {{ .Values.tls.tlsSecretName }}
+            secretName: {{ ternary (include "op-signer-service.fullname" .) .Values.tls.externalSecret.tlsSecretName .Values.tls.certManager.enabled }}
           {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
