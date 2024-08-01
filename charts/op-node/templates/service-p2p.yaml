@@ -96,8 +96,8 @@ spec:
   selector:
     {{- include "op-node.selectorLabels" $ | nindent 4 }}
     statefulset.kubernetes.io/pod-name: {{ template "op-node.fullname" $ }}-{{ $index }}
-{{- else }}
 {{- /* In case of ClusterIP, we cannot set same ClusterIP to different svcs, so we use just one */ -}}
+{{- else }}
 apiVersion: v1
 kind: Service
 metadata:
