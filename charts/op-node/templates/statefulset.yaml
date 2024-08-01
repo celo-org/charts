@@ -158,6 +158,11 @@ spec:
             {{- if kindIs "int" .Values.config.sequencer.maxSafeLag }}
             --sequencer.max-safe-lag={{ int .Values.config.sequencer.maxSafeLag }} \
             {{- end }}
+            {{- if .Values.config.conductor.enabled }}
+            --conductor.enabled \
+            --conductor.rpc={{ .Values.config.conductor.rpc }} \
+            --conductor.rpc-timeout={{ .Values.config.conductor.rpcTimeout }} \
+            {{- end }}
             {{- end }}
             {{- if kindIs "float64" .Values.config.verifier.l1Confs }}
             --verifier.l1-confs={{ int .Values.config.verifier.l1Confs }} \
@@ -191,6 +196,7 @@ spec:
             --plasma.da-service={{ .Values.config.plasma.daService }} \
             --plasma.verify-on-read={{ .Values.config.plasma.verifyOnRead }} \
             {{- end }}
+
             {{- with .Values.extraArgs }}
             {{- range . }}
             {{- tpl (.) $ | nindent 12 }} \
