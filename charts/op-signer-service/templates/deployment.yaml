@@ -85,7 +85,7 @@ spec:
       volumes:
         - name: pki
           secret:
-            secretName: {{ ternary (include "op-signer-service.fullname" .) .Values.tls.externalSecret.tlsSecretName .Values.tls.certManager.enabled }}
+            secretName: {{ ternary (include "op-signer-service.fullname" .)-tls .Values.tls.externalSecret.tlsSecretName .Values.tls.certManager.enabled }}
           {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
