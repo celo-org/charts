@@ -11,5 +11,11 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    {{- if .Values.tls.enabled}}
+    - port: {{ include "op-signer-service.tls-port" . }}
+      targetPort: https
+      protocol: TCP
+      name: https
+    {{- end}}
   selector:
     {{- include "op-signer-service.selectorLabels" . | nindent 4 }}

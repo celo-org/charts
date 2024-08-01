@@ -46,6 +46,7 @@ spec:
       protocol: TCP
   selector:
     {{- include "op-geth.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-geth.fullname" $ }}-{{ $index }}
 ---
 apiVersion: v1
 kind: Service
@@ -82,6 +83,7 @@ spec:
       protocol: UDP
   selector:
     {{- include "op-geth.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-geth.fullname" $ }}-{{ $index }}
 {{- end }}
 {{- end }}
 {{- end }}

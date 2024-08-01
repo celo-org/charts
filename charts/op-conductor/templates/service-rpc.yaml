@@ -1,0 +1,50 @@
+{{- $replicas := .Values.replicaCount }}
+{{ range $index, $e := until (int $replicas) }}
+{{- with $.Values.services.rpc }}
+{{- $loadBalancerIP := "" }}
+{{- $clusterIP := "" }}
+{{- if lt $index (len .loadBalancerIPs) }}
+  {{- $loadBalancerIP = index .loadBalancerIPs $index }}
+{{- end }}
+{{- if lt $index (len .clusterIPs) }}
+  {{- $clusterIP = index .clusterIPs $index }}
+{{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "op-conductor.fullname" $ }}-rpc-{{ $index }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    service-type: rpc
+    {{- include "op-conductor.labels" $ | nindent 4 }}
+spec:
+  type: {{ .type }}
+  {{- with $loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with $clusterIP }}
+  clusterIP: {{ . }}
+  {{- end }}
+  {{- with .externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .internalTrafficPolicy }}
+  internalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .publishNotReadyAddresses }}
+  publishNotReadyAddresses: {{ . }}
+  {{- end }}
+  ports:
+    - name: rpc
+      port: {{ .port }}
+      targetPort: rpc
+      protocol: TCP
+  selector:
+    {{- include "op-conductor.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-conductor.fullname" $ }}-{{ $index }}
+{{- end }}
+{{- end }}

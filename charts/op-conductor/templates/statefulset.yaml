@@ -1,0 +1,168 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "op-conductor.fullname" . }}
+  labels:
+    {{- include "op-conductor.labels" . | nindent 4 }}
+  {{- with .Values.statefulset.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "op-conductor.selectorLabels" . | nindent 6 }}
+  serviceName: {{ template "op-conductor.name" . }}
+  template:
+    metadata:
+      labels:
+        {{- include "op-conductor.selectorLabels" . | nindent 8 }}
+      annotations:
+      {{- with .Values.statefulset.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.config.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.config.metrics.port }}"
+        prometheus.io/path: "/metrics"
+      {{- end }}
+    spec:
+      initContainers:
+      - name: download-rollup
+        image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
+        imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - |
+          datadir="{{ .Values.persistence.mountPath }}"
+          if [ ! -f $datadir/.initialized ]; then
+              wget -qO $datadir/rollup.json "{{ .Values.init.rollup.url }}"
+              touch $datadir/.initialized
+              echo "Successfully downloaded rollup files"
+          else
+              echo "Already downloaded, skipping."
+          fi
+        volumeMounts:
+        - name: data
+          mountPath: {{ .Values.persistence.mountPath }}
+      - name: split-config-parameters
+        image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
+        imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - |
+          # Get Replica ID from hostname
+          RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
+          datadir="{{ .Values.persistence.mountPath }}"
+
+          # Split the jwt keys based on the comma and get the $RID-th key
+          echo $JWT_SECRET | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' > "$datadir/jwt.hex"
+          # If the jwt is not defined for this index, use the first jwt key
+          if [ ! -s "$datadir/jwt.hex" ]; then
+            cat $JWT_SECRET | tr ',' '\n' | head -n 1 | tr -d '\n' > "$datadir/jwt.hex"
+          fi
+        env:
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ ternary (include "op-conductor.fullname" .) .Values.secrets.jwt.secretName (not (empty .Values.secrets.jwt.value)) }}
+              key: {{ ternary "jwt" .Values.secrets.jwt.secretKey (not (empty .Values.secrets.jwt.value)) }}
+        volumeMounts:
+        - name: data
+          mountPath: {{ .Values.persistence.mountPath }}
+      containers:
+      - name: op-conductor
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - |
+          exec /usr/local/bin/op-conductor \
+            --consensus.addr={{ .Values.config.consensus.addr }} \
+            --consensus.port={{ .Values.config.consensus.port }} \
+            --execution.rpc={{ .Values.config.execution.rpc }} \
+            --node.rpc={{ .Values.config.node.rpc }} \
+            --rollup.config={{ .Values.persistence.mountPath }}/rollup.json \
+            --rpc.addr={{ .Values.config.rpc.addr }} \
+            --rpc.port={{ .Values.config.rpc.port }} \
+            {{- if .Values.config.rpc.enableAdmin }}
+            --rpc.enable-admin \
+            {{- end }}
+            {{- if .Values.config.rpc.enableProxy }}
+            --rpc.enable-proxy \
+            {{- end }}
+            --raft.bootstrap={{ .Values.config.raft.bootstrap }} \
+            --raft.server.id={{ .Values.config.raft.server.id }} \
+            --raft.storage.dir={{ .Values.persistence.mountPath }} \
+            --healtcheck.interval={{ .Values.config.healthcheck.interval }} \
+            --healtcheck.min-peer-count={{ .Values.config.healthcheck.minPeerCount }} \
+            {{- if .Values.config.healthcheck.safeEnabled }}
+            --healtcheck.safe-enabled \
+            {{- end }}
+            --healthcheck.safe-interval={{ .Values.config.healthcheck.safeInterval }} \
+            --healthcheck.unsafe-interval={{ .Values.config.healthcheck.unsafeInterval }} \
+            --log.format={{ .Values.config.log.format }} \
+            --log.level={{ .Values.config.log.level }} \
+            --metrics.addr={{ .Values.config.metrics.addr }} \
+            {{- if .Values.config.network }}
+            --network={{ .Values.config.network }} \
+            {{- end }}
+            {{- if .Values.config.paused }}
+            --paused \
+            {{- end }}
+
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        ports:
+        - containerPort: {{ .Values.config.rpc.port }}
+          name: rpc
+          protocol: TCP
+        - containerPort: {{ .Values.config.consensus.port }}
+          name: consensus
+          protocol: TCP
+        - containerPort: {{ .Values.config.metrics.port }}
+          name: metrics
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /raft
+          name: data
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      {{- with .Values.persistence.pvc.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      name: data
+    spec:
+      accessModes:
+      - {{ .Values.persistence.pvc.accessMode }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.pvc.size | quote }}
+      {{- if .Values.persistence.pvc.storageClass }}
+      storageClassName: {{ .Values.persistence.pvc.storageClass }}
+      {{- end }}
+      volumeMode: Filesystem
