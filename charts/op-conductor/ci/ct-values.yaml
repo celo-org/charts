@@ -3,4 +3,4 @@ secrets:
   # REQUIRED: JWT for communication with op-geth and op-node. In case of multiReplica, comma separated list of JWTs (or shared)
   # Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   jwt:
-    value: 0000000000000000000000000000000000000000000000000000000000000001
+    value: "0000000000000000000000000000000000000000000000000000000000000001"
