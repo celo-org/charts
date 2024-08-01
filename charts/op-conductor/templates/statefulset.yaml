@@ -107,10 +107,10 @@ spec:
             --raft.bootstrap={{ .Values.config.raft.bootstrap }} \
             --raft.server.id={{ .Values.config.raft.server.id }} \
             --raft.storage.dir={{ .Values.persistence.mountPath }} \
-            --healtcheck.interval={{ .Values.config.healthcheck.interval }} \
-            --healtcheck.min-peer-count={{ .Values.config.healthcheck.minPeerCount }} \
+            --healthcheck.interval={{ .Values.config.healthcheck.interval }} \
+            --healthcheck.min-peer-count={{ .Values.config.healthcheck.minPeerCount }} \
             {{- if .Values.config.healthcheck.safeEnabled }}
-            --healtcheck.safe-enabled \
+            --healthcheck.safe-enabled \
             {{- end }}
             --healthcheck.safe-interval={{ .Values.config.healthcheck.safeInterval }} \
             --healthcheck.unsafe-interval={{ .Values.config.healthcheck.unsafeInterval }} \
