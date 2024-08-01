@@ -10,8 +10,8 @@ init:
     url: https://storage.googleapis.com/cel2-rollup-files/dango/rollup.json
 
 image:
-  repository: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-conductor
-  tag: v0.0.1-rc.4
+  repository: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-conductor
+  tag: dev
   pullPolicy: IfNotPresent
 statefulset:
   annotations: {}
@@ -24,11 +24,12 @@ config:
   node:
     rpc: http://op-node:8547
   consensus:
-    # Address to listen for consensus connections
-    addr: 0.0.0.0
+    # Address to listen for consensus connections. It cannot be 0. If empty, it will try to use 
+    # the service ip or the pod ip.
+    addr: ""
     port: 50050
   raft:
-    bootstrap: false
+    # bootstrap: false
     server:
       id: 1
     storage:
@@ -39,7 +40,7 @@ config:
     addr: 0.0.0.0
     port: 8545
   healthcheck:
-    interval: 0
+    interval: 10
     minPeerCount: 0
     safeEnabled: false
     safeInterval: 1200
@@ -83,11 +84,3 @@ services:
     port: 50050
     annotations: {}
     publishNotReadyAddresses: true
-
-secrets:
-  # REQUIRED: JWT for communication with op-geth and op-node. In case of multiReplica, comma separated list of JWTs (or shared)
-  # Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
-  jwt:
-    value: ""
-    secretName: ""
-    secretKey: ""
