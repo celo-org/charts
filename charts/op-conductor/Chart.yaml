@@ -1,8 +1,8 @@
 ---
-name: eigenda-proxy
+name: op-conductor
 apiVersion: v2
-version: 0.1.6
-description: Helm chart deploying Layr-Labs eigenda-proxy
+version: 0.0.1
+description: Helm chart deploying OP Conductor, a HA controller for op-node
 home: https://clabs.co
 sources:
   - https://github.com/Layr-Labs/eigenda-proxy/tree/main
@@ -11,7 +11,6 @@ sources:
   - https://clabs.co
   - https://github.com/celo-org
 keywords:
-  - eigenda
   - celo
   - blockchain
   - optimism
@@ -25,4 +24,4 @@ maintainers:
     url: https://clabs.co
 type: application
 icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
-appVersion: v1.0.0
+appVersion: v1.8.0
