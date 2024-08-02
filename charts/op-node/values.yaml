@@ -217,6 +217,10 @@ config:
     maxSafeLag: 0                      # maximum number of L2 blocks for restricting the distance between L2 safe and unsafe. Disabled if 0
   verifier:
     l1Confs: 0                         # number of L1 blocks to keep distance from the L1 head before deriving L2 data from
+  conductor:
+    enabled: false                     # Enable the conductor service
+    rpc: http://127.0.0.1:8547         # Conductor service rpc endpoint
+    rpcTimeout: 1s                     # Conductor service rpc timeout
   plasma:
     enabled: false                     # enable plasma
     daServer: ""                       # plasma data availability server
