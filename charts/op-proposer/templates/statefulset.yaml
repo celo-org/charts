@@ -125,7 +125,6 @@ spec:
             {{- end }}
             {{- end }}
             {{- end }}
-            {{- end }}
             {{- with .Values.extraArgs }}
             {{- range . }}
             {{- tpl (.) $ | nindent 12 }} \
