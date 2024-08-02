@@ -136,11 +136,13 @@ spec:
             {{- end }}
 
         env:
+        {{- if not .Values.config.signer.enabled }}
         - name: OP_PROPOSER_PRIVATE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ ternary (include "op-proposer.fullname" .) .Values.secrets.privateKey.secretName (not (empty .Values.secrets.privateKey.value)) }}
               key: {{ ternary "privateKey" .Values.secrets.privateKey.secretKey (not (empty .Values.secrets.privateKey.value)) }}
+        {{- end }}
         - name: L1_URL
           valueFrom:
             secretKeyRef:
