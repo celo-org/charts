@@ -110,6 +110,22 @@ spec:
             --log.level={{ .Values.config.logs.level }} \
             --log.format={{ .Values.config.logs.format }} \
             --log.color={{ .Values.config.logs.color }} \
+            {{- if .Values.config.signer.enabled }}
+            --signer.address={{ .Values.config.signer.address }} \
+            --signer.endpoint={{ .Values.config.signer.endpoint }} \
+            {{- if .Values.config.signer.tls.enabled }}
+            {{- if .Values.config.signer.tls.certManager.enabled }}
+            --signer.tls.ca="/certs/ca.crt" \
+            --signer.tls.cert="/certs/tls.crt" \
+            --signer.tls.key="/certs/tls.key" \
+            {{- else }}
+            --signer.tls.ca={{ .Values.config.signer.tls.externalSecret.tlsSecretCaKey | quote }} \
+            --signer.tls.cert={{ .Values.config.signer.tls.externalSecret.tlsSecretCertKey | quote }} \
+            --signer.tls.key={{ .Values.config.signer.tls.externalSecret.tlsSecretKeyKey | quote }} \
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
             {{- with .Values.extraArgs }}
             {{- range . }}
             {{- tpl (.) $ | nindent 12 }} \
@@ -145,6 +161,11 @@ spec:
         volumeMounts:
         - name: contracts
           mountPath: /contracts
+        {{- if .Values.config.signer.tls.enabled }}
+        - mountPath: "/certs"
+          name: pki
+          readOnly: true
+        {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       {{- with .Values.sidecarContainers }}
@@ -153,3 +174,8 @@ spec:
       volumes:
       - name: contracts
         emptyDir: {}
+      {{- if .Values.config.signer.tls.enabled }}
+        - name: pki
+          secret:
+            secretName: {{ ternary (template "op-proposer.fullname" .) .Values.config.signer.tls.externalSecret.tlsSecretName .Values.config.signer.tls.certManager.enabled }}
+      {{- end }}

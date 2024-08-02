@@ -1,0 +1,36 @@
+{{- if .Values.tls.certManager.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ template "op-proposer.fullname" . }}
+spec:
+  secretName: {{ template "op-proposer.fullname" . }}
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+
+  isCA: false
+  usages:
+    - client auth
+
+  subject:
+    organizations:
+      - cLabs
+  # The use of the common name field has been deprecated since 2000 and is
+  # discouraged from being used.
+  commonName: {{ template "op-proposer.fullname" . }}
+
+  # At least one of commonName (possibly through literalSubject), dnsNames, uris, emailAddresses, ipAddresses or otherNames is required.
+  dnsNames:
+    - {{ template "op-proposer.fullname" . }}
+
+  # Issuer references are always required.
+  issuerRef:
+    name: {{ .Values.config.signer.tls.certManager.issuerName }}
+    kind: {{ .Values.config.signer.tls.certManager.issuerKind }}
+    group: {{ .Values.config.signer.tls.certManager.issuerGroup }}
+{{- end }}
