@@ -133,6 +133,25 @@ spec:
             --target-num-frames={{ . }} \
             {{- end }}
             {{- end }}
+            {{- if .Values.config.signer.enabled }}
+            --signer.address={{ .Values.config.signer.address }} \
+            --signer.endpoint={{ .Values.config.signer.endpoint }} \
+            {{- if .Values.config.signer.tls.enabled }}
+            {{- if .Values.config.signer.tls.certManager.enabled }}
+            --signer.tls.ca="/certs/ca.crt" \
+            --signer.tls.cert="/certs/tls.crt" \
+            --signer.tls.key="/certs/tls.key" \
+            {{- else }}
+            --signer.tls.ca="/certs/{{ .Values.config.signer.tls.externalSecret.tlsSecretCaKey }}" \
+            --signer.tls.cert="/certs/{{ .Values.config.signer.tls.externalSecret.tlsSecretCertKey }}" \
+            --signer.tls.key="/certs/{{ .Values.config.signer.tls.externalSecret.tlsSecretKeyKey }}" \
+            {{- end }}
+            {{- else }}
+            --signer.tls.ca="" \
+            --signer.tls.cert="" \
+            --signer.tls.key="" \
+            {{- end }}
+            {{- end }}
             {{- with .Values.extraArgs }}
             {{- range . }}
             {{- tpl (.) $ | nindent 12 }} \
@@ -140,11 +159,13 @@ spec:
             {{- end }}
 
         env:
+        {{- if not .Values.config.signer.enabled }}
         - name: OP_BATCHER_PRIVATE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ ternary (include "op-batcher.fullname" .) .Values.secrets.privateKey.secretName (not (empty .Values.secrets.privateKey.value)) }}
               key: {{ ternary "privateKey" .Values.secrets.privateKey.secretKey (not (empty .Values.secrets.privateKey.value)) }}
+        {{- end }}
         - name: L1_URL
           valueFrom:
             secretKeyRef:
@@ -167,6 +188,18 @@ spec:
         {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+        {{- if .Values.config.signer.tls.enabled }}
+        volumeMounts:
+        - mountPath: "/certs"
+          name: pki
+          readOnly: true
+        {{- end }}
       {{- with .Values.sidecarContainers }}
         {{- tpl (toYaml . | nindent 6) $ }}
+      {{- end }}
+      {{- if .Values.config.signer.tls.enabled }}
+      volumes:
+      - name: pki
+        secret:
+          secretName: {{ ternary (include "op-proposer.fullname" .) .Values.config.signer.tls.externalSecret.tlsSecretName .Values.config.signer.tls.certManager.enabled }}
       {{- end }}
