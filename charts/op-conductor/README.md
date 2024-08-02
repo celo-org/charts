@@ -1,6 +1,6 @@
 # op-conductor
 
-![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
+![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
 
 Helm chart deploying OP Conductor, a HA controller for op-node
 
@@ -24,10 +24,10 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| config.consensus.addr | string | `"0.0.0.0"` |  |
+| config.consensus.addr | string | `""` |  |
 | config.consensus.port | int | `50050` |  |
 | config.execution.rpc | string | `"http://op-geth:8545"` |  |
-| config.healthcheck.interval | int | `0` |  |
+| config.healthcheck.interval | int | `10` |  |
 | config.healthcheck.minPeerCount | int | `0` |  |
 | config.healthcheck.safeEnabled | bool | `false` |  |
 | config.healthcheck.safeInterval | int | `1200` |  |
@@ -40,7 +40,6 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | config.network | string | `""` |  |
 | config.node.rpc | string | `"http://op-node:8547"` |  |
 | config.paused | bool | `false` |  |
-| config.raft.bootstrap | bool | `false` |  |
 | config.raft.server.id | int | `1` |  |
 | config.raft.storage.dir | string | `"/raft"` |  |
 | config.rpc.addr | string | `"0.0.0.0"` |  |
@@ -48,8 +47,8 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | config.rpc.enableProxy | bool | `true` |  |
 | config.rpc.port | int | `8545` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"us-docker.pkg.dev/oplabs-tools-artifacts/images/op-conductor"` |  |
-| image.tag | string | `"v0.0.1-rc.4"` |  |
+| image.repository | string | `"us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-conductor"` |  |
+| image.tag | string | `"dev"` |  |
 | init.image.pullPolicy | string | `"IfNotPresent"` |  |
 | init.image.repository | string | `"alpine"` |  |
 | init.image.tag | float | `3.19` |  |
@@ -62,9 +61,6 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | persistence.type | string | `"pvc"` |  |
 | podSecurityContext | object | `{}` |  |
 | replicaCount | int | `1` |  |
-| secrets.jwt.secretKey | string | `""` |  |
-| secrets.jwt.secretName | string | `""` |  |
-| secrets.jwt.value | string | `""` |  |
 | services.consensus.annotations | object | `{}` |  |
 | services.consensus.clusterIPs | list | `[]` |  |
 | services.consensus.loadBalancerIPs | list | `[]` |  |

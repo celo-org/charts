@@ -68,18 +68,21 @@ spec:
           RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
           datadir="{{ .Values.persistence.mountPath }}"
 
-          # Split the jwt keys based on the comma and get the $RID-th key
-          echo $JWT_SECRET | tr ',' '\n' | sed -n "$((RID + 1))p" | tr -d '\n' > "$datadir/jwt.hex"
-          # If the jwt is not defined for this index, use the first jwt key
-          if [ ! -s "$datadir/jwt.hex" ]; then
-            cat $JWT_SECRET | tr ',' '\n' | head -n 1 | tr -d '\n' > "$datadir/jwt.hex"
+          # Get the IP used for consensus. First try to get the service IP, then the pod IP
+          if [ -z "{{ .Values.config.consensus.addr }}" ]; then
+            SERVICE_NAME="{{ include "op-conductor.fullname" . | replace "-" "_" | upper }}_CONSENSUS_$RID"
+            SERVICE_IP=$(eval echo \$$SERVICE_NAME)
+            if [ -n "$SERVICE_IP" ]; then
+              echo "Using service IP for consensus"
+              echo $SERVICE_IP > "$datadir/consensus.addr"
+            else
+              echo "Using pod IP for consensus"
+              echo $(hostname -i) > "$datadir/consensus.addr"
+            fi
+          else
+            echo "{{ .Values.config.consensus.addr }}" > "$datadir/consensus.addr"
           fi
-        env:
-        - name: JWT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{ ternary (include "op-conductor.fullname" .) .Values.secrets.jwt.secretName (not (empty .Values.secrets.jwt.value)) }}
-              key: {{ ternary "jwt" .Values.secrets.jwt.secretKey (not (empty .Values.secrets.jwt.value)) }}
+          echo "Using consensus address: $(cat $datadir/consensus.addr)"
         volumeMounts:
         - name: data
           mountPath: {{ .Values.persistence.mountPath }}
@@ -90,8 +93,16 @@ spec:
         - -c
         args:
         - |
+          RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
+          datadir="{{ .Values.persistence.mountPath }}"
+
+          bootstrap_flag=""
+          # Check if we're replica 0 and if we need to bootstrap the raft cluster
+          if [ "$RID" == "0" ] && [ ! -f $datadir/.initialized ]; then
+              bootstrap_flag="--raft.bootstrap=true"
+          fi
           exec /usr/local/bin/op-conductor \
-            --consensus.addr={{ .Values.config.consensus.addr }} \
+            --consensus.addr=$(cat $datadir/consensus.addr) \
             --consensus.port={{ .Values.config.consensus.port }} \
             --execution.rpc={{ .Values.config.execution.rpc }} \
             --node.rpc={{ .Values.config.node.rpc }} \
@@ -104,7 +115,7 @@ spec:
             {{- if .Values.config.rpc.enableProxy }}
             --rpc.enable-proxy \
             {{- end }}
-            --raft.bootstrap={{ .Values.config.raft.bootstrap }} \
+            $bootstrap_flag \
             --raft.server.id={{ .Values.config.raft.server.id }} \
             --raft.storage.dir={{ .Values.persistence.mountPath }} \
             --healthcheck.interval={{ .Values.config.healthcheck.interval }} \
