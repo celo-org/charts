@@ -1,6 +1,6 @@
 # op-geth
 
-![Version: 0.2.9](https://img.shields.io/badge/Version-0.2.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.2.10](https://img.shields.io/badge/Version-0.2.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-geth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -173,8 +173,9 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | services.p2p.port | int | `30303` |  |
 | services.p2p.publishNotReadyAddresses | bool | `true` |  |
 | services.p2p.type | string | `"ClusterIP"` |  |
-| services.rpc.enabled | bool | `true` |  |
 | services.rpc.httpPort | int | `8545` |  |
+| services.rpc.individualServiceEnabled | bool | `false` |  |
+| services.rpc.sharedServiceEnabled | bool | `true` |  |
 | services.rpc.type | string | `"ClusterIP"` |  |
 | services.rpc.wsPort | int | `8545` |  |
 | sidecarContainers | list | `[]` |  |
