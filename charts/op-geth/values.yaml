@@ -119,7 +119,8 @@ extraVolumes: []
 ## Services config
 services:
   rpc:
-    enabled: true
+    sharedServiceEnabled: true
+    individualServiceEnabled: false
     type: ClusterIP
     httpPort: 8545
     wsPort: 8545
