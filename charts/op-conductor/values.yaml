@@ -24,7 +24,7 @@ config:
   node:
     rpc: http://op-node:8547
   consensus:
-    # Address to listen for consensus connections. It cannot be 0. If empty, it will try to use 
+    # Address to listen for consensus connections. It cannot be 0. If empty, it will try to use
     # the service ip or the pod ip.
     addr: ""
     port: 50050
