@@ -1,6 +1,6 @@
 # op-proposer
 
-![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-proposer client (Optimism Rollup)
 
@@ -37,6 +37,18 @@ Celo implementation for op-proposer client (Optimism Rollup)
 | config.rpc.addr | string | `"0.0.0.0"` |  |
 | config.rpc.enabledAdmin | bool | `false` |  |
 | config.rpc.port | int | `8545` |  |
+| config.signer.address | string | `"0x000000000000"` |  |
+| config.signer.enabled | bool | `false` |  |
+| config.signer.endpoint | string | `"https://test.example.com"` |  |
+| config.signer.tls.certManager.enabled | bool | `false` | Enable creating certificates through certmanager. This takes precedence over externalSecret. |
+| config.signer.tls.certManager.issuerGroup | string | `""` | Issuer group |
+| config.signer.tls.certManager.issuerKind | string | `"Issuer"` | Issuer kind |
+| config.signer.tls.certManager.issuerName | string | `"test-issuer"` | Issuer name |
+| config.signer.tls.enabled | bool | `false` | Enable TLS |
+| config.signer.tls.externalSecret.tlsSecretCaKey | string | `"ca.pem"` | Secret key for the TLS CA |
+| config.signer.tls.externalSecret.tlsSecretCertKey | string | `"certificate.pem"` | Secret key for the TLS certificate |
+| config.signer.tls.externalSecret.tlsSecretKeyKey | string | `"key.pem"` | Secret key for the TLS key |
+| config.signer.tls.externalSecret.tlsSecretName | string | `"test-secret"` | Secret name for the secret containing an already created TLS certificate |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
