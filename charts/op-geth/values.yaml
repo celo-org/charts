@@ -121,6 +121,7 @@ services:
   rpc:
     sharedServiceEnabled: true
     individualServiceEnabled: false
+    publishNotReadyAddresses: false
     type: ClusterIP
     httpPort: 8545
     wsPort: 8545
@@ -260,6 +261,22 @@ readinessProbe:
       - sh
       - /scripts/readiness.sh
       - "60"
+
+# Sequencer recommended readinessProbe
+# readinessProbe:
+#   enabled: false
+#   initialDelaySeconds: 2
+#   periodSeconds: 4
+#   successThreshold: 1
+#   failureThreshold: 2
+#   timeoutSeconds: 2
+#   exec:
+#     command:
+#       - /bin/sh
+#       - -c
+#       - |
+#         response=$(wget --quiet --timeout=1 --header="Content-Type: application/json" --post-data='{"jsonrpc":"2.0","method":"admin_sequencerActive","id":1}' -O- http://{{ .Release.Name | replace "geth" "node" }}:9545)
+#         echo $response | jq -e '.result == true' > /dev/null || exit 1
 
 secrets:
   # REQUIRED: JWT for communication with op-geth. In case of multiReplica, comma separated list of JWTs (or shared)

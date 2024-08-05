@@ -1,0 +1,33 @@
+{{- $replicas := .Values.replicaCount }}
+{{ range $index, $e := until (int $replicas) }}
+{{- with $.Values.services.rpc }}
+{{- if and .individualServiceEnabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "op-geth.fullname" $ }}-rpc-{{ $index }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "op-geth.labels" $ | nindent 4 }}
+spec:
+  type: ClusterIP
+  publishNotReadyAddresses: true
+  ports:
+    - name: http
+      port: {{ .httpPort }}
+      targetPort: http
+    {{- if and $.Values.config.ws.enabled (and (ne .httpPort .wsPort) (ne .Values.config.http.port .Values.config.http.port)) }}
+    - name: ws
+      port: {{ .wsPort }}
+      targetPort: ws
+    {{- end }}
+  selector:
+    {{- include "op-geth.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-geth.fullname" $ }}-{{ $index }}
+{{- end }}
+{{- end }}
+{{- end }}
