@@ -1,5 +1,5 @@
 {{- with .Values.services.rpc }}
-{{- if .enabled }}
+{{- if .sharedServiceEnabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -34,8 +34,5 @@ spec:
       targetPort: rpc
   selector:
     {{- include "op-node.selectorLabels" $ | nindent 4 }}
-    {{- with $.Values.podStatusLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
 {{- end }}
 {{- end }}

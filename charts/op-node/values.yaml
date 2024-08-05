@@ -71,10 +71,12 @@ services:
     annotations: {}
     publishNotReadyAddresses: true
   rpc:
-    enabled: true
+    sharedServiceEnabled: true
+    individualServiceEnabled: true
     type: ClusterIP
     port: 9545
     annotations: {}
+    publishNotReadyAddresses: false
   metrics:
     enabled: true
     type: ClusterIP
