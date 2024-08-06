@@ -110,6 +110,8 @@ serviceMonitor:
   # relabelings: []
   # metricRelabelings: []
 
+# .livenessProbe.exec.command can also be in a templated string format
+# If not using exec, set exec: null
 livenessProbe:
   enabled: true
   initialDelaySeconds: 60
@@ -117,10 +119,13 @@ livenessProbe:
   successThreshold: 1
   failureThreshold: 3
   timeoutSeconds: 5
+  exec: null
   httpGet:
     path: /healthz
     port: rpc
 
+# .readinessProbe.exec.command can also be in a templated string format
+# If not using exec, set exec: null
 readinessProbe:
   enabled: false
   # initialDelaySeconds: 60
@@ -128,13 +133,14 @@ readinessProbe:
   # successThreshold: 1
   # failureThreshold: 3
   # timeoutSeconds: 5
+  # exec: null
   # httpGet:
   #   path: /healthz
   #   port: rpc
 
 # Recommended readinessProbe when sequencing enabled (required for HA)
 # readinessProbe:
-#   enabled: false
+#   enabled: true
 #   initialDelaySeconds: 2
 #   periodSeconds: 4
 #   successThreshold: 1
