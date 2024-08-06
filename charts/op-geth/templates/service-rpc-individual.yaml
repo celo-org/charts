@@ -12,6 +12,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
+    service-type: rpc
     {{- include "op-geth.labels" $ | nindent 4 }}
 spec:
   type: ClusterIP
