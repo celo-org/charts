@@ -265,7 +265,7 @@ readinessProbe:
       - "60"
 
 # Recommended readinessProbe when sequencing enabled (required for HA)
-# Check the endpoint renders in "linked" op-node 
+# Check the endpoint renders in "linked" op-node
 # .readinessProbe.exec.command can also be in a templated string format
 # readinessProbe:
 #   enabled: true
