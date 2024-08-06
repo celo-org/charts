@@ -235,6 +235,7 @@ startupProbe:
       - /scripts/wait-for-sync.sh
 
 # .livenessProbe.exec.command can also be in a templated string format
+# If not using exec, set exec: null
 livenessProbe:
   enabled: false
   initialDelaySeconds: 120
@@ -249,6 +250,7 @@ livenessProbe:
       - "300"
 
 # .readinessProbe.exec.command can also be in a templated string format
+# If not using exec, set exec: null
 readinessProbe:
   enabled: false
   initialDelaySeconds: 60
