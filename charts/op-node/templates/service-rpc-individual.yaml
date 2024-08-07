@@ -1,0 +1,28 @@
+{{- $replicas := .Values.replicaCount }}
+{{ range $index, $e := until (int $replicas) }}
+{{- with $.Values.services.rpc }}
+{{- if and .individualServiceEnabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "op-node.fullname" $ }}-rpc-{{ $index }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    service-type: rpc
+    {{- include "op-node.labels" $ | nindent 4 }}
+spec:
+  type: ClusterIP
+  publishNotReadyAddresses: true
+  ports:
+    - name: rpc
+      port: {{ .port }}
+      targetPort: rpc
+  selector:
+    {{- include "op-node.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-node.fullname" $ }}-{{ $index }}
+{{- end }}
+{{- end }}
+{{- end }}

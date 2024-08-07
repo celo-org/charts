@@ -120,7 +120,8 @@ extraVolumes: []
 services:
   rpc:
     sharedServiceEnabled: true
-    individualServiceEnabled: false
+    individualServiceEnabled: true
+    publishNotReadyAddresses: false
     type: ClusterIP
     httpPort: 8545
     wsPort: 8545
@@ -234,6 +235,7 @@ startupProbe:
       - /scripts/wait-for-sync.sh
 
 # .livenessProbe.exec.command can also be in a templated string format
+# If not using exec, set exec: null
 livenessProbe:
   enabled: false
   initialDelaySeconds: 120
@@ -248,6 +250,7 @@ livenessProbe:
       - "300"
 
 # .readinessProbe.exec.command can also be in a templated string format
+# If not using exec, set exec: null
 readinessProbe:
   enabled: false
   initialDelaySeconds: 60
@@ -260,6 +263,25 @@ readinessProbe:
       - sh
       - /scripts/readiness.sh
       - "60"
+
+# Recommended readinessProbe when sequencing enabled (required for HA)
+# Check the endpoint renders in "linked" op-node
+# .readinessProbe.exec.command can also be in a templated string format
+# readinessProbe:
+#   enabled: true
+#   initialDelaySeconds: 2
+#   periodSeconds: 4
+#   successThreshold: 1
+#   failureThreshold: 2
+#   timeoutSeconds: 2
+#   exec:
+#     command:
+#       - /bin/sh
+#       - -c
+#       - |
+#         RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
+#         response=$(wget --quiet --timeout=1 --header="Content-Type: application/json" --post-data='{"jsonrpc":"2.0","method":"admin_sequencerActive","id":1}' -O- http://{{ .Release.Name | replace "geth" "node" }}-$RID:9545)
+#         echo $response | jq -e '.result == true' > /dev/null || exit 1
 
 secrets:
   # REQUIRED: JWT for communication with op-geth. In case of multiReplica, comma separated list of JWTs (or shared)

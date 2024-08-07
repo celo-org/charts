@@ -65,11 +65,19 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "op-geth.healthcheck" -}}
 {{- $context := index . 0 }}
 {{- $root := index . 1 }}
-{{- if and $root.exec (kindIs "string" $root.exec.command) }}
+{{- if and $root.exec (kindIs "slice" $root.exec.command) }}
 {{- omit $root "enabled" "exec" | toYaml }}
 exec:
   command:
-		{{- tpl $root.exec.command $context | nindent 4 }}
+    {{- range $cmd := $root.exec.command -}}
+    {{- $processedCmd := tpl $cmd $context | trim -}}
+    {{- if contains "\n" $processedCmd }}
+    - |
+      {{- $processedCmd | nindent 7 }}
+    {{- else -}}
+    {{ printf "- %s" $processedCmd | nindent 4 }}
+    {{- end -}}
+    {{- end -}}
 {{- else }}
 {{- omit $root "enabled" | toYaml }}
 {{- end }}
