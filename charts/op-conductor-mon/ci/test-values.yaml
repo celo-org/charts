@@ -1,0 +1,31 @@
+---
+config: |
+  log_level: info
+  dry_run: false
+  
+  metrics:
+    enabled: true
+    host: 0.0.0.0
+    port: {{ .Values.service.metricsPort | default 7300 }}
+  
+  healthz:
+    enabled: true
+    host: 0.0.0.0
+    port: {{ .Values.service.healthzPort | default 8080 }}
+  
+  poll_interval: 30s
+  node_state_expiration: 1h
+  rpc_timeout: 15s
+  
+  nodes:
+    op-conductor:
+      rpc_address: http://op-conductor:8545
+    op-conductor-replica:
+      rpc_address: http://op-conductor-replica:8545
+    op-conductor-fullnode:
+      rpc_address: http://op-conductor-fullnode:8545
+
+podAnnotations:
+  prometheus.io/path: /metrics
+  prometheus.io/port: "7030"
+  prometheus.io/scrape: "true"

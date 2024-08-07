@@ -1,0 +1,125 @@
+# Default values for op-conductor-mon.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+# -- Number of deployment replicas
+replicaCount: 1
+
+image:
+  # -- Image repository
+  repository: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-conductor-mon
+  # -- Image pullpolicy
+  pullPolicy: IfNotPresent
+  # -- Image tag
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "main"
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+# -- Config as string. Minimal example at https://github.com/ethereum-optimism/optimism/blob/develop/proxyd/example.config.toml
+config: ""
+# |
+#  log_level: info
+#  dry_run: false
+#  
+#  metrics:
+#    enabled: true
+#    host: 0.0.0.0
+#    port: {{ .Values.service.metricsPort | default 7300 }}
+#  
+#  healthz:
+#    enabled: true
+#    host: 0.0.0.0
+#    port: {{ .Values.service.healthzPort | default 8080 }}
+#  
+#  poll_interval: 30s
+#  node_state_expiration: 1h
+#  rpc_timeout: 15s
+#  
+#  nodes:
+#    op-conductor-0:
+#      rpc_address: http://op-conductor-0:9545
+#    op-conductor-1:
+#      rpc_address: http://op-conductor-1:9545
+#    op-conductor-3:
+#      rpc_address: http://op-conductor-3:9545
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+service:
+  # -- K8S service type
+  type: ClusterIP
+  # -- Metrics port
+  metricsPort: 7300
+  # -- Healthz port
+  healthzPort: 8080
+
+# -- Custom pod annotations
+podAnnotations: {}
+  # prometheus.io/path: /metrics
+  # prometheus.io/port: "7300"
+  # prometheus.io/scrape: "true"
+
+# -- Custom pod labels
+podLabels: {}
+
+# -- Custom pod security context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Custom container security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# -- Container resources
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- Liveness probe configuration
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: healthz
+
+# -- Readiness probe configuration
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: healthz
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes pod affinity
+affinity: {}
