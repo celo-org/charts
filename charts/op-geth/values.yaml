@@ -381,6 +381,6 @@ syncToS3:
     enabled: false
     image:
       repository: dysnix/kubectl
-      tag: v1.29
+      tag: v1.30
       pullPolicy: IfNotPresent
     schedule: "0 2 * * *"
