@@ -2,7 +2,7 @@
 serviceAccount:
   create: true
   annotations: {}
-schedule: "0 0 * * *" # -- Run every day at midnight
+schedule: "0 0 * * *"  # -- Run every day at midnight
 # -- RPC URL for L2 blockchain
 rpcURL: https://forno.dango.celo-testnet.org
 # -- Address of the L2 CeloDistributionSchedule contract
@@ -12,7 +12,7 @@ functionSignature: "distributeAccordingToSchedule()(bool)"
 # -- Args to pass to function
 functionArgs: ""
 # -- Private key of the sender account (for signing transactions)
-senderKey: 
+senderKey:
   value: ""
     # secretName: test
     # secretKey: test
