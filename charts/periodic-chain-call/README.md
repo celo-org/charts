@@ -1,8 +1,8 @@
-# cel2-migration-tool
+# periodic-chain-call
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
-Node migration tool for Cel2 network
+Calls a blockchain smart contract function on a schedule
 
 **Homepage:** <https://clabs.co>
 
@@ -23,30 +23,15 @@ Node migration tool for Cel2 network
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| cel2NetworkName | string | `"myNetwork"` | Reference name for the tar.zstd file |
-| compressAndUpload.image.pullPolicy | string | `"IfNotPresent"` |  |
-| compressAndUpload.image.repository | string | `"alpine"` |  |
-| compressAndUpload.image.tag | float | `3.19` |  |
-| download.config | string | `"https://storage.googleapis.com/cel2-rollup-files/jctestnet/config.json"` |  |
-| download.deploymentL1 | string | `"https://storage.googleapis.com/cel2-rollup-files/jctestnet/deployment-l1.json"` |  |
-| download.l2Allocs | string | `"https://storage.googleapis.com/cel2-rollup-files/jctestnet/l2-allocs.json"` |  |
-| downloadDeps.image.pullPolicy | string | `"IfNotPresent"` |  |
-| downloadDeps.image.repository | string | `"alpine"` |  |
-| downloadDeps.image.tag | float | `3.19` |  |
-| gcsBucket | string | `"cel2-node-files/"` | GCS bucket to store the tar.zstd file |
-| l1Url | string | `"https://ethereum-holesky-rpc.publicnode.com"` | RPC URL for L1 blockchain |
-| migrationTool.config.batchSize | int | `5000` |  |
-| migrationTool.config.memoryLimit | int | `20000` |  |
-| migrationTool.extraArgs | list | `[]` |  |
-| migrationTool.image.pullPolicy | string | `"Always"` |  |
-| migrationTool.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/cel2-migration-tool"` |  |
-| migrationTool.image.tag | string | `"8bdebc03a0526b6474dfba468884116ee1366907"` |  |
-| migrationTool.pauseOnCompletion | bool | `false` | Run `tail -f /dev/null` to keep the migration job alive after completion |
-| migrationTool.resources | object | `{}` |  |
-| pvc.input | string | `"myNetwork-input"` |  |
-| pvc.output | string | `"myNetwork-output"` |  |
-| pvc.useOutputAsInput | bool | `true` | Only one PVC required. This operation is not idempotent |
-| schedule | string | `"0 0 30 2 0"` |  |
+| contractAddress | string | `"0x78Af211Ad79bCE6BF636640CE8c2C2b29e02365A"` | Address of the L2 CeloDistributionSchedule contract |
+| functionArgs | string | `""` | Args to pass to function |
+| functionSignature | string | `"distributeAccordingToSchedule()(bool)"` | Signature of function to call |
+| image.pullPolicy | string | `"IfNotPresent"` |  |
+| image.repository | string | `"ghcr.io/foundry-rs/foundry"` |  |
+| image.tag | string | `"latest"` |  |
+| rpcURL | string | `"https://forno.dango.celo-testnet.org"` | RPC URL for L2 blockchain |
+| schedule | string | `"0 0 * * *"` |  |
+| senderKey | object | `{"value":""}` | Private key of the sender account (for signing transactions) |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
 
