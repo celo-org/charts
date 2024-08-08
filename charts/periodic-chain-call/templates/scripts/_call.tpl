@@ -4,9 +4,7 @@ balance=$(cast balance --rpc-url {{ .Values.l2Url}} $sender_address)
 
 echo "Sending address $sender_address has $balance account balance"
 
-cast send --private-key {{ .Values.senderKey.value  }}) --rpc-url {{ .Values.l2Url }} {{ .Values.contractAddress }} {{ .Values.functionSignature }} {{ .Values.functionArgs }}
+cast send --private-key "{{ .Values.senderKey.value  }})" --rpc-url "{{ .Values.rpcURL }}" "{{ .Values.contractAddress }}" "{{ .Values.functionSignature }}" "{{ .Values.functionArgs }}"
 {{- else }}
-
-cast call --rpc-url {{ .Values.l2Url }} {{ .Values.contractAddress }} {{ .Values.functionSignature }} {{ .Values.functionArgs }}
-
+cast call --rpc-url {{ .Values.rpcURL }} "{{ .Values.contractAddress }}" "{{ .Values.functionSignature }}" "{{ .Values.functionArgs }}"
 {{- end }}

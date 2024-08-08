@@ -20,8 +20,8 @@ spec:
           initContainers:
           containers:
           - name: distribute-call
-            image: {{ .Values.faucet-distribution.image }}:{{ .Values.faucet-distribution.image.tag }}
-            imagePullPolicy: {{ .Values.faucet-distribution.image.pullPolicy }}
+            image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
             command:
             - /bin/sh
             - -c
