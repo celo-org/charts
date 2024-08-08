@@ -9,7 +9,7 @@ l2Url: https://forno.dango.celo-testnet.org
 contractAddress: "0x78Af211Ad79bCE6BF636640CE8c2C2b29e02365A"
 # -- Signature of function to call
 functionSignature: "distributeAccordingToSchedule()(bool)"
-# -- Signature of function to call
+# -- Args to pass to function
 functionArgs: ""
 # -- Private key of the sender account (for signing transactions)
 senderKey: 

@@ -1,8 +1,8 @@
 ---
-name: faucet-distribution-cronjob
+name: periodic-chain-call
 apiVersion: v2
 version: 0.1.4
-description: Calls CeloDistributionSchedule to distribute funds to the faucet
+description: Calls a blockchain smart contract function on a schedule
 home: https://clabs.co
 sources:
   - https://celo.org
@@ -12,7 +12,6 @@ sources:
 keywords:
   - celo
   - blockchain
-  - faucet
 maintainers:
   - name: cLabs
     email: devops@clabs.co

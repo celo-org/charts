@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "faucet-distribution-cronjob.name" -}}
+{{- define "periodic-chain-call.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "faucet-distribution-cronjob.fullname" -}}
+{{- define "periodic-chain-call.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,16 +27,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "faucet-distribution-cronjob.chart" -}}
+{{- define "periodic-chain-call.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "faucet-distribution-cronjob.serviceAccountName" -}}
+{{- define "periodic-chain-call.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "faucet-distribution-cronjob.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "periodic-chain-call.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -45,9 +45,9 @@ Create the name of the service account to use
 {{/*
 Common labels
 */}}
-{{- define "faucet-distribution-cronjob.labels" -}}
-helm.sh/chart: {{ include "faucet-distribution-cronjob.chart" . }}
-{{ include "faucet-distribution-cronjob.selectorLabels" . }}
+{{- define "periodic-chain-call.labels" -}}
+helm.sh/chart: {{ include "periodic-chain-call.chart" . }}
+{{ include "periodic-chain-call.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -57,12 +57,12 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "faucet-distribution-cronjob.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "faucet-distribution-cronjob.name" . }}
+{{- define "periodic-chain-call.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "periodic-chain-call.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{- define "faucet-distribution-cronjob.healthcheck" -}}
+{{- define "periodic-chain-call.healthcheck" -}}
 {{- $context := index . 0 }}
 {{- $root := index . 1 }}
 {{- if and $root.exec (kindIs "string" $root.exec.command) }}
