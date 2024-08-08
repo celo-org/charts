@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "faucet-distribution-cronjob.labels" . | nindent 4 }}
+    component: faucet-distribution-cronjob
+spec:
+  schedule: "{{ .Values.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            {{- include "faucet-distribution-cronjob.labels" . | nindent 12 }}
+        spec:
+          serviceAccountName: {{ include "faucet-distribution-cronjob.serviceAccountName" . }}
+          initContainers:
+          containers:
+          - name: distribute-call
+            image: {{ .Values.faucet-distribution.image }}:{{ .Values.faucet-distribution.image.tag }}
+            imagePullPolicy: {{ .Values.faucet-distribution.image.pullPolicy }}
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              {{- include (print $.Template.BasePath "/scripts/_call.tpl") . | nindent 14 }}
+          restartPolicy: Never
