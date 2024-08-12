@@ -83,26 +83,26 @@ spec:
             --resubmission-timeout={{ .Values.config.resubmissionTimeout }} \
             {{- if .Values.config.rpc.enabledAdmin }}
             --rpc.enable-admin \
-            --rpc.addr={{ .Values.config.rpc.addr }} \
-            --rpc.port={{ .Values.config.rpc.port }} \
+            --rpc.addr={{ toString .Values.config.rpc.addr }} \
+            --rpc.port={{ toString .Values.config.rpc.port }} \
             {{- end }}
             {{- with .Values.config.batchType }}
             --batch-type={{ . }} \
             {{- end }}
             {{- with .Values.config.maxChannelDuration }}
-            --max-channel-duration={{ . }} \
+            --max-channel-duration={{ toString . }} \
             {{- end }}
             {{- with .Values.config.maxL1TxSizeBytes }}
-            --max-l1-tx-size-bytes={{ . }} \
+            --max-l1-tx-size-bytes={{ toString . }} \
             {{- end }}
             {{- with .Values.config.maxPendingTransactions }}
-            --max-pending-tx={{ . }} \
+            --max-pending-tx={{ toString . }} \
             {{- end }}
             {{- with .Values.config.subSafetyMargin }}
-            --sub-safety-margin={{ . }} \
+            --sub-safety-margin={{ toString . }} \
             {{- end }}
             {{- with .Values.config.feeLimitMultiplier }}
-            --fee-limit-multiplier={{ . }} \
+            --fee-limit-multiplier={{ toString . }} \
             {{- end }}
             {{- range $key, $value := .Values.config.txmgr }}
             {{- if kindIs "string" $value }}
