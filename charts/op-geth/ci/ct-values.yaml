@@ -7,3 +7,22 @@ secrets:
     value: "1010101010101010101010101010101010101010101010101010101010101010, 1010101010101010101010101010101010101010101010101010101010101012"
 extraArgs:
   - --gpo.blocks=10
+readinessProbe:
+  enabled: false
+  initialDelaySeconds: 2
+  periodSeconds: 4
+  successThreshold: 1
+  failureThreshold: 2
+  timeoutSeconds: 2
+  exec:
+    command:
+      - /bin/sh
+      - -c
+      - |
+        RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
+        response=$(wget --quiet --timeout=1 --header="Content-Type: application/json" --post-data='{"jsonrpc":"2.0","method":"admin_sequencerActive","id":1}' -O- http://{{ .Release.Name | replace "geth" "node" }}-$RID:9545)
+        echo $response | jq -e '.result == true' > /dev/null || exit 1
+services:
+  rpc:
+    sharedServiceEnabled: true
+    individualServiceEnabled: true

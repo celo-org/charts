@@ -1,16 +1,16 @@
 {{- with .Values.services.rpc }}
-{{- if .enabled }}
+{{- if .sharedServiceEnabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "op-node.fullname" $ }}-rpc
+  name: {{ include "op-geth.fullname" $ }}-shared-rpc
   {{- with .annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
     service-type: rpc
-    {{- include "op-node.labels" $ | nindent 4 }}
+    {{- include "op-geth.labels" $ | nindent 4 }}
 spec:
   type: {{ .type }}
   {{- with .loadBalancerIP }}
@@ -25,17 +25,17 @@ spec:
   {{- with .internalTrafficPolicy }}
   internalTrafficPolicy: {{ . }}
   {{- end }}
-  {{- with .publishNotReadyAddresses }}
-  publishNotReadyAddresses: {{ . }}
-  {{- end }}
+  publishNotReadyAddresses: false
   ports:
-    - name: rpc
-      port: {{ .port }}
-      targetPort: rpc
-  selector:
-    {{- include "op-node.selectorLabels" $ | nindent 4 }}
-    {{- with $.Values.podStatusLabels }}
-    {{- toYaml . | nindent 4 }}
+    - name: http
+      port: {{ .httpPort }}
+      targetPort: http
+    {{- if and $.Values.config.ws.enabled (and (ne .httpPort .wsPort) (ne .Values.config.http.port .Values.config.ws.port)) }}
+    - name: ws
+      port: {{ .wsPort }}
+      targetPort: ws
     {{- end }}
+  selector:
+    {{- include "op-geth.selectorLabels" $ | nindent 4 }}
 {{- end }}
 {{- end }}

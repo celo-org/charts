@@ -10,3 +10,17 @@ secrets:
     value: https://ethereum-beacon-api.publicnode.com
 extraArgs:
   - --log.format=terminal
+readinessProbe:
+  enabled: false
+  initialDelaySeconds: 2
+  periodSeconds: 4
+  successThreshold: 1
+  failureThreshold: 2
+  timeoutSeconds: 2
+  exec:
+    command:
+      - /bin/sh
+      - -c
+      - |
+        response=$(wget --quiet --timeout=1 --header="Content-Type: application/json" --post-data='{"jsonrpc":"2.0","method":"admin_sequencerActive","id":1}' -O- http://localhost:{{ .Values.config.port }})
+        echo $response | jq -e '.result == true' > /dev/null || exit 1
