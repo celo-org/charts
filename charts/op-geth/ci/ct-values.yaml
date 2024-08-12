@@ -8,7 +8,7 @@ secrets:
 extraArgs:
   - --gpo.blocks=10
 readinessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 2
   periodSeconds: 4
   successThreshold: 1

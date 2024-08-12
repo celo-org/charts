@@ -11,7 +11,7 @@ secrets:
 extraArgs:
   - --log.format=terminal
 readinessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 2
   periodSeconds: 4
   successThreshold: 1
