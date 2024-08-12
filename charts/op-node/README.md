@@ -90,6 +90,7 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | initFromGCS.enabled | bool | `false` |  |
 | initFromGCS.force | bool | `false` |  |
 | livenessProbe.enabled | bool | `true` |  |
+| livenessProbe.exec | string | `nil` |  |
 | livenessProbe.failureThreshold | int | `3` |  |
 | livenessProbe.httpGet.path | string | `"/healthz"` |  |
 | livenessProbe.httpGet.port | string | `"rpc"` |  |
