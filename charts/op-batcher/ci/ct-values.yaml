@@ -12,3 +12,4 @@ extraArgs:
   - --wait-node-sync=true
 config:
   l2Url: http://op-node:8545
+  rollupUrl: http://op-node:9545
