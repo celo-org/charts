@@ -89,6 +89,12 @@ spec:
             {{- with .Values.config.batchType }}
             --batch-type={{ . }} \
             {{- end }}
+            {{- with .Values.config.compressionAlgo }}
+            --compression-algo={{ . }} \
+            {{- end }}
+            {{ with .Values.config.compressor }}
+            --compressor={{ . }} \
+            {{- end }}
             {{- with .Values.config.maxChannelDuration }}
             --max-channel-duration={{ toString . }} \
             {{- end }}

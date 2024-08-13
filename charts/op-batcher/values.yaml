@@ -136,12 +136,14 @@ secrets:
 ## Main op-batcher config
 config:
   l2Url: ""                                                                 # HTTP provider URL for the L2 engine. If multiple URLs are provided, they should match the number of rollup-rpcs
-  dataAvailabilityType: calldata                                            # The data availability type to use for submitting batches to the L1. Valid options: calldata, blobs
-  batchType: ""                                                             # The batch type. 0 for SingularBatch and 1 for SpanBatch
   rollupUrl: ""                                                             # HTTP provider URL for rollup node. If multiple URLs are provided, they should match the number of l2-eth-rpcs
   pollInterval: 1s                                                          # How frequently to poll L2 for new blocks
   subSafetyMargin: 6                                                        # Safety margin (in #L1blocks) for batch transaction submission to ensure safe channel inclusion on L1.
   numConfirmations: 1                                                       # Number of confirmations which we will wait after sending a transaction
+  dataAvailabilityType: calldata                                            # The data availability type to use for submitting batches to the L1. Valid options: calldata, blobs
+  batchType: ""                                                             # The batch type. 0 for SingularBatch and 1 for SpanBatch
+  compressionAlgo: ""                                                       # The compression algorithm to use. Valid options: zlib, brotli, brotli-9, brotli-10, brotli-11
+  compressor: ""                                                            # The type of compressor. Valid options: ratio, shadow, none
   blobTargetNumFrames: ""                                                   # The target number of frames to create per channel. Controls number of blobs per blob tx, if using Blob DA.
   safeAbortNonceTooLowCount: 3                                              # Number of ErrNonceTooLow observations required to give up on a tx at a particular nonce without receiving confirmation
   resubmissionTimeout: 30s                                                  # Duration we will wait before resubmitting a transaction to L1
