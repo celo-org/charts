@@ -92,7 +92,7 @@ spec:
             {{- with .Values.config.compressionAlgo }}
             --compression-algo={{ . }} \
             {{- end }}
-            {{ with .Values.config.compressor }}
+            {{- with .Values.config.compressor }}
             --compressor={{ . }} \
             {{- end }}
             {{- with .Values.config.maxChannelDuration }}

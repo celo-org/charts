@@ -135,54 +135,54 @@ secrets:
 
 ## Main op-batcher config
 config:
-  l2Url: ""                                                                 # HTTP provider URL for the L2 engine. If multiple URLs are provided, they should match the number of rollup-rpcs
-  rollupUrl: ""                                                             # HTTP provider URL for rollup node. If multiple URLs are provided, they should match the number of l2-eth-rpcs
-  pollInterval: 1s                                                          # How frequently to poll L2 for new blocks
-  subSafetyMargin: 6                                                        # Safety margin (in #L1blocks) for batch transaction submission to ensure safe channel inclusion on L1.
-  numConfirmations: 1                                                       # Number of confirmations which we will wait after sending a transaction
-  dataAvailabilityType: calldata                                            # The data availability type to use for submitting batches to the L1. Valid options: calldata, blobs
-  batchType: ""                                                             # The batch type. 0 for SingularBatch and 1 for SpanBatch
-  compressionAlgo: ""                                                       # The compression algorithm to use. Valid options: zlib, brotli, brotli-9, brotli-10, brotli-11
-  compressor: ""                                                            # The type of compressor. Valid options: ratio, shadow, none
-  blobTargetNumFrames: ""                                                   # The target number of frames to create per channel. Controls number of blobs per blob tx, if using Blob DA.
-  safeAbortNonceTooLowCount: 3                                              # Number of ErrNonceTooLow observations required to give up on a tx at a particular nonce without receiving confirmation
-  resubmissionTimeout: 30s                                                  # Duration we will wait before resubmitting a transaction to L1
-  maxL1TxSizeBytes: ""                                                      # The maximum size of an L1 transaction in bytes. 120000 by default
-  maxChannelDuration: ""                                                    # The maximum duration of L1-blocks to keep a channel open. 0 to disable.
-  maxPendingTransactions: ""                                                # The maximum number of pending transactions. 0 for no limit.
-  feeLimitMultiplier: 5                                                     # The multiplier to apply to the gas price when submitting transactions to L1
+  l2Url: ""                              # HTTP provider URL for the L2 engine. If multiple URLs are provided, they should match the number of rollup-rpcs
+  rollupUrl: ""                          # HTTP provider URL for rollup node. If multiple URLs are provided, they should match the number of l2-eth-rpcs
+  pollInterval: 1s                       # How frequently to poll L2 for new blocks
+  subSafetyMargin: 6                     # Safety margin (in #L1blocks) for batch transaction submission to ensure safe channel inclusion on L1.
+  numConfirmations: 1                    # Number of confirmations which we will wait after sending a transaction
+  dataAvailabilityType: calldata         # The data availability type to use for submitting batches to the L1. Valid options: calldata, blobs
+  batchType: ""                          # The batch type. 0 for SingularBatch and 1 for SpanBatch
+  compressionAlgo: ""                    # The compression algorithm to use. Valid options: zlib, brotli, brotli-9, brotli-10, brotli-11
+  compressor: ""                         # The type of compressor. Valid options: ratio, shadow, none. The shadow compressor guarantees that the compressed data stays below maxL1TxSizeBytes. The ratio compressor might go over.
+  blobTargetNumFrames: ""                # The target number of frames to create per channel. Controls number of blobs per blob tx, if using Blob DA.
+  safeAbortNonceTooLowCount: 3           # Number of ErrNonceTooLow observations required to give up on a tx at a particular nonce without receiving confirmation
+  resubmissionTimeout: 30s               # Duration we will wait before resubmitting a transaction to L1
+  maxL1TxSizeBytes: ""                   # The maximum size of an L1 transaction in bytes. 120000 by default
+  maxChannelDuration: ""                 # The maximum duration of L1-blocks to keep a channel open. 0 to disable.
+  maxPendingTransactions: ""             # The maximum number of pending transactions. 0 for no limit.
+  feeLimitMultiplier: 5                  # The multiplier to apply to the gas price when submitting transactions to L1
   txmgr:
-    feeLimitThreshold: ""                                                   # The minimum threshold (in GWei) at which fee bumping starts to be capped
-    minBasefee: ""                                                          # Enforces a minimum base fee (in GWei) to assume when determining tx fees. Off by default
-    minTipCap: ""                                                           # Enforces a minimum tip cap (in GWei) to assume when determining tx fees. Off by default
-    notInMempoolTimeout: ""                                                 # Timeout for aborting a tx send if the tx does not make it to the mempool
-    receiptQueryInterval: ""                                                # Frequency to poll for receipts
-    sendTimeout: ""                                                         # Timeout for sending a tx. 0 to disable
-    # feeLimitThreshold: 10                                                   # The minimum threshold (in GWei) at which fee bumping starts to be capped
-    # minBaseFee: 0                                                           # Enforces a minimum base fee (in GWei) to assume when determining tx fees. Off by default
-    # minTipCap: 0                                                            # Enforces a minimum tip cap (in GWei) to assume when determining tx fees. Off by default
-    # notInMempoolTimeout: 2m0s                                               # Timeout for aborting a tx send if the tx does not make it to the mempool
-    # receiptQueryInterval: 12s                                               # Frequency to poll for receipts
-    # sendTimeout: 2m0s                                                       # Timeout for sending a tx. 0 to disable
+    feeLimitThreshold: ""                # The minimum threshold (in GWei) at which fee bumping starts to be capped
+    minBasefee: ""                       # Enforces a minimum base fee (in GWei) to assume when determining tx fees. Off by default
+    minTipCap: ""                        # Enforces a minimum tip cap (in GWei) to assume when determining tx fees. Off by default
+    notInMempoolTimeout: ""              # Timeout for aborting a tx send if the tx does not make it to the mempool
+    receiptQueryInterval: ""             # Frequency to poll for receipts
+    sendTimeout: ""                      # Timeout for sending a tx. 0 to disable
+    # feeLimitThreshold: 10              # The minimum threshold (in GWei) at which fee bumping starts to be capped
+    # minBaseFee: 0                      # Enforces a minimum base fee (in GWei) to assume when determining tx fees. Off by default
+    # minTipCap: 0                       # Enforces a minimum tip cap (in GWei) to assume when determining tx fees. Off by default
+    # notInMempoolTimeout: 2m0s          # Timeout for aborting a tx send if the tx does not make it to the mempool
+    # receiptQueryInterval: 12s          # Frequency to poll for receipts
+    # sendTimeout: 2m0s                  # Timeout for sending a tx. 0 to disable
   logs:
-    level: info                                                              # Log level
-    format: json                                                             # Log format
-    color: false                                                            # Enable colored logs
+    level: info                          # Log level
+    format: json                         # Log format
+    color: false                         # Enable colored logs
   rpc:
-    enableAdmin: false                                                      # Enable the RPC admin API
-    addr: 0.0.0.0                                                           # RPC listening address
-    port: 8545                                                              # RPC listening port
+    enableAdmin: false                   # Enable the RPC admin API
+    addr: 0.0.0.0                        # RPC listening address
+    port: 8545                           # RPC listening port
   plasma:
-    enabled: false                                                           # Enable the plasma module
-    daServer: ""                                                            # Data availability server URL
-    daService: true                    # Use DA service type where commitments are generated by plasma server
-    verifyOnRead: false                # verify input data matches the commitments from the DA storage service
+    enabled: false                       # Enable the plasma module
+    daServer: ""                         # Data availability server URL
+    daService: true                      # Use DA service type where commitments are generated by plasma server
+    verifyOnRead: false                  # verify input data matches the commitments from the DA storage service
   metrics:
     enabled: false
     addr: 0.0.0.0
     port: 7300
   signer:
-    enabled: false                                                           # Enable the signer
+    enabled: false                       # Enable the signer
     address: "0x000000000000"
     endpoint: "https://test.example.com"
     tls:
