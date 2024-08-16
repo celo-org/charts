@@ -48,6 +48,7 @@ spec:
               --eth-rpc={{ .Values.config.ethRpc }} \
               --tx-mode={{ .Values.config.txMode }} \
               --num-distributors={{ .Values.config.numDistributors }} \
+              --starting-index=$STARTING_INDEX \
               --data-rate={{ .Values.config.dataRate }} \
               --log.format={{ .Values.config.logFormat }} \
               {{- if .Values.metrics.enabled }}
@@ -56,6 +57,7 @@ spec:
               {{- with .Values.extraArgs }}
               {{- toYaml . | nindent 14 }} \
               {{- end }}
+
           {{- if .Values.metrics.enabled }}
           ports:
             - name: metrics
