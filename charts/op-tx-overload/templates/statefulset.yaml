@@ -1,20 +1,23 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "op-tx-overload.fullname" . }}
   labels:
     {{- include "op-tx-overload.labels" . | nindent 4 }}
 spec:
+  serviceName: {{ include "op-tx-overload.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "op-tx-overload.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- if .Values.metrics.enabled }}
+        prometheus.io/path: /metrics
+        prometheus.io/port: "7300"
+        prometheus.io/scrape: "true"
+        {{- end }}
       labels:
         {{- include "op-tx-overload.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
@@ -34,19 +37,25 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.command }}
           command:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- if or (.Values.args) (.Values.metrics.enabled) }}
+          - /bin/sh
+          - -c
           args:
-          {{- with .Values.args }}
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- if .Values.metrics.enabled }}
-            - --metrics.enabled
-          {{- end }}
-          {{- end }}
+          - |
+            RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
+            STARTING_INDEX=$((RID * {{ .Values.config.numDistributors }}))
+            /tx-overload.bin \
+              --eth-rpc={{ .Values.config.ethRpc }} \
+              --tx-mode={{ .Values.config.txMode }} \
+              --num-distributors={{ .Values.config.numDistributors }} \
+              --data-rate={{ .Values.config.dataRate }} \
+              --log.format={{ .Values.config.logFormat }} \
+              {{- if .Values.metrics.enabled }}
+              --metrics.enabled \
+              {{- end }}
+              {{- with .Values.extraArgs }}
+              {{- toYaml . | nindent 14 }} \
+              {{- end }}
           {{- if .Values.metrics.enabled }}
           ports:
             - name: metrics
@@ -79,3 +88,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  volumeClaimTemplates: []
+  updateStrategy:
+    type: RollingUpdate

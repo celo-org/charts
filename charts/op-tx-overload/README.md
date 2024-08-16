@@ -1,6 +1,6 @@
 # op-tx-overload
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: test](https://img.shields.io/badge/AppVersion-test-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: test](https://img.shields.io/badge/AppVersion-test-informational?style=flat-square)
 
 Generate load on Optimism Bedrock using transactions with random calldata.
 
@@ -20,8 +20,12 @@ Generate load on Optimism Bedrock using transactions with random calldata.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| args | list | `[]` | Args for the deployment. |
-| command | list | `[]` | Command for the deployment. "./tx-overload" if empty. |
+| config.dataRate | int | `1000` |  |
+| config.ethRpc | string | `"http://op-geth-sequencer-shared-rpc:8545"` |  |
+| config.logFormat | string | `"json"` |  |
+| config.numDistributors | int | `4` |  |
+| config.txMode | string | `"random"` |  |
+| extraArgs | object | `{}` | Args for the deployment. |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/tx-overload"` | Image repository |

@@ -10,20 +10,15 @@ fullnameOverride: ""
 # -- Number of deployment replicas
 replicaCount: 1
 
-# -- Command for the deployment. "./tx-overload" if empty.
-command: []
-  # - |
-  #   echo "Done testing"
-  #   tail -f /dev/null
+config:
+  ethRpc: http://op-geth-sequencer-shared-rpc:8545
+  txMode: random
+  numDistributors: 4
+  dataRate: 1000
+  logFormat: json
 
 # -- Args for the deployment.
-args: []
-  # - --eth-rpc
-  # - http://op-geth:8545
-  # - --num-distributors
-  # - "1"
-  # - --data-rate
-  # - "1000"
+extraArgs: {}
 
 # -- Env Vars. mounted from a secret
 secretEnv: {}
