@@ -19,7 +19,7 @@ keywords:
   - Validator
   - Ethereum
   - Proof-of-Stake
-version: 0.7.4
+version: 0.7.5
 dependencies:
   - name: common
     repository: oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci

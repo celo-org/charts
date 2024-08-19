@@ -197,8 +197,8 @@ persistence:
     annotations: {}
       # resize.topolvm.io/increase: 10%
       # resize.topolvm.io/storage_limit: 500Gi
-      # resize.topolvm.io/threshold: 85%
-      # resize.topolvm.io/inodes-threshold: 90%
+      # resize.topolvm.io/threshold: 10%
+      # resize.topolvm.io/inodes-threshold: 5%
   hostPath:
     path: /blockchain/optimism  # assume /blockchain is your host volume mount point
     type: DirectoryOrCreate     # automaticaly create "optimism" directory if it doesn't exist

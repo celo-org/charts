@@ -1,6 +1,6 @@
 # op-bootnode
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-bootnode (Optimism Rollup)
 
@@ -46,9 +46,9 @@ Celo implementation for op-bootnode (Optimism Rollup)
 | podSecurityContext | object | `{}` |  |
 | pvc.accessMode | string | `"ReadWriteOnce"` |  |
 | pvc.annotations."resize.topolvm.io/increase" | string | `"1Gi"` |  |
-| pvc.annotations."resize.topolvm.io/inodes-threshold" | string | `"90%"` |  |
+| pvc.annotations."resize.topolvm.io/inodes-threshold" | string | `"5%"` |  |
 | pvc.annotations."resize.topolvm.io/storage_limit" | string | `"5Gi"` |  |
-| pvc.annotations."resize.topolvm.io/threshold" | string | `"90%"` |  |
+| pvc.annotations."resize.topolvm.io/threshold" | string | `"10%"` |  |
 | pvc.enabled | bool | `true` |  |
 | pvc.size | string | `"1Gi"` |  |
 | pvc.storageClassName | string | `""` |  |

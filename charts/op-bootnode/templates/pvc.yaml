@@ -5,9 +5,9 @@ kind: PersistentVolumeClaim
 metadata:
   annotations:
     resize.topolvm.io/increase: 1Gi
-    resize.topolvm.io/inodes-threshold: 90%
+    resize.topolvm.io/inodes-threshold: 5%
     resize.topolvm.io/storage_limit: 5Gi
-    resize.topolvm.io/threshold: 90%
+    resize.topolvm.io/threshold: 10%
   labels:
     {{- include "op-bootnode.labels" . | nindent 4 }}
   name: {{ include "op-bootnode.fullname" . }}

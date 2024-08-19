@@ -41,10 +41,10 @@ config:
     port: 8545
   healthcheck:
     interval: 10
-    minPeerCount: 0
+    minPeerCount: 1
     safeEnabled: false
     safeInterval: 1200
-    unsafeInterval: 0
+    unsafeInterval: 10000
   log:
     format: json
     level: INFO
@@ -65,8 +65,8 @@ persistence:
     annotations:
       # resize.topolvm.io/increase: 1Gi
       # resize.topolvm.io/storage_limit: 5Gi
-      # resize.topolvm.io/threshold: 90%
-      # resize.topolvm.io/inodes-threshold: 90%
+      # resize.topolvm.io/threshold: 10%
+      # resize.topolvm.io/inodes-threshold: 5%
   mountPath: /raft
 
 services:

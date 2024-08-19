@@ -171,8 +171,8 @@ persistence:
     annotations:
       # resize.topolvm.io/increase: 1Gi
       # resize.topolvm.io/storage_limit: 10Gi
-      # resize.topolvm.io/threshold: 90%
-      # resize.topolvm.io/inodes-threshold: 90%
+      # resize.topolvm.io/threshold: 10%
+      # resize.topolvm.io/inodes-threshold: 5%
   mountPath: ""                 # mount path for container fs, leave blank to use value from .Values.rollup.config
 
 ## initContainers configuration
