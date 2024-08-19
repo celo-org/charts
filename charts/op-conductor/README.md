@@ -1,6 +1,6 @@
 # op-conductor
 
-![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
+![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
 
 Helm chart deploying OP Conductor, a HA controller for op-node
 
@@ -28,10 +28,10 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | config.consensus.port | int | `50050` |  |
 | config.execution.rpc | string | `"http://op-geth:8545"` |  |
 | config.healthcheck.interval | int | `10` |  |
-| config.healthcheck.minPeerCount | int | `0` |  |
+| config.healthcheck.minPeerCount | int | `1` |  |
 | config.healthcheck.safeEnabled | bool | `false` |  |
 | config.healthcheck.safeInterval | int | `1200` |  |
-| config.healthcheck.unsafeInterval | int | `0` |  |
+| config.healthcheck.unsafeInterval | int | `10000` |  |
 | config.log.format | string | `"json"` |  |
 | config.log.level | string | `"INFO"` |  |
 | config.metrics.addr | string | `"0.0.0.0"` |  |
