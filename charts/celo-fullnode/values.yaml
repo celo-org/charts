@@ -57,8 +57,8 @@ storage:
   annotations: {}
     # resize.topolvm.io/increase: 10%
     # resize.topolvm.io/storage_limit: 500Gi
-    # resize.topolvm.io/threshold: 85%
-    # resize.topolvm.io/inodes-threshold: 90%
+    # resize.topolvm.io/threshold: 10%
+    # resize.topolvm.io/inodes-threshold: 5%
   # -- Size of the persistent volume claim for the celo-blockchain statefulset
   size: 20Gi
   # -- Include a dataSource in the volumeClaimTemplates

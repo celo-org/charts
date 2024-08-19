@@ -59,8 +59,8 @@ pvc:
   annotations:
     resize.topolvm.io/increase: 1Gi
     resize.topolvm.io/storage_limit: 5Gi
-    resize.topolvm.io/threshold: 90%
-    resize.topolvm.io/inodes-threshold: 90%
+    resize.topolvm.io/threshold: 10%
+    resize.topolvm.io/inodes-threshold: 5%
 
 secrets:
   # The key to use for the P2P network
