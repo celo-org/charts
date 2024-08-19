@@ -41,10 +41,10 @@ config:
     port: 8545
   healthcheck:
     interval: 10
-    minPeerCount: 0
+    minPeerCount: 1
     safeEnabled: false
     safeInterval: 1200
-    unsafeInterval: 0
+    unsafeInterval: 10000
   log:
     format: json
     level: INFO
