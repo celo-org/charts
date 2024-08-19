@@ -195,7 +195,7 @@ jobs:
           --chart-dirs charts,charts-private
           --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup
           --excluded-charts blockscout,akeyless-gadmin-producer,ultragreen-dashboard,kong-celo-fullnode
-          --excluded-charts eigenda-proxy,nethermind,prysm
+          --excluded-charts eigenda-proxy,nethermind,prysm,op-conductor
           --chart-repos bitnami=https://charts.bitnami.com/bitnami,stakewise=https://charts.stakewise.io/
   helm-docs:
     runs-on: 'ubuntu-latest'
