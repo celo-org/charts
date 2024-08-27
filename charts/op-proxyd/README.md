@@ -1,6 +1,6 @@
 # op-proxyd
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.0.2](https://img.shields.io/badge/AppVersion-v0.0.2-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.0](https://img.shields.io/badge/AppVersion-v0.1.0-informational?style=flat-square)
 
 Celo implementation for OP proxyd
 
@@ -29,7 +29,7 @@ Celo implementation for OP proxyd
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/proxyd/proxyd"` | Image repository |
-| image.tag | string | `"v0.0.2"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"v0.1.0"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `"nginx"` |  |
