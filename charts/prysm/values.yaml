@@ -13,9 +13,9 @@ global:
   ## openssl rand -hex 32 > token.txt
   ##
   JWTSecret:
-    value: ""
+    value: "test"
     ## !! The key for the secret MUST be jwtsecret
-    secretName: ""
+    secretName: "test"
 
   ## Server endpoints for an execution layer jwt authenticated HTTP JSON-RPC connection.
   ## Uses the same endpoint to populate the deposit cache.
