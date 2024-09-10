@@ -119,7 +119,7 @@ spec:
               --JsonRpc.Port={{ .Values.jsonrpc.ports.rest }}
               --JsonRpc.WebSocketsPort={{ .Values.jsonrpc.ports.websocket }}
           {{- end }}
-          {{- if .Values.global.JWTSecret }}
+          {{- if or (.Values.global.JWTSecret.value) (.Values.global.JWTSecret.secretName) }}
               --JsonRpc.JwtSecretFile=/secret/jwtsecret
               --JsonRpc.EnginePort={{ .Values.jsonrpc.engine.port }}
               --JsonRpc.EngineHost={{ .Values.jsonrpc.engine.host }}
@@ -165,7 +165,7 @@ spec:
               containerPort: {{ .Values.jsonrpc.ports.websocket }}
               protocol: TCP
           {{- end }}
-          {{- if .Values.global.JWTSecret }}
+          {{- if or (.Values.global.JWTSecret.value) (.Values.global.JWTSecret.secretName) }}
             - name: engine
               protocol: TCP
               containerPort: {{ .Values.jsonrpc.engine.port }}
@@ -186,7 +186,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data/nethermind
-          {{- if .Values.global.JWTSecret }}
+          {{- if or (.Values.global.JWTSecret.value) (.Values.global.JWTSecret.secretName) }}
             - name: jwtsecret
               mountPath: /secret
               readOnly: true
@@ -204,11 +204,18 @@ spec:
               value: "{{ .Values.sidecar.bindAddr }}:{{ .Values.sidecar.bindPort }}"
             - name: CLIENT_PORT
               value: {{ .Values.jsonrpc.ports.rest | quote }}
-          {{- if .Values.global.JWTSecret }}
+          {{- if or (.Values.global.JWTSecret.value) (.Values.global.JWTSecret.secretName) }}
             - name: CLIENT_AUTHORIZATIONTYPE
               value: "bearer"
             - name: CLIENT_JWTSECRET
-              value: {{ .Values.global.JWTSecret | quote }}
+              {{- if .Values.global.JWTSecret.value }}
+              value: {{ .Values.global.JWTSecret.value | quote }}
+              {{- else if and (.Values.global.JWTSecret.secretName) (.Values.global.JWTSecret.secretKey) }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.JWTSecret.secretName }}
+                  key: {{ .Values.global.JWTSecret.secretKey }}
+              {{- end }}
           {{- end }}
           ports:
             - containerPort: {{ .Values.sidecar.bindPort }}
@@ -240,10 +247,14 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-        {{- if .Values.global.JWTSecret }}
+        {{- if .Values.global.JWTSecret.value }}
         - name: jwtsecret
           secret:
             secretName: {{ include "common.names.fullname" . }}
+        {{- else if .Values.global.JWTSecret.secretName }}
+        - name: jwtsecret
+          secret:
+            secretName: {{ .Values.global.JWTSecret.secretName }}
         {{- end }}
         - name: env-nodeport
           emptyDir: {}

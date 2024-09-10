@@ -14,7 +14,10 @@ global:
   ## a command line tool, for example:
   ## openssl rand -hex 32 > token.txt
   ##
-  JWTSecret: ""
+  JWTSecret:
+    value: ""
+    secretName: ""
+    secretKey: ""
 
   ## Credentials to fetch images from private registry
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/

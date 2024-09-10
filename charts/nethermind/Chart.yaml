@@ -4,7 +4,7 @@ name: nethermind
 description: .NET Core Ethereum client
 type: application
 # version: 2.6.0 # Version of stakewise/charts/nethermind
-version: 2.6.2
+version: 2.6.3
 appVersion: "v1.26.0"
 icon: https://storage.googleapis.com/stakewise-charts/stakewise.png
 keywords:
