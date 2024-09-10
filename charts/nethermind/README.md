@@ -1,6 +1,6 @@
 # nethermind
 
-![Version: 2.6.3](https://img.shields.io/badge/Version-2.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.26.0](https://img.shields.io/badge/AppVersion-v1.26.0-informational?style=flat-square)
+![Version: 2.6.4](https://img.shields.io/badge/Version-2.6.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.28.0](https://img.shields.io/badge/AppVersion-1.28.0-informational?style=flat-square)
 
 .NET Core Ethereum client
 Initially based on [stakewise/helm-charts/nethermind](https://github.com/stakewise/helm-charts/tree/main/charts/nethermind).
@@ -47,7 +47,7 @@ Initially based on [stakewise/helm-charts/nethermind](https://github.com/stakewi
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"nethermind/nethermind"` |  |
-| image.tag | string | `"1.27.1"` |  |
+| image.tag | string | `"1.28.0"` |  |
 | imagePullSecrets | list | `[]` |  |
 | initChownData | bool | `true` |  |
 | initImage.pullPolicy | string | `"IfNotPresent"` |  |
