@@ -26,7 +26,7 @@ spec:
       protocol: TCP
       name: json-ws
   {{- end }}
-  {{- if .Values.global.JWTSecret }}
+  {{- if or (.Values.global.JWTSecret.value) (.Values.global.JWTSecret.secretName) }}
     - port: {{ .Values.jsonrpc.engine.port }}
       targetPort: engine
       protocol: TCP

@@ -1,6 +1,6 @@
 # nethermind
 
-![Version: 2.6.2](https://img.shields.io/badge/Version-2.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.26.0](https://img.shields.io/badge/AppVersion-v1.26.0-informational?style=flat-square)
+![Version: 2.6.3](https://img.shields.io/badge/Version-2.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.26.0](https://img.shields.io/badge/AppVersion-v1.26.0-informational?style=flat-square)
 
 .NET Core Ethereum client
 Initially based on [stakewise/helm-charts/nethermind](https://github.com/stakewise/helm-charts/tree/main/charts/nethermind).
@@ -31,7 +31,9 @@ Initially based on [stakewise/helm-charts/nethermind](https://github.com/stakewi
 | affinity | object | `{}` |  |
 | extraFlags | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
-| global.JWTSecret | string | `""` |  |
+| global.JWTSecret.secretKey | string | `""` |  |
+| global.JWTSecret.secretName | string | `""` |  |
+| global.JWTSecret.value | string | `""` |  |
 | global.imagePullSecrets | list | `[]` |  |
 | global.livenessProbe.enabled | bool | `true` |  |
 | global.metrics.enabled | bool | `true` |  |
