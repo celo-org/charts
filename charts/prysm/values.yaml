@@ -12,7 +12,10 @@ global:
   ## a command line tool, for example:
   ## openssl rand -hex 32 > token.txt
   ##
-  JWTSecret: "1010101010101010101010101010101010101010101010101010101010101010"
+  JWTSecret:
+    value: ""
+    ## !! The key for the secret MUST be jwtsecret
+    secretName: ""
 
   ## Server endpoints for an execution layer jwt authenticated HTTP JSON-RPC connection.
   ## Uses the same endpoint to populate the deposit cache.
