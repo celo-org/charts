@@ -1,6 +1,6 @@
 # prysm
 
-![Version: 5.0.3](https://img.shields.io/badge/Version-5.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v5.0.3](https://img.shields.io/badge/AppVersion-v5.0.3-informational?style=flat-square)
+![Version: 5.0.4](https://img.shields.io/badge/Version-5.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v5.0.3](https://img.shields.io/badge/AppVersion-v5.0.3-informational?style=flat-square)
 
 Go implementation of Ethereum proof of stake.
 Initially based on [stakewise/helm-charts/prysm](https://github.com/stakewise/helm-charts/tree/main/charts/prysm).
@@ -36,7 +36,8 @@ Kubernetes: `^1.18.0-0`
 | extraFlags[0] | string | `"--p2p-max-peers=160"` |  |
 | extraFlags[1] | string | `"--enable-peer-scorer"` |  |
 | fullnameOverride | string | `""` |  |
-| global.JWTSecret | string | `"1010101010101010101010101010101010101010101010101010101010101010"` |  |
+| global.JWTSecret.secretName | string | `"test"` |  |
+| global.JWTSecret.value | string | `"test"` |  |
 | global.executionEndpoints | list | `[]` |  |
 | global.imagePullSecrets | list | `[]` |  |
 | global.livenessProbe.enabled | bool | `true` |  |
