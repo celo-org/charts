@@ -43,11 +43,12 @@ spec:
           args:
           - |
             RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
-            STARTING_INDEX=$((RID * {{ .Values.config.numDistributors }}))
+            NUM_DISTRIBUTORS={{ .Values.config.numDistributors }}
+            STARTING_INDEX=$((RID * NUM_DISTRIBUTORS))
             /tx-overload.bin \
               --eth-rpc={{ .Values.config.ethRpc }} \
               --tx-mode={{ .Values.config.txMode }} \
-              --num-distributors={{ .Values.config.numDistributors }} \
+              --num-distributors=$NUM_DISTRIBUTORS \
               --starting-index=$STARTING_INDEX \
               --data-rate={{ .Values.config.dataRate }} \
               --log.format={{ .Values.config.logFormat }} \

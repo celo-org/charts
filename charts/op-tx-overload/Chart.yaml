@@ -1,8 +1,9 @@
+---
 apiVersion: v2
 name: op-tx-overload
 description: Generate load on Optimism Bedrock using transactions with random calldata.
 type: application
-version: 0.2.1
+version: 0.2.2
 appVersion: "test"
 sources:
   - https://github.com/celo-org/tx-overload
