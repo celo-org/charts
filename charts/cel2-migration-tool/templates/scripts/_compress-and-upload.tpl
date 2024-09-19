@@ -7,7 +7,10 @@ source /root/google-cloud-sdk/path.bash.inc
 /root/google-cloud-sdk/bin/gcloud components install alpha -q
 
 # Uplaod rollup config
-/root/google-cloud-sdk/bin/gcloud alpha storage cp /output/config/rollup-config.json gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-rollup.json
+/root/google-cloud-sdk/bin/gcloud alpha storage cp /output/config/rollup.json gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-rollup.json
+
+# Uplaod genesis
+/root/google-cloud-sdk/bin/gcloud alpha storage cp /output/config/genesis.json gs://{{ .Values.gcsBucket | trimPrefix "gs://" | trimSuffix "/" }}/{{ .Values.cel2NetworkName }}-genesis.json
 
 # Delete jwt and nodekey
 rm -f /output/geth/nodekey /output/geth/jwtsecret
