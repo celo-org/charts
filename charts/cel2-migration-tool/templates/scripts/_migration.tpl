@@ -6,6 +6,7 @@ time celo-migrate full \
   --l2-allocs /output/config/l2-allocs.json \
   --l1-rpc {{ .Values.l1Url | quote }} \
   --outfile.rollup-config /output/config/rollup.json \
+  --outfile.genesis /output/config/genesis.json \
   --old-db /output/celo/chaindata \
   --new-db /output/celo/chaindata_migrated \
   --memory-limit {{ .Values.migrationTool.config.memoryLimit }} \
