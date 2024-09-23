@@ -10,6 +10,10 @@ on:
       - '**/*Dockerfile*'
       - '**/*dockerfile*'
 
+permissions:
+  contents: read
+
+
 jobs:
   detect-files-changed:
     runs-on: ubuntu-latest

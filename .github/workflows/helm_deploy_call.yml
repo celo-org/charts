@@ -31,6 +31,10 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: read
+
+
 env:
   KUBE_CONFIG_PATH: /home/runner/.kube/config
   USE_GKE_GCLOUD_AUTH_PLUGIN: "True"

@@ -17,6 +17,9 @@ on:
 env:
   HELM_VERSION: "v3.14.1"
 
+permissions:
+  contents: read
+
 jobs:
   helm-release:
     runs-on: 'ubuntu-latest'
