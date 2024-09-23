@@ -149,6 +149,7 @@ spec:
             {{- end }}
             {{- if .Values.config.sequencer.enabled }}
             --sequencer.enabled \
+            --sequencer.use-finalized \
             {{- if .Values.config.sequencer.stopped }}
             --sequencer.stopped \
             {{- end }}
