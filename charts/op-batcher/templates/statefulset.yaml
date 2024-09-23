@@ -128,11 +128,11 @@ spec:
             --log.level={{ .Values.config.logs.level }} \
             --log.format={{ .Values.config.logs.format }} \
             --log.color={{ .Values.config.logs.color }} \
-            {{- if .Values.config.plasma.enabled }}
-            --plasma.enabled=true \
-            --plasma.da-server={{ .Values.config.plasma.daServer }} \
-            --plasma.da-service={{ .Values.config.plasma.daService }} \
-            --plasma.verify-on-read={{ .Values.config.plasma.verifyOnRead }} \
+            {{- if .Values.config.altda.enabled }}
+            --altda.enabled=true \
+            --altda.da-server={{ .Values.config.altda.daServer }} \
+            --altda.da-service={{ .Values.config.altda.daService }} \
+            --altda.verify-on-read={{ .Values.config.altda.verifyOnRead }} \
             {{- else }}
             --data-availability-type={{ .Values.config.dataAvailabilityType }} \
             {{- with .Values.config.blobTargetNumFrames }}
