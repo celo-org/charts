@@ -17,6 +17,9 @@ on:
 env:
   HELM_VERSION: "v3.14.1"
 
+permissions:
+  contents: read
+
 jobs:
   helm-release:
     runs-on: 'ubuntu-latest'
@@ -25,23 +28,28 @@ jobs:
       contents: 'read'
       id-token: 'write'
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        with:
+          egress-policy: audit
+
       - name: "Checkout main branch"
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: "Install Helm"
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@fe7b79cd5ee1e45176fcad797de68ecaf3ca4814 # v4.2.0
         with:
           version: "${{ env.HELM_VERSION }}"
 
       - name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v2'
+        uses: 'google-github-actions/auth@62cf5bd3e4211a0a0b51f2c6d6a37129d828611d # v2.1.5'
         with:
           workload_identity_provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-charts-main/providers/github-by-repos
           service_account: 'publish-helm-charts@devopsre.iam.gserviceaccount.com'
 
       # Gcloud CLI required for login to Artifact Registry
       - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v2'
+        uses: 'google-github-actions/setup-gcloud@f0990588f1e5b5af6827153b93673613abdc6ec7 # v2.1.1'
 
       - name: Add Helm repositories
         run: |
@@ -70,7 +78,7 @@ jobs:
           done
 
       - name: "Get Helm Charts changed"
-        uses: jitterbit/get-changed-files@v1
+        uses: jitterbit/get-changed-files@b17fbb00bdc0c0f63fcf166580804b4d2cdc2a42 # v1
         id: updated_files
         with:
           format: csv
