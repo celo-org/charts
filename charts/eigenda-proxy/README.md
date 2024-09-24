@@ -1,6 +1,6 @@
 # eigenda-proxy
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Helm chart deploying Layr-Labs eigenda-proxy
 
@@ -36,7 +36,7 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.disperser.rpc | string | `"disperser-holesky.eigenda.xyz:443"` |  |
 | config.eth.confirmationDepth | int | `1` |  |
 | config.eth.rpc | string | `"https://ethereum-holesky-rpc.publicnode.com"` |  |
-| config.eth.serviceManagerAddr | string | `"0x44632dfBdCb6D3E21EF613B0ca8A6A0c618F5a37"` |  |
+| config.eth.serviceManagerAddr | string | `"0xD4A7E1Bd8015057293f0D0A557088c286942e84b"` |  |
 | config.privateKey.value | string | `""` |  |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |

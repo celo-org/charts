@@ -135,7 +135,7 @@ config:
   eth:
     confirmationDepth: 1
     rpc: https://ethereum-holesky-rpc.publicnode.com
-    serviceManagerAddr: 0x44632dfBdCb6D3E21EF613B0ca8A6A0c618F5a37
+    serviceManagerAddr: 0xD4A7E1Bd8015057293f0D0A557088c286942e84b
   privateKey:
     value: ""
     # secretName: test
