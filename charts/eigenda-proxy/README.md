@@ -1,6 +1,6 @@
 # eigenda-proxy
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Helm chart deploying Layr-Labs eigenda-proxy
 
@@ -38,11 +38,20 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.eth.rpc | string | `"https://ethereum-holesky-rpc.publicnode.com"` |  |
 | config.eth.serviceManagerAddr | string | `"0xD4A7E1Bd8015057293f0D0A557088c286942e84b"` |  |
 | config.privateKey.value | string | `""` |  |
+| config.routing.cacheTargets | string | `""` |  |
+| config.s3.accessKeyId | string | `""` |  |
+| config.s3.accessKeySecret | string | `""` |  |
+| config.s3.backup | string | `""` |  |
+| config.s3.bucket | string | `""` |  |
+| config.s3.credentialType | string | `""` |  |
+| config.s3.disableTls | string | `""` |  |
+| config.s3.endpoint | string | `""` |  |
+| config.s3.path | string | `""` |  |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/eigenda-proxy"` |  |
-| image.tag | string | `"v1.2.0"` |  |
+| image.tag | string | `"v1.4.1"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
