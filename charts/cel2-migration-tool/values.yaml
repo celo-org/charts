@@ -31,7 +31,7 @@ compressAndUpload:
 migrationTool:
   image:
     repository: us-west1-docker.pkg.dev/devopsre/dev-images/cel2-migration-tool
-    tag: f9c39bbaeee0b7a0e784c1126d5602701720f0f0
+    tag: cb878edf601cc92ff3a9225e0c7ecc36c966cb23
     pullPolicy: Always
   resources: {}
   config:

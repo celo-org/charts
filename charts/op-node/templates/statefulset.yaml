@@ -149,6 +149,7 @@ spec:
             {{- end }}
             {{- if .Values.config.sequencer.enabled }}
             --sequencer.enabled \
+            --sequencer.use-finalized \
             {{- if .Values.config.sequencer.stopped }}
             --sequencer.stopped \
             {{- end }}
@@ -190,11 +191,11 @@ spec:
             {{- with .Values.config.syncmode }}
             --syncmode={{ . }} \
             {{- end }}
-            {{- if .Values.config.plasma.enabled }}
-            --plasma.enabled=true \
-            --plasma.da-server={{ .Values.config.plasma.daServer }} \
-            --plasma.da-service={{ .Values.config.plasma.daService }} \
-            --plasma.verify-on-read={{ .Values.config.plasma.verifyOnRead }} \
+            {{- if .Values.config.altda.enabled }}
+            --altda.enabled=true \
+            --altda.da-server={{ .Values.config.altda.daServer }} \
+            --altda.da-service={{ .Values.config.altda.daService }} \
+            --altda.verify-on-read={{ .Values.config.altda.verifyOnRead }} \
             {{- end }}
 
             {{- with .Values.extraArgs }}

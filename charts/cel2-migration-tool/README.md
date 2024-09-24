@@ -1,6 +1,6 @@
 # cel2-migration-tool
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Node migration tool for Cel2 network
 
@@ -40,7 +40,7 @@ Node migration tool for Cel2 network
 | migrationTool.extraArgs | list | `[]` |  |
 | migrationTool.image.pullPolicy | string | `"Always"` |  |
 | migrationTool.image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/cel2-migration-tool"` |  |
-| migrationTool.image.tag | string | `"f9c39bbaeee0b7a0e784c1126d5602701720f0f0"` |  |
+| migrationTool.image.tag | string | `"cb878edf601cc92ff3a9225e0c7ecc36c966cb23"` |  |
 | migrationTool.pauseOnCompletion | bool | `false` | Run `tail -f /dev/null` to keep the migration job alive after completion |
 | migrationTool.resources | object | `{}` |  |
 | pvc.input | string | `"myNetwork-input"` |  |
