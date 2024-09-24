@@ -133,6 +133,7 @@ spec:
             --altda.da-server={{ .Values.config.altda.daServer }} \
             --altda.da-service={{ .Values.config.altda.daService }} \
             --altda.verify-on-read={{ .Values.config.altda.verifyOnRead }} \
+            --altda.max-concurrent-da-requests={{ .Values.config.altda.maxConcurrentDaRequests }} \
             {{- else }}
             --data-availability-type={{ .Values.config.dataAvailabilityType }} \
             {{- with .Values.config.blobTargetNumFrames }}

@@ -8,7 +8,7 @@ replicaCount: 1
 image:
   repository: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/eigenda-proxy
   pullPolicy: Always
-  tag: v1.2.0
+  tag: v1.4.1
 
 imagePullSecrets: []
 nameOverride: ""
@@ -132,7 +132,26 @@ persistence:
 config:
   disperser:
     rpc: disperser-holesky.eigenda.xyz:443
+  eth:
+    confirmationDepth: 1
+    rpc: https://ethereum-holesky-rpc.publicnode.com
+    serviceManagerAddr: 0xD4A7E1Bd8015057293f0D0A557088c286942e84b
+  routing:
+    cacheTargets: ""
   privateKey:
     value: ""
     # secretName: test
     # secretKey: test
+  s3:
+    backup: ""
+    bucket: ""
+    endpoint: ""
+    disableTls: ""
+    credentialType: ""
+    accessKeyId: ""
+    accessKeySecret: ""
+    path: ""
+
+log:
+  level: info
+  format: json

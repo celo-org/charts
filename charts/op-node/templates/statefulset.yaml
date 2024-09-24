@@ -149,12 +149,14 @@ spec:
             {{- end }}
             {{- if .Values.config.sequencer.enabled }}
             --sequencer.enabled \
-            --sequencer.use-finalized \
             {{- if .Values.config.sequencer.stopped }}
             --sequencer.stopped \
             {{- end }}
             {{- if kindIs "int" .Values.config.sequencer.l1Confs }}
             --sequencer.l1-confs={{ int .Values.config.sequencer.l1Confs }} \
+            {{- end }}
+            {{- if .Values.config.sequencer.useFinalized }}
+            --sequencer.use-finalized \
             {{- end }}
             {{- if kindIs "int" .Values.config.sequencer.maxSafeLag }}
             --sequencer.max-safe-lag={{ int .Values.config.sequencer.maxSafeLag }} \

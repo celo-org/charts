@@ -1,6 +1,6 @@
 # op-node
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-node consensus engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree/main/dysnix/op-node).
@@ -61,6 +61,7 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | config.sequencer.l1Confs | int | `5` |  |
 | config.sequencer.maxSafeLag | int | `0` |  |
 | config.sequencer.stopped | bool | `false` |  |
+| config.sequencer.useFinalized | bool | `false` |  |
 | config.syncmode | string | `""` |  |
 | config.verifier.l1Confs | int | `0` |  |
 | extraArgs | list | `[]` |  |
