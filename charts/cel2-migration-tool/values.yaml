@@ -34,6 +34,7 @@ migrationTool:
     tag: cb878edf601cc92ff3a9225e0c7ecc36c966cb23
     pullPolicy: Always
   resources: {}
+  preMigration: false
   config:
     batchSize: 5000
     memoryLimit: 20000
