@@ -1,6 +1,6 @@
 # op-batcher
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-batcher client (Optimism Rollup)
 
@@ -27,6 +27,7 @@ Celo implementation for op-batcher client (Optimism Rollup)
 | config.altda.daServer | string | `""` |  |
 | config.altda.daService | bool | `true` |  |
 | config.altda.enabled | bool | `false` |  |
+| config.altda.maxConcurrentDaRequests | int | `2` |  |
 | config.altda.verifyOnRead | bool | `false` |  |
 | config.batchType | string | `""` |  |
 | config.blobTargetNumFrames | string | `""` |  |
