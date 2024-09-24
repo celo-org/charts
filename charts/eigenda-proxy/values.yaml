@@ -132,7 +132,15 @@ persistence:
 config:
   disperser:
     rpc: disperser-holesky.eigenda.xyz:443
+  eth:
+    confirmationDepth: 1
+    rpc: https://ethereum-holesky-rpc.publicnode.com
+    serviceManagerAddr: 0x44632dfBdCb6D3E21EF613B0ca8A6A0c618F5a37
   privateKey:
     value: ""
     # secretName: test
     # secretKey: test
+
+log:
+  level: info
+  format: json
