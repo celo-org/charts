@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Detect files changed
         id: detect-files-changed
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@48d8f15b2aaa3d255ca5af3eba4870f807ce6b3c
         with:
           separator: ','
   
@@ -40,13 +40,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Login at GCP Artifact Registry
-        uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@main
+        uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@dd5ce31ba87a6cdee1657f8e4f0a58dd231abdd3
         with:
           workload-id-provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-charts-main/providers/github-by-repos
           service-account: publish-helm-charts@devopsre.iam.gserviceaccount.com
           docker-gcp-registries: us-west1-docker.pkg.dev
       - name: Build and push container
-        uses: celo-org/reusable-workflows/.github/actions/build-container@main
+        uses: celo-org/reusable-workflows/.github/actions/build-container@dd5ce31ba87a6cdee1657f8e4f0a58dd231abdd3
         with:
           platforms: linux/amd64,linux/arm64
           registry: us-west1-docker.pkg.dev/devopsre/dev-images/health-checker

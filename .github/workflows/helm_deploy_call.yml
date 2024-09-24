@@ -54,7 +54,7 @@ jobs:
           fetch-depth: 0
 
       - name: Export Environment Variables
-        uses: cardinalby/export-env-action@v2
+        uses: cardinalby/export-env-action@66657b34899a2d695434ed060d9f2215db9b4035
         with:
           envFile: ./.github/workflows/.env
 
