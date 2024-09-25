@@ -22,6 +22,9 @@ if [ ! -f $datadir/.initialized ]; then
       {{- tpl (.) $ | nindent 6 }} \
       {{- end }}
       {{- end }}
+      {{- if .Values.config.state.scheme }}
+      --state.scheme={{ .Values.config.state.scheme }}
+      {{- end }}
       init $datadir/genesis.json
     echo "Successfully initialized from genesis file"
     {{- end }}
