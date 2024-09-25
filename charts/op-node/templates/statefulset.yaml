@@ -188,6 +188,9 @@ spec:
             {{- with .Values.config.p2p.static }}
             --p2p.static={{ join "," . }} \
             {{- end }}
+            {{- if .Values.config.p2p.noDiscovery }}
+            --p2p.no-discovery \
+            {{- end }}
             --p2p.priv.path=$datadir/opnode_p2p_priv.txt \
             --log.level={{ .Values.config.logLevel }} \
             {{- with .Values.config.syncmode }}
