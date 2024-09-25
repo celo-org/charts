@@ -260,6 +260,7 @@ config:
     useHostPort: false                 # use hostPort for p2p traffic instead of dedicated k8s svc
     bootnodes: []                      # override bootnodes
     static: []                         # static peers
+    noDiscovery: false                 # disable peer discovery
     keys: ""                           # comma separated list of keys to use for p2p
     sequencer:
       key: ""                            # sequencer key
