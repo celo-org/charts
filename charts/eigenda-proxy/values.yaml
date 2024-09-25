@@ -143,10 +143,10 @@ config:
     # secretName: test
     # secretKey: test
   s3:
-    backup: ""
+    backup: null
     bucket: ""
     endpoint: ""
-    disableTls: ""
+    disableTls: null
     credentialType: ""
     accessKeyId: ""
     accessKeySecret: ""
