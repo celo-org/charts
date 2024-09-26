@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "periodic-chain-call.labels" . | nindent 4 }}
+    component: periodic-chain-call
+spec:
+  schedule: "{{ .Values.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            {{- include "periodic-chain-call.labels" . | nindent 12 }}
+        spec:
+          serviceAccountName: {{ include "periodic-chain-call.serviceAccountName" . }}
+          initContainers:
+          containers:
+          - name: distribute-call
+            image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command:
+            - /bin/sh
+            - -c
+            args:
+            - |
+              {{- include (print $.Template.BasePath "/scripts/_call.tpl") . | nindent 14 }}
+          restartPolicy: Never
