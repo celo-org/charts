@@ -1,4 +1,4 @@
-{{- if .Values.persistence.enabled }}
+{{- if and .Values.persistence.enabled .Values.config.bigKZGFiles }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

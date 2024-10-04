@@ -151,6 +151,7 @@ config:
     accessKeyId: ""
     accessKeySecret: ""
     path: ""
+  bigKZGFiles: false
 
 log:
   level: info
