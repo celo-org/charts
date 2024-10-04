@@ -97,14 +97,14 @@ spec:
               exec /app/eigenda-proxy \
                 --addr=0.0.0.0 \
                 --port={{ .Values.services.api.port }} \
-                --eigenda-disperser-rpc={{ .Values.config.disperser.rpc }} \
-                --eigenda-eth-confirmation-depth={{ .Values.config.eth.confirmationDepth }} \
-                --eigenda-eth-rpc={{ .Values.config.eth.rpc }} \
-                --eigenda-svc-manager-addr={{ .Values.config.eth.serviceManagerAddr }} \
-                --eigenda-status-query-timeout=45m \
-                --eigenda-g1-path=/data/resources/g1.point \
-                --eigenda-g2-tau-path=/data/resources/g2.point.powerOf2 \
-                --eigenda-disable-tls=false \
+                --eigenda.disperser-rpc={{ .Values.config.disperser.rpc }} \
+                --eigenda.eth-confirmation-depth={{ .Values.config.eth.confirmationDepth }} \
+                --eigenda.eth-rpc={{ .Values.config.eth.rpc }} \
+                --eigenda.svc-manager-addr={{ .Values.config.eth.serviceManagerAddr }} \
+                --eigenda.status-query-timeout=45m \
+                --eigenda.g1-path=/data/resources/g1.point \
+                --eigenda.g2-tau-path=/data/resources/g2.point.powerOf2 \
+                --eigenda.disable-tls=false \
                 {{- if .Values.config.routing.cacheTargets }}
                 --routing.cache-targets={{ .Values.config.routing.cacheTargets }} \
                 {{- end }}
@@ -117,8 +117,8 @@ spec:
                 {{- if .Values.config.s3.endpoint }}
                 --s3.endpoint={{ .Values.config.s3.endpoint }} \
                 {{- end }}
-                {{- if and (hasKey .Values.config.s3 "disableTls") (not (empty .Values.config.s3.disableTls)) }}
-                --s3.disable-tls={{ .Values.config.s3.disableTls }} \
+                {{- if and (hasKey .Values.config.s3 "enableTls") (not (empty .Values.config.s3.enableTls)) }}
+                --s3.disable-tls={{ .Values.config.s3.enableTls }} \
                 {{- end }}
                 {{- if .Values.config.s3.credentialType }}
                 --s3.credential-type={{ .Values.config.s3.credentialType }} \
