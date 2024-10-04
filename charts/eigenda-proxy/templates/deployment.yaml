@@ -107,6 +107,7 @@ spec:
                 --eigenda.status-query-timeout=45m \
                 --eigenda.g1-path=$kzg_folder/g1.point \
                 --eigenda.g2-tau-path=$kzg_folder/g2.point.powerOf2 \
+                --eigenda.max-blob-length={{ .Values.config.maxBlobLength }} \
                 --eigenda.disable-tls=false \
                 {{- if .Values.config.routing.cacheTargets }}
                 --routing.cache-targets={{ .Values.config.routing.cacheTargets }} \

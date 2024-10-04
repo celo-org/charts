@@ -152,6 +152,7 @@ config:
     accessKeySecret: ""
     path: ""
   bigKZGFiles: false
+  maxBlobLength: 32MiB
 
 log:
   level: info

@@ -38,6 +38,7 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.eth.confirmationDepth | int | `1` |  |
 | config.eth.rpc | string | `"https://ethereum-holesky-rpc.publicnode.com"` |  |
 | config.eth.serviceManagerAddr | string | `"0xD4A7E1Bd8015057293f0D0A557088c286942e84b"` |  |
+| config.maxBlobLength | string | `"32MiB"` |  |
 | config.privateKey.value | string | `""` |  |
 | config.routing.cacheTargets | string | `""` |  |
 | config.s3.accessKeyId | string | `""` |  |
