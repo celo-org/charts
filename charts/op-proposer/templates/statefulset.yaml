@@ -102,6 +102,7 @@ spec:
             --rollup-rpc={{ .Values.config.rollupRpc }} \
             --l2oo-address=$L2OutputOracleProxy \
             --l1-eth-rpc=$L1_URL \
+            --num-confirmations={{ .Values.config.numConfirmations }} \
             {{- if .Values.config.metrics.enabled }}
             --metrics.enabled \
             --metrics.addr={{ .Values.config.metrics.addr }} \
