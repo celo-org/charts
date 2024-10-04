@@ -38,6 +38,7 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.config.bigKZGFiles }}
       initContainers:
         - name: download-srs
           image: alpine:latest
@@ -82,6 +83,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+      {{- end }}
       containers:
         - name: eigenda-proxy
           securityContext:
@@ -94,6 +96,7 @@ spec:
           args:
             - |
               mkdir -p /data/resources
+              kzg_folder={{ ternary "/data/resources" "/app/resources" .Values.config.bigKZGFiles }}
               exec /app/eigenda-proxy \
                 --addr=0.0.0.0 \
                 --port={{ .Values.services.api.port }} \
@@ -102,8 +105,9 @@ spec:
                 --eigenda.eth-rpc={{ .Values.config.eth.rpc }} \
                 --eigenda.svc-manager-addr={{ .Values.config.eth.serviceManagerAddr }} \
                 --eigenda.status-query-timeout=45m \
-                --eigenda.g1-path=/data/resources/g1.point \
-                --eigenda.g2-tau-path=/data/resources/g2.point.powerOf2 \
+                --eigenda.g1-path=$kzg_folder/g1.point \
+                --eigenda.g2-tau-path=$kzg_folder/g2.point.powerOf2 \
+                --eigenda.max-blob-length={{ .Values.config.maxBlobLength }} \
                 --eigenda.disable-tls=false \
                 {{- if .Values.config.routing.cacheTargets }}
                 --routing.cache-targets={{ .Values.config.routing.cacheTargets }} \
@@ -171,9 +175,11 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if .Values.config.bigKZGFiles }}
           volumeMounts:
             - name: data
               mountPath: /data
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -188,6 +194,7 @@ spec:
       {{- end }}
       updateStrategy:
         type: Recreate
+      {{- if .Values.config.bigKZGFiles }}
       volumes:
         - name: data
         {{- if .Values.persistence.enabled }}
@@ -196,3 +203,4 @@ spec:
         {{ else }}
           emptyDir: {}
         {{- end }}
+      {{- end }}
