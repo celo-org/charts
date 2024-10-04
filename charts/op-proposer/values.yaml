@@ -148,6 +148,7 @@ config:
   pollInterval: 12s                                                          # How frequently to poll L2 for new blocks
   rollupRpc: http://localhost:8547                                           # HTTP provider URL for the rollup node. A comma-separated list for multiple providers
   activeSecuencerCheckDuration: 2m0s                                         # How frequently to check if the sequencer is active (if multiple provided)
+  numConfirmations: 10                                                       # Number of confirmations to wait for a L1 transaction
   logs:
     level: info                                                              # Log level
     format: json                                                             # Log format
