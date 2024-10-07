@@ -9,14 +9,8 @@ if [ ! -f $datadir/.initialized ]; then
     {{- end }}
     {{- if .Values.init.genesis.enabled }}
     wget -qO $datadir/genesis.json "{{ .Values.init.genesis.url }}"
-    {{- $stateScheme := "" }}
-    {{- if .Values.config.state }}
-    {{- if .Values.config.state.scheme }}
-    {{- $stateScheme = printf " --state.scheme=%s" .Values.config.state.scheme }}
-    {{- end }}
-    {{- end }}
     geth \
-      --datadir={{ .Values.config.datadir }}{{ $stateScheme }} \
+      --datadir={{ .Values.config.datadir }} \
       {{- with .Values.init.extraArgs }}
       {{- range . }}
       {{- tpl (.) $ | nindent 6 }} \
