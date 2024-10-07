@@ -17,7 +17,7 @@ if [ ! -f $datadir/.initialized ]; then
       {{- end }}
       {{- end }}
       {{- if .Values.config.state.scheme }}
-      --state.scheme={{ .Values.config.state.scheme }}
+      --state.scheme={{ .Values.config.state.scheme }} \
       {{- end }}
       init $datadir/genesis.json
     echo "Successfully initialized from genesis file"
