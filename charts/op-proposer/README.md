@@ -1,6 +1,6 @@
 # op-proposer
 
-![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-proposer client (Optimism Rollup)
 
@@ -32,7 +32,7 @@ Celo implementation for op-proposer client (Optimism Rollup)
 | config.metrics.addr | string | `"0.0.0.0"` |  |
 | config.metrics.enabled | bool | `false` |  |
 | config.metrics.port | int | `7300` |  |
-| config.numConfirmations | int | `10` |  |
+| config.numConfirmations | int | `5` |  |
 | config.pollInterval | string | `"12s"` |  |
 | config.rollupRpc | string | `"http://localhost:8547"` |  |
 | config.rpc.addr | string | `"0.0.0.0"` |  |
