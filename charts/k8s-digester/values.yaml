@@ -16,7 +16,7 @@ image:
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag
-  tag: "v0.1.13@sha256:d1f64b466db8909c30a1a8f48f791f61d5fe1b03f8bb918ee3a71799c129237e"
+  tag: "v0.1.15@sha256:52740b9bdf2d334580749e5d2f8c6a6c16bba996319c89f0bdea9cdaa98a3efc"
 
 # -- Image pull secrets
 imagePullSecrets: []
