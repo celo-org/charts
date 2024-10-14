@@ -138,6 +138,7 @@ config:
     serviceManagerAddr: 0xD4A7E1Bd8015057293f0D0A557088c286942e84b
   routing:
     cacheTargets: ""
+    writeOnMiss: false
   privateKey:
     value: ""
     # secretName: test
