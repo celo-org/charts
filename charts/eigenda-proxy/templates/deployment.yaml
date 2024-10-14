@@ -106,11 +106,14 @@ spec:
                 --eigenda.svc-manager-addr={{ .Values.config.eth.serviceManagerAddr }} \
                 --eigenda.status-query-timeout=45m \
                 --eigenda.g1-path=$kzg_folder/g1.point \
-                --eigenda.g2-tau-path=$kzg_folder/g2.point.powerOf2 \
+                --eigenda.g2-power-of-2-path=$kzg_folder/g2.point.powerOf2 \
                 --eigenda.max-blob-length={{ .Values.config.maxBlobLength }} \
                 --eigenda.disable-tls=false \
                 {{- if .Values.config.routing.cacheTargets }}
                 --routing.cache-targets={{ .Values.config.routing.cacheTargets }} \
+                {{- end }}
+                {{- if .Values.config.routing.writeOnMiss }}
+                --routing.write-on-miss \
                 {{- end }}
                 {{- if and (hasKey .Values.config.s3 "backup") (not (empty .Values.config.s3.backup)) }}
                 --s3.backup={{ .Values.config.s3.backup }} \
@@ -122,7 +125,7 @@ spec:
                 --s3.endpoint={{ .Values.config.s3.endpoint }} \
                 {{- end }}
                 {{- if and (hasKey .Values.config.s3 "enableTls") (not (empty .Values.config.s3.enableTls)) }}
-                --s3.disable-tls={{ .Values.config.s3.enableTls }} \
+                --s3.enable-tls={{ .Values.config.s3.enableTls }} \
                 {{- end }}
                 {{- if .Values.config.s3.credentialType }}
                 --s3.credential-type={{ .Values.config.s3.credentialType }} \
@@ -147,7 +150,7 @@ spec:
                 {{- end }}
                 {{- end }}
           env:
-            - name: EIGENDA_PROXY_SIGNER_PRIVATE_KEY_HEX
+            - name: EIGENDA_PROXY_EIGENDA_SIGNER_PRIVATE_KEY_HEX
             {{- if and (.Values.config.privateKey.secretName) (.Values.config.privateKey.secretKey) }}
               valueFrom:
                 secretKeyRef:
