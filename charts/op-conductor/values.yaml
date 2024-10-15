@@ -11,7 +11,7 @@ init:
 
 image:
   repository: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-conductor
-  tag: dev
+  tag: ea8d7ce5425edb3d1adcf0a8bb2a98fcdb21b3e0
   pullPolicy: IfNotPresent
 statefulset:
   annotations: {}
@@ -29,7 +29,7 @@ config:
     addr: ""
     port: 50050
   raft:
-    # bootstrap: false
+    bootstrap: false
     server:
       id: 1
     storage:
