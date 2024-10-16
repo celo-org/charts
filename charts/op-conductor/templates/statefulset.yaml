@@ -93,14 +93,15 @@ spec:
         - -c
         args:
         - |
-          RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
           datadir="{{ .Values.persistence.mountPath }}"
 
-          bootstrap_flag=""
-          # Check if we're replica 0 and if we need to bootstrap the raft cluster
-          if [ "$RID" == "0" ] && [ ! -f $datadir/.initialized ]; then
+          bootstrap_flag="--raft.bootstrap=false"
+          # Check if we need to bootstrap the raft cluster
+          {{- if .Values.config.raft.bootstrap }}
+          if [ ! -d $datadir/{{ .Values.config.raft.server.id }} ]; then
               bootstrap_flag="--raft.bootstrap=true"
           fi
+          {{- end }}
           exec /usr/local/bin/op-conductor \
             --consensus.addr=$(cat $datadir/consensus.addr) \
             --consensus.port={{ .Values.config.consensus.port }} \
@@ -127,7 +128,11 @@ spec:
             --healthcheck.unsafe-interval={{ .Values.config.healthcheck.unsafeInterval }} \
             --log.format={{ .Values.config.log.format }} \
             --log.level={{ .Values.config.log.level }} \
-            --metrics.addr={{ .Values.config.metrics.addr }} \
+            {{- if .Values.config.metrics.enabled }}
+            --metrics.enabled \
+            --metrics.addr=0.0.0.0 \
+            --metrics.port={{ .Values.config.metrics.port }} \
+            {{- end }}
             {{- if .Values.config.network }}
             --network={{ .Values.config.network }} \
             {{- end }}

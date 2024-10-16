@@ -1,6 +1,6 @@
 # op-conductor
 
-![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
+![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
 
 Helm chart deploying OP Conductor, a HA controller for op-node
 
@@ -40,6 +40,7 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | config.network | string | `""` |  |
 | config.node.rpc | string | `"http://op-node:8547"` |  |
 | config.paused | bool | `false` |  |
+| config.raft.bootstrap | bool | `false` |  |
 | config.raft.server.id | int | `1` |  |
 | config.raft.storage.dir | string | `"/raft"` |  |
 | config.rpc.addr | string | `"0.0.0.0"` |  |
@@ -48,7 +49,7 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | config.rpc.port | int | `8545` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-conductor"` |  |
-| image.tag | string | `"dev"` |  |
+| image.tag | string | `"ea8d7ce5425edb3d1adcf0a8bb2a98fcdb21b3e0"` |  |
 | init.image.pullPolicy | string | `"IfNotPresent"` |  |
 | init.image.repository | string | `"alpine"` |  |
 | init.image.tag | float | `3.19` |  |
