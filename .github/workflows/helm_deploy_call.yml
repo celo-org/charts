@@ -35,6 +35,9 @@ env:
   KUBE_CONFIG_PATH: /home/runner/.kube/config
   USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
 
+permissions:
+  contents: read
+
 jobs:
   helmfile:
     name: Helm Deploy
@@ -44,19 +47,24 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        with:
+          egress-policy: audit
+
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
 
       - name: Export Environment Variables
-        uses: cardinalby/export-env-action@v2
+        uses: cardinalby/export-env-action@b16a08b396d047e3f9e1446e3946440e2be02a73 # v2
         with:
           envFile: ./.github/workflows/.env
 
       - id: 'auth-gcp-no-main'
         name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v2'
+        uses: 'google-github-actions/auth@62cf5bd3e4211a0a0b51f2c6d6a37129d828611d # v2.1.5'
         with:
           workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ inputs.service-account }}
@@ -64,7 +72,7 @@ jobs:
 
       - id: 'auth-gcp-main'
         name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v2'
+        uses: 'google-github-actions/auth@62cf5bd3e4211a0a0b51f2c6d6a37129d828611d # v2.1.5'
         with:
           workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER_MASTER }}
           service_account: ${{ inputs.service-account }}
@@ -72,19 +80,19 @@ jobs:
 
       - name: 'Set up Cloud SDK'
         if: ${{ inputs.run-gke-credentials }}
-        uses: 'google-github-actions/setup-gcloud@v2'
+        uses: 'google-github-actions/setup-gcloud@f0990588f1e5b5af6827153b93673613abdc6ec7 # v2.1.1'
         with:
           install_components: 'core,gke-gcloud-auth-plugin,kubectl'
           project_id: ${{ inputs.project }}
 
       - name: 'Get GKE credentials'
-        uses: google-github-actions/get-gke-credentials@v2
+        uses: google-github-actions/get-gke-credentials@6051de21ad50fbb1767bc93c11357a49082ad116 # v2.2.1
         with:
           cluster_name: ${{ inputs.cluster-name }}
           location: ${{ inputs.cluster-location }}
 
       - name: Setup helmfile
-        uses: mamezou-tech/setup-helmfile@v2.0.0
+        uses: mamezou-tech/setup-helmfile@03233e1cd9b19b2ba320e431f7bcc0618db4248d # v2.0.0
 
       - name: Run helmfile
         run: helmfile --color --file ${{ inputs.helmfile }} ${{ inputs.action }} --context 10
