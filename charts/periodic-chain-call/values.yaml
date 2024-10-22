@@ -1,0 +1,22 @@
+---
+serviceAccount:
+  create: true
+  annotations: {}
+schedule: "0 0 * * *"  # -- Run every day at midnight
+# -- RPC URL for L2 blockchain
+rpcURL: https://forno.dango.celo-testnet.org
+# -- Address of the L2 CeloDistributionSchedule contract
+contractAddress: "0x78Af211Ad79bCE6BF636640CE8c2C2b29e02365A"
+# -- Signature of function to call
+functionSignature: "distributeAccordingToSchedule()(bool)"
+# -- Args to pass to function
+functionArgs: ""
+# -- Private key of the sender account (for signing transactions)
+senderKey:
+  value: ""
+    # secretName: test
+    # secretKey: test
+image:
+  repository: ghcr.io/foundry-rs/foundry
+  tag: latest
+  pullPolicy: IfNotPresent
