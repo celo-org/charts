@@ -195,8 +195,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      updateStrategy:
-        type: Recreate
       {{- if .Values.config.bigKZGFiles }}
       volumes:
         - name: data
