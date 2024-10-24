@@ -94,7 +94,6 @@ spec:
         command:
         - /bin/sh
         - -c
-        {{- end }}
         args:
         - |
           {{- if .Values.config.useFaultProofs }}
