@@ -65,32 +65,32 @@ spec:
         args:
         - |
           # Saving the announce ip address to a file
-          loadBalancerIps="{{ .Values.services.p2p.loadBalancerIP }}"
-          clusterIps="{{ .Values.services.p2p.clusterIP }}"
+          loadBalancerIp="{{ .Values.services.p2p.loadBalancerIP }}"
+          clusterIp="{{ .Values.services.p2p.clusterIP }}"
           # If the loadBalancerIPs are defined, use them
-          if [ -n "$loadBalancerIps" ]; then
-            loadBalancerIp=$(echo "$loadBalancerIps")
-            echo "$loadBalancerIp" > "/announce_ip"
+          if [ -n "$loadBalancerIp" ]; then
+            loadBalancerIp=$(echo "$loadBalancerIp")
+            echo "$loadBalancerIp" > "/tmp/announce_ip"
           # If the clusterIPs are defined now, use them
-          elif [ -n "$clusterIps" ]; then
-            clusterIp=$(echo "$clusterIps")
-            echo "$clusterIp" > "/announce_ip"
+          elif [ -n "$clusterIp" ]; then
+            clusterIp=$(echo "$clusterIp")
+            echo "$clusterIp" > "/tmp/announce_ip"
           # If none of the above are defined, use the hostname
           else
-            echo $(hostname -i) > "/announce_ip"
+            echo $(hostname -i) > "/tmp/announce_ip"
           fi
 
           # Saving the p2p private key (nodeKey) to a file
           if [ -n "$NODEKEY" ]; then
-            echo "$NODEKEY" | sed 's/^0x//' > "/nodeKey"
+            echo "$NODEKEY" | sed 's/^0x//' > "/tmp/nodeKey"
           fi
 
           {{- if .Values.config.nat }}
           natFlag="-nat={{ .Values.config.nat }}"
           {{- else }}
-          natFlag="-nat=extip:$(cat /announce_ip)"
+          natFlag="-nat=extip:$(cat /tmp/announce_ip)"
           {{- end }}
-          [ -f /nodeKey ] && nodeKeyFlag="-nodekey=/nodeKey" || nodeKeyFlag=""
+          [ -f /tmp/nodeKey ] && nodeKeyFlag="-nodekey=/tmp/nodeKey" || nodeKeyFlag=""
           exec bootnode \
             -addr=":{{ .Values.config.port }}" \
             $natFlag \
@@ -115,7 +115,7 @@ spec:
         - name: NODEKEY
           valueFrom:
             secretKeyRef:
-              name: {{ ternary (include "op-geth.fullname" .) .Values.secrets.nodeKey.secretName (not (empty .Values.secrets.nodeKey.value)) }}
+              name: {{ ternary (include "op-geth-bootnode.fullname" .) .Values.secrets.nodeKey.secretName (not (empty .Values.secrets.nodeKey.value)) }}
               key: {{ ternary "nodeKey" .Values.secrets.nodeKey.secretKey (not (empty .Values.secrets.nodeKey.value)) }}
         {{- end }}
         ports:

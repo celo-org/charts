@@ -1,7 +1,7 @@
 ---
 image:
-  repository: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth-bootnode
-  tag: latest
+  repository: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth-bootnode
+  tag: ffa122403fea6acc8130752cda345df5d50c1320
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -68,7 +68,7 @@ services:
     enabled: true       # disable if you are not using "snap" syncmode
     type: ClusterIP
     loadBalancerIP: ""
-    clusterIPs: ""
+    clusterIP: ""
     port: 30303
     annotations: {}
     publishNotReadyAddresses: true
