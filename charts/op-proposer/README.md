@@ -1,6 +1,6 @@
 # op-proposer
 
-![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-proposer client (Optimism Rollup)
 
@@ -24,8 +24,10 @@ Celo implementation for op-proposer client (Optimism Rollup)
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| config.L2OutputOracle | string | `""` |  |
 | config.activeSecuencerCheckDuration | string | `"2m0s"` |  |
+| config.disputeGameFactoryProxy | string | `""` |  |
+| config.gameType | int | `1` |  |
+| config.l2OutputOracle | string | `""` |  |
 | config.logs.color | bool | `false` |  |
 | config.logs.format | string | `"json"` |  |
 | config.logs.level | string | `"info"` |  |
@@ -34,6 +36,7 @@ Celo implementation for op-proposer client (Optimism Rollup)
 | config.metrics.port | int | `7300` |  |
 | config.numConfirmations | int | `5` |  |
 | config.pollInterval | string | `"12s"` |  |
+| config.proposalInterval | string | `"300s"` |  |
 | config.rollupRpc | string | `"http://localhost:8547"` |  |
 | config.rpc.addr | string | `"0.0.0.0"` |  |
 | config.rpc.enabledAdmin | bool | `false` |  |
@@ -50,6 +53,7 @@ Celo implementation for op-proposer client (Optimism Rollup)
 | config.signer.tls.externalSecret.tlsSecretCertKey | string | `"certificate.pem"` | Secret key for the TLS certificate |
 | config.signer.tls.externalSecret.tlsSecretKeyKey | string | `"key.pem"` | Secret key for the TLS key |
 | config.signer.tls.externalSecret.tlsSecretName | string | `"test-secret"` | Secret name for the secret containing an already created TLS certificate |
+| config.useFaultProofs | bool | `false` |  |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
