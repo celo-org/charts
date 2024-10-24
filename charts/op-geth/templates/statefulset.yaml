@@ -266,6 +266,9 @@ spec:
             {{- with .Values.config.bootnodes }}
             --bootnodes={{ join "," . }} \
             {{- end }}
+            {{- with .Values.config.netrestrict }}
+            --netrestrict={{ join "," . }} \
+            {{- end }}
             {{- if not .Values.config.nodiscover }}
             --port={{ .Values.config.port }} \
             {{- end }}
