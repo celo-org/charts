@@ -1,0 +1,110 @@
+---
+image:
+  repository: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth-bootnode
+  tag: latest
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+updateStrategy:
+  type: RollingUpdate
+
+## --state.scheme=path promised to speed up shutdown
+terminationGracePeriodSeconds: 300
+
+## Extra pod labels
+podLabels: {}
+  # environment: production
+
+## This labels mark Geth node as ready to serve the traffic.
+## Used as selector for RPC service together with `.Values.podLabels` and default labels.
+podStatusLabels: {}
+  # manualstatus: in-service
+
+## Extra pod annotations
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 10001
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  allowPrivilegeEscalation: false
+  privileged: false
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  # readOnlyRootFilesystem: true
+
+## By disabling we fix "Unknown config environment variable envvar=GETH_"
+## Enable if your workload depends on this functionality
+enableServiceLinks: false
+
+## Override op-geth-bootnode command (can be templated)
+command:
+  - /bin/sh
+  - -c
+
+## Extra op-geth-bootnode arguments (can be templated)
+extraArgs: []
+
+## Services config
+services:
+  p2p:
+    enabled: true       # disable if you are not using "snap" syncmode
+    type: ClusterIP
+    loadBalancerIP: ""
+    clusterIPs: ""
+    port: 30303
+    annotations: {}
+    publishNotReadyAddresses: true
+
+affinity: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+secrets:
+  # REQUIRED: Private Key for the p2p. Comma separated list of keys if multiple replicas
+  # Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  nodeKey:
+    value: ""
+    secretName: ""
+    secretKey: ""
+
+## Main op-geth-bootnode config
+config:
+  port: 30303               # TCP port for P2P communication
+  useHostPort: false        # allocate hostPorts for P2P communication instead of K8S service
+  nat: ""                   # Override the p2p service ip/pod ips. refer to `bootnode --help` for other options
+  netrestrict: ""           # restrict network communication to the given IP networks (CIDR masks)
+  v5: false                 # run a v5 topic discovery bootnode
+  verbosity: 3              # log verbosity (0-5) (default 3)
+  vmodule: ""               # log verbosity pattern
