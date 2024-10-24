@@ -36,7 +36,7 @@ spec:
             - -c
           args: 
             - |
-              /app/op-conductor-mon /app/op-cpnductor-mon.toml
+              /app/op-conductor-mon /app/op-conductor-mon.toml
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -56,7 +56,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config
-              mountPath: /app/op-cpnductor-mon.toml
+              mountPath: /app/op-conductor-mon.toml
               subPath: config
       volumes:
         - name: config
