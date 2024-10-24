@@ -36,7 +36,7 @@ spec:
             - -c
           args: 
             - |
-              /app/op-conductor-mon /app/op-conductor-mon.toml
+              exec /app/op-conductor-mon /app/op-conductor-mon.toml
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
