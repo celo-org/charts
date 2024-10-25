@@ -147,6 +147,9 @@ spec:
             --rollup.config={{ . }}/rollup.json \
             {{- end }}
             {{- end }}
+            {{- if .Values.config.safedbPath }}
+            --safedb-path={{ .Values.config.safedbPath }} \
+            {{- end }}
             {{- if .Values.config.sequencer.enabled }}
             --sequencer.enabled \
             {{- if .Values.config.sequencer.stopped }}
