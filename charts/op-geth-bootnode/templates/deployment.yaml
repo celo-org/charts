@@ -119,12 +119,6 @@ spec:
               key: {{ ternary "nodeKey" .Values.secrets.nodeKey.secretKey (not (empty .Values.secrets.nodeKey.value)) }}
         {{- end }}
         ports:
-        - name: p2p-tcp
-          containerPort: {{ .Values.config.port }}
-          {{- if .Values.config.useHostPort }}
-          hostPort: {{ .Values.config.port }}
-          {{- end }}
-          protocol: TCP
         - name: p2p-udp
           containerPort: {{ .Values.config.port }}
           {{- if .Values.config.useHostPort }}
