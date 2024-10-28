@@ -67,9 +67,15 @@ spec:
             echo "wget failed, retrying..."
             sleep 5 # Wait for 5 seconds before retrying
           done
+          {{- if .Values.config.useFaultProofs }}
+          DisputeGameFactoryProxy=$(cat $datadir/deployment-l1.json | grep DisputeGameFactoryProxy | cut -d'"' -f4)
+          echo $DisputeGameFactoryProxy > $datadir/DisputeGameFactoryProxy
+          echo "DisputeGameFactoryProxy: $DisputeGameFactoryProxy"
+          {{- else }}
           L2OutputOracleProxy=$(cat $datadir/deployment-l1.json | grep L2OutputOracleProxy | cut -d'"' -f4)
           echo $L2OutputOracleProxy > $datadir/L2OutputOracleProxy
           echo "L2OutputOracleProxy: $L2OutputOracleProxy"
+          {{- end }}
         volumeMounts:
         - name: contracts
           mountPath: /contracts
@@ -85,22 +91,23 @@ spec:
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- if .Values.command }}
-        command:
-          {{- tpl (toYaml .Values.command) $ | nindent 10 }}
-        {{- else }}
         command:
         - /bin/sh
         - -c
-        {{- end }}
         args:
         - |
-          [ -f /contracts/L2OutputOracleProxy ] && L2OutputOracleProxy=$(cat /contracts/L2OutputOracleProxy) || L2OutputOracleProxy={{ .Values.config.L2OutputOracle }}
+          {{- if .Values.config.useFaultProofs }}
+          [ -f /contracts/DisputeGameFactoryProxy ] && DisputeGameFactoryProxy=$(cat /contracts/DisputeGameFactoryProxy) || DisputeGameFactoryProxy={{ .Values.config.disputeGameFactoryProxy }}
+          contractFlag="--game-factory-address=$DisputeGameFactoryProxy --game-type={{ .Values.config.gameType }} --proposal-interval={{ .Values.config.proposalInterval }}"
+          {{- else }}
+          [ -f /contracts/L2OutputOracleProxy ] && L2OutputOracleProxy=$(cat /contracts/L2OutputOracleProxy) || L2OutputOracleProxy={{ .Values.config.l2OutputOracle }}
+          contractFlag="--l2oo-address=$L2OutputOracleProxy"
+          {{- end }}
           exec op-proposer \
             --poll-interval={{ .Values.config.pollInterval }} \
             --rpc.port={{ .Values.config.rpc.port }} \
             --rollup-rpc={{ .Values.config.rollupRpc }} \
-            --l2oo-address=$L2OutputOracleProxy \
+            "$contractFlag" \
             --l1-eth-rpc=$L1_URL \
             --num-confirmations={{ .Values.config.numConfirmations }} \
             {{- if .Values.config.metrics.enabled }}
