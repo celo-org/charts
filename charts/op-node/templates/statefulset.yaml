@@ -195,7 +195,7 @@ spec:
             --p2p.no-discovery \
             {{- end }}
             {{- with .Values.config.p2p.netrestrict }}
-            --netrestrict={{ join "," . }} \
+            --p2p.netrestrict={{ join "," . }} \
             {{- end }}
             --p2p.priv.path=$datadir/opnode_p2p_priv.txt \
             --log.level={{ .Values.config.logLevel }} \
