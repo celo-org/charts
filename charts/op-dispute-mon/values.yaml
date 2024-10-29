@@ -24,7 +24,7 @@ imagePullSecrets: []
 
 config:
   disputeGameFactoryProxy: ""
-  l1EthRPC: https://ethereum-holesky-rpc.publicnode.com	
+  l1EthRPC: https://ethereum-holesky-rpc.publicnode.com
   rollupRPC: ""
   gameWindow: 672h0m0s
   monitorInterval: 30s

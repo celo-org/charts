@@ -15,6 +15,11 @@ spec:
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.config.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.config.metrics.port }}"
+        prometheus.io/path: "/metrics"
+      {{- end }}
       labels:
         {{- include "op-dispute-mon.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
@@ -88,7 +93,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: metrics
-              containerPort: {{ .Values.service.metricsPort | default 7300 }}
+              containerPort: {{ .Values.services.metrics.port | default 7300 }}
               protocol: TCP
           {{- with .Values.livenessProbe }}
           livenessProbe:
