@@ -9,7 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
     component: celostats-server
 spec:
-  replicas: 1
+  replicas: {{ .Values.celostats.replicas.server }}
   selector:
     matchLabels:
       app: celostats
