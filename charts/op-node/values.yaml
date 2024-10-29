@@ -219,7 +219,10 @@ config:
   jwt: ""                              # REQUIRED for communication with op-geth. In case of multiReplica, comma separated list of JWTs (or shared)
   network: op-mainnet                  # which network to use
   port: 9545
-  logLevel: INFO
+  log:
+    level: info
+    format: json
+    color: false
   syncmode: ""                         # can be "execution-layer" if you are using "snap" syncmode on execution layer
   enableAdmin: false                   # enable admin API
   safedbPath: ""                       # File path used to persist safe head update data. Disabled if not set or empty
