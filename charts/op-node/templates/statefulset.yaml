@@ -198,7 +198,9 @@ spec:
             --p2p.netrestrict={{ join "," . }} \
             {{- end }}
             --p2p.priv.path=$datadir/opnode_p2p_priv.txt \
-            --log.level={{ .Values.config.logLevel }} \
+            --log.level={{ .Values.config.log.level }} \
+            --log.format={{ .Values.config.log.format }} \
+            --log.color={{ .Values.config.log.color }} \
             {{- with .Values.config.syncmode }}
             --syncmode={{ . }} \
             {{- end }}
