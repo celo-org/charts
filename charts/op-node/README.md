@@ -1,6 +1,6 @@
 # op-node
 
-![Version: 0.4.5](https://img.shields.io/badge/Version-0.4.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.6](https://img.shields.io/badge/Version-0.4.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-node consensus engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree/main/dysnix/op-node).
@@ -42,7 +42,9 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | config.l2.port | string | `""` |  |
 | config.l2.protocol | string | `""` |  |
 | config.l2.url | string | `"http://op-geth-authrpc:8551"` |  |
-| config.logLevel | string | `"INFO"` |  |
+| config.log.color | bool | `false` |  |
+| config.log.format | string | `"json"` |  |
+| config.log.level | string | `"info"` |  |
 | config.metrics.enabled | bool | `false` |  |
 | config.metrics.port | int | `7300` |  |
 | config.network | string | `"op-mainnet"` |  |
