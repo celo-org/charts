@@ -1,8 +1,9 @@
+---
 apiVersion: v2
 name: op-conductor-mon
 description: A Helm chart for OP Conductor monitoring
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "main"
 maintainers:
   - name: cLabs
