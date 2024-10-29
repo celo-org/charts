@@ -5,6 +5,11 @@ imagePullPolicy: IfNotPresent
 nodeSelector: {}
 
 celostats:
+  replicas:
+    # -- Server replicas
+    server: 1
+    # -- Frontend replicas
+    frontend: 1
   image:
     # -- Celostat-server image and tag
     server:
