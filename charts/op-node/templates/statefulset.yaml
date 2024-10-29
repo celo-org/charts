@@ -147,6 +147,9 @@ spec:
             --rollup.config={{ . }}/rollup.json \
             {{- end }}
             {{- end }}
+            {{- if .Values.config.safedbPath }}
+            --safedb-path={{ .Values.config.safedbPath }} \
+            {{- end }}
             {{- if .Values.config.sequencer.enabled }}
             --sequencer.enabled \
             {{- if .Values.config.sequencer.stopped }}
@@ -191,8 +194,13 @@ spec:
             {{- if .Values.config.p2p.noDiscovery }}
             --p2p.no-discovery \
             {{- end }}
+            {{- with .Values.config.p2p.netrestrict }}
+            --p2p.netrestrict={{ join "," . }} \
+            {{- end }}
             --p2p.priv.path=$datadir/opnode_p2p_priv.txt \
-            --log.level={{ .Values.config.logLevel }} \
+            --log.level={{ .Values.config.log.level }} \
+            --log.format={{ .Values.config.log.format }} \
+            --log.color={{ .Values.config.log.color }} \
             {{- with .Values.config.syncmode }}
             --syncmode={{ . }} \
             {{- end }}

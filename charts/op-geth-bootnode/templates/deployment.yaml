@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "op-geth-bootnode.fullname" . }}
+  labels:
+    {{- include "op-geth-bootnode.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ template "op-geth-bootnode.name" . }}
+  replicas: {{ .Values.replicaCount }}
+  updateStrategy:
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "op-geth-bootnode.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "op-geth-bootnode.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podStatusLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      enableServiceLinks: {{ .Values.enableServiceLinks }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "op-geth-bootnode.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: op-geth-bootnode
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.command }}
+        command:
+          {{- tpl (toYaml .) $ | nindent 10 }}
+        {{- end }}
+        args:
+        - |
+          # Saving the announce ip address to a file
+          loadBalancerIp="{{ .Values.services.p2p.loadBalancerIP }}"
+          clusterIp="{{ .Values.services.p2p.clusterIP }}"
+          # If the loadBalancerIPs are defined, use them
+          if [ -n "$loadBalancerIp" ]; then
+            loadBalancerIp=$(echo "$loadBalancerIp")
+            echo "$loadBalancerIp" > "/tmp/announce_ip"
+          # If the clusterIPs are defined now, use them
+          elif [ -n "$clusterIp" ]; then
+            clusterIp=$(echo "$clusterIp")
+            echo "$clusterIp" > "/tmp/announce_ip"
+          # If none of the above are defined, use the hostname
+          else
+            echo $(hostname -i) > "/tmp/announce_ip"
+          fi
+
+          # Saving the p2p private key (nodeKey) to a file
+          if [ -n "$NODEKEY" ]; then
+            echo "$NODEKEY" | sed 's/^0x//' > "/tmp/nodeKey"
+          fi
+
+          {{- if .Values.config.nat }}
+          natFlag="-nat={{ .Values.config.nat }}"
+          {{- else }}
+          natFlag="-nat=extip:$(cat /tmp/announce_ip)"
+          {{- end }}
+          [ -f /tmp/nodeKey ] && nodeKeyFlag="-nodekey=/tmp/nodeKey" || nodeKeyFlag=""
+          exec bootnode \
+            -addr=":{{ .Values.config.port }}" \
+            $natFlag \
+            {{- if .Values.config.netrestrict }}
+            -netrestrict={{ .Values.config.netrestrict }} \
+            {{- end }}
+            $nodeKeyFlag \
+            {{- if .Values.config.v5 }}
+            -v5 \
+            {{- end }}
+            -verbosity={{ .Values.config.verbosity }} \
+            {{- if .Values.config.vmodule }}
+            -vmodule={{ .Values.config.vmodule }} \
+            {{- end }}
+            {{- with .Values.extraArgs }}
+            {{- range . }}
+            {{- tpl (.) $ | nindent 12 }} \
+            {{- end }}
+            {{- end }}
+        {{- if or .Values.secrets.nodeKey.value .Values.secrets.nodeKey.secretName }}
+        env:
+        - name: NODEKEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ ternary (include "op-geth-bootnode.fullname" .) .Values.secrets.nodeKey.secretName (not (empty .Values.secrets.nodeKey.value)) }}
+              key: {{ ternary "nodeKey" .Values.secrets.nodeKey.secretKey (not (empty .Values.secrets.nodeKey.value)) }}
+        {{- end }}
+        ports:
+        - name: p2p-udp
+          containerPort: {{ .Values.config.port }}
+          {{- if .Values.config.useHostPort }}
+          hostPort: {{ .Values.config.port }}
+          {{- end }}
+          protocol: UDP
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}

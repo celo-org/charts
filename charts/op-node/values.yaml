@@ -219,9 +219,13 @@ config:
   jwt: ""                              # REQUIRED for communication with op-geth. In case of multiReplica, comma separated list of JWTs (or shared)
   network: op-mainnet                  # which network to use
   port: 9545
-  logLevel: INFO
+  log:
+    level: info
+    format: json
+    color: false
   syncmode: ""                         # can be "execution-layer" if you are using "snap" syncmode on execution layer
   enableAdmin: false                   # enable admin API
+  safedbPath: ""                       # File path used to persist safe head update data. Disabled if not set or empty
   l1:
     trustrpc: false                                       # enable if you trust L1 provider and want to fetch data from it faster
     rpckind: any                                          # Valid options: alchemy, quicknode, infura, parity, nethermind, debug_geth, erigon, basic, any, standard
@@ -260,6 +264,7 @@ config:
     useHostPort: false                 # use hostPort for p2p traffic instead of dedicated k8s svc
     bootnodes: []                      # override bootnodes
     static: []                         # static peers
+    netrestrict: []                    # restrict network access to specific IPs
     noDiscovery: false                 # disable peer discovery
     keys: ""                           # comma separated list of keys to use for p2p
     sequencer:

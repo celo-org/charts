@@ -1,15 +1,14 @@
 ---
-name: op-node
+name: op-geth-bootnode
 apiVersion: v2
-version: 0.4.6
-description: Celo implementation for op-node consensus engine (Optimism Rollup)
+version: 0.0.1
+description: Celo implementation for op-geth-bootnode execution engine (Optimism Rollup)
 home: https://clabs.co
 sources:
   - https://celo.org
   - https://docs.celo.org
   - https://clabs.co
   - https://github.com/celo-org
-  - https://github.com/celo-org/optimism/
 keywords:
   - celo
   - blockchain
@@ -18,6 +17,7 @@ keywords:
   - ethereum
   - layer2
   - op-stack
+  - bootnode
 maintainers:
   - name: cLabs
     email: devops@clabs.co

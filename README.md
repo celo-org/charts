@@ -37,6 +37,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [op-conductor](./charts/op-conductor/README.md) - Helm chart deploying OP Conductor, a HA controller for op-node
 - [op-conductor-mon](./charts/op-conductor-mon/README.md) - A Helm chart for OP Conductor monitoring
 - [op-geth](./charts/op-geth/README.md) - Celo implementation for op-geth execution engine (Optimism Rollup)
+- [op-geth-bootnode](./charts/op-geth-bootnode/README.md) - Celo implementation for op-geth-bootnode execution engine (Optimism Rollup)
 - [op-node](./charts/op-node/README.md) - Celo implementation for op-node consensus engine (Optimism Rollup)
 - [op-proposer](./charts/op-proposer/README.md) - Celo implementation for op-proposer client (Optimism Rollup)
 - [op-proxyd](./charts/op-proxyd/README.md) - Celo implementation for OP proxyd
