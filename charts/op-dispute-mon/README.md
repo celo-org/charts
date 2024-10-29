@@ -35,7 +35,7 @@ A Helm chart for Fault Proof Monitoring
 | config.rollupRPC | string | `""` |  |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-docker.pkg.dev/oplabs-tools-artifacts/images/op-dispute-mon"` | Image repository |
+| image.repository | string | `"us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-dispute-mon"` | Image repository |
 | image.tag | string | `"main"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | init.contracts.enabled | bool | `false` |  |
