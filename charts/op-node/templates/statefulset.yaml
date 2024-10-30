@@ -116,11 +116,25 @@ spec:
         {{- end }}
         args:
         - |
+          RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
           datadir="{{ .Values.persistence.mountPath | default .Values.config.rollup.config }}"
           advertiseIpFlag=""
           if [ -f $datadir/advertiseIP ]; then
             advertiseIpFlag="--p2p.advertise.ip=$(cat $datadir/advertiseIP)"
           fi
+
+          # Check if conductor is enabled and start extra copies stopped
+          sequencerFlag=""
+          {{- if .Values.config.sequencer.enabled }}
+          sequencerFlag="--sequencer.enabled"
+          {{- if not .Values.config.conductor.enabled }}
+          if [ "$RID" -gt 0 ]; then
+              stoppedFlag="--sequencer.stopped"
+          else
+              stoppedFlag=""
+          fi
+          {{- end }}
+          {{- end }}
 
           exec op-node \
             --l1=$L1_URL \
@@ -150,11 +164,9 @@ spec:
             {{- if .Values.config.safedbPath }}
             --safedb-path={{ .Values.config.safedbPath }} \
             {{- end }}
+            $sequencerFlag \
+            $stoppedFlag \
             {{- if .Values.config.sequencer.enabled }}
-            --sequencer.enabled \
-            {{- if .Values.config.sequencer.stopped }}
-            --sequencer.stopped \
-            {{- end }}
             {{- if kindIs "int" .Values.config.sequencer.l1Confs }}
             --sequencer.l1-confs={{ int .Values.config.sequencer.l1Confs }} \
             {{- end }}
