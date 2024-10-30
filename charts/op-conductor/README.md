@@ -1,6 +1,6 @@
 # op-conductor
 
-![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
+![Version: 0.0.6](https://img.shields.io/badge/Version-0.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
 
 Helm chart deploying OP Conductor, a HA controller for op-node
 
@@ -24,8 +24,10 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| config.consensus.addr | string | `""` |  |
 | config.consensus.port | int | `50050` |  |
+| config.execution.namePattern | string | `""` |  |
+| config.execution.port | string | `""` |  |
+| config.execution.protocol | string | `""` |  |
 | config.execution.rpc | string | `"http://op-geth:8545"` |  |
 | config.healthcheck.interval | int | `10` |  |
 | config.healthcheck.minPeerCount | int | `1` |  |
@@ -38,11 +40,11 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | config.metrics.enabled | bool | `true` |  |
 | config.metrics.port | int | `7300` |  |
 | config.network | string | `""` |  |
+| config.node.namePattern | string | `""` |  |
+| config.node.port | string | `""` |  |
+| config.node.protocol | string | `""` |  |
 | config.node.rpc | string | `"http://op-node:8547"` |  |
 | config.paused | bool | `false` |  |
-| config.raft.bootstrap | bool | `false` |  |
-| config.raft.server.id | int | `1` |  |
-| config.raft.storage.dir | string | `"/raft"` |  |
 | config.rpc.addr | string | `"0.0.0.0"` |  |
 | config.rpc.enableAdmin | bool | `false` |  |
 | config.rpc.enableProxy | bool | `true` |  |
