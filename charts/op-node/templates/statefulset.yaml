@@ -127,7 +127,9 @@ spec:
           sequencerFlag=""
           {{- if .Values.config.sequencer.enabled }}
           sequencerFlag="--sequencer.enabled"
-          {{- if not .Values.config.conductor.enabled }}
+          {{- if .Values.config.conductor.enabled }}
+          stoppedFlag=""
+          {{- else }}
           if [ "$RID" -gt 0 ]; then
               stoppedFlag="--sequencer.stopped"
           else
@@ -178,7 +180,7 @@ spec:
             {{- end }}
             {{- if .Values.config.conductor.enabled }}
             --conductor.enabled \
-            --conductor.rpc={{ .Values.config.conductor.rpc }} \
+            --conductor.rpc=$(cat $datadir/conductorRpcUrl) \
             --conductor.rpc-timeout={{ .Values.config.conductor.rpcTimeout }} \
             {{- end }}
             {{- end }}

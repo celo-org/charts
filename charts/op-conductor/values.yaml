@@ -21,19 +21,16 @@ config:
   execution:
     # execution engine (op-geth) rpc endpoint
     rpc: http://op-geth:8545
+    protocol: ""                             # Used for multiReplica. Leave url empty if using multiReplica
+    namePattern: ""                          # Used for multiReplica. Set to the op-geth sts name pattern. Example: "op-geth-validator-authrpc"
+    port: ""                                 # Used for multiReplica. Port of op-geth L2 node with multiReplica
   node:
     rpc: http://op-node:8547
+    protocol: ""                             # Used for multiReplica. Leave url empty if using multiReplica
+    namePattern: ""                          # Used for multiReplica. Set to the op-node sts name pattern. Example: "op-geth-validator-authrpc"
+    port: ""                                 # Used for multiReplica. Port of op-node L2 node with multiReplica
   consensus:
-    # Address to listen for consensus connections. It cannot be 0. If empty, it will try to use
-    # the service ip or the pod ip.
-    addr: ""
     port: 50050
-  raft:
-    bootstrap: false
-    server:
-      id: 1
-    storage:
-      dir: /raft
   rpc:
     enableAdmin: false
     enableProxy: true

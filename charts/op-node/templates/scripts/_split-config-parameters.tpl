@@ -53,3 +53,14 @@ else
 fi
 echo "Setting L2 url to $l2Url"
 echo "$l2Url" > "$datadir/l2Url"
+
+
+# Get the conductor url
+conductorRpcUrl=""
+if [ -n "{{ .Values.config.conductor.rpc.url }}" ]; then
+  conductorRpcUrl="{{ .Values.config.conductor.rpc.url }}"
+else
+  conductorRpcUrl="{{ .Values.config.conductor.rpc.protocol }}://{{ .Values.config.conductor.rpc.namePattern }}-$RID:{{ .Values.config.conductor.rpc.port }}"
+fi
+echo "Setting conductor url to $conductorRpcUrl"
+echo "$conductorRpcUrl" > "$datadir/conductorRpcUrl"
