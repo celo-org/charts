@@ -74,24 +74,28 @@ spec:
                  [ $(cat /tmp/RESULT_COND_2_SEQ_HEALTHY) = "true" ] && \
                  [ $(cat /tmp/RESULT_COND_2_LEADER) = "true" ]; then
                 echo "Requirements for switch and start are met"
+                SWITCH=true
               else
                 echo "Requirements for switch and start are NOT met. Exiting..."
-                exit 1
+                SWITCH=false
               fi
 
-              echo "Stopping OP Node $first"
-              LAST_UNSAFE_HASH=$(curl -X POST -H "Content-Type: application/json" --data \
-                '{"jsonrpc":"2.0","method":"admin_stopSequencer","params":[],"id":1}' \
-                {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$first:{{ .Values.opNode.port }} -s | jq .result)
-              echo "Stopped OP Node $first with unsafe hash $LAST_UNSAFE_HASH. Starting OP Node $last..."
-              curl -X POST -H "Content-Type: application/json" --data \
-                '{"jsonrpc":"2.0","method":"admin_startSequencer","params":["$LAST_UNSAFE_HASH"],"id":1}'  \
-                {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$last:{{ .Values.opNode.port }} -s
-              if [ $? -eq 0 ]; then
-                echo "Started OP Node $last"
-              else
-                echo "Failed to start OP Node $last"
-                exit 1
+              if [ $SWITCH -eq "true"]; then
+                echo "Stopping OP Node $first"
+                LAST_UNSAFE_HASH=$(curl -X POST -H "Content-Type: application/json" --data \
+                  '{"jsonrpc":"2.0","method":"admin_stopSequencer","params":[],"id":1}' \
+                  {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$first:{{ .Values.opNode.port }} -s | jq .result)
+                echo "Stopped OP Node $first with unsafe hash $LAST_UNSAFE_HASH. Starting OP Node $last..."
+                START=$(curl -X POST -H "Content-Type: application/json" --data \
+                  '{"jsonrpc":"2.0","method":"admin_startSequencer","params":[$LAST_UNSAFE_HASH],"id":1}'  \
+                  {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$last:{{ .Values.opNode.port }} -s)
+                if [ $? -eq 0 ] || [ $LAST -ne "null"]; then
+                  echo "Started OP Node $last"
+                else
+                  echo "Failed to start OP Node $last"
+                  echo "$START"
+                  exit 1
+                fi
               fi
 
               echo "Forming raft cluster..."
@@ -108,7 +112,7 @@ spec:
               do
                 curl -X POST -H "Content-Type: application/json" --data \
                     '{"jsonrpc":"2.0","method":"conductor_addServerAsVoter","params":["$i", "{{ .Values.opConductor.consensus.namePattern }}-$i:{{ .Values.opConductor.consensus.port }}", 0],"id":1}'  \
-                    {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$last:{{ .Values.opConductor.rpc.port }} -s | jq .result)
+                    {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$last:{{ .Values.opConductor.rpc.port }} -s | jq .result
                 i=$((i + 1))
               done
               echo "Done forming raft cluster"
