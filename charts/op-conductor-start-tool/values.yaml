@@ -1,0 +1,21 @@
+---
+schedule: "0 0 30 2 0"
+suspend: true
+image:
+  repository: alpine
+  tag: 3.19
+  pullPolicy: IfNotPresent
+opNode:
+  replicas: 3
+  protocol: "http"
+  namePattern: "op-node-sequencer-rpc"
+  port: "9545"
+opConductor:
+  replicas: 3
+  protocol: "http"
+  rpc:
+    namePattern: "op-conductor-rpc"
+    port: "8545"
+  consensus:
+    namePattern: "op-conductor-consensus"
+    port: "50050"
