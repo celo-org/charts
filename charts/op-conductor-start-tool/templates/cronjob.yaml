@@ -76,11 +76,11 @@ spec:
                 echo "Requirements for switch and start are met"
                 SWITCH=true
               else
-                echo "Requirements for switch and start are NOT met. Exiting..."
+                echo "Requirements for switch and start are NOT met. Skipping..."
                 SWITCH=false
               fi
 
-              if [ $SWITCH -eq "true"]; then
+              if [ $SWITCH = true ]; then
                 echo "Stopping OP Node $first"
                 LAST_UNSAFE_HASH=$(curl -X POST -H "Content-Type: application/json" --data \
                   '{"jsonrpc":"2.0","method":"admin_stopSequencer","params":[],"id":1}' \
@@ -88,8 +88,8 @@ spec:
                 echo "Stopped OP Node $first with unsafe hash $LAST_UNSAFE_HASH. Starting OP Node $last..."
                 START=$(curl -X POST -H "Content-Type: application/json" --data \
                   '{"jsonrpc":"2.0","method":"admin_startSequencer","params":[$LAST_UNSAFE_HASH],"id":1}'  \
-                  {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$last:{{ .Values.opNode.port }} -s)
-                if [ $? -eq 0 ] || [ $LAST -ne "null"]; then
+                  {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$last:{{ .Values.opNode.port }} -s | jq .result)
+                if [ $? -eq 0 ] && [ $START -eq "null"]; then
                   echo "Started OP Node $last"
                 else
                   echo "Failed to start OP Node $last"
@@ -101,15 +101,17 @@ spec:
               echo "Forming raft cluster..."
               echo "Checking OP Conductor $last is leader"
               CHECK_LEADER=$(curl -X POST -H "Content-Type: application/json" --data \
-                '{"jsonrpc":"2.0","method":"conductor_leader","params":[],"id":1}'  \
+                '{"jsonrpc":"2.0","method":"conductor_leader","params":[],"id":1}' \
                 {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$last:{{ .Values.opConductor.rpc.port }} -s | jq .result)
-              if [ ! $CHECK_LEADER = "true" ]; then
+              if [ "$CHECK_LEADER" = false ]; then
                 echo "OP Conductor $last is NOT the leader, exiting..."
                 exit 1
               fi
               i=0
-              while [ $i -lt $(( {{ .Values.opNode.replicas }} -1 )) ]
+              echo "Sending addServerAsVoter to OP Conductor $last"
+              while [ $i -lt $(( {{ .Values.opNode.replicas }} - 1 )) ]
               do
+                echo "Sending addServerAsVoter to OP Conductor $last for member $i"
                 curl -X POST -H "Content-Type: application/json" --data \
                     '{"jsonrpc":"2.0","method":"conductor_addServerAsVoter","params":["$i", "{{ .Values.opConductor.consensus.namePattern }}-$i:{{ .Values.opConductor.consensus.port }}", 0],"id":1}'  \
                     {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$last:{{ .Values.opConductor.rpc.port }} -s | jq .result
@@ -121,6 +123,7 @@ spec:
               i=0
               while [ $i -lt {{ .Values.opConductor.replicas }} ]
               do
+                echo "Sending conductor_resume to OP Conductor $i"
                 curl -X POST -H "Content-Type: application/json" --data \
                       '{"jsonrpc":"2.0","method":"conductor_resume","params":[],"id":1}'  \
                       {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$i:{{ .Values.opConductor.rpc.port }} -s
