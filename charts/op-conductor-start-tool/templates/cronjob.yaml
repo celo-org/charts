@@ -86,54 +86,89 @@ spec:
                   '{"jsonrpc":"2.0","method":"admin_stopSequencer","params":[],"id":1}' \
                   {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$first:{{ .Values.opNode.port }} -s | jq -r .result)
                 echo "Stopped OP Node $first with unsafe hash $LAST_UNSAFE_HASH. Starting OP Node $last..."
-                START=$(curl -X POST -H "Content-Type: application/json" --data \
+                curl -X POST -H "Content-Type: application/json" --data \
                   '{"jsonrpc":"2.0","method":"admin_startSequencer","params":["'${LAST_UNSAFE_HASH}'"],"id":1}'  \
-                  {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$last:{{ .Values.opNode.port }} -s | jq .result)
-                echo "Checking OP Node $last status"
+                  {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$last:{{ .Values.opNode.port }} -s
+                echo "Started OP Node $last, checking OP Node $last status..."
                 STARTED=$(curl -X POST -H "Content-Type: application/json" --data \
                   '{"jsonrpc":"2.0","method":"admin_sequencerActive","params":[],"id":1}'  \
                   {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$last:{{ .Values.opNode.port }} -s | jq .result)
                 if [ "$STARTED" = true ]; then
-                  echo "Started OP Node $last"
+                  echo "OP Node $last is active"
                 else
                   echo "Failed to start OP Node $last"
-                  echo "admin_startSequencer result: $START"
                   echo "admin_sequencerActive result: $STARTED"
+                  echo "Falling back to activating OP Node $first"
+                  curl -X POST -H "Content-Type: application/json" --data \
+                    '{"jsonrpc":"2.0","method":"admin_startSequencer","params":["'${LAST_UNSAFE_HASH}'"],"id":1}'  \
+                    {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$first:{{ .Values.opNode.port }} -s
                   exit 1
                 fi
               fi
 
-              echo "Forming raft cluster..."
-              echo "Checking OP Conductor $last is leader"
-              CHECK_LEADER=$(curl -X POST -H "Content-Type: application/json" --data \
-                '{"jsonrpc":"2.0","method":"conductor_leader","params":[],"id":1}' \
-                {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$last:{{ .Values.opConductor.rpc.port }} -s | jq .result)
-              if [ "$CHECK_LEADER" = false ]; then
-                echo "OP Conductor $last is NOT the leader, exiting..."
-                exit 1
+              echo "Checking raft cluster..."
+              CLUSTER_MEMBERS=$(curl -X POST -H "Content-Type: application/json" --data \
+                '{"jsonrpc":"2.0","method":"conductor_clusterMembership","params":[],"id":1}' \
+                {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$last:{{ .Values.opConductor.rpc.port }} -s | jq '.result.servers | length')
+              echo "Current raft cluster members: $CLUSTER_MEMBERS"
+              if [ "$CLUSTER_MEMBERS" = 1 ]; then
+                echo "Forming raft cluster..."
+                echo "Checking OP Conductor $last is leader"
+                CHECK_LEADER=$(curl -X POST -H "Content-Type: application/json" --data \
+                  '{"jsonrpc":"2.0","method":"conductor_leader","params":[],"id":1}' \
+                  {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$last:{{ .Values.opConductor.rpc.port }} -s | jq .result)
+                if [ "$CHECK_LEADER" = false ]; then
+                  echo "OP Conductor $last is NOT the leader, exiting..."
+                  exit 1
+                fi
+                i=0
+                echo "Sending addServerAsVoter to OP Conductor $last"
+                while [ $i -lt $(( {{ .Values.opNode.replicas }} - 1 )) ]
+                do
+                  echo "Sending addServerAsVoter to OP Conductor $last for member $i"
+                  curl -X POST -H "Content-Type: application/json" --data \
+                      '{"jsonrpc":"2.0","method":"conductor_addServerAsVoter","params":["'${i}'", "{{ .Values.opConductor.consensus.namePattern }}-'${i}':{{ .Values.opConductor.consensus.port }}", 0],"id":1}'  \
+                      {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$last:{{ .Values.opConductor.rpc.port }} -s
+                  i=$((i + 1))
+                done
+                CLUSTER_MEMBERS=$(curl -X POST -H "Content-Type: application/json" --data \
+                  '{"jsonrpc":"2.0","method":"conductor_clusterMembership","params":[],"id":1}' \
+                  {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$last:{{ .Values.opConductor.rpc.port }} -s | jq '.result.servers | length')
+                if [ "$CLUSTER_MEMBERS" = {{ .Values.opNode.replicas }} ]; then
+                  echo "Done forming raft cluster"
+                else
+                  echo "Failed to form raft cluster. Exiting..."
+                  curl -X POST -H "Content-Type: application/json" --data \
+                    '{"jsonrpc":"2.0","method":"conductor_clusterMembership","params":[],"id":1}' \
+                    {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$last:{{ .Values.opConductor.rpc.port }} -s
+                  exit 1
+                fi
+              else
+                echo "Raft cluster already formed"
               fi
-              i=0
-              echo "Sending addServerAsVoter to OP Conductor $last"
-              while [ $i -lt $(( {{ .Values.opNode.replicas }} - 1 )) ]
-              do
-                echo "Sending addServerAsVoter to OP Conductor $last for member $i"
-                curl -X POST -H "Content-Type: application/json" --data \
-                    '{"jsonrpc":"2.0","method":"conductor_addServerAsVoter","params":["$i", "{{ .Values.opConductor.consensus.namePattern }}-$i:{{ .Values.opConductor.consensus.port }}", 0],"id":1}'  \
-                    {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$last:{{ .Values.opConductor.rpc.port }} -s | jq .result
-                i=$((i + 1))
-              done
-              echo "Done forming raft cluster"
 
-              echo "Unpausing OP Conductors..."
-              i=0
-              while [ $i -lt {{ .Values.opConductor.replicas }} ]
-              do
-                echo "Sending conductor_resume to OP Conductor $i"
-                curl -X POST -H "Content-Type: application/json" --data \
-                      '{"jsonrpc":"2.0","method":"conductor_resume","params":[],"id":1}'  \
-                      {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$i:{{ .Values.opConductor.rpc.port }} -s
-                i=$((i + 1))
-              done
-              echo "OP Conductors unpaused."
+              if [ $(cat /tmp/RESULT_COND_0_PAUSED) = "true" ] && \
+                 [ $(cat /tmp/RESULT_COND_1_PAUSED) = "true" ] && \
+                 [ $(cat /tmp/RESULT_COND_2_PAUSED) = "true" ]; then
+                echo "Conductors are paused"
+                UNPAUSE=true
+              else
+                echo "Conductors are NOT paused. Skipping..."
+                UNPAUSE=false
+              fi
+
+              if [ $UNPAUSE = true ]; then
+                echo "Unpausing OP Conductors..."
+                i=0
+                while [ $i -lt {{ .Values.opConductor.replicas }} ]
+                do
+                  echo "Sending conductor_resume to OP Conductor $i"
+                  curl -X POST -H "Content-Type: application/json" --data \
+                        '{"jsonrpc":"2.0","method":"conductor_resume","params":[],"id":1}'  \
+                        {{ .Values.opConductor.protocol }}://{{ .Values.opConductor.rpc.namePattern }}-$i:{{ .Values.opConductor.rpc.port }} -s
+                  i=$((i + 1))
+                done
+                echo "OP Conductors unpaused."
+              fi
 
           restartPolicy: Never
