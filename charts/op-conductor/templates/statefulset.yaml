@@ -132,9 +132,7 @@ spec:
         configMap:
           name: {{ template "op-conductor.fullname" . }}-scripts
   updateStrategy:
-    rollingUpdate:
-      partition: 0
-    type: RollingUpdate
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim
