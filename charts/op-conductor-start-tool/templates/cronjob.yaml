@@ -84,16 +84,21 @@ spec:
                 echo "Stopping OP Node $first"
                 LAST_UNSAFE_HASH=$(curl -X POST -H "Content-Type: application/json" --data \
                   '{"jsonrpc":"2.0","method":"admin_stopSequencer","params":[],"id":1}' \
-                  {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$first:{{ .Values.opNode.port }} -s | jq .result)
+                  {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$first:{{ .Values.opNode.port }} -s | jq -r .result)
                 echo "Stopped OP Node $first with unsafe hash $LAST_UNSAFE_HASH. Starting OP Node $last..."
                 START=$(curl -X POST -H "Content-Type: application/json" --data \
-                  '{"jsonrpc":"2.0","method":"admin_startSequencer","params":[$LAST_UNSAFE_HASH],"id":1}'  \
+                  '{"jsonrpc":"2.0","method":"admin_startSequencer","params":["'${LAST_UNSAFE_HASH}'"],"id":1}'  \
                   {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$last:{{ .Values.opNode.port }} -s | jq .result)
-                if [ $? -eq 0 ] && [ $START -eq "null"]; then
+                echo "Checking OP Node $last status"
+                STARTED=$(curl -X POST -H "Content-Type: application/json" --data \
+                  '{"jsonrpc":"2.0","method":"admin_sequencerActive","params":[],"id":1}'  \
+                  {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$last:{{ .Values.opNode.port }} -s | jq .result)
+                if [ "$STARTED" = true ]; then
                   echo "Started OP Node $last"
                 else
                   echo "Failed to start OP Node $last"
-                  echo "$START"
+                  echo "admin_startSequencer result: $START"
+                  echo "admin_sequencerActive result: $STARTED"
                   exit 1
                 fi
               fi
