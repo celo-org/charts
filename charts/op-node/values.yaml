@@ -248,8 +248,12 @@ config:
     l1Confs: 0                         # number of L1 blocks to keep distance from the L1 head before deriving L2 data from
   conductor:
     enabled: false                     # Enable the conductor service
-    rpc: http://127.0.0.1:8547         # Conductor service rpc endpoint
     rpcTimeout: 1s                     # Conductor service rpc timeout
+    rpc:
+      url: http://127.0.0.1:8547         # Conductor service rpc endpoint
+      protocol: ""                             # Used for multiReplica. Leave url empty if using multiReplica
+      namePattern: ""                          # Used for multiReplica. Set to the op-conductor sts name pattern. Example: "op-conductor-rpc"
+      port: ""                                 # Used for multiReplica. Port of op-conductor with multiReplica
   altda:
     enabled: false                     # enable altda
     daServer: ""                       # altda data availability server

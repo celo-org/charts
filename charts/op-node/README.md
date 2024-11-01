@@ -1,6 +1,6 @@
 # op-node
 
-![Version: 0.4.6](https://img.shields.io/badge/Version-0.4.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.7](https://img.shields.io/badge/Version-0.4.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-node consensus engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree/main/dysnix/op-node).
@@ -32,7 +32,10 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | config.altda.enabled | bool | `false` |  |
 | config.altda.verifyOnRead | bool | `false` |  |
 | config.conductor.enabled | bool | `false` |  |
-| config.conductor.rpc | string | `"http://127.0.0.1:8547"` |  |
+| config.conductor.rpc.namePattern | string | `""` |  |
+| config.conductor.rpc.port | string | `""` |  |
+| config.conductor.rpc.protocol | string | `""` |  |
+| config.conductor.rpc.url | string | `"http://127.0.0.1:8547"` |  |
 | config.conductor.rpcTimeout | string | `"1s"` |  |
 | config.enableAdmin | bool | `false` |  |
 | config.jwt | string | `""` |  |

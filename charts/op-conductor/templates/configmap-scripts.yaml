@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "op-conductor.fullname" . }}-scripts
+  labels:
+    {{- include "op-conductor.labels" . | nindent 4 }}
+data:
+  download-rollup.sh: |-
+    {{- include (print $.Template.BasePath "/scripts/_download-rollup.tpl") . | nindent 4 }}
+  split-config-parameters.sh: |-
+    {{- include (print $.Template.BasePath "/scripts/_split-config-parameters.tpl") . | nindent 4 }}
