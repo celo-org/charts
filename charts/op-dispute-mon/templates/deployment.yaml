@@ -61,7 +61,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           command: 
-            - /bin/bash
+            - /bin/sh
             - -c
           args: 
             - |
