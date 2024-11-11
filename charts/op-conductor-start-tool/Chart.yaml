@@ -1,8 +1,8 @@
 ---
-name: celostats
+name: op-conductor-start-tool
 apiVersion: v2
-version: 0.1.3
-description: Chart which is used to deploy a celostats setup for a celo testnet
+version: 0.0.1
+description: OP Conductor start tool Cel2 network
 home: https://clabs.co
 sources:
   - https://celo.org
@@ -10,15 +10,18 @@ sources:
   - https://clabs.co
   - https://github.com/celo-org
 keywords:
-  - Celo
-  - Ethereum
-  - Blockchain
-  - Celostats
-  - Ethstats
-appVersion: "latest"
+  - celo
+  - blockchain
+  - optimism
+  - rollup
+  - ethereum
+  - layer2
+  - op-stack
+  - op-conductor
 maintainers:
   - name: cLabs
     email: devops@clabs.co
     url: https://clabs.co
 type: application
 icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+appVersion: v1.0.0

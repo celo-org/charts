@@ -1,7 +1,7 @@
 ---
 name: op-conductor
 apiVersion: v2
-version: 0.0.5
+version: 0.0.7
 description: Helm chart deploying OP Conductor, a HA controller for op-node
 home: https://clabs.co
 sources:

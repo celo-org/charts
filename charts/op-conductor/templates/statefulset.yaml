@@ -36,20 +36,10 @@ spec:
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        command:
-        - /bin/sh
-        - -c
-        args:
-        - |
-          datadir="{{ .Values.persistence.mountPath }}"
-          if [ ! -f $datadir/.initialized ]; then
-              wget -qO $datadir/rollup.json "{{ .Values.init.rollup.url }}"
-              touch $datadir/.initialized
-              echo "Successfully downloaded rollup files"
-          else
-              echo "Already downloaded, skipping."
-          fi
+        command: ["sh", "/scripts/download-rollup.sh"]
         volumeMounts:
+        - name: scripts
+          mountPath: /scripts
         - name: data
           mountPath: {{ .Values.persistence.mountPath }}
       - name: split-config-parameters
@@ -59,31 +49,10 @@ spec:
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        command:
-        - /bin/sh
-        - -c
-        args:
-        - |
-          # Get Replica ID from hostname
-          RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
-          datadir="{{ .Values.persistence.mountPath }}"
-
-          # Get the IP used for consensus. First try to get the service IP, then the pod IP
-          if [ -z "{{ .Values.config.consensus.addr }}" ]; then
-            SERVICE_NAME="{{ include "op-conductor.fullname" . | replace "-" "_" | upper }}_CONSENSUS_$RID"
-            SERVICE_IP=$(eval echo \$$SERVICE_NAME)
-            if [ -n "$SERVICE_IP" ]; then
-              echo "Using service IP for consensus"
-              echo $SERVICE_IP > "$datadir/consensus.addr"
-            else
-              echo "Using pod IP for consensus"
-              echo $(hostname -i) > "$datadir/consensus.addr"
-            fi
-          else
-            echo "{{ .Values.config.consensus.addr }}" > "$datadir/consensus.addr"
-          fi
-          echo "Using consensus address: $(cat $datadir/consensus.addr)"
+        command: ["sh", "/scripts/split-config-parameters.sh"]
         volumeMounts:
+        - name: scripts
+          mountPath: /scripts
         - name: data
           mountPath: {{ .Values.persistence.mountPath }}
       containers:
@@ -93,21 +62,20 @@ spec:
         - -c
         args:
         - |
+          RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
           datadir="{{ .Values.persistence.mountPath }}"
 
           bootstrap_flag="--raft.bootstrap=false"
           # Check if we need to bootstrap the raft cluster
-          {{- if .Values.config.raft.bootstrap }}
-          if [ ! -d $datadir/{{ .Values.config.raft.server.id }} ]; then
+          if [ ! -d $datadir/$RID ] && [ "$RID" -eq 2 ]; then
               bootstrap_flag="--raft.bootstrap=true"
           fi
-          {{- end }}
           exec /usr/local/bin/op-conductor \
-            --consensus.addr=$(cat $datadir/consensus.addr) \
+            --consensus.addr=$(cat $datadir/advertiseIP) \
             --consensus.port={{ .Values.config.consensus.port }} \
-            --execution.rpc={{ .Values.config.execution.rpc }} \
-            --node.rpc={{ .Values.config.node.rpc }} \
-            --rollup.config={{ .Values.persistence.mountPath }}/rollup.json \
+            --execution.rpc=$(cat $datadir/executionUrl) \
+            --node.rpc=$(cat $datadir/nodeUrl) \
+            --rollup.config=$datadir/rollup.json \
             --rpc.addr={{ .Values.config.rpc.addr }} \
             --rpc.port={{ .Values.config.rpc.port }} \
             {{- if .Values.config.rpc.enableAdmin }}
@@ -117,7 +85,7 @@ spec:
             --rpc.enable-proxy \
             {{- end }}
             $bootstrap_flag \
-            --raft.server.id={{ .Values.config.raft.server.id }} \
+            --raft.server.id=$RID \
             --raft.storage.dir={{ .Values.persistence.mountPath }} \
             --healthcheck.interval={{ .Values.config.healthcheck.interval }} \
             --healthcheck.min-peer-count={{ .Values.config.healthcheck.minPeerCount }} \
@@ -159,10 +127,12 @@ spec:
         volumeMounts:
         - mountPath: /raft
           name: data
+      volumes:
+      - name: scripts
+        configMap:
+          name: {{ template "op-conductor.fullname" . }}-scripts
   updateStrategy:
-    rollingUpdate:
-      partition: 0
-    type: RollingUpdate
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim

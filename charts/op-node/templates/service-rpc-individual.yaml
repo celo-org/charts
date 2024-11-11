@@ -2,6 +2,7 @@
 {{ range $index, $e := until (int $replicas) }}
 {{- with $.Values.services.rpc }}
 {{- if and .individualServiceEnabled }}
+---
 apiVersion: v1
 kind: Service
 metadata:
