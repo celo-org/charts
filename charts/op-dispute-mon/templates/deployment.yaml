@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "op-dispute-mon.fullname" . }}
+  labels:
+    {{- include "op-dispute-mon.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "op-dispute-mon.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.config.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.config.metrics.port }}"
+        prometheus.io/path: "/metrics"
+      {{- end }}
+      labels:
+        {{- include "op-dispute-mon.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "op-dispute-mon.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      {{- if .Values.init.contracts.enabled }}
+      - name: contracts
+        image: {{ .Values.init.contracts.image.repository }}:{{ .Values.init.contracts.image.tag }}
+        imagePullPolicy: {{ .Values.init.contracts.image.pullPolicy | quote }}
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - |
+          datadir=/contracts
+          while ! wget -qO $datadir/deployment-l1.json "{{ .Values.init.contracts.url }}"; do
+            echo "wget failed, retrying..."
+            sleep 5 # Wait for 5 seconds before retrying
+          done
+          DisputeGameFactoryProxy=$(cat $datadir/deployment-l1.json | grep DisputeGameFactoryProxy | cut -d'"' -f4)
+          echo $DisputeGameFactoryProxy > $datadir/DisputeGameFactoryProxy
+          echo "DisputeGameFactoryProxy: $DisputeGameFactoryProxy"
+        volumeMounts:
+        - name: contracts
+          mountPath: /contracts
+      {{- end }}
+      {{- with .Values.initContainers }}
+        {{- tpl (toYaml . | nindent 6) $ }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          command: 
+            - /bin/sh
+            - -c
+          args: 
+            - |
+              [ -f /contracts/DisputeGameFactoryProxy ] && DisputeGameFactoryProxy=$(cat /contracts/DisputeGameFactoryProxy) || DisputeGameFactoryProxy={{ .Values.config.disputeGameFactoryProxy }}
+              exec op-dispute-mon \
+                --l1-eth-rpc={{ .Values.config.l1EthRPC }} \
+                --rollup-rpc={{ .Values.config.rollupRPC }} \
+                --game-factory-address=${DisputeGameFactoryProxy} \
+                --game-window={{ .Values.config.gameWindow }} \
+                --monitor-interval={{ .Values.config.monitorInterval }} \
+                --max-concurrency={{ .Values.config.maxConcurrency }} \
+                {{- if .Values.config.honestActors }}
+                --honest-actors={{ join "," .Values.config.honestActors }} \
+                {{- end }}
+                {{- if .Values.config.ignoredGames }}
+                --ignored-games={{ join "," .Values.config.ignoredGames }} \
+                {{- end }}
+                --log.format={{ .Values.config.log.format }} \
+                --log.color={{ .Values.config.log.color }} \
+                --log.level={{ .Values.config.log.level }} \
+                {{- if .Values.config.metrics.enabled }}
+                --metrics.enabled \
+                --metrics.addr={{ .Values.config.metrics.addr }} \
+                --metrics.port={{ .Values.config.metrics.port }} \
+                {{- end }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.services.metrics.port | default 7300 }}
+              protocol: TCP
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: contracts
+              mountPath: /contracts
+      volumes:
+        - name: contracts
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
