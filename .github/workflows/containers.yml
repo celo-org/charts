@@ -16,10 +16,15 @@ jobs:
     outputs:
       files-changed: ${{ steps.detect-files-changed.outputs.all_changed_files }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden Runner
+        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Detect files changed
         id: detect-files-changed
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@c65cd883420fd2eb864698a825fc4162dd94482c # v44.5.7
         with:
           separator: ','
   
@@ -34,15 +39,20 @@ jobs:
       id-token: write
       security-events: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden Runner
+        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Login at GCP Artifact Registry
-        uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@main
+        uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@75d00a351905bfee73a7f11bf2ae7c6bae70fddc # main
         with:
           workload-id-provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-charts-main/providers/github-by-repos
           service-account: publish-helm-charts@devopsre.iam.gserviceaccount.com
           docker-gcp-registries: us-west1-docker.pkg.dev
       - name: Build and push container
-        uses: celo-org/reusable-workflows/.github/actions/build-container@main
+        uses: celo-org/reusable-workflows/.github/actions/build-container@75d00a351905bfee73a7f11bf2ae7c6bae70fddc # main
         with:
           platforms: linux/amd64,linux/arm64
           registry: us-west1-docker.pkg.dev/devopsre/dev-images/health-checker
