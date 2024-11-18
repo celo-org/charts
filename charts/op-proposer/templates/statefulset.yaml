@@ -107,7 +107,7 @@ spec:
             --poll-interval={{ .Values.config.pollInterval }} \
             --rpc.port={{ .Values.config.rpc.port }} \
             --rollup-rpc={{ .Values.config.rollupRpc }} \
-            "$contractFlag" \
+            $contractFlag \
             --l1-eth-rpc=$L1_URL \
             --num-confirmations={{ .Values.config.numConfirmations }} \
             {{- if .Values.config.metrics.enabled }}
