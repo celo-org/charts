@@ -80,8 +80,8 @@ spec:
         args:
           - |
             exec op-bootnode \
-              --log.level={{ .Values.config.logs.level }} \
-              --log.format={{ .Values.config.logs.format }} \
+              --log.level={{ .Values.config.log.level }} \
+              --log.format={{ .Values.config.log.format }} \
               {{- if .Values.config.metrics.enabled }}
               --metrics.enabled \
               --metrics.port=7300 \
@@ -95,8 +95,18 @@ spec:
               --p2p.advertise.ip={{ . }} \
               {{- end }}
               --p2p.priv.path=/secrets/p2p.hex \
-              --p2p.peerstore.path=/data/opnode_peerstore_db \
-              --p2p.discovery.path=/data/opnode_discovery_db \
+              {{- with .Values.config.p2p.netrestrict }}
+              --p2p.netrestrict={{ join "," . }} \
+              {{- end }}
+              {{- with .Values.config.p2p.discoveryPath }}
+              --p2p.discovery.path={{ . | quote }} \
+              {{- end }}
+              {{- with .Values.config.p2p.peerStorePath }}
+              --p2p.peerstore.path={{ . | quote }} \
+              {{- end }}
+              {{- with .Values.config.p2p.static }}
+              --p2p.static={{ join "," . }} \
+              {{- end }}
               {{- with .Values.extraArgs }}
               {{- range . }}
               {{- tpl (.) $ | nindent 14 }} \
