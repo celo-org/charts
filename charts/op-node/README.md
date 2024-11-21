@@ -1,6 +1,6 @@
 # op-node
 
-![Version: 0.4.7](https://img.shields.io/badge/Version-0.4.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.8](https://img.shields.io/badge/Version-0.4.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-node consensus engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree/main/dysnix/op-node).
@@ -52,10 +52,12 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | config.metrics.port | int | `7300` |  |
 | config.network | string | `"op-mainnet"` |  |
 | config.p2p.bootnodes | list | `[]` |  |
+| config.p2p.discoveryPath | string | `""` |  |
 | config.p2p.keys | string | `""` |  |
 | config.p2p.nat | bool | `false` |  |
 | config.p2p.netrestrict | list | `[]` |  |
 | config.p2p.noDiscovery | bool | `false` |  |
+| config.p2p.peerStorePath | string | `""` |  |
 | config.p2p.port | int | `9222` |  |
 | config.p2p.sequencer.key | string | `""` |  |
 | config.p2p.static | list | `[]` |  |

@@ -271,6 +271,8 @@ config:
     netrestrict: []                    # restrict network access to specific IPs
     noDiscovery: false                 # disable peer discovery
     keys: ""                           # comma separated list of keys to use for p2p
+    discoveryPath: ""                  # path to store p2p discovery data
+    peerStorePath: ""                  # path to store p2p peer data
     sequencer:
       key: ""                            # sequencer key
 
