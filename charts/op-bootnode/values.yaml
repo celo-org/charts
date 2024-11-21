@@ -1,7 +1,7 @@
 ---
 replicaCount: 1
 image:
-  repository: jcortejoso/op-bootnode
+  repository: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-bootnode
   tag: v1.7.4
   pullPolicy: Always
 
@@ -76,9 +76,13 @@ config:
     advertise:
       ip: ""                             # The IP address to advertise in Discv5, put into the ENR of the node. This may also be a hostname / domain name to resolve to an IP.
     useHostPort: false
+    static: []                         # static peers
+    netrestrict: []                    # restrict network access to specific IPs
+    discoveryPath: ""                  # path to store p2p discovery data
+    peerStorePath: ""                  # path to store p2p peer data
   rpc:
     useHostPort: false
-  logs:
+  log:
     level: info
     format: json
   metrics:
