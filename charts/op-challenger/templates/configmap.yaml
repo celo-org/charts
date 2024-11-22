@@ -1,0 +1,197 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "op-challenger.fullname" . }}
+  labels:
+    {{- include "op-challenger.labels" . | nindent 4 }}
+data:
+  op-challenger.sh: |
+    #!/bin/bash
+
+    L1_ETH_RPC={{ .Values.config.l1EthRPC }}
+    GAME_FACTORY_ADDRESS={{ default $DisputeGameFactoryProxy .Values.config.disputeGameFactoryProxy }}
+    PRIVATE_KEY={{ .Values.config.privateKey }}
+    GAME_WINDOW={{ .Values.config.gameWindow }}
+
+    fetch_game_list() {
+      local head_lines="$1"
+      local output
+      if ! output=$(op-challenger list-games --l1-eth-rpc="${L1_ETH_RPC}" --game-factory-address="${GAME_FACTORY_ADDRESS}" --game-window="${GAME_WINDOW}"); then
+        printf "Error: Failed to fetch games list\n" >&2
+        return 1
+      fi
+      if [[ -n "$head_lines" && "$head_lines" != "all" && "$head_lines" -ne 0 ]]; then
+        output=$(printf "%s\n" "$output" | head -n$((head_lines + 2)))
+      fi
+
+      printf "%s\n" "$output"
+    }
+
+    extract_in_progress_games() {
+      local game_list="$1"
+      local line game_address status
+      while IFS= read -r line; do
+        game_address=$(printf "%s" "$line" | awk '{print $2}')
+        status=$(printf "%s" "$line" | awk '{print $(NF-1) " " $NF}')
+        if [[ "$status" == "In Progress" ]]; then
+          printf "%s\n" "$game_address"
+        fi
+      done <<< "$game_list"
+    }
+
+    extract_resolvable_games() {
+      local game_list="$1"
+      local line game_address resolution_time status resolution_timestamp
+      local clock_duration=302400  # 3.5 days in seconds
+      local threshold_time=$(date -d "@$(($(date +%s) - clock_duration))" +%s)
+      while IFS= read -r line; do
+        game_address=$(printf "%s" "$line" | awk '{print $2}')
+        status=$(printf "%s" "$line" | awk '{print $(NF-1) " " $NF}')
+        if [[ "$status" == "In Progress" ]]; then
+          resolution_time=$(printf "%s" "$line" | awk '{print $4 " " $5}')
+          resolution_timestamp=$(date -d "$resolution_time" +%s)
+          if [[ "$resolution_timestamp" -le "$threshold_time" ]]; then
+            printf "%s\n" "$game_address"
+          fi
+        fi
+      done <<< "$game_list"
+    }
+
+    fetch_claims_for_game() {
+      local game_address="$1"
+      local claims_output
+      if ! claims_output=$(op-challenger list-claims --l1-eth-rpc="${L1_ETH_RPC}" --game-address="${game_address}"); then
+        printf "Error: Failed to fetch claims for game %s\n" "${game_address}" >&2
+        return 1
+      fi
+      printf "%s\n" "$claims_output"
+    }
+
+    resolve_claim() {
+      local game_address="$1"
+      local claim_index="$2"
+      if ! op-challenger resolve-claim --l1-eth-rpc="${L1_ETH_RPC}" --private-key="${PRIVATE_KEY}" --claim="${claim_index}" --game-address="${game_address}" --resubmission-timeout=48s; then
+        printf "Error: Failed to resolve claim %s for game %s\n" "${claim_index}" "${game_address}" >&2
+        return 1
+      fi
+    }
+
+    resolve_claim_if_ready() {
+      local game_address="$1"
+      local claim_index="$2"
+      local resolution_icon="$3"
+      local resolve_time="$4"
+
+      if [[ "$resolution_icon" == "✅" ]]; then
+        printf "Skipping resolved claim %s for game %s\n" "$claim_index" "$game_address"
+        return 0
+      fi
+
+      # Check if the claim is eligible for resolution (⏱️ and past resolve time)
+      local current_time
+      current_time=$(date +%s)
+      local resolve_time_epoch
+      resolve_time_epoch=$(date -d "$resolve_time" +%s 2>/dev/null || printf "")
+
+      if [[ -z "$resolve_time_epoch" || "$current_time" -lt "$resolve_time_epoch" ]]; then
+        printf "Skipping claim %s for game %s as it is not yet eligible for resolution\n" "$claim_index" "$game_address"
+        return 0
+      fi
+
+      # Proceed to resolve the claim
+      if ! op-challenger resolve-claim --l1-eth-rpc="${L1_ETH_RPC}" --private-key="${PRIVATE_KEY}" --claim="${claim_index}" --game-address="${game_address}"; then
+        printf "Error: Failed to resolve claim %s for game %s\n" "${claim_index}" "${game_address}" >&2
+        return 1
+      fi
+    }
+
+    resolve_game() {
+      local game_address="$1"
+      printf "Finalizing game: %s\n" "$game_address"
+      if ! op-challenger resolve --l1-eth-rpc="${L1_ETH_RPC}" --private-key="${PRIVATE_KEY}" --game-address="${game_address}" --resubmission-timeout=48s; then
+        printf "Error: Failed to finalize game %s\n" "${game_address}" >&2
+        return 1
+      fi
+    }
+
+    process_claims_old() {
+      local game_address="$1"
+      local claims_output claim_index
+      claims_output=$(fetch_claims_for_game "$game_address")
+
+      if [[ -z "$claims_output" ]]; then
+        printf "No claims found for game %s\n" "$game_address" >&2
+        return 1
+      fi
+
+      while IFS= read -r claim_line; do
+        claim_index=$(printf "%s" "$claim_line" | awk '{print $1}')
+        if [[ "$claim_index" =~ ^[0-9]+$ ]]; then
+          resolve_claim "$game_address" "$claim_index"
+        fi
+      done <<< "$(printf "%s" "$claims_output" | awk '/^[[:space:]]*[0-9]+/')" # Filters lines starting with claim indices
+    }
+
+    process_claims() {
+      local game_address="$1"
+      local claims_output claim_line claim_index resolution_icon resolve_time
+
+      claims_output=$(fetch_claims_for_game "$game_address")
+
+      if [[ -z "$claims_output" ]]; then
+        printf "No claims found for game %s\n" "$game_address" >&2
+        return 1
+      fi
+
+      # Iterate over claims
+      while IFS= read -r claim_line; do
+        claim_index=$(printf "%s" "$claim_line" | awk '{print $1}')
+        resolution_icon=$(printf "%s" "$claim_line" | awk '{print $(NF-2)}')
+        resolve_time=$(printf "%s" "$claim_line" | awk '{print $(NF-1) " " $NF}')
+
+        if [[ "$claim_index" =~ ^[0-9]+$ ]]; then
+          resolve_claim_if_ready "$game_address" "$claim_index" "$resolution_icon" "$resolve_time"
+        fi
+      done <<< "$(printf "%s" "$claims_output" | awk '/^[[:space:]]*[0-9]+/')"
+    }
+
+    main() {
+      printf "Starting...\n"
+      local head_lines="${1:-50}"  # Default to 50 lines if not provided
+      local game_list game_address
+      if ! game_list=$(fetch_game_list "$head_lines"); then
+        printf "Error: Unable to retrieve games list\n" >&2
+        return 1
+      fi
+
+      while IFS= read -r game_address; do
+        printf "Processing game: %s\n" "$game_address"
+        if ! process_claims "$game_address"; then
+          printf "Warning: Failed to process claims for game %s\n" "$game_address" >&2
+          continue
+        fi
+        resolve_game "$game_address"
+      done < <(extract_resolvable_games "$game_list")
+    }
+
+    main_loop() {
+      local game_list game_address
+      while true; do
+        if ! game_list=$(fetch_game_list "all"); then
+          printf "Error: Unable to retrieve games list\n" >&2
+          return 1
+        fi
+
+        while IFS= read -r game_address; do
+          printf "Processing game: %s\n" "$game_address"
+          if ! process_claims "$game_address"; then
+            printf "Warning: Failed to process claims for game %s\n" "$game_address" >&2
+            continue
+          fi
+          resolve_game "$game_address"
+        done < <(extract_resolvable_games "$game_list")
+        sleep 60
+      done
+    }
+
+    main_loop "$@"
