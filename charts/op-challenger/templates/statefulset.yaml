@@ -119,6 +119,7 @@ spec:
             - name: metrics
               containerPort: {{ .Values.services.metrics.port | default 7300 }}
               protocol: TCP
+          enableServiceLinks: false
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
