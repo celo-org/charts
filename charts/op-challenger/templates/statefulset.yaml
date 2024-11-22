@@ -66,11 +66,10 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           command: 
-            - /bin/bash
+            - /bin/sh
             - -c
           args: 
             - |
-              apk add -U bash
               [ -f /data/DisputeGameFactoryProxy ] && DisputeGameFactoryProxy=$(cat /data/DisputeGameFactoryProxy) || DisputeGameFactoryProxy={{ .Values.config.disputeGameFactoryProxy }}
               export OP_CHALLENGER_GAME_FACTORY_ADDRESS=$DisputeGameFactoryProxy
               export OP_CHALLENGER_PRIVATE_KEY={{ .Values.config.privateKey }}
