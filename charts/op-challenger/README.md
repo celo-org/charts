@@ -23,7 +23,9 @@ A Helm chart for Fault Proof Monitoring
 | config.gameWindow | string | `"672h0m0s"` |  |
 | config.honestActors | list | `[]` |  |
 | config.ignoredGames | list | `[]` |  |
+| config.l1Beacon | string | `"https://celo-l1-beacon.celo-networks-dev.org"` |  |
 | config.l1EthRPC | string | `"https://ethereum-holesky-rpc.publicnode.com"` |  |
+| config.l2EthRPC | string | `"http://op-geth-sequencer-shared-rpc:8545"` |  |
 | config.log.color | bool | `false` |  |
 | config.log.format | string | `"json"` |  |
 | config.log.level | string | `"INFO"` |  |
@@ -33,21 +35,28 @@ A Helm chart for Fault Proof Monitoring
 | config.metrics.port | int | `7300` |  |
 | config.monitorInterval | string | `"30s"` |  |
 | config.privateKey | string | `""` |  |
-| config.rollupRPC | string | `""` |  |
+| config.rollupRPC | string | `"http://op-node-sequencer-shared-rpc:9545"` |  |
+| config.traceType | string | `"permissioned,cannon"` |  |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-docker.pkg.dev/oplabs-tools-artifacts/images/op-challenger"` | Image repository |
+| image.repository | string | `"us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-challenger"` | Image repository |
 | image.tag | string | `"main"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
-| init.contracts.enabled | bool | `false` |  |
+| init.contracts.enabled | bool | `true` |  |
 | init.contracts.image.pullPolicy | string | `"IfNotPresent"` |  |
 | init.contracts.image.repository | string | `"alpine"` |  |
 | init.contracts.image.tag | float | `3.19` |  |
-| init.contracts.url | string | `""` |  |
+| init.contracts.urls."deployment-l1.json" | string | `""` |  |
+| init.contracts.urls."genesis.json" | string | `""` |  |
+| init.contracts.urls."prestate.json" | string | `""` |  |
+| init.contracts.urls."rollup.json" | string | `""` |  |
 | initContainers | object | `{}` |  |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
+| persistence.annotations | object | `{}` |  |
+| persistence.size | string | `"1Gi"` |  |
+| persistence.storageClass | string | `""` |  |
 | podAnnotations | object | `{}` | Custom pod annotations |
 | podLabels | object | `{}` | Custom pod labels |
 | podSecurityContext | object | `{}` | Custom pod security context |
