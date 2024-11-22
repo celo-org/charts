@@ -34,6 +34,7 @@ spec:
       serviceAccountName: {{ include "op-challenger.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      enableServiceLinks: false
       initContainers:
       {{- if .Values.init.contracts.enabled }}
       - name: contracts
@@ -119,7 +120,6 @@ spec:
             - name: metrics
               containerPort: {{ .Values.services.metrics.port | default 7300 }}
               protocol: TCP
-          enableServiceLinks: false
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
