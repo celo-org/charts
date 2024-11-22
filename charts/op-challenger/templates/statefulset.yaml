@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "op-challenger.fullname" . }}
   labels:
     {{- include "op-challenger.labels" . | nindent 4 }}
 spec:
+  serviceName: {{ include "op-challenger.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -43,17 +44,21 @@ spec:
         - -c
         args:
         - |
-          datadir=/contracts
-          while ! wget -qO $datadir/deployment-l1.json "{{ .Values.init.contracts.url }}"; do
-            echo "wget failed, retrying..."
+          datadir=/data
+
+          {{- range $filename, $url := .Values.init.contracts.urls }}
+          while ! wget -qO $datadir/{{ $filename }} "{{ $url }}"; do
+            echo "wget failed for {{ $filename }}, retrying..."
             sleep 5 # Wait for 5 seconds before retrying
           done
+          {{- end }}
+
           DisputeGameFactoryProxy=$(cat $datadir/deployment-l1.json | grep DisputeGameFactoryProxy | cut -d'"' -f4)
           echo $DisputeGameFactoryProxy > $datadir/DisputeGameFactoryProxy
           echo "DisputeGameFactoryProxy: $DisputeGameFactoryProxy"
         volumeMounts:
-        - name: contracts
-          mountPath: /contracts
+        - name: data
+          mountPath: /data
       {{- end }}
       {{- with .Values.initContainers }}
         {{- tpl (toYaml . | nindent 6) $ }}
@@ -66,8 +71,47 @@ spec:
           args: 
             - |
               apk add -U bash
-              [ -f /contracts/DisputeGameFactoryProxy ] && DisputeGameFactoryProxy=$(cat /contracts/DisputeGameFactoryProxy) || DisputeGameFactoryProxy={{ .Values.config.disputeGameFactoryProxy }}
-              exec DisputeGameFactoryProxy=$DisputeGameFactoryProxy /scripts/op-challenger.sh 
+              [ -f /data/DisputeGameFactoryProxy ] && DisputeGameFactoryProxy=$(cat /data/DisputeGameFactoryProxy) || DisputeGameFactoryProxy={{ .Values.config.disputeGameFactoryProxy }}
+              export OP_CHALLENGER_GAME_FACTORY_ADDRESS=$DisputeGameFactoryProxy
+              export OP_CHALLENGER_PRIVATE_KEY={{ .Values.config.privateKey }}
+
+              exec op-challenger \
+                --l1-eth-rpc="${OP_CHALLENGER_L1_ETH_RPC}" \
+                --l1-beacon="${OP_CHALLENGER_L1_BEACON}" \
+                --l2-eth-rpc="${OP_CHALLENGER_L2_ETH_RPC}" \
+                --rollup-rpc="${OP_CHALLENGER_ROLLUP_RPC}" \
+                --game-factory-address="${OP_CHALLENGER_GAME_FACTORY_ADDRESS}" \
+                --private-key="${OP_CHALLENGER_PRIVATE_KEY}" \
+                --datadir="${OP_CHALLENGER_DATADIR}" \
+                --trace-type="${OP_CHALLENGER_TRACE_TYPE}" \
+                --cannon-bin="${OP_CHALLENGER_CANNON_BIN}" \
+                --cannon-server="${OP_CHALLENGER_CANNON_SERVER}" \
+                --cannon-prestate="${OP_CHALLENGER_CANNON_PRESTATE}" \
+                --cannon-rollup-config="${OP_CHALLENGER_CANNON_ROLLUP_CONFIG}" \
+                --cannon-l2-genesis="${OP_CHALLENGER_CANNON_L2_GENESIS}"
+          env:
+          - name: OP_CHALLENGER_L1_ETH_RPC
+            value: {{ .Values.config.l1EthRPC }}
+          - name: OP_CHALLENGER_L1_BEACON
+            value: {{ .Values.config.l1Beacon }}
+          - name: OP_CHALLENGER_L2_ETH_RPC
+            value: {{ .Values.config.l2EthRPC }}
+          - name: OP_CHALLENGER_ROLLUP_RPC
+            value: {{ .Values.config.rollupRPC }}
+          - name: OP_CHALLENGER_DATADIR
+            value: /data
+          - name: OP_CHALLENGER_TRACE_TYPE
+            value: {{ .Values.config.traceType }}
+          - name: OP_CHALLENGER_CANNON_BIN
+            value: /usr/local/bin/cannon
+          - name: OP_CHALLENGER_CANNON_SERVER
+            value: /usr/local/bin/op-program
+          - name: OP_CHALLENGER_CANNON_PRESTATE
+            value: /data/prestate.json
+          - name: OP_CHALLENGER_CANNON_ROLLUP_CONFIG
+            value: /data/rollup.json
+          - name: OP_CHALLENGER_CANNON_L2_GENESIS
+            value: /data/genesis.json
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -89,18 +133,12 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
-            - name: contracts
-              mountPath: /contracts
-            - mountPath: /scripts/op-challenger.sh
-              name: op-challenger-script
-              subPath: op-challenger.sh
+            - name: data
+              mountPath: /data
       volumes:
-        - name: contracts
-          emptyDir: {}
-        - configMap:
-            defaultMode: 511
-            name: op-challenger-script
-          name: op-challenger-script
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "op-challenger.fullname" . }}-data
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -113,3 +151,14 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      annotations:
+        {{- toYaml .Values.persistence.annotations | nindent 8 }}
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.persistence.size }}
+      storageClassName: {{ .Values.persistence.storageClass }}

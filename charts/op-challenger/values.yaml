@@ -26,7 +26,10 @@ config:
   privateKey: ""
   disputeGameFactoryProxy: ""
   l1EthRPC: https://ethereum-holesky-rpc.publicnode.com
-  rollupRPC: ""
+  l1Beacon: https://celo-l1-beacon.celo-networks-dev.org
+  l2EthRPC: http://op-geth-sequencer-shared-rpc:8545
+  rollupRPC: http://op-node-sequencer-shared-rpc:9545
+  traceType: "permissioned,cannon"
   gameWindow: 672h0m0s
   monitorInterval: 30s
   maxConcurrency: 5
@@ -127,4 +130,17 @@ init:
       repository: alpine
       tag: 3.19
       pullPolicy: IfNotPresent
-    url: ""
+    urls:
+      deployment-l1.json: ""
+      rollup.json: ""
+      genesis.json: ""
+      prestate.json: ""
+
+persistence:
+  size: 1Gi
+  storageClass: ""
+  annotations: {}
+    # resize.topolvm.io/increase: 10%
+    # resize.topolvm.io/storage_limit: 500Gi
+    # resize.topolvm.io/threshold: 10%
+    # resize.topolvm.io/inodes-threshold: 5%
