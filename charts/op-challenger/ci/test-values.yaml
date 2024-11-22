@@ -1,1 +1,11 @@
 ---
+image:
+  tag: dev-jcortejoso
+init:
+  contracts:
+    enabled: true
+    urls:
+      deployment-l1.json: https://storage.googleapis.com/cel2-rollup-files/eigenda/deployment-l1.json
+      rollup.json: https://storage.googleapis.com/cel2-rollup-files/eigenda/rollup.json
+      genesis.json: https://storage.googleapis.com/cel2-rollup-files/eigenda/genesis.json
+      prestate.json: https://storage.googleapis.com/cel2-rollup-files/eigenda/prestate.json
