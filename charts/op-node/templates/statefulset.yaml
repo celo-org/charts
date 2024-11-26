@@ -164,7 +164,7 @@ spec:
             {{- end }}
             {{- end }}
             {{- if .Values.config.safedbPath }}
-            --safedb-path={{ .Values.config.safedbPath }} \
+            --safedb.path={{ .Values.config.safedbPath }} \
             {{- end }}
             $sequencerFlag \
             $stoppedFlag \
