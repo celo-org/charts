@@ -12,9 +12,7 @@ init:
 secrets:
   # Private Key for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   privateKey:
-    value: 0x0000000000000000000000000000000000000000000000000000000000000001
-    secretName: private-key-secret
-    secretKey: privateKeyKey
+    value: 0xa59dba48fba0901c00164473d11038190fda2005a1c2d83bcf76aff145343af3
   # L1 URL for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   l1Url:
     value: https://ethereum-holesky-rpc.publicnode.com

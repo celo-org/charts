@@ -87,9 +87,9 @@ spec:
                 --cannon-prestate="${OP_CHALLENGER_CANNON_PRESTATE}" \
                 --cannon-rollup-config="${OP_CHALLENGER_CANNON_ROLLUP_CONFIG}" \
                 --cannon-l2-genesis="${OP_CHALLENGER_CANNON_L2_GENESIS}" \
-                {{ if .Values.config.selectiveClaimResolution }}
+                {{- if .Values.config.selectiveClaimResolution }}
                 --selective-claim-resolution \
-                {{ end }}
+                {{- end }}
                 {{- if .Values.config.signer.enabled }}
                 --signer.address={{ .Values.config.signer.address }} \
                 --signer.endpoint={{ .Values.config.signer.endpoint }} \
