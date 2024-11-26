@@ -208,5 +208,5 @@ spec:
       volumes:
       - name: pki
         secret:
-          secretName: {{ ternary (include "op-batcher.fullname" .) .Values.config.signer.tls.externalSecret.tlsSecretName .Values.config.signer.tls.certManager.enabled }}
+          secretName: {{ ternary (printf "%s-%s" (include "op-batcher.fullname" .) "tls" ) .Values.config.signer.tls.externalSecret.tlsSecretName .Values.config.signer.tls.certManager.enabled }}
       {{- end }}
