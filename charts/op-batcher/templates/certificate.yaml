@@ -2,9 +2,9 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ template "op-batcher.fullname" . }}
+  name: {{ template "op-batcher.fullname" . }}-tls
 spec:
-  secretName: {{ template "op-batcher.fullname" . }}
+  secretName: {{ template "op-batcher.fullname" . }}-tls
   privateKey:
     algorithm: RSA
     encoding: PKCS1
