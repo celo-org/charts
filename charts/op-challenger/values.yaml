@@ -22,6 +22,8 @@ image:
 # -- Image pull secrets
 imagePullSecrets: []
 
+extraArgs: []
+
 config:
   disputeGameFactoryProxy: ""
   l1Beacon: https://celo-l1-beacon.celo-networks-dev.org
