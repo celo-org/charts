@@ -190,5 +190,5 @@ spec:
       {{- if .Values.config.signer.tls.enabled }}
       - name: pki
         secret:
-          secretName: {{ ternary (printf "%s-%s" (include "op-batcher.fullname" .) "tls" ) .Values.config.signer.tls.externalSecret.tlsSecretName .Values.config.signer.tls.certManager.enabled }}
+          secretName: {{ ternary (printf "%s-%s" (include "op-proposer.fullname" .) "tls" ) .Values.config.signer.tls.externalSecret.tlsSecretName .Values.config.signer.tls.certManager.enabled }}
       {{- end }}
