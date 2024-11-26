@@ -1,6 +1,6 @@
 # op-challenger
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
 
 A Helm chart for Fault Proof Monitoring
 
@@ -24,7 +24,6 @@ A Helm chart for Fault Proof Monitoring
 | config.honestActors | list | `[]` |  |
 | config.ignoredGames | list | `[]` |  |
 | config.l1Beacon | string | `"https://celo-l1-beacon.celo-networks-dev.org"` |  |
-| config.l1EthRPC | string | `"https://ethereum-holesky-rpc.publicnode.com"` |  |
 | config.l2EthRPC | string | `"http://op-geth-sequencer-shared-rpc:8545"` |  |
 | config.log.color | bool | `false` |  |
 | config.log.format | string | `"json"` |  |
@@ -34,8 +33,20 @@ A Helm chart for Fault Proof Monitoring
 | config.metrics.enabled | bool | `true` |  |
 | config.metrics.port | int | `7300` |  |
 | config.monitorInterval | string | `"30s"` |  |
-| config.privateKey | string | `""` |  |
 | config.rollupRPC | string | `"http://op-node-sequencer-shared-rpc:9545"` |  |
+| config.selectiveClaimResolution | bool | `false` |  |
+| config.signer.address | string | `"0x000000000000"` |  |
+| config.signer.enabled | bool | `false` |  |
+| config.signer.endpoint | string | `"https://test.example.com"` |  |
+| config.signer.tls.certManager.enabled | bool | `false` | Enable creating certificates through certmanager. This takes precedence over externalSecret. |
+| config.signer.tls.certManager.issuerGroup | string | `""` | Issuer group |
+| config.signer.tls.certManager.issuerKind | string | `"Issuer"` | Issuer kind |
+| config.signer.tls.certManager.issuerName | string | `"test-issuer"` | Issuer name |
+| config.signer.tls.enabled | bool | `false` | Enable TLS |
+| config.signer.tls.externalSecret.tlsSecretCaKey | string | `"ca.pem"` | Secret key for the TLS CA |
+| config.signer.tls.externalSecret.tlsSecretCertKey | string | `"certificate.pem"` | Secret key for the TLS certificate |
+| config.signer.tls.externalSecret.tlsSecretKeyKey | string | `"key.pem"` | Secret key for the TLS key |
+| config.signer.tls.externalSecret.tlsSecretName | string | `"test-secret"` | Secret name for the secret containing an already created TLS certificate |
 | config.traceType | string | `"permissioned,cannon"` |  |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
@@ -63,6 +74,12 @@ A Helm chart for Fault Proof Monitoring
 | readinessProbe | object | `{}` | Readiness probe configuration |
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
+| secrets.l1Url.secretKey | string | `""` |  |
+| secrets.l1Url.secretName | string | `""` |  |
+| secrets.l1Url.value | string | `""` |  |
+| secrets.privateKey.secretKey | string | `""` |  |
+| secrets.privateKey.secretName | string | `""` |  |
+| secrets.privateKey.value | string | `""` |  |
 | securityContext | object | `{}` | Custom container security context |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |

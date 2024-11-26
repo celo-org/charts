@@ -9,3 +9,12 @@ init:
       rollup.json: https://storage.googleapis.com/cel2-rollup-files/eigenda/rollup.json
       genesis.json: https://storage.googleapis.com/cel2-rollup-files/eigenda/genesis.json
       prestate.json: https://storage.googleapis.com/cel2-rollup-files/eigenda/prestate.json
+secrets:
+  # Private Key for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  privateKey:
+    value: 0x0000000000000000000000000000000000000000000000000000000000000001
+    secretName: private-key-secret
+    secretKey: privateKeyKey
+  # L1 URL for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
+  l1Url:
+    value: https://ethereum-holesky-rpc.publicnode.com

@@ -72,7 +72,6 @@ spec:
             - |
               [ -f /data/DisputeGameFactoryProxy ] && DisputeGameFactoryProxy=$(cat /data/DisputeGameFactoryProxy) || DisputeGameFactoryProxy={{ .Values.config.disputeGameFactoryProxy }}
               export OP_CHALLENGER_GAME_FACTORY_ADDRESS=$DisputeGameFactoryProxy
-              export OP_CHALLENGER_PRIVATE_KEY={{ .Values.config.privateKey }}
 
               exec op-challenger \
                 --l1-eth-rpc="${OP_CHALLENGER_L1_ETH_RPC}" \
@@ -80,17 +79,54 @@ spec:
                 --l2-eth-rpc="${OP_CHALLENGER_L2_ETH_RPC}" \
                 --rollup-rpc="${OP_CHALLENGER_ROLLUP_RPC}" \
                 --game-factory-address="${OP_CHALLENGER_GAME_FACTORY_ADDRESS}" \
-                --private-key="${OP_CHALLENGER_PRIVATE_KEY}" \
+                --game-window="${OP_CHALLENGER_GAME_WINDOW}" \
                 --datadir="${OP_CHALLENGER_DATADIR}" \
                 --trace-type="${OP_CHALLENGER_TRACE_TYPE}" \
                 --cannon-bin="${OP_CHALLENGER_CANNON_BIN}" \
                 --cannon-server="${OP_CHALLENGER_CANNON_SERVER}" \
                 --cannon-prestate="${OP_CHALLENGER_CANNON_PRESTATE}" \
                 --cannon-rollup-config="${OP_CHALLENGER_CANNON_ROLLUP_CONFIG}" \
-                --cannon-l2-genesis="${OP_CHALLENGER_CANNON_L2_GENESIS}"
+                --cannon-l2-genesis="${OP_CHALLENGER_CANNON_L2_GENESIS}" \
+                {{ if .Values.config.selectiveClaimResolution }}
+                --selective-claim-resolution \
+                {{ end }}
+                {{- if .Values.config.signer.enabled }}
+                --signer.address={{ .Values.config.signer.address }} \
+                --signer.endpoint={{ .Values.config.signer.endpoint }} \
+                {{- if .Values.config.signer.tls.enabled }}
+                {{- if .Values.config.signer.tls.certManager.enabled }}
+                --signer.tls.ca="/certs/ca.crt" \
+                --signer.tls.cert="/certs/tls.crt" \
+                --signer.tls.key="/certs/tls.key" \
+                {{- else }}
+                --signer.tls.ca="/certs/{{ .Values.config.signer.tls.externalSecret.tlsSecretCaKey }}" \
+                --signer.tls.cert="/certs/{{ .Values.config.signer.tls.externalSecret.tlsSecretCertKey }}" \
+                --signer.tls.key="/certs/{{ .Values.config.signer.tls.externalSecret.tlsSecretKeyKey }}" \
+                {{- end }}
+                {{- else }}
+                --signer.tls.ca="" \
+                --signer.tls.cert="" \
+                --signer.tls.key="" \
+                {{- end }}
+                {{- end }}
+                {{- with .Values.extraArgs }}
+                {{- range . }}
+                {{- tpl (.) $ | nindent 16 }} \
+                {{- end }}
+                {{- end }}
           env:
+          {{- if not .Values.config.signer.enabled }}
+          - name: OP_CHALLENGER_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ ternary (include "op-challenger.fullname" .) .Values.secrets.privateKey.secretName (not (empty .Values.secrets.privateKey.value)) }}
+                key: {{ ternary "privateKey" .Values.secrets.privateKey.secretKey (not (empty .Values.secrets.privateKey.value)) }}
+          {{- end }}
           - name: OP_CHALLENGER_L1_ETH_RPC
-            value: {{ .Values.config.l1EthRPC }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ ternary (include "op-challenger.fullname" .) .Values.secrets.l1Url.secretName (not (empty .Values.secrets.l1Url.value)) }}
+                key: {{ ternary "l1Url" .Values.secrets.l1Url.secretKey (not (empty .Values.secrets.l1Url.value)) }}
           - name: OP_CHALLENGER_L1_BEACON
             value: {{ .Values.config.l1Beacon }}
           - name: OP_CHALLENGER_L2_ETH_RPC
@@ -101,6 +137,8 @@ spec:
             value: /data
           - name: OP_CHALLENGER_TRACE_TYPE
             value: {{ .Values.config.traceType }}
+          - name: OP_CHALLENGER_GAME_WINDOW
+            value: {{ .Values.config.gameWindow }}
           - name: OP_CHALLENGER_CANNON_BIN
             value: /usr/local/bin/cannon
           - name: OP_CHALLENGER_CANNON_SERVER
