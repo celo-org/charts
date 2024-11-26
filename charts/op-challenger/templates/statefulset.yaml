@@ -65,10 +65,10 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          command: 
+          command:
             - /bin/sh
             - -c
-          args: 
+          args:
             - |
               [ -f /data/DisputeGameFactoryProxy ] && DisputeGameFactoryProxy=$(cat /data/DisputeGameFactoryProxy) || DisputeGameFactoryProxy={{ .Values.config.disputeGameFactoryProxy }}
               export OP_CHALLENGER_GAME_FACTORY_ADDRESS=$DisputeGameFactoryProxy
