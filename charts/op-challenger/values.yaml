@@ -23,13 +23,12 @@ image:
 imagePullSecrets: []
 
 config:
-  privateKey: ""
   disputeGameFactoryProxy: ""
-  l1EthRPC: https://ethereum-holesky-rpc.publicnode.com
   l1Beacon: https://celo-l1-beacon.celo-networks-dev.org
   l2EthRPC: http://op-geth-sequencer-shared-rpc:8545
   rollupRPC: http://op-node-sequencer-shared-rpc:9545
   traceType: "permissioned,cannon"
+  selectiveClaimResolution: false
   gameWindow: 672h0m0s
   monitorInterval: 30s
   maxConcurrency: 5
@@ -47,6 +46,16 @@ config:
     enabled: true
     addr: 0.0.0.0
     port: 7300
+
+secrets:
+  privateKey:
+    value: ""
+    secretName: ""
+    secretKey: ""
+  l1Url:
+    value: ""
+    secretName: ""
+    secretKey: ""
 
 serviceAccount:
   # -- Specifies whether a service account should be created
