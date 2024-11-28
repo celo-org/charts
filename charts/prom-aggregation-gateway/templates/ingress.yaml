@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ include "prom-aggregation-gateway.fullname" . }}
   labels:
     {{- include "prom-aggregation-gateway.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -33,7 +33,7 @@ spec:
             {{- end }}
             backend:
               service:
-                name: {{ .Release.Name }}
+                name: {{ include "prom-aggregation-gateway.fullname" . }}
                 port:
                   number: api-port
           {{- end }}
