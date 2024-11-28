@@ -1,0 +1,29 @@
+controller:
+  image:
+    repository: ghcr.io/zapier/prom-aggregation-gateway
+    tag: latest
+  apiPort: 8080
+  lifecyclePort: 8888
+  replicaCount: 1
+  type: Deployment
+  env:
+    GIN_MODE: release
+  tolerations: []
+  nodeSelector: {}
+
+podMonitor:
+  create: false
+  additionalLabels: {}
+
+podAnnotations: {}
+
+service:
+  create: true
+  annotations: {}
+  type: ClusterIP
+  port: 8080
+  nodePort: ""
+
+serviceMonitor:
+  create: false
+  additionalLabels: {}

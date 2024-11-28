@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: {{ .Values.controller.type }}
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "prom-aggregation-gateway.labels" . | nindent 4 }}
+    {{- if .Values.controller.labels }}
+    {{- toYaml .Values.controller.labels | nindent 4 }}
+    {{- end }}
+  {{- if .Values.controller.annotations }}
+    annotations:
+      {{- include "prom-aggregation-gateway.annotations" . | nindent 4 }}
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "prom-aggregation-gateway.selectorLabels" . | nindent 6 }}
+  {{- if eq .Values.controller.type "Deployment" }}
+  replicas: {{ .Values.controller.replicaCount }}
+  {{- end }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "prom-aggregation-gateway.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: prom-aggregation-gateway
+          image: {{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}
+          {{- with .Values.controller.env }}
+          env:
+          {{- range $key, $value := . }}
+          {{- if not (kindIs "invalid" $value) }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          args:
+            - --apiListen
+            - :{{ .Values.controller.apiPort }}
+            - --lifecycleListen
+            - :{{ .Values.controller.lifecyclePort }}
+          ports:
+            - name: api-port
+              containerPort: {{ .Values.controller.apiPort }}
+            - name: lifecycle
+              containerPort: {{ .Values.controller.lifecyclePort }}
+          livenessProbe:
+            httpGet:
+              path: /healthy
+              port: lifecycle
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: lifecycle
+          {{- with .Values.controller.resources }}
+          resources: {{ . | toYaml | nindent 12 }}
+          {{- end }}
+      {{- with .Values.controller.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- if .Values.controller.tolerations }}
+      tolerations:
+        {{- with .Values.controller.tolerations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    {{- end }}
