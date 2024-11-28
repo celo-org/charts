@@ -44,3 +44,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/name: {{ include "prom-aggregation-gateway.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "prom-aggregation-gateway.api-port" -}}
+{{- .Values.service.port }}
+{{- end -}}
