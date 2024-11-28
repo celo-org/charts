@@ -1,0 +1,16 @@
+{{- if .Values.podMonitor.create }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ .Release.Name }}-metrics
+{{- with .Values.podMonitor.additionalLabels }}
+  labels:
+{{- toYaml . | nindent 4 }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "prom-aggregation-gateway.selectorLabels" . | nindent 6 }}
+  podMetricsEndpoints:
+  - port: lifecycle
+{{- end }}

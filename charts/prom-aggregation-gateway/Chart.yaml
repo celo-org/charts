@@ -1,0 +1,14 @@
+apiVersion: v2
+name: prom-aggregation-gateway
+version: 0.0.1
+home: https://github.com/zapier/prom-aggregation-gateway
+appVersion: latest
+description: cLabs prometheus aggregation gateway
+type: application
+keywords:
+  - prometheus
+  - gateway
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co

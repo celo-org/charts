@@ -1,0 +1,24 @@
+{{- if .Values.service.create }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "prom-aggregation-gateway.selectorLabels" . | nindent 4 }}
+  {{- with .Values.service.annotations }}
+  annotations: {{ . | toYaml | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    {{- include "prom-aggregation-gateway.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: api-port
+      port: {{ .Values.service.port }}
+      targetPort: api-port
+  {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.nodePort }}
+  {{- else if ne (default .Values.controller.nodePort 12345) 12345 }}
+      {{ fail "cannot define nodePort without a service of type NodePort" }}
+  {{- end }}
+{{- end }}
