@@ -172,10 +172,20 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+            {{- if .Values.config.signer.tls.enabled }}
+            - mountPath: "/certs"
+              name: pki
+              readOnly: true
+            {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "op-challenger.fullname" . }}-data
+        {{- if .Values.config.signer.tls.enabled }}
+        - name: pki
+          secret:
+            secretName: {{ ternary (printf "%s-%s" (include "op-challenger.fullname" .) "tls" ) .Values.config.signer.tls.externalSecret.tlsSecretName .Values.config.signer.tls.certManager.enabled }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
