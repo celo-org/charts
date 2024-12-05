@@ -1,7 +1,7 @@
 ---
 name: op-conductor-start-tool
 apiVersion: v2
-version: 0.0.1
+version: 0.0.2
 description: OP Conductor start tool Cel2 network
 home: https://clabs.co
 sources:
