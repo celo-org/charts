@@ -85,7 +85,8 @@ spec:
                 LAST_UNSAFE_HASH=$(curl -X POST -H "Content-Type: application/json" --data \
                   '{"jsonrpc":"2.0","method":"admin_stopSequencer","params":[],"id":1}' \
                   {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$first:{{ .Values.opNode.port }} -s | jq -r .result)
-                echo "Stopped OP Node $first with unsafe hash $LAST_UNSAFE_HASH. Starting OP Node $last..."
+                echo "Stopped OP Node $first with unsafe hash $LAST_UNSAFE_HASH. Sleeping 1 second and starting OP Node $last..."
+                sleep 1
                 curl -X POST -H "Content-Type: application/json" --data \
                   '{"jsonrpc":"2.0","method":"admin_startSequencer","params":["'${LAST_UNSAFE_HASH}'"],"id":1}'  \
                   {{ .Values.opNode.protocol }}://{{ .Values.opNode.namePattern }}-$last:{{ .Values.opNode.port }} -s

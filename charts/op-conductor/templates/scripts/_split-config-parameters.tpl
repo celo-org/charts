@@ -12,7 +12,7 @@ if [ -n "$loadBalancerIps" ]; then
   advertiseIp=$(echo "$loadBalancerIps" | tr ',' '\n' | sed -n "$((RID + 1))p")
 # If the clusterIPs are defined now, use them
 elif [ -n "$clusterIps" ]; then
-  advertiseIp=$(echo "$clusterIps" | tr ',' '\n' | sed -n "$((RID + 1))p")
+  advertiseIp=$(echo "{{ include "op-conductor.fullname" $ }}-consensus-$((RID))")
 # If none of the above are defined, use pod's ip
 else
   advertiseIp="$(hostname -i)"
