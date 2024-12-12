@@ -1,0 +1,25 @@
+apiVersion: v2
+name: op-conductor-ops
+description: Celo implementation for OP conductor-ops
+type: application
+version: 0.0.1
+appVersion: "v0.0.1"
+home: https://clabs.co
+sources:
+  - https://celo.org
+  - https://docs.celo.org
+  - https://clabs.co
+  - https://github.com/celo-org
+keywords:
+  - celo
+  - blockchain
+  - optimism
+  - rollup
+  - ethereum
+  - layer2
+  - op-stack
+  - conductor
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co

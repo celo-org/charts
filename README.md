@@ -37,6 +37,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [op-challenger](./charts/op-challenger/README.md) - A Helm chart for Fault Proof Monitoring
 - [op-conductor](./charts/op-conductor/README.md) - Helm chart deploying OP Conductor, a HA controller for op-node
 - [op-conductor-mon](./charts/op-conductor-mon/README.md) - A Helm chart for OP Conductor monitoring
+- [op-conductor-ops](./charts/op-conductor-ops/README.md) - Celo implementation for OP conductor-ops
 - [op-conductor-start-tool](./charts/op-conductor-start-tool/README.md) - OP Conductor start tool Cel2 network
 - [op-dispute-mon](./charts/op-dispute-mon/README.md) - A Helm chart for Fault Proof Monitoring
 - [op-geth](./charts/op-geth/README.md) - Celo implementation for op-geth execution engine (Optimism Rollup)
