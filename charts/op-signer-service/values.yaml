@@ -48,6 +48,9 @@ env: {}
   # KEY_VERSION: "1"
   # LOG_LEVEL: "3"
 
+# -- Annotations to add to the statefulset
+annotations: {}
+
 # -- TLS config
 tls:
   # -- Enable TLS

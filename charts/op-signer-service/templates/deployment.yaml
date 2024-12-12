@@ -4,6 +4,10 @@ metadata:
   name: {{ include "op-signer-service.fullname" . }}
   labels:
     {{- include "op-signer-service.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
