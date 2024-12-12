@@ -103,6 +103,9 @@ services:
     annotations: {}
     publishNotReadyAddresses: true
 
+# -- Annotations to add to the statefulset
+annotations: {}
+
 # -- Custom pod annotations
 podAnnotations: {}
   # prometheus.io/path: /metrics
