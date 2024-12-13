@@ -1,6 +1,6 @@
 # op-challenger
 
-![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
+![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
 
 A Helm chart for Fault Proof Monitoring
 
@@ -38,10 +38,12 @@ A Helm chart for Fault Proof Monitoring
 | config.signer.address | string | `"0x000000000000"` |  |
 | config.signer.enabled | bool | `false` |  |
 | config.signer.endpoint | string | `"https://test.example.com"` |  |
+| config.signer.tls.certManager.duration | string | `"438000h"` | Certificate duration |
 | config.signer.tls.certManager.enabled | bool | `false` | Enable creating certificates through certmanager. This takes precedence over externalSecret. |
 | config.signer.tls.certManager.issuerGroup | string | `""` | Issuer group |
 | config.signer.tls.certManager.issuerKind | string | `"Issuer"` | Issuer kind |
 | config.signer.tls.certManager.issuerName | string | `"test-issuer"` | Issuer name |
+| config.signer.tls.certManager.renewBefore | string | `"8766h"` | Certificate renew before |
 | config.signer.tls.enabled | bool | `false` | Enable TLS |
 | config.signer.tls.externalSecret.tlsSecretCaKey | string | `"ca.pem"` | Secret key for the TLS CA |
 | config.signer.tls.externalSecret.tlsSecretCertKey | string | `"certificate.pem"` | Secret key for the TLS certificate |
