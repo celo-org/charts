@@ -192,6 +192,10 @@ config:
       certManager:
         # -- Enable creating certificates through certmanager. This takes precedence over externalSecret.
         enabled: false
+        # -- Certificate duration
+        duration: "438000h"
+        # -- Certificate renew before
+        renewBefore: "8766h"
         # -- Issuer name
         issuerName: "test-issuer"
         # -- Issuer kind
