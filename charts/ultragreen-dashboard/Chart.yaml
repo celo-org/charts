@@ -12,6 +12,7 @@ sources:
   - https://github.com/celo-org
 version: 0.3.0
 appVersion: "0.1.0"
+deprecated: true
 maintainers:
   - name: cLabs
     email: devops@clabs.co
