@@ -101,7 +101,7 @@ spec:
                 --addr=0.0.0.0 \
                 --port={{ .Values.services.api.port }} \
                 --eigenda.disperser-rpc={{ .Values.config.disperser.rpc }} \
-                --eigenda.eth-confirmation-depth={{ .Values.config.eth.confirmationDepth }} \
+                --eigenda.confirmation-depth={{ .Values.config.eth.confirmationDepth }} \
                 --eigenda.eth-rpc={{ .Values.config.eth.rpc }} \
                 --eigenda.svc-manager-addr={{ .Values.config.eth.serviceManagerAddr }} \
                 --eigenda.status-query-timeout=45m \
@@ -109,14 +109,11 @@ spec:
                 --eigenda.g2-power-of-2-path=$kzg_folder/g2.point.powerOf2 \
                 --eigenda.max-blob-length={{ .Values.config.maxBlobLength }} \
                 --eigenda.disable-tls=false \
-                {{- if .Values.config.routing.cacheTargets }}
-                --routing.cache-targets={{ .Values.config.routing.cacheTargets }} \
+                {{- if .Values.config.storage.cacheTargets }}
+                --storage.cache-targets={{ .Values.config.storage.cacheTargets }} \
                 {{- end }}
-                {{- if .Values.config.routing.writeOnMiss }}
-                --routing.write-on-miss \
-                {{- end }}
-                {{- if and (hasKey .Values.config.s3 "backup") (not (empty .Values.config.s3.backup)) }}
-                --s3.backup={{ .Values.config.s3.backup }} \
+                {{- if .Values.config.storage.writeOnMiss }}
+                --storage.write-on-miss \
                 {{- end }}
                 {{- if .Values.config.s3.bucket }}
                 --s3.bucket={{ .Values.config.s3.bucket }} \
