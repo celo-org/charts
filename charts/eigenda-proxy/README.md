@@ -53,8 +53,8 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/eigenda-proxy"` |  |
-| image.tag | string | `"main"` |  |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/eigenda-proxy/eigenda-proxy"` |  |
+| image.tag | string | `"latest"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
