@@ -1,0 +1,12 @@
+apiVersion: v2
+name: pr-url-checker-app
+description: A Helm chart to run pr-url-checker-app at cLabs
+type: application
+version: 0.1.4
+appVersion: "latest"
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
+sources:
+  - https://github.com/celo-org/pr-url-checker-app

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pr-url-checker-app.fullname" . }}
+  labels:
+    {{- include "pr-url-checker-app.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ include "pr-url-checker-app.port" . }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "pr-url-checker-app.selectorLabels" . | nindent 4 }}
