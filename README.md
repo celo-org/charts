@@ -49,6 +49,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [op-tx-overload](./charts/op-tx-overload/README.md) - Generate load on Optimism Bedrock using transactions with random calldata.
 - [op-ufm](./charts/op-ufm/README.md) - A Helm chart for OP User Facing Monitoring
 - [optics-keymaster](./charts/optics-keymaster/README.md) - Optics Keymaster
+- [pr-url-checker-app](./charts/pr-url-checker-app/README.md) - A Helm chart to run pr-url-checker-app at cLabs
 - [prom-aggregation-gateway](./charts/prom-aggregation-gateway/README.md) - cLabs prometheus aggregation gateway
 - [prysm](./charts/prysm/README.md) - Go implementation of Ethereum proof of stake.
 - [rosetta](./charts/rosetta/README.md) - Rosetta Client for Celo Networks
