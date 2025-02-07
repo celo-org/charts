@@ -35,7 +35,6 @@ serviceAccount:
 
 # -- Env Vars. for the pod.
 env: {}
-  # repo: "whitelist"
   # appID: "123456789"
   # installationID: "123456789"
 
