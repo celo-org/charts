@@ -2,7 +2,7 @@ apiVersion: v2
 name: pr-url-checker-app
 description: A Helm chart to run pr-url-checker-app at cLabs
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "latest"
 maintainers:
   - name: cLabs

@@ -7,3 +7,5 @@ env:
   installationID: "123456789"
 
 secretEnv: {}
+
+secretVolume: {}
