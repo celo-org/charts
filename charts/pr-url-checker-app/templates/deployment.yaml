@@ -42,7 +42,7 @@ spec:
             - name: http
               containerPort: {{ include "pr-url-checker-app.port" . }}
               protocol: TCP
-          {{- if or (.Values.env) (.Values.secretEnv) }}
+          {{- if or (.Values.env) (.Values.secretEnv) (.Values.secretVolume) }}
           env:
           {{- with .Values.env }}
             {{- range $key, $value := . }}
@@ -59,6 +59,20 @@ spec:
                   key: {{ $value.secretKey }}
             {{- end }}
           {{- end }}
+          {{- with .Values.secretVolume }}
+            {{- range $key, $value := . }}
+            - name: {{ $key }}
+              value: "{{ $value.mountPath }}/{{ $value.path }}"
+            {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- with .Values.secretVolume }}
+          volumeMounts:
+            {{- range $key, $value := . }}
+            - name: {{ $key }}
+              mountPath: {{ $value.mountPath }}
+              readOnly: true
+            {{- end }}
           {{- end }}
           {{- if .Values.livenessProbe }}
           livenessProbe:
@@ -70,6 +84,17 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.secretVolume }}
+      volumes:
+        {{- range $key, $value := . }}
+        - name: {{ $key }}
+          secret:
+            secretName: {{ $value.secretName }}
+            items:
+              - key: {{ $value.secretKey }}
+                path: {{ $value.path }}
+        {{- end }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

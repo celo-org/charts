@@ -35,18 +35,21 @@ serviceAccount:
 
 # -- Env Vars. for the pod.
 env: {}
-  # workflowFileName: "workload-id-tf.yaml"
-  # organization: "celo-org"
-  # repo: "infrastructure"
+  # appID: "123456789"
+  # installationID: "123456789"
 
 # -- Env Vars. coming form a secret.
 secretEnv: {}
   # webhookSecret:
-  #   secretName: "test"
-  #   secretKey: "test"
-  # githubToken:
-  #   secretName: "test"
-  #   secretKey: "test"
+  #   secretName: "pr-url-checker-app"
+  #   secretKey: "webhookSecret"
+
+secretVolume: {}
+  # keyFile:
+  #   secretName: "pr-url-checker-app"
+  #   secretKey: "keyFile"
+  #   mountPath: "/etc/secrets"
+  #   path: "keyFile.key"
 
 ingress:
   # -- Ingress enabled

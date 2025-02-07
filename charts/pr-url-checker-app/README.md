@@ -1,6 +1,6 @@
 # pr-url-checker-app
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
 
 A Helm chart to run pr-url-checker-app at cLabs
 
@@ -40,6 +40,7 @@ A Helm chart to run pr-url-checker-app at cLabs
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
 | secretEnv | object | `{}` | Env Vars. coming form a secret. |
+| secretVolume | object | `{}` |  |
 | securityContext | object | `{}` | Custom container security context |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |

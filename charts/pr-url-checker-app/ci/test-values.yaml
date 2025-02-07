@@ -2,8 +2,9 @@
 env:
   webhookSecret: "webhookSecret"
   keyFile: "keyFile"
-  repo: "whitelist"
   appID: "123456789"
   installationID: "123456789"
 
 secretEnv: {}
+
+secretVolume: {}
