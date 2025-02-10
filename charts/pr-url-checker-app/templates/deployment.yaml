@@ -61,8 +61,13 @@ spec:
           {{- end }}
           {{- with .Values.secretVolume }}
             {{- range $key, $value := . }}
+            {{- if or (eq $key "keyfile") (eq $key "keyFile") }}
+            - name: keyFile
+              value: "{{ $value.mountPath }}/{{ $value.path }}"
+            {{- else }}
             - name: {{ $key }}
               value: "{{ $value.mountPath }}/{{ $value.path }}"
+            {{- end }}
             {{- end }}
           {{- end }}
           {{- end }}
