@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -26,7 +27,7 @@ spec:
       protocol: TCP
       name: json-ws
   {{- end }}
-  {{- if or (.Values.global.JWTSecret.value) (.Values.global.JWTSecret.secretName) }}
+  {{- if or .Values.global.JWTSecret .Values.global.secretNameOverride }}
     - port: {{ .Values.jsonrpc.engine.port }}
       targetPort: engine
       protocol: TCP

@@ -1,11 +1,10 @@
----
 apiVersion: v2
 name: nethermind
 description: .NET Core Ethereum client
 type: application
-# version: 2.6.0 # Version of stakewise/charts/nethermind
-version: 2.6.5
-appVersion: "1.28.0"
+# version: 2.7.4 # Version of stakewise/charts/nethermind
+version: 2.7.4
+appVersion: "v1.30.3"
 icon: https://storage.googleapis.com/stakewise-charts/stakewise.png
 keywords:
   - ethereum
@@ -15,11 +14,13 @@ keywords:
 home: https://nethermind.io/
 sources:
   - https://github.com/NethermindEth/nethermind
-maintainers:
-  - name: cLabs
-    email: devops@clabs.co
-    url: https://clabs.co
+
 dependencies:
   - name: common
     repository: https://charts.stakewise.io/
     version: 1.x.x
+
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
