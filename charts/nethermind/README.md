@@ -1,6 +1,6 @@
 # nethermind
 
-![Version: 2.6.5](https://img.shields.io/badge/Version-2.6.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.28.0](https://img.shields.io/badge/AppVersion-1.28.0-informational?style=flat-square)
+![Version: 2.7.4](https://img.shields.io/badge/Version-2.7.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.30.3](https://img.shields.io/badge/AppVersion-v1.30.3-informational?style=flat-square)
 
 .NET Core Ethereum client
 Initially based on [stakewise/helm-charts/nethermind](https://github.com/stakewise/helm-charts/tree/main/charts/nethermind).
@@ -30,10 +30,10 @@ Initially based on [stakewise/helm-charts/nethermind](https://github.com/stakewi
 | additionalLabels.client-type | string | `"execution"` |  |
 | affinity | object | `{}` |  |
 | extraFlags | list | `[]` |  |
+| extraVolumeMounts | object | `{}` |  |
+| extraVolumes | object | `{}` |  |
 | fullnameOverride | string | `""` |  |
-| global.JWTSecret.secretKey | string | `""` |  |
-| global.JWTSecret.secretName | string | `""` |  |
-| global.JWTSecret.value | string | `""` |  |
+| global.JWTSecret | string | `""` |  |
 | global.imagePullSecrets | list | `[]` |  |
 | global.livenessProbe.enabled | bool | `true` |  |
 | global.metrics.enabled | bool | `true` |  |
@@ -43,11 +43,12 @@ Initially based on [stakewise/helm-charts/nethermind](https://github.com/stakewi
 | global.rbac.create | bool | `true` |  |
 | global.readinessProbe.enabled | bool | `true` |  |
 | global.replicaCount | int | `1` |  |
+| global.secretNameOverride | string | `""` |  |
 | global.serviceAccount.create | bool | `true` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"nethermind/nethermind"` |  |
-| image.tag | string | `"1.28.0"` |  |
+| image.tag | string | `"1.30.3"` |  |
 | imagePullSecrets | list | `[]` |  |
 | initChownData | bool | `true` |  |
 | initImage.pullPolicy | string | `"IfNotPresent"` |  |
