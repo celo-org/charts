@@ -21,7 +21,6 @@ metadata:
 spec:
   type: {{ $.Values.p2pNodePort.type }}
   externalTrafficPolicy: Local
-  publishNotReadyAddresses: true
   ports:
     - name: p2p-tcp
       port: {{ include "nethermind.p2pPort" $ }}

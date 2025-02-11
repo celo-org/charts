@@ -16,13 +16,8 @@ spec:
     metadata:
       labels:
         {{- include "common.labels.matchLabels" . | nindent 8 }}
-      annotations:
-      {{- if .Values.global.metrics.enabled }}
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "{{ .Values.metrics.port }}"
-        prometheus.io/path: "/metrics"
-      {{- end }}
       {{- with .Values.podAnnotations }}
+      annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
@@ -119,7 +114,7 @@ spec:
               --JsonRpc.Port={{ .Values.jsonrpc.ports.rest }}
               --JsonRpc.WebSocketsPort={{ .Values.jsonrpc.ports.websocket }}
           {{- end }}
-          {{- if or (.Values.global.JWTSecret.value) (.Values.global.JWTSecret.secretName) }}
+          {{- if or .Values.global.JWTSecret .Values.global.secretNameOverride }}
               --JsonRpc.JwtSecretFile=/secret/jwtsecret
               --JsonRpc.EnginePort={{ .Values.jsonrpc.engine.port }}
               --JsonRpc.EngineHost={{ .Values.jsonrpc.engine.host }}
@@ -165,7 +160,7 @@ spec:
               containerPort: {{ .Values.jsonrpc.ports.websocket }}
               protocol: TCP
           {{- end }}
-          {{- if or (.Values.global.JWTSecret.value) (.Values.global.JWTSecret.secretName) }}
+          {{- if or .Values.global.JWTSecret .Values.global.secretNameOverride }}
             - name: engine
               protocol: TCP
               containerPort: {{ .Values.jsonrpc.engine.port }}
@@ -186,13 +181,16 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data/nethermind
-          {{- if or (.Values.global.JWTSecret.value) (.Values.global.JWTSecret.secretName) }}
+          {{- if or .Values.global.JWTSecret .Values.global.secretNameOverride }}
             - name: jwtsecret
               mountPath: /secret
               readOnly: true
           {{- end }}
             - name: env-nodeport
               mountPath: /env
+          {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- if .Values.jsonrpc.enabled }}
@@ -204,18 +202,14 @@ spec:
               value: "{{ .Values.sidecar.bindAddr }}:{{ .Values.sidecar.bindPort }}"
             - name: CLIENT_PORT
               value: {{ .Values.jsonrpc.ports.rest | quote }}
-          {{- if or (.Values.global.JWTSecret.value) (.Values.global.JWTSecret.secretName) }}
+          {{- if or .Values.global.JWTSecret .Values.global.secretNameOverride }}
             - name: CLIENT_AUTHORIZATIONTYPE
               value: "bearer"
             - name: CLIENT_JWTSECRET
-              {{- if .Values.global.JWTSecret.value }}
-              value: {{ .Values.global.JWTSecret.value | quote }}
-              {{- else if and (.Values.global.JWTSecret.secretName) (.Values.global.JWTSecret.secretKey) }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.global.JWTSecret.secretName }}
-                  key: {{ .Values.global.JWTSecret.secretKey }}
-              {{- end }}
+                  name: {{ coalesce .Values.global.secretNameOverride (include "common.names.fullname" .) }}
+                  key: jwtsecret
           {{- end }}
           ports:
             - containerPort: {{ .Values.sidecar.bindPort }}
@@ -247,14 +241,10 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-        {{- if .Values.global.JWTSecret.value }}
+        {{- if or .Values.global.JWTSecret .Values.global.secretNameOverride }}
         - name: jwtsecret
           secret:
-            secretName: {{ include "common.names.fullname" . }}
-        {{- else if .Values.global.JWTSecret.secretName }}
-        - name: jwtsecret
-          secret:
-            secretName: {{ .Values.global.JWTSecret.secretName }}
+            secretName: {{ coalesce .Values.global.secretNameOverride (include "common.names.fullname" .) }}
         {{- end }}
         - name: env-nodeport
           emptyDir: {}
@@ -262,6 +252,9 @@ spec:
         - name: data
           emptyDir: {}
 {{- else }}
+        {{- with .Values.extraVolumes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
   volumeClaimTemplates:
     - metadata:
         name: data
