@@ -14,6 +14,7 @@ global:
   ## a command line tool, for example:
   ## openssl rand -hex 32 > token.txt
   ##
+  ## Override using secretNameOverride
   JWTSecret: ""
 
   ## If you would like the JSON Web Token (JWT) to be managed by a secret outside
