@@ -1,7 +1,7 @@
 apiVersion: v2
 name: prysm
-version: 5.0.4
-appVersion: v5.0.3
+version: 5.2.1
+appVersion: v5.2.0
 kubeVersion: "^1.18.0-0"
 description: Go implementation of Ethereum proof of stake.
 type: application
@@ -15,9 +15,9 @@ home: https://www.ethereum.org/
 sources:
   - https://github.com/prysmaticlabs/prysm
 maintainers:
-  - name: cLabs
-    email: devops@clabs.co
-    url: https://clabs.co
+  - name: Dmitri Tsumak
+    email: dmitri@stakewise.io
+
 dependencies:
   - name: common
     repository: https://charts.stakewise.io/

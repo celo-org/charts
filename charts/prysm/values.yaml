@@ -12,10 +12,13 @@ global:
   ## a command line tool, for example:
   ## openssl rand -hex 32 > token.txt
   ##
-  JWTSecret:
-    value: "test"
-    ## !! The key for the secret MUST be jwtsecret
-    secretName: "test"
+  JWTSecret: ""
+
+  ## If you would like the JSON Web Token (JWT) to be managed by a secret outside
+  ## of this chart, an existing secret name can be passed here. If specified, JWTSecret should not be set.
+  ## jwtsecret should be the key of the token in the secret.
+  ##
+  secretNameOverride: ""
 
   ## Server endpoints for an execution layer jwt authenticated HTTP JSON-RPC connection.
   ## Uses the same endpoint to populate the deposit cache.
@@ -174,7 +177,7 @@ sidecar:
 image:
   registry: "gcr.io"
   repository: "prysmaticlabs/prysm/beacon-chain"
-  tag: "v5.0.3"
+  tag: "v5.2.0"
   pullPolicy: IfNotPresent
 imageGnosis:
   registry: "ghcr.io"
@@ -258,7 +261,6 @@ totalDifficultyOverride: ""
 extraFlags:
   # p2p options
   - "--p2p-max-peers=160"
-  - "--enable-peer-scorer"
 
 ## Extra annotations for StatefulSet pods
 podAnnotations: {}
