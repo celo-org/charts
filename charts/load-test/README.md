@@ -1,6 +1,6 @@
 # load-test
 
-![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.4](https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Chart which is used to run load test for a Celo Network
 
@@ -38,7 +38,7 @@ Chart which is used to run load test for a Celo Network
 | genesis.network | string | `"globaltestnet"` |  |
 | genesis.useGenesisFileBase64 | bool | `false` |  |
 | geth.image.repository | string | `"us.gcr.io/celo-org/geth"` |  |
-| geth.image.tag | string | `"1.8.0"` |  |
+| geth.image.tag | string | `"1.8.8"` |  |
 | geth.networkID | string | `"9099000"` |  |
 | geth.staticNodes | string | `""` |  |
 | geth.verbosity | int | `1` |  |
