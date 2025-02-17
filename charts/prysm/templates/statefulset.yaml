@@ -84,7 +84,7 @@ spec:
               {{- end }}
               echo "p2p-host-ip: $EXTERNAL_IP"   > /config/config.yaml;
               echo "p2p-tcp-port: $EXTERNAL_PORT" >> /config/config.yaml;
-              echo "p2p-udp-port: $EXTERNAL_PORT" >> /config/config.yaml;
+              echo "p2p-udp-port: $((EXTERNAL_PORT + 1))" >> /config/config.yaml;
           {{- else }}
               echo "p2p-host-ip: $POD_IP"   > /config/config.yaml;
               echo 'p2p-tcp-port: {{ include "prysm.p2pPort" . }}' >> /config/config.yaml;

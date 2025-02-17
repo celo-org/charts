@@ -129,7 +129,7 @@ spec:
               --Network.P2PPort=$EXTERNAL_PORT
               --Network.DiscoveryPort=$EXTERNAL_PORT
           {{- else }}
-              --Network.ExternalIp=$(POD_IP)
+              --Network.ExternalIp=$(hostname -i)
               --Network.P2PPort={{ include "nethermind.p2pPort" . }}
               --Network.DiscoveryPort={{ include "nethermind.p2pPort" . }}
           {{- end }}
