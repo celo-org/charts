@@ -2,8 +2,8 @@ apiVersion: v2
 name: dshackle
 description: A Helm chart for dshackle - A Fault Tolerant Load Balancer for Blockchain API.
 type: application
-version: 0.1.0
-appVersion: "0.15.1"
+version: 0.1.1
+appVersion: "0.15.2"
 maintainers:
   - name: cLabs
     email: devops@clabs.co
