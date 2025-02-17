@@ -38,7 +38,7 @@ celo_fullnode:
     image:
       imagePullPolicy: IfNotPresent
       repository: us.gcr.io/celo-org/geth
-      tag: 1.8.0
+      tag: 1.8.8
     public_ip_per_node: []
     node_keys: []
     resources:

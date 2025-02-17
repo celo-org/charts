@@ -1,6 +1,6 @@
 # testnet
 
-![Version: 0.5.4](https://img.shields.io/badge/Version-0.5.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.5.5](https://img.shields.io/badge/Version-0.5.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Private Celo network Helm chart for Kubernetes
 
@@ -63,7 +63,7 @@ Private Celo network Helm chart for Kubernetes
 | geth.faultyValidatorType | string | `""` |  |
 | geth.faultyValidators | int | `0` |  |
 | geth.image.repository | string | `"us.gcr.io/celo-org/geth"` |  |
-| geth.image.tag | string | `"1.8.0"` |  |
+| geth.image.tag | string | `"1.8.8"` |  |
 | geth.in_memory_discovery_table | bool | `false` |  |
 | geth.light.maxpeers | int | `1000` |  |
 | geth.light.serve | int | `70` |  |
