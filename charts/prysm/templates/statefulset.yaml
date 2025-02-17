@@ -84,13 +84,14 @@ spec:
               {{- end }}
               echo "p2p-host-ip: $EXTERNAL_IP"   > /config/config.yaml;
               echo "p2p-tcp-port: $EXTERNAL_PORT" >> /config/config.yaml;
-              echo "p2p-udp-port: $EXTERNAL_PORT" >> /config/config.yaml;
+              echo "p2p-udp-port: $((EXTERNAL_PORT + 1))" >> /config/config.yaml;
           {{- else }}
               echo "p2p-host-ip: $POD_IP"   > /config/config.yaml;
               echo 'p2p-tcp-port: {{ include "prysm.p2pPort" . }}' >> /config/config.yaml;
               echo 'p2p-udp-port: {{ include "prysm.p2pPort" . }}' >> /config/config.yaml;
           {{- end }}
               INDEX=$((${HOSTNAME##*-}+1));
+              cat data/scripts/execution-endpoints.txt;
               EE=$(sed "${INDEX}q;d" /data/scripts/execution-endpoints.txt);
               echo "execution-endpoint: ${EE}" >> /config/config.yaml;
               echo "Pod will connect to the ${EE} endpoint";
@@ -207,8 +208,6 @@ spec:
               protocol: TCP
           {{- end }}
           volumeMounts:
-            - name: scripts
-              mountPath: /data/scripts
             - name: data
               mountPath: /data
             - name: jwtsecret
@@ -263,15 +262,9 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-        {{- if .Values.global.JWTSecret.value }}
         - name: jwtsecret
           secret:
-            secretName: {{ include "common.names.fullname" . }}
-        {{- else if .Values.global.JWTSecret.secretName }}
-        - name: jwtsecret
-          secret:
-            secretName: {{ .Values.global.JWTSecret.secretName }}
-        {{- end }}
+            secretName: {{ coalesce .Values.global.secretNameOverride (include "common.names.fullname" .) }}
         - name: config
           emptyDir: {}
       {{- if eq .Values.global.network "gnosis" }}
