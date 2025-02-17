@@ -1,7 +1,7 @@
 apiVersion: v2
 name: prysm
-version: 5.0.5
-appVersion: v5.0.3
+version: 5.2.1
+appVersion: v5.2.0
 kubeVersion: "^1.18.0-0"
 description: Go implementation of Ethereum proof of stake.
 type: application

@@ -1,6 +1,6 @@
 # prysm
 
-![Version: 5.0.5](https://img.shields.io/badge/Version-5.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v5.0.3](https://img.shields.io/badge/AppVersion-v5.0.3-informational?style=flat-square)
+![Version: 5.2.1](https://img.shields.io/badge/Version-5.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v5.2.0](https://img.shields.io/badge/AppVersion-v5.2.0-informational?style=flat-square)
 
 Go implementation of Ethereum proof of stake.
 Initially based on [stakewise/helm-charts/prysm](https://github.com/stakewise/helm-charts/tree/main/charts/prysm).
@@ -34,10 +34,8 @@ Kubernetes: `^1.18.0-0`
 | checkpointSyncUrl | string | `""` |  |
 | eth1Endpoints | list | `[]` |  |
 | extraFlags[0] | string | `"--p2p-max-peers=160"` |  |
-| extraFlags[1] | string | `"--enable-peer-scorer"` |  |
 | fullnameOverride | string | `""` |  |
-| global.JWTSecret.secretName | string | `"test"` |  |
-| global.JWTSecret.value | string | `"test"` |  |
+| global.JWTSecret | string | `"test"` |  |
 | global.executionEndpoints | list | `[]` |  |
 | global.imagePullSecrets | list | `[]` |  |
 | global.livenessProbe.enabled | bool | `true` |  |
@@ -47,6 +45,7 @@ Kubernetes: `^1.18.0-0`
 | global.network | string | `"mainnet"` |  |
 | global.rbac.create | bool | `true` |  |
 | global.readinessProbe.enabled | bool | `true` |  |
+| global.secretNameOverride | string | `""` |  |
 | global.serviceAccount.create | bool | `true` |  |
 | http.enabled | bool | `true` |  |
 | http.port | string | `"8080"` |  |
@@ -54,7 +53,7 @@ Kubernetes: `^1.18.0-0`
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"gcr.io"` |  |
 | image.repository | string | `"prysmaticlabs/prysm/beacon-chain"` |  |
-| image.tag | string | `"v5.0.3"` |  |
+| image.tag | string | `"v5.2.0"` |  |
 | imageGnosis.pullPolicy | string | `"IfNotPresent"` |  |
 | imageGnosis.registry | string | `"ghcr.io"` |  |
 | imageGnosis.repository | string | `"gnosischain/gbc-prysm-beacon-chain"` |  |
