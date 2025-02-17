@@ -12,7 +12,7 @@ global:
   ## a command line tool, for example:
   ## openssl rand -hex 32 > token.txt
   ##
-  JWTSecret: "test"
+  JWTSecret: ""
 
   ## If you would like the JSON Web Token (JWT) to be managed by a secret outside
   ## of this chart, an existing secret name can be passed here. If specified, JWTSecret should not be set.
