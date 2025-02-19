@@ -101,6 +101,9 @@ spec:
             {{- with .Values.config.maxL1TxSizeBytes }}
             --max-l1-tx-size-bytes={{ toString . }} \
             {{- end }}
+            {{- with .Values.config.targetNumFrames }}
+            --target-num-frames={{ toString . }} \
+            {{- end }}
             {{- with .Values.config.maxPendingTransactions }}
             --max-pending-tx={{ toString . }} \
             {{- end }}

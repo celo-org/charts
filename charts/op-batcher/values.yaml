@@ -150,6 +150,7 @@ config:
   maxL1TxSizeBytes: ""                   # The maximum size of an L1 transaction in bytes. 120000 by default
   maxChannelDuration: ""                 # The maximum duration of L1-blocks to keep a channel open. 0 to disable.
   maxPendingTransactions: ""             # The maximum number of pending transactions. 0 for no limit.
+  targetNumFrames: ""                    # The target number of frames to create per channel. Controls number of blobs per blob tx, if using Blob DA. The default value is 1.
   feeLimitMultiplier: 5                  # The multiplier to apply to the gas price when submitting transactions to L1
   txmgr:
     feeLimitThreshold: ""                # The minimum threshold (in GWei) at which fee bumping starts to be capped
