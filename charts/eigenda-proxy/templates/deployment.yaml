@@ -112,6 +112,9 @@ spec:
                 {{- if .Values.config.storage.cacheTargets }}
                 --storage.cache-targets={{ .Values.config.storage.cacheTargets }} \
                 {{- end }}
+                {{- if .Values.config.storage.fallbackTargets }}
+                --storage.cache-targets={{ .Values.config.storage.fallbackTargets }} \
+                {{- end }}
                 {{- if .Values.config.storage.writeOnMiss }}
                 --storage.write-on-miss \
                 {{- end }}
