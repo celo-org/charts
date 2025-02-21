@@ -27,10 +27,12 @@ spec:
       protocol: TCP
       name: json-ws
   {{- end }}
+  {{- if or .Values.global.JWTSecret .Values.global.secretNameOverride }}
     - port: {{ .Values.jsonrpc.engine.port }}
       targetPort: engine
       protocol: TCP
       name: engine
+  {{- end }}
   {{- if .Values.global.metrics.enabled }}
     - port: {{ .Values.metrics.port }}
       targetPort: metrics
@@ -71,7 +73,7 @@ spec:
       protocol: TCP
       name: json-ws
   {{- end }}
-  {{- if $.Values.global.JWTSecret }}
+  {{- if or $.Values.global.JWTSecret $.Values.global.secretNameOverride }}
     - port: {{ $.Values.jsonrpc.engine.port }}
       targetPort: engine
       protocol: TCP

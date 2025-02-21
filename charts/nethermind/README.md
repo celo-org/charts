@@ -1,6 +1,6 @@
 # nethermind
 
-![Version: 2.7.7](https://img.shields.io/badge/Version-2.7.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.30.3](https://img.shields.io/badge/AppVersion-v1.30.3-informational?style=flat-square)
+![Version: 2.7.8](https://img.shields.io/badge/Version-2.7.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.30.3](https://img.shields.io/badge/AppVersion-v1.30.3-informational?style=flat-square)
 
 .NET Core Ethereum client
 Initially based on [stakewise/helm-charts/nethermind](https://github.com/stakewise/helm-charts/tree/main/charts/nethermind).
