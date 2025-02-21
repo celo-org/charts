@@ -1,3 +1,6 @@
-{{- define "prysm.p2pPort" -}}
+{{- define "prysm.p2pTcpPort" -}}
 {{- printf "13000" -}}
+{{- end -}}
+{{- define "prysm.p2pUdpPort" -}}
+{{- printf "13001" -}}
 {{- end -}}
