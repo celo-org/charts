@@ -136,9 +136,12 @@ spec:
             --altda.max-concurrent-da-requests={{ .Values.config.altda.maxConcurrentDaRequests }} \
             {{- else }}
             --data-availability-type={{ .Values.config.dataAvailabilityType }} \
+            {{- end }}
             {{- with .Values.config.blobTargetNumFrames }}
             --target-num-frames={{ . }} \
             {{- end }}
+            {{- with .Values.config.throttleInterval }}
+            --throttle-interval={{ . }} \
             {{- end }}
             {{- if .Values.config.signer.enabled }}
             --signer.address={{ .Values.config.signer.address }} \
