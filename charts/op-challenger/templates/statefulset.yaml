@@ -144,7 +144,7 @@ spec:
           - name: OP_CHALLENGER_CANNON_SERVER
             value: /usr/local/bin/op-program
           - name: OP_CHALLENGER_CANNON_PRESTATE
-            value: /data/prestate.json
+            value: /data/prestate.bin.gz
           - name: OP_CHALLENGER_CANNON_ROLLUP_CONFIG
             value: /data/rollup.json
           - name: OP_CHALLENGER_CANNON_L2_GENESIS

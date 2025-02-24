@@ -175,7 +175,7 @@ init:
       deployment-l1.json: ""
       rollup.json: ""
       genesis.json: ""
-      prestate.json: ""
+      prestate.bin.gz: ""
 
 persistence:
   size: 1Gi
