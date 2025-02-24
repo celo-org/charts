@@ -130,12 +130,6 @@ spec:
                 {{- if .Values.config.s3.credentialType }}
                 --s3.credential-type={{ .Values.config.s3.credentialType }} \
                 {{- end }}
-                {{- if .Values.config.s3.accessKeyId }}
-                --s3.access-key-id={{ .Values.config.s3.accessKeyId }} \
-                {{- end }}
-                {{- if .Values.config.s3.accessKeySecret }}
-                --s3.access-key-secret={{ .Values.config.s3.accessKeySecret }} \
-                {{- end }}
                 {{- if .Values.config.s3.path }}
                 --s3.path={{ .Values.config.s3.path }} \
                 {{- end }}
@@ -159,6 +153,29 @@ spec:
             {{- else }}
               value: {{ toString .Values.config.privateKey.value }}
             {{- end }}
+            {{- if or (.Values.config.s3.accessKeyId.value) (.Values.config.s3.accessKeyId.secretName) }}
+            - name: EIGENDA_PROXY_S3_ACCESS_KEY_ID
+            {{- if .Values.config.s3.accessKeyId.secretName }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ toString .Values.config.s3.accessKeyId.secretName }}
+                  key: {{ toString .Values.config.s3.accessKeyId.secretKey }}
+            {{- else }}
+              value: {{ toString .Values.config.s3.accessKeyId.value }}
+            {{- end }}
+            {{- end }}
+            {{- if or (.Values.config.s3.accessKeySecret.value) (.Values.config.s3.accessKeySecret.secretName) }}
+            - name: EIGENDA_PROXY_S3_ACCESS_KEY_SECRET
+            {{- if .Values.config.s3.accessKeySecret.secretName }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ toString .Values.config.s3.accessKeySecret.secretName }}
+                  key: {{ toString .Values.config.s3.accessKeySecret.secretKey }}
+            {{- else }}
+              value: {{ toString .Values.config.s3.accessKeySecret.value }}
+            {{- end }}
+            {{- end }}
+
           ports:
             - name: api
               containerPort: {{ .Values.services.api.port }}

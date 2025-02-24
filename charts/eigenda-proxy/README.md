@@ -1,6 +1,6 @@
 # eigenda-proxy
 
-![Version: 0.3.5](https://img.shields.io/badge/Version-0.3.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.3.6](https://img.shields.io/badge/Version-0.3.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Helm chart deploying Layr-Labs eigenda-proxy
 
@@ -40,8 +40,8 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.eth.serviceManagerAddr | string | `"0xD4A7E1Bd8015057293f0D0A557088c286942e84b"` |  |
 | config.maxBlobLength | string | `"32MiB"` |  |
 | config.privateKey.value | string | `""` |  |
-| config.s3.accessKeyId | string | `""` |  |
-| config.s3.accessKeySecret | string | `""` |  |
+| config.s3.accessKeyId.value | string | `""` |  |
+| config.s3.accessKeySecret.value | string | `""` |  |
 | config.s3.backup | string | `nil` |  |
 | config.s3.bucket | string | `""` |  |
 | config.s3.credentialType | string | `""` |  |

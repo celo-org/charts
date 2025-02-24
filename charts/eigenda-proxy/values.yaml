@@ -150,8 +150,14 @@ config:
     endpoint: ""
     enableTls: null
     credentialType: ""
-    accessKeyId: ""
-    accessKeySecret: ""
+    accessKeyId:
+      value: ""
+      # secretName: test
+      # secretKey: test
+    accessKeySecret:
+      value: ""
+      # secretName: test
+      # secretKey: test
     path: ""
   bigKZGFiles: false
   maxBlobLength: 32MiB
