@@ -5,10 +5,10 @@ init:
   contracts:
     enabled: true
     urls:
-      deployment-l1.json: https://storage.googleapis.com/cel2-rollup-files/eigenda/deployment-l1.json
-      rollup.json: https://storage.googleapis.com/cel2-rollup-files/eigenda/rollup.json
-      genesis.json: https://storage.googleapis.com/cel2-rollup-files/eigenda/genesis.json
-      prestate.json: https://storage.googleapis.com/cel2-rollup-files/eigenda/prestate.json
+      deployment-l1.json: https://storage.googleapis.com/cel2-rollup-files/baklava/deployment-l1.json
+      rollup.json: https://storage.googleapis.com/cel2-rollup-files/baklava/rollup.json
+      genesis.json: https://storage.googleapis.com/cel2-rollup-files/baklava/genesis.json
+      prestate.bin.gz: https://storage.googleapis.com/cel2-rollup-files/baklava/prestate.bin.gz
 secrets:
   # Private Key for the proposer. Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   privateKey:
