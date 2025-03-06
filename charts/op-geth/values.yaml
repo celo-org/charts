@@ -145,6 +145,7 @@ services:
     port: 30303
     annotations: {}
     publishNotReadyAddresses: true
+    skipUDPService: false
 ingress:
   http:
     enabled: false
