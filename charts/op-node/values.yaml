@@ -70,6 +70,7 @@ services:
     # nodePort: 9222
     annotations: {}
     publishNotReadyAddresses: true
+    skipUDPService: false
   rpc:
     sharedServiceEnabled: true
     individualServiceEnabled: true
