@@ -1,6 +1,6 @@
 # accounts-exporter
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Exports ethereum wallet balances to Prometheus.
 
@@ -23,7 +23,9 @@ Exports ethereum wallet balances to Prometheus.
 | addressess | string | `""` | Adresses to get balance for. As a string, one address per line, in the format <NAME>:<PUBLIC_ADDRESS> (reported as labels "name" and "address") |
 | affinity | object | `{}` | Kubernetes pod affinity |
 | fullnameOverride | string | `""` | Chart full name override |
-| geth.url | string | `"https://rpc2.sepolia.org"` | Provider RPC endpoint to read balances from |
+| geth.secretKey | string | `""` | Secret key containing the Provider RPC endpoint to read balances from |
+| geth.secretName | string | `""` | Secret name containing the Provider RPC endpoint to read balances from |
+| geth.url | string | `""` | Provider RPC endpoint to read balances from |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/ethexporter"` | Image repository |
 | image.tag | string | `"0.1.0"` | Image tag Overrides the image tag whose default is the chart appVersion. |
