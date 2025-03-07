@@ -33,9 +33,19 @@ spec:
             name: {{ include "accounts-exporter.fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
+          {{- if or .Values.geth.url (and .Values.geth.secretName .Values.geth.secretKey ) }}
           env:
+          {{- if .Values.geth.url }}
           - name: GETH
             value: {{ .Values.geth.url }}
+          {{- else if and .Values.geth.secretName .Values.geth.secretKey }}
+          - name: GETH
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.geth.secretName }}
+                key: {{ .Values.geth.secretKey }}
+          {{- end }}
+          {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"

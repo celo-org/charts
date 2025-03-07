@@ -12,7 +12,11 @@ replicaCount: 1
 
 geth:
   # -- Provider RPC endpoint to read balances from
-  url: "https://rpc2.sepolia.org"
+  url: ""
+  # -- Secret name containing the Provider RPC endpoint to read balances from
+  secretName: ""
+  # -- Secret key containing the Provider RPC endpoint to read balances from
+  secretKey: ""
 
 # -- Adresses to get balance for. As a string, one address per line, in the format <NAME>:<PUBLIC_ADDRESS> (reported as labels "name" and "address")
 addressess: ""
