@@ -160,6 +160,9 @@ nodeSelector: {}
 # -- Kubernetes tolerations
 tolerations: []
 
+# -- Kubernetes enableServiceLinks
+enableServiceLinks: false
+
 # -- Kubernetes pod affinity
 affinity: {}
 
