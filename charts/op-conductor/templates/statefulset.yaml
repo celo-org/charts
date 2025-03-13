@@ -71,7 +71,8 @@ spec:
               bootstrap_flag="--raft.bootstrap=true"
           fi
           exec /usr/local/bin/op-conductor \
-            --consensus.addr=$(cat $datadir/advertiseIP) \
+            --consensus.addr=$POD_IP \
+            --consensus.advertise=$(cat $datadir/advertiseIP) \
             --consensus.port={{ .Values.config.consensus.port }} \
             --execution.rpc=$(cat $datadir/executionUrl) \
             --node.rpc=$(cat $datadir/nodeUrl) \
@@ -114,6 +115,12 @@ spec:
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
         ports:
         - containerPort: {{ .Values.config.rpc.port }}
           name: rpc
