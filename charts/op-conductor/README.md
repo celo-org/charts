@@ -45,6 +45,7 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | config.node.protocol | string | `""` |  |
 | config.node.rpc | string | `"http://op-node:8547"` |  |
 | config.paused | bool | `false` |  |
+| config.raft.server.id | string | `""` |  |
 | config.rpc.addr | string | `"0.0.0.0"` |  |
 | config.rpc.enableAdmin | bool | `false` |  |
 | config.rpc.enableProxy | bool | `true` |  |
