@@ -1,6 +1,6 @@
 # op-conductor
 
-![Version: 0.0.8](https://img.shields.io/badge/Version-0.0.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
+![Version: 0.0.9](https://img.shields.io/badge/Version-0.0.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
 
 Helm chart deploying OP Conductor, a HA controller for op-node
 
@@ -51,7 +51,7 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | config.rpc.port | int | `8545` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-conductor"` |  |
-| image.tag | string | `"ea8d7ce5425edb3d1adcf0a8bb2a98fcdb21b3e0"` |  |
+| image.tag | string | `"c3afe7339063fd6912703ca0cd2490582da1f3c4"` |  |
 | init.image.pullPolicy | string | `"IfNotPresent"` |  |
 | init.image.repository | string | `"alpine"` |  |
 | init.image.tag | float | `3.19` |  |
