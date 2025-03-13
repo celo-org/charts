@@ -40,6 +40,9 @@ config:
     enableProxy: true
     addr: 0.0.0.0
     port: 8545
+  raft:
+    server:
+      id: ""
   healthcheck:
     interval: 10
     minPeerCount: 1

@@ -72,7 +72,7 @@ spec:
           fi
           exec /usr/local/bin/op-conductor \
             --consensus.addr=$POD_IP \
-            --consensus.advertise=$(cat $datadir/advertiseIP) \
+            --consensus.advertise=$(cat $datadir/advertiseIP):{{ .Values.config.consensus.port }} \
             --consensus.port={{ .Values.config.consensus.port }} \
             --execution.rpc=$(cat $datadir/executionUrl) \
             --node.rpc=$(cat $datadir/nodeUrl) \
@@ -86,7 +86,11 @@ spec:
             --rpc.enable-proxy \
             {{- end }}
             $bootstrap_flag \
+            {{- if .Values.config.raft.server.id }}
+            --raft.server.id={{ .Values.config.raft.server.id }} \
+            {{- else }}
             --raft.server.id=$RID \
+            {{- end }}
             --raft.storage.dir={{ .Values.persistence.mountPath }} \
             --healthcheck.interval={{ .Values.config.healthcheck.interval }} \
             --healthcheck.min-peer-count={{ .Values.config.healthcheck.minPeerCount }} \
