@@ -1,0 +1,21 @@
+---
+apiVersion: v2
+appVersion: "0.1.0"
+name: etherscan-exporter
+description: A Helm chart for etherscan-exporter
+type: application
+home: https://celo.org
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+version: 0.1.0
+sources:
+  - https://celo.org
+  - https://clabs.co
+  - https://github.com/celo-org
+  - https://etherscan.io
+keywords:
+  - Etherscan
+  - Celo
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
