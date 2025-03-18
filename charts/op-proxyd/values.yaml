@@ -190,3 +190,6 @@ tolerations: []
 
 # -- Kubernetes pod affinity
 affinity: {}
+
+# -- Kubernetes upgrade strategy
+strategy: {}
