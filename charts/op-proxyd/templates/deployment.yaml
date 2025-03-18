@@ -8,6 +8,9 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  {{- with .Values.strategy }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "op-proxyd.selectorLabels" . | nindent 6 }}
