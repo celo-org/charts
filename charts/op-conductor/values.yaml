@@ -1,5 +1,6 @@
 ---
 replicaCount: 1
+podManagementPolicy: Parallel
 
 init:
   image:
