@@ -63,6 +63,7 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | persistence.pvc.size | string | `"1Gi"` |  |
 | persistence.pvc.storageClass | string | `""` |  |
 | persistence.type | string | `"pvc"` |  |
+| podManagementPolicy | string | `"Parallel"` |  |
 | podSecurityContext | object | `{}` |  |
 | replicaCount | int | `1` |  |
 | services.consensus.annotations | object | `{}` |  |
