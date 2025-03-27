@@ -72,7 +72,7 @@ spec:
           fi
           exec /usr/local/bin/op-conductor \
             --consensus.addr=$POD_IP \
-            --consensus.advertise=$(cat $datadir/advertiseIP):{{ .Values.config.consensus.port }} \
+            --consensus.advertised=$(cat $datadir/advertiseIP):{{ .Values.config.consensus.port }} \
             --consensus.port={{ .Values.config.consensus.port }} \
             --execution.rpc=$(cat $datadir/executionUrl) \
             --node.rpc=$(cat $datadir/nodeUrl) \
