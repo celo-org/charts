@@ -109,6 +109,15 @@ spec:
             --rollup-rpc={{ .Values.config.rollupRpc }} \
             $contractFlag \
             --l1-eth-rpc=$L1_URL \
+            {{- range $key, $value := .Values.config.txmgr }}
+            {{- if kindIs "string" $value }}
+            {{- if ne $value "" }}
+            --txmgr.{{ $key | snakecase | replace "_" "-" }}={{ $value }} \
+            {{- end }}
+            {{- else }}
+            --txmgr.{{ $key | snakecase | replace "_" "-" }}={{ default 0 $value }} \
+            {{- end }}
+            {{- end }}
             --num-confirmations={{ .Values.config.numConfirmations }} \
             {{- if .Values.config.metrics.enabled }}
             --metrics.enabled \
