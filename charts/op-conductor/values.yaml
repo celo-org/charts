@@ -1,5 +1,6 @@
 ---
 replicaCount: 1
+podManagementPolicy: Parallel
 
 init:
   image:
@@ -11,7 +12,7 @@ init:
 
 image:
   repository: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-conductor
-  tag: ea8d7ce5425edb3d1adcf0a8bb2a98fcdb21b3e0
+  tag: c3afe7339063fd6912703ca0cd2490582da1f3c4
   pullPolicy: IfNotPresent
 
 updateStrategy:
@@ -40,6 +41,9 @@ config:
     enableProxy: true
     addr: 0.0.0.0
     port: 8545
+  raft:
+    server:
+      id: ""
   healthcheck:
     interval: 10
     minPeerCount: 1

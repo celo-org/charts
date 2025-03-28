@@ -9,6 +9,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  podManagementPolicy: {{ .Values.podManagementPolicy }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -71,7 +72,8 @@ spec:
               bootstrap_flag="--raft.bootstrap=true"
           fi
           exec /usr/local/bin/op-conductor \
-            --consensus.addr=$(cat $datadir/advertiseIP) \
+            --consensus.addr=$POD_IP \
+            --consensus.advertised=$(cat $datadir/advertiseIP):{{ .Values.config.consensus.port }} \
             --consensus.port={{ .Values.config.consensus.port }} \
             --execution.rpc=$(cat $datadir/executionUrl) \
             --node.rpc=$(cat $datadir/nodeUrl) \
@@ -85,7 +87,11 @@ spec:
             --rpc.enable-proxy \
             {{- end }}
             $bootstrap_flag \
+            {{- if .Values.config.raft.server.id }}
+            --raft.server.id={{ .Values.config.raft.server.id }} \
+            {{- else }}
             --raft.server.id=$RID \
+            {{- end }}
             --raft.storage.dir={{ .Values.persistence.mountPath }} \
             --healthcheck.interval={{ .Values.config.healthcheck.interval }} \
             --healthcheck.min-peer-count={{ .Values.config.healthcheck.minPeerCount }} \
@@ -114,6 +120,12 @@ spec:
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
         ports:
         - containerPort: {{ .Values.config.rpc.port }}
           name: rpc
