@@ -169,13 +169,13 @@ spec:
             $sequencerFlag \
             $stoppedFlag \
             {{- if .Values.config.sequencer.enabled }}
-            {{- if kindIs "int" .Values.config.sequencer.l1Confs }}
+            {{- if .Values.config.sequencer.l1Confs }}
             --sequencer.l1-confs={{ int .Values.config.sequencer.l1Confs }} \
             {{- end }}
             {{- if .Values.config.sequencer.useFinalized }}
             --sequencer.use-finalized \
             {{- end }}
-            {{- if kindIs "int" .Values.config.sequencer.maxSafeLag }}
+            {{- if .Values.config.sequencer.maxSafeLag }}
             --sequencer.max-safe-lag={{ int .Values.config.sequencer.maxSafeLag }} \
             {{- end }}
             {{- if .Values.config.conductor.enabled }}

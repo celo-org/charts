@@ -3,7 +3,7 @@ apiVersion: v2
 name: op-challenger
 description: A Helm chart for Fault Proof Monitoring
 type: application
-version: 0.1.8
+version: 0.1.9
 appVersion: "main"
 maintainers:
   - name: cLabs

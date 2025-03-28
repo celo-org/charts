@@ -153,6 +153,10 @@ config:
   rollupRpc: http://localhost:8547                                           # HTTP provider URL for the rollup node. A comma-separated list for multiple providers
   activeSecuencerCheckDuration: 2m0s                                         # How frequently to check if the sequencer is active (if multiple provided)
   numConfirmations: 5                                                        # Number of confirmations to wait for a L1 transaction
+  txmgr:
+    feeLimitThreshold: ""                                                    # The minimum threshold (in GWei) at which fee bumping starts to be capped
+    minBasefee: ""                                                           # Enforces a minimum base fee (in GWei) to assume when determining tx fees. Off by default
+    minTipCap: ""                                                            # Enforces a minimum tip cap (in GWei) to assume when determining tx fees. Off by default
   logs:
     level: info                                                              # Log level
     format: json                                                             # Log format

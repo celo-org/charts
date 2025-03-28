@@ -34,6 +34,8 @@ config:
   gameWindow: 672h0m0s
   monitorInterval: 30s
   maxConcurrency: 5
+  txmgr:
+    minTipCap: ""                        # Enforces a minimum tip cap (in GWei) to assume when determining tx fees. Off by default
   honestActors: []
     # - "0x0000000000000000000000000000000000000000"
     # - "0x0000000000000000000000000000000000000001"

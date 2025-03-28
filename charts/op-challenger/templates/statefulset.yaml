@@ -90,6 +90,15 @@ spec:
                 {{- if .Values.config.selectiveClaimResolution }}
                 --selective-claim-resolution \
                 {{- end }}
+                {{- range $key, $value := .Values.config.txmgr }}
+                {{- if kindIs "string" $value }}
+                {{- if ne $value "" }}
+                --txmgr.{{ $key | snakecase | replace "_" "-" }}={{ $value }} \
+                {{- end }}
+                {{- else }}
+                --txmgr.{{ $key | snakecase | replace "_" "-" }}={{ default 0 $value }} \
+                {{- end }}
+                {{- end }}
                 {{- if .Values.config.signer.enabled }}
                 --signer.address={{ .Values.config.signer.address }} \
                 --signer.endpoint={{ .Values.config.signer.endpoint }} \
