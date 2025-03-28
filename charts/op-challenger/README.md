@@ -1,6 +1,6 @@
 # op-challenger
 
-![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
+![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
 
 A Helm chart for Fault Proof Monitoring
 
@@ -50,6 +50,7 @@ A Helm chart for Fault Proof Monitoring
 | config.signer.tls.externalSecret.tlsSecretKeyKey | string | `"key.pem"` | Secret key for the TLS key |
 | config.signer.tls.externalSecret.tlsSecretName | string | `"test-secret"` | Secret name for the secret containing an already created TLS certificate |
 | config.traceType | string | `"permissioned,cannon"` |  |
+| config.txmgr.minTipCap | string | `""` |  |
 | enableServiceLinks | bool | `false` | Kubernetes enableServiceLinks |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` | Chart full name override |

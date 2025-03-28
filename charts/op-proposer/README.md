@@ -1,6 +1,6 @@
 # op-proposer
 
-![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-proposer client (Optimism Rollup)
 
@@ -55,6 +55,9 @@ Celo implementation for op-proposer client (Optimism Rollup)
 | config.signer.tls.externalSecret.tlsSecretCertKey | string | `"certificate.pem"` | Secret key for the TLS certificate |
 | config.signer.tls.externalSecret.tlsSecretKeyKey | string | `"key.pem"` | Secret key for the TLS key |
 | config.signer.tls.externalSecret.tlsSecretName | string | `"test-secret"` | Secret name for the secret containing an already created TLS certificate |
+| config.txmgr.feeLimitThreshold | string | `""` |  |
+| config.txmgr.minBasefee | string | `""` |  |
+| config.txmgr.minTipCap | string | `""` |  |
 | config.useFaultProofs | bool | `false` |  |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
