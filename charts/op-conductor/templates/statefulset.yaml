@@ -80,9 +80,13 @@ spec:
 
           bootstrap_flag="--raft.bootstrap=false"
           # Check if we need to bootstrap the raft cluster
+          {{- if .Values.config.raft.forceBootstrap }}
+          bootstrap_flag="--raft.bootstrap=true"
+          {{- else }}
           if [ ! -d $datadir/$RID ] && [ "$RID" -eq 2 ]; then
               bootstrap_flag="--raft.bootstrap=true"
           fi
+          {{- end }}
           exec /usr/local/bin/op-conductor \
             --consensus.addr=$POD_IP \
             --consensus.advertised=$(cat $datadir/advertiseIP):{{ .Values.config.consensus.port }} \
