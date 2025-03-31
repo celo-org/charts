@@ -1,6 +1,9 @@
 ---
 replicaCount: 1
 podManagementPolicy: Parallel
+nodeSelector: {}
+affinity: {}
+tolerations: []
 
 init:
   image:

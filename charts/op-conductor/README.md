@@ -1,6 +1,6 @@
 # op-conductor
 
-![Version: 0.0.9](https://img.shields.io/badge/Version-0.0.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
 
 Helm chart deploying OP Conductor, a HA controller for op-node
 
@@ -24,6 +24,7 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| affinity | object | `{}` |  |
 | config.consensus.port | int | `50050` |  |
 | config.execution.namePattern | string | `""` |  |
 | config.execution.port | string | `""` |  |
@@ -57,6 +58,7 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | init.image.repository | string | `"alpine"` |  |
 | init.image.tag | float | `3.19` |  |
 | init.rollup.url | string | `"https://storage.googleapis.com/cel2-rollup-files/dango/rollup.json"` |  |
+| nodeSelector | object | `{}` |  |
 | persistence.mountPath | string | `"/raft"` |  |
 | persistence.pvc.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.pvc.annotations | string | `nil` |  |
@@ -80,6 +82,7 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | services.rpc.type | string | `"ClusterIP"` |  |
 | statefulset.annotations | object | `{}` |  |
 | statefulset.podAnnotations | object | `{}` |  |
+| tolerations | list | `[]` |  |
 | updateStrategy.type | string | `"RollingUpdate"` |  |
 
 ----------------------------------------------
