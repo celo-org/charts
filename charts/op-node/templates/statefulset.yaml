@@ -217,14 +217,14 @@ spec:
             {{- with .Values.config.p2p.peerStorePath }}
             --p2p.peerstore.path={{ . | quote }} \
             {{- end }}
-            {{- with .Values.config.p2p.peers.grace }}
-            --p2p.peers.grace={{ . }} \
+            {{- if .Values.config.p2p.peers.grace }}
+            --p2p.peers.grace={{ .Values.config.p2p.peers.grace }} \
             {{- end }}
             {{- if .Values.config.p2p.peers.hi }}
-            --p2p.peers.hi={{ . }} \
+            --p2p.peers.hi={{ .Values.config.p2p.peers.hi }} \
             {{- end }}
             {{- if .Values.config.p2p.peers.lo }}
-            --p2p.peers.lo={{ . }} \
+            --p2p.peers.lo={{ .Values.config.p2p.peers.lo }} \
             {{- end }}
             --p2p.priv.path=$datadir/opnode_p2p_priv.txt \
             --log.level={{ .Values.config.log.level }} \
