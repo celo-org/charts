@@ -274,6 +274,10 @@ config:
     keys: ""                           # comma separated list of keys to use for p2p
     discoveryPath: ""                  # path to store p2p discovery data
     peerStorePath: ""                  # path to store p2p peer data
+    peers: {}
+      # grace: 30s
+      # hi: 400
+      # lo: 200
     sequencer:
       key: ""                            # sequencer key
 
