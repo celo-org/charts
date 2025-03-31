@@ -1,6 +1,6 @@
 # op-conductor
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
 
 Helm chart deploying OP Conductor, a HA controller for op-node
 
@@ -46,6 +46,7 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | config.node.protocol | string | `""` |  |
 | config.node.rpc | string | `"http://op-node:8547"` |  |
 | config.paused | bool | `false` |  |
+| config.raft.forceBootstrap | bool | `false` |  |
 | config.raft.server.id | string | `""` |  |
 | config.rpc.addr | string | `"0.0.0.0"` |  |
 | config.rpc.enableAdmin | bool | `false` |  |
