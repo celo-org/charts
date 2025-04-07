@@ -130,7 +130,10 @@ spec:
             - "--datadir=/data"
             - "--rpc-host={{ .Values.rpc.host }}"
             - "--rpc-port={{ .Values.rpc.port }}"
-            - "--accept-terms-of-use"
+            - "--accept-terms-of-use" 
+          {{- if .Values.minSyncPeers }}
+            - "--min-sync-peers={{ .Values.minSyncPeers }}"
+          {{- end }}
             - "--config-file=/config/config.yaml"
             - "--jwt-secret=/secret/jwtsecret"
           {{- if .Values.httpMevRelay }}
@@ -160,12 +163,10 @@ spec:
 
           {{- if .Values.checkpointSyncUrl }}
             - "--checkpoint-sync-url={{ .Values.checkpointSyncUrl }}"
-            - "--genesis-beacon-api-url={{ .Values.checkpointSyncUrl }}"
           {{- end}}
-
-          {{- range .Values.extraFlags }}
-            - {{ . | quote }}
-          {{- end }}
+          {{- if .Values.genesisBeaconApiUrl }}
+            - "--genesis-beacon-api-url={{ .Values.genesisBeaconApiUrl }}"
+          {{- end}}
 
           {{- if .Values.metrics.enabled }}
             - "--monitoring-port={{ .Values.metrics.port }}"
@@ -179,6 +180,9 @@ spec:
             - "--grpc-gateway-port={{ .Values.http.port }}"
           {{- else }}
             - "--disable-grpc-gateway"
+          {{- end }}
+          {{- range .Values.extraFlags }}
+            - {{ . }}
           {{- end }}
           env:
             - name: POD_IP
