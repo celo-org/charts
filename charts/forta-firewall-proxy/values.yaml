@@ -13,12 +13,12 @@ replicaCount: 1
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
   # -- Image repository
-  repository: us-west1-docker.pkg.dev/devopsre/dev-images/generic-op-txproxy
+  repository: us-west1-docker.pkg.dev/devopsre/forta-firewall-op-txproxy/forta-firewall-op-txproxy
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "test"
+  tag: "v0.0.1"
 
 # -- Image pull secrets
 imagePullSecrets: []
