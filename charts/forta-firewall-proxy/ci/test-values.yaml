@@ -1,21 +1,4 @@
 ---
-nameOverride: ""
-fullnameOverride: ""
-
-replicaCount: 1
-
-image:
-  repository: us-west1-docker.pkg.dev/devopsre/social-connect/odis-signer
-  pullPolicy: Always
-  tag: "odis-signer-3.1.2"
-
-imagePullSecrets: []
-
-serviceAccount:
-  create: true
-  annotations: {}
-  name: ""
-
 env:
   OP_TXPROXY_SENDRAWTX_BACKEND: "http://op-geth-replica-rpc-0:8545"
   OP_TXPROXY_TRACE_BACKEND: "http://op-geth-forno-snapsync-rpc-0:8545"
