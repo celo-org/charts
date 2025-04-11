@@ -1,8 +1,8 @@
 ---
 env:
-  OP_TXPROXY_SENDRAWTX_BACKEND: "http://op-geth-replica-rpc-0:8545"
-  OP_TXPROXY_TRACE_BACKEND: "http://op-geth-forno-snapsync-rpc-0:8545"
-  OP_TXPROXY_FIREWALL_BACKEND: "https://attester-api.forta.network/screen"
+  OP_TXPROXY_SENDRAWTX_BACKEND: "https://sequencer.baklava.celo-testnet.org"
+  OP_TXPROXY_TRACE_BACKEND: "https://baklava-forno.celo-testnet.org"
+  OP_TXPROXY_FIREWALL_BACKEND: ""
   OP_TXPROXY_FIREWALL_MODE: "forward_all"
   OP_TXPROXY_CHAIN_ID: "62320"
   OP_TXPROXY_LOG_LEVEL: "debug"
