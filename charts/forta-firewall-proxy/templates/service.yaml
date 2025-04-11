@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "forta-firewall-proxy.fullname" . }}
+  labels:
+    {{- include "forta-firewall-proxy.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ include "forta-firewall-proxy.rpcPort" . }}
+      targetPort: rpc
+      protocol: TCP
+      name: rpc
+  selector:
+    {{- include "forta-firewall-proxy.selectorLabels" . | nindent 4 }}
