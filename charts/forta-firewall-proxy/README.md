@@ -22,8 +22,8 @@ A Helm chart for Kubernetes
 | env | object | `{}` | Env Vars. for the pod. |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/generic-op-txproxy"` | Image repository |
-| image.tag | string | `"test"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/forta-firewall-op-txproxy/forta-firewall-op-txproxy"` | Image repository |
+| image.tag | string | `"v0.0.1"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `"nginx"` | Ingress class name |
