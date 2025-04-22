@@ -48,6 +48,9 @@ Selector labels
 {{- define "op-conductor.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "op-conductor.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- with .Values.statefulset.labels }}
+{{- toYaml . }}
+{{- end }}
 {{- end }}
 
 {{/*
