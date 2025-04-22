@@ -24,6 +24,7 @@ updateStrategy:
 statefulset:
   annotations: {}
   podAnnotations: {}
+  labels: {}
 
 config:
   execution:
