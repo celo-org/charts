@@ -58,6 +58,9 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels
 */}}
 {{- define "op-node.selectorLabels" -}}
+{{- with .Values.statefulset.labels }}
+{{- toYaml . }}
+{{- end }}
 app.kubernetes.io/name: {{ include "op-node.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

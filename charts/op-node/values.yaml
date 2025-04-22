@@ -28,6 +28,8 @@ statefulset:
   annotations: {}
   # Annotations to add to the pod template
   podAnnotations: {}
+  # Labels to add to the statefulset, pods
+  labels: {}
 
 terminationGracePeriodSeconds: 300
 
