@@ -192,7 +192,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | syncToS3.cronjob.enabled | bool | `false` |  |
 | syncToS3.cronjob.image.pullPolicy | string | `"IfNotPresent"` |  |
 | syncToS3.cronjob.image.repository | string | `"dysnix/kubectl"` |  |
-| syncToS3.cronjob.image.tag | string | `"v1.29"` |  |
+| syncToS3.cronjob.image.tag | string | `"v1.31"` |  |
 | syncToS3.cronjob.schedule | string | `"0 2 * * *"` |  |
 | syncToS3.enabled | bool | `false` |  |
 | terminationGracePeriodSeconds | int | `300` |  |
