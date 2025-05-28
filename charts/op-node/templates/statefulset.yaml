@@ -142,6 +142,9 @@ spec:
             --l1=$L1_URL \
             --l1.trustrpc={{ .Values.config.l1.trustrpc }} \
             --l1.rpckind={{ .Values.config.l1.rpckind }} \
+            {{- if .Values.config.l1.runtimeConfigReloadInterval }}
+            --l1.runtime-config-reload-interval={{ .Values.config.l1.runtimeConfigReloadInterval }} \
+            {{- end }}
             --l2=$(cat $datadir/l2Url) \
             --l2.jwt-secret=$datadir/jwt.hex \
             --rpc.addr=0.0.0.0 \

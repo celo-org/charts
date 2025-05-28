@@ -1,6 +1,6 @@
 # prysm
 
-![Version: 5.2.2](https://img.shields.io/badge/Version-5.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v5.2.0](https://img.shields.io/badge/AppVersion-v5.2.0-informational?style=flat-square)
+![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v6.0.0](https://img.shields.io/badge/AppVersion-v6.0.0-informational?style=flat-square)
 
 Go implementation of Ethereum proof of stake.
 Initially based on [stakewise/helm-charts/prysm](https://github.com/stakewise/helm-charts/tree/main/charts/prysm).
@@ -53,7 +53,7 @@ Kubernetes: `^1.18.0-0`
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"gcr.io"` |  |
 | image.repository | string | `"prysmaticlabs/prysm/beacon-chain"` |  |
-| image.tag | string | `"v5.2.0"` |  |
+| image.tag | string | `"v6.0.0"` |  |
 | imageGnosis.pullPolicy | string | `"IfNotPresent"` |  |
 | imageGnosis.registry | string | `"ghcr.io"` |  |
 | imageGnosis.repository | string | `"gnosischain/gbc-prysm-beacon-chain"` |  |

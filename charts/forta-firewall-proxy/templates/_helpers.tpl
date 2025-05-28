@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "op-conductor.name" -}}
+{{- define "forta-firewall-proxy.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "op-conductor.fullname" -}}
+{{- define "forta-firewall-proxy.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "op-conductor.chart" -}}
+{{- define "forta-firewall-proxy.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "op-conductor.labels" -}}
-helm.sh/chart: {{ include "op-conductor.chart" . }}
-{{ include "op-conductor.selectorLabels" . }}
+{{- define "forta-firewall-proxy.labels" -}}
+helm.sh/chart: {{ include "forta-firewall-proxy.chart" . }}
+{{ include "forta-firewall-proxy.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,21 +45,40 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "op-conductor.selectorLabels" -}}
-{{- with .Values.statefulset.labels }}
-{{- toYaml . }}
-{{- end }}
-app.kubernetes.io/name: {{ include "op-conductor.name" . }}
+{{- define "forta-firewall-proxy.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "forta-firewall-proxy.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "op-conductor.serviceAccountName" -}}
+{{- define "forta-firewall-proxy.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "op-conductor.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "forta-firewall-proxy.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create the http port to use
+*/}}
+{{- define "forta-firewall-proxy.rpcPort" -}}
+{{- if .Values.service.rpcPort }}
+{{- .Values.service.rpcPort }}
+{{- else }}
+8545
+{{- end }}
+{{- end }}
+
+{{/*
+Create the metrics port to use
+*/}}
+{{- define "forta-firewall-proxy.metricsPort" -}}
+{{- if .Values.service.metricsPort }}
+{{- .Values.service.metricsPort }}
+{{- else }}
+7300
 {{- end }}
 {{- end }}
