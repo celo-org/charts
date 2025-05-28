@@ -1,6 +1,6 @@
 # op-node
 
-![Version: 0.4.15](https://img.shields.io/badge/Version-0.4.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.16](https://img.shields.io/badge/Version-0.4.16-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-node consensus engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree/main/dysnix/op-node).
@@ -40,6 +40,7 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | config.enableAdmin | bool | `false` |  |
 | config.jwt | string | `""` |  |
 | config.l1.rpckind | string | `"any"` |  |
+| config.l1.runtimeConfigReloadInterval | string | `"10m0s"` |  |
 | config.l1.trustrpc | bool | `false` |  |
 | config.l2.namePattern | string | `""` |  |
 | config.l2.port | string | `""` |  |
