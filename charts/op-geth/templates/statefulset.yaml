@@ -285,6 +285,9 @@ spec:
         env:
         - name: GETH_DATADIR
           value: {{ .Values.config.datadir }}
+        {{-  with .Values.extraEnv }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         ports:
         - name: http
           containerPort: {{ .Values.config.http.port }}
