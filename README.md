@@ -75,8 +75,8 @@ This repo uses GitHub Actions to automatically perform the following:
 
 ### Technologies
 
-- For checking the `Chart.yaml` version, linting, installing/deleting and testing a chart the [chart-testing Action](https://github.com/helm/chart-testing-action) is used (based on the [helm/chart-testing](https://github.com/helm/chart-testing) CLI tool).
-- For spinning a Kind cluster the [Kind Action](https://github.com/helm/kind-action) is used (based on [kind tool](https://kind.sigs.k8s.io/)).
+- For checking the `Chart.yaml` version, linting, installing/deleting, and testing a chart, the [chart-testing Action](https://github.com/helm/chart-testing-action) is used (based on the [helm/chart-testing](https://github.com/helm/chart-testing) CLI tool).
+- For spinning a Kind cluster, the [Kind Action](https://github.com/helm/kind-action) is used (based on [kind tool](https://kind.sigs.k8s.io/)).
 - For autogenerating the chart README, a custom workflow based on [helm-docs](https://github.com/norwoodj/helm-docs) is used.
 - For publishing a new chart release to Artifact Registry (project `devops`, URL `oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci`), a custom workflow is used.
 
