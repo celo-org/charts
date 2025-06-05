@@ -99,6 +99,11 @@ spec:
                 --txmgr.{{ $key | snakecase | replace "_" "-" }}={{ default 0 $value }} \
                 {{- end }}
                 {{- end }}
+                {{- if .Values.config.metrics.enabled }}
+                --metrics.enabled \
+                --metrics.addr=0.0.0.0 \
+                --metrics.port={{ .Values.config.metrics.port }} \
+                {{- end }}
                 {{- if .Values.config.signer.enabled }}
                 --signer.address={{ .Values.config.signer.address }} \
                 --signer.endpoint={{ .Values.config.signer.endpoint }} \
