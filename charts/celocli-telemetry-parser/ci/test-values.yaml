@@ -1,0 +1,3 @@
+---
+env:
+  POSTHOG_API_KEY: "celocli-telemetry-parser"
