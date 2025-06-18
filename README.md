@@ -17,6 +17,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [cel2-migration-tool](./charts/cel2-migration-tool/README.md) - Node migration tool for Cel2 network
 - [celo-fullnode](./charts/celo-fullnode/README.md) - Helm chart for deploying a Celo fullnode. More info at https://docs.celo.org
 - [celo-fullnode-backups](./charts/celo-fullnode-backups/README.md) - Automate celo-blockchain chain backups using PVC snapshots
+- [celocli-telemetry-parser](./charts/celocli-telemetry-parser/README.md) - A Helm chart for Kubernetes
 - [clean-pvcs](./charts/clean-pvcs/README.md) - Delete PVCs not mounted for some time
 - [common](./charts/common/README.md) - Helm chart with helper templates and functions for Celo nodes. Import into your chart with `dependencies` and use the templates and functions
 - [daily-chain-backup](./charts/daily-chain-backup/README.md) - A Helm chart for deploying cron job to periodically run chain backups and upload to GCS
