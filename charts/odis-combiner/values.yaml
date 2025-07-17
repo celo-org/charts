@@ -110,6 +110,9 @@ env:
 
 # -- Custom pod annotations
 podAnnotations: {}
+  # prometheus.io/path: /metrics
+  # prometheus.io/port: ""8081
+  # prometheus.io/scrape: "true"
 
 # -- Custom pod security context
 podSecurityContext: {}

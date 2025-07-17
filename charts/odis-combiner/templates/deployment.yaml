@@ -17,9 +17,6 @@ spec:
     metadata:
       annotations:
         clabs.co/images: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        prometheus.io/path: /metrics
-        prometheus.io/port: {{ include "odis-combiner.port" . | quote }}
-        prometheus.io/scrape: "true"
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
