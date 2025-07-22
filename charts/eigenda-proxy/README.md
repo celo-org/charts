@@ -1,6 +1,6 @@
 # eigenda-proxy
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Helm chart deploying Layr-Labs eigenda-proxy
 
@@ -34,11 +34,12 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | config.bigKZGFiles | bool | `false` |  |
+| config.disableKZGConfig | bool | `true` |  |
 | config.disperser.rpc | string | `"disperser-holesky.eigenda.xyz:443"` |  |
 | config.eth.confirmationDepth | int | `1` |  |
 | config.eth.rpc | string | `"https://ethereum-holesky-rpc.publicnode.com"` |  |
 | config.eth.serviceManagerAddr | string | `"0xD4A7E1Bd8015057293f0D0A557088c286942e84b"` |  |
-| config.maxBlobLength | string | `"32MiB"` |  |
+| config.maxBlobLength | string | `"16MiB"` |  |
 | config.privateKey.value | string | `""` |  |
 | config.s3.accessKeyId.value | string | `""` |  |
 | config.s3.accessKeySecret.value | string | `""` |  |
@@ -67,6 +68,7 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.v2.maxBlobLength | string | `"16MiB"` |  |
 | config.v2.putRetries | int | `3` |  |
 | config.v2.relayTimeout | string | `"10s"` |  |
+| config.v2.serviceManagerAddr | string | `""` |  |
 | config.v2.signerPaymentKeyHex.value | string | `""` |  |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |

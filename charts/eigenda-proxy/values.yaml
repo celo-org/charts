@@ -162,13 +162,15 @@ config:
       # secretKey: test
     path: ""
   bigKZGFiles: false
-  maxBlobLength: 32MiB
+  disableKZGConfig: true
+  maxBlobLength: 16MiB
   v2:
     enabled: false
     blobCertifiedTimeout: 30s
     blobStatusPollInterval: 1s
     blobVersion: 0
     certVerifierAddr: ""
+    serviceManagerAddr: ""
     contractCallTimeout: 10s
     disablePointEvaluation: false
     disableTls: false

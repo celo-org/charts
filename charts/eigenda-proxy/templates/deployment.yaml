@@ -107,8 +107,10 @@ spec:
                 --eigenda.eth-rpc={{ .Values.config.eth.rpc }} \
                 --eigenda.svc-manager-addr={{ .Values.config.eth.serviceManagerAddr }} \
                 --eigenda.status-query-timeout=45m \
+                {{- if not .Values.config.disableKZGConfig }}
                 --eigenda.g1-path=$kzg_folder/g1.point \
                 --eigenda.g2-power-of-2-path=$kzg_folder/g2.point.powerOf2 \
+                {{- end }}
                 --eigenda.max-blob-length={{ .Values.config.maxBlobLength }} \
                 --eigenda.disable-tls=false \
                 {{- if .Values.config.v2.enabled }}
@@ -117,6 +119,9 @@ spec:
                 --eigenda.v2.blob-version={{ .Values.config.v2.blobVersion }} \
                 {{- if .Values.config.v2.certVerifierAddr }}
                 --eigenda.v2.cert-verifier-addr={{ .Values.config.v2.certVerifierAddr }} \
+                {{- end }}
+                {{- if .Values.config.v2.serviceManagerAddr }}
+                --eigenda.v2.service-manager-addr={{ .Values.config.v2.serviceManagerAddr }} \
                 {{- end }}
                 --eigenda.v2.contract-call-timeout={{ .Values.config.v2.contractCallTimeout }} \
                 {{- if .Values.config.v2.disablePointEvaluation }}
