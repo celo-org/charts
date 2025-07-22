@@ -100,6 +100,8 @@ spec:
               exec /app/eigenda-proxy \
                 --addr=0.0.0.0 \
                 --port={{ .Values.services.api.port }} \
+                --storage.backends-to-enable={{ .Values.config.storage.backendsToEnable }} \
+                --storage.dispersal-backend={{ .Values.config.storage.dispersalBackend }} \
                 --eigenda.disperser-rpc={{ .Values.config.disperser.rpc }} \
                 --eigenda.confirmation-depth={{ .Values.config.eth.confirmationDepth }} \
                 --eigenda.eth-rpc={{ .Values.config.eth.rpc }} \
@@ -109,6 +111,31 @@ spec:
                 --eigenda.g2-power-of-2-path=$kzg_folder/g2.point.powerOf2 \
                 --eigenda.max-blob-length={{ .Values.config.maxBlobLength }} \
                 --eigenda.disable-tls=false \
+                {{- if .Values.config.v2.enabled }}
+                --eigenda.v2.blob-certified-timeout={{ .Values.config.v2.blobCertifiedTimeout }} \
+                --eigenda.v2.blob-status-poll-interval={{ .Values.config.v2.blobStatusPollInterval }} \
+                --eigenda.v2.blob-version={{ .Values.config.v2.blobVersion }} \
+                {{- if .Values.config.v2.certVerifierAddr }}
+                --eigenda.v2.cert-verifier-addr={{ .Values.config.v2.certVerifierAddr }} \
+                {{- end }}
+                --eigenda.v2.contract-call-timeout={{ .Values.config.v2.contractCallTimeout }} \
+                {{- if .Values.config.v2.disablePointEvaluation }}
+                --eigenda.v2.disable-point-evaluation \
+                {{- end }}
+                {{- if .Values.config.v2.disableTls }}
+                --eigenda.v2.disable-tls \
+                {{- end }}
+                --eigenda.v2.disperse-blob-timeout={{ .Values.config.v2.disperseBlobTimeout }} \
+                {{- if .Values.config.v2.disperserRpc }}
+                --eigenda.v2.disperser-rpc={{ .Values.config.v2.disperserRpc }} \
+                {{- end }}
+                {{- if .Values.config.v2.ethRpc }}
+                --eigenda.v2.eth-rpc={{ .Values.config.v2.ethRpc }} \
+                {{- end }}
+                --eigenda.v2.max-blob-length={{ .Values.config.v2.maxBlobLength }} \
+                --eigenda.v2.put-retries={{ .Values.config.v2.putRetries }} \
+                --eigenda.v2.relay-timeout={{ .Values.config.v2.relayTimeout }} \
+                {{- end }}
                 {{- if .Values.config.storage.cacheTargets }}
                 --storage.cache-targets={{ .Values.config.storage.cacheTargets }} \
                 {{- end }}
@@ -173,6 +200,19 @@ spec:
                   key: {{ toString .Values.config.s3.accessKeySecret.secretKey }}
             {{- else }}
               value: {{ toString .Values.config.s3.accessKeySecret.value }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.config.v2.enabled }}
+            {{- if or (.Values.config.v2.signerPaymentKeyHex.value) (.Values.config.v2.signerPaymentKeyHex.secretName) }}
+            - name: EIGENDA_PROXY_EIGENDA_V2_SIGNER_PRIVATE_KEY_HEX
+            {{- if .Values.config.v2.signerPaymentKeyHex.secretName }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ toString .Values.config.v2.signerPaymentKeyHex.secretName }}
+                  key: {{ toString .Values.config.v2.signerPaymentKeyHex.secretKey }}
+            {{- else }}
+              value: {{ toString .Values.config.v2.signerPaymentKeyHex.value }}
+            {{- end }}
             {{- end }}
             {{- end }}
 

@@ -6,9 +6,9 @@
 replicaCount: 1
 
 image:
-  repository: us-west1-docker.pkg.dev/devopsre/eigenda-proxy/eigenda-proxy
+  repository: ghcr.io/layr-labs/eigenda-proxy
   pullPolicy: Always
-  tag: latest
+  tag: v1.7.0
 
 imagePullSecrets: []
 nameOverride: ""
@@ -140,6 +140,8 @@ config:
     cacheTargets: ""
     fallbackTargets: ""
     writeOnMiss: false
+    backendsToEnable: V1,V2
+    dispersalBackend: V1
   privateKey:
     value: ""
     # secretName: test
@@ -161,6 +163,25 @@ config:
     path: ""
   bigKZGFiles: false
   maxBlobLength: 32MiB
+  v2:
+    enabled: false
+    blobCertifiedTimeout: 30s
+    blobStatusPollInterval: 1s
+    blobVersion: 0
+    certVerifierAddr: ""
+    contractCallTimeout: 10s
+    disablePointEvaluation: false
+    disableTls: false
+    disperseBlobTimeout: 2m0s
+    disperserRpc: ""
+    ethRpc: ""
+    maxBlobLength: 16MiB
+    putRetries: 3
+    relayTimeout: 10s
+    signerPaymentKeyHex:
+      value: ""
+      # secretName: test
+      # secretKey: test
 
 log:
   level: info
