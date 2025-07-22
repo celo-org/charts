@@ -1,7 +1,7 @@
 ---
 name: eigenda-proxy
 apiVersion: v2
-version: 0.4.1
+version: 0.4.2
 description: Helm chart deploying Layr-Labs eigenda-proxy
 home: https://clabs.co
 sources:
