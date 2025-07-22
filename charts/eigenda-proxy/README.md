@@ -1,6 +1,6 @@
 # eigenda-proxy
 
-![Version: 0.3.6](https://img.shields.io/badge/Version-0.3.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Helm chart deploying Layr-Labs eigenda-proxy
 
@@ -48,14 +48,31 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.s3.enableTls | string | `nil` |  |
 | config.s3.endpoint | string | `""` |  |
 | config.s3.path | string | `""` |  |
+| config.storage.backendsToEnable | string | `"V1,V2"` |  |
 | config.storage.cacheTargets | string | `""` |  |
+| config.storage.dispersalBackend | string | `"V1"` |  |
 | config.storage.fallbackTargets | string | `""` |  |
 | config.storage.writeOnMiss | bool | `false` |  |
+| config.v2.blobCertifiedTimeout | string | `"30s"` |  |
+| config.v2.blobStatusPollInterval | string | `"1s"` |  |
+| config.v2.blobVersion | int | `0` |  |
+| config.v2.certVerifierAddr | string | `""` |  |
+| config.v2.contractCallTimeout | string | `"10s"` |  |
+| config.v2.disablePointEvaluation | bool | `false` |  |
+| config.v2.disableTls | bool | `false` |  |
+| config.v2.disperseBlobTimeout | string | `"2m0s"` |  |
+| config.v2.disperserRpc | string | `""` |  |
+| config.v2.enabled | bool | `false` |  |
+| config.v2.ethRpc | string | `""` |  |
+| config.v2.maxBlobLength | string | `"16MiB"` |  |
+| config.v2.putRetries | int | `3` |  |
+| config.v2.relayTimeout | string | `"10s"` |  |
+| config.v2.signerPaymentKeyHex.value | string | `""` |  |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/eigenda-proxy/eigenda-proxy"` |  |
-| image.tag | string | `"latest"` |  |
+| image.repository | string | `"ghcr.io/layr-labs/eigenda-proxy"` |  |
+| image.tag | string | `"v1.7.0"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |
