@@ -57,6 +57,7 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.v2.blobCertifiedTimeout | string | `"30s"` |  |
 | config.v2.blobStatusPollInterval | string | `"1s"` |  |
 | config.v2.blobVersion | int | `0` |  |
+| config.v2.blsOperatorStateRetrieverAddr | string | `""` |  |
 | config.v2.certVerifierAddr | string | `""` |  |
 | config.v2.contractCallTimeout | string | `"10s"` |  |
 | config.v2.disablePointEvaluation | bool | `false` |  |

@@ -171,6 +171,7 @@ config:
     blobVersion: 0
     certVerifierAddr: ""
     serviceManagerAddr: ""
+    blsOperatorStateRetrieverAddr: ""
     contractCallTimeout: 10s
     disablePointEvaluation: false
     disableTls: false
