@@ -3,14 +3,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "op-proposer.fullname" $ }}-metrics
+  name: {{ include "app.fullname" $ }}-metrics
   {{- with .annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
     service-type: metrics
-    {{- include "op-proposer.labels" $ | nindent 4 }}
+    {{- include "app.labels" $ | nindent 4 }}
 spec:
   type: {{ .type }}
   {{- with .loadBalancerIP }}
@@ -33,6 +33,6 @@ spec:
       port: {{ .port }}
       targetPort: metrics
   selector:
-    {{- include "op-proposer.selectorLabels" $ | nindent 4 }}
+    {{- include "app.selectorLabels" $ | nindent 4 }}
 {{- end }}
 {{- end }}

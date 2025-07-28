@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "op-proposer.fullname" . }}
+  name: {{ include "app.fullname" . }}
   labels:
-    {{- include "op-proposer.labels" . | nindent 4 }}
+    {{- include "app.labels" . | nindent 4 }}
 spec:
-  serviceName: {{ include "op-proposer.fullname" . }}
+  serviceName: {{ include "app.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "op-proposer.selectorLabels" . | nindent 6 }}
+      {{- include "app.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -22,7 +22,7 @@ spec:
         prometheus.io/path: "/metrics"
       {{- end }}
       labels:
-        {{- include "op-proposer.labels" . | nindent 8 }}
+        {{- include "app.labels" . | nindent 8 }}
         {{- if and .Values.podLabels (not (empty .Values.podLabels)) }}
           {{- toYaml .Values.podLabels | nindent 8 }}
         {{- end }}
@@ -31,7 +31,7 @@ spec:
       imagePullSecrets:
         {{- toYaml .Values.imagePullSecrets | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "op-proposer.serviceAccountName" . }}
+      serviceAccountName: {{ include "app.serviceAccountName" . }}
       {{- if not ( empty .Values.podSecurityContext ) }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -48,17 +48,17 @@ spec:
           - name: PRIVATE_KEY
             valueFrom:
               secretKeyRef:
-                name: {{ ternary (include "op-proposer.fullname" .) .Values.secrets.env.PRIVATE_KEY.secretName (not (empty .Values.secrets.env.PRIVATE_KEY.value)) }}
+                name: {{ ternary (include "app.fullname" .) .Values.secrets.env.PRIVATE_KEY.secretName (not (empty .Values.secrets.env.PRIVATE_KEY.value)) }}
                 key: {{ ternary "privateKey" .Values.secrets.env.PRIVATE_KEY.secretKey (not (empty .Values.secrets.env.PRIVATE_KEY.value)) }}
           - name: NETWORK_PRIVATE_KEY
             valueFrom:
               secretKeyRef:
-                name: {{ ternary (include "op-proposer.fullname" .) .Values.secrets.env.NETWORK_PRIVATE_KEY.secretName (not (empty .Values.secrets.env.NETWORK_PRIVATE_KEY.value)) }}
+                name: {{ ternary (include "app.fullname" .) .Values.secrets.env.NETWORK_PRIVATE_KEY.secretName (not (empty .Values.secrets.env.NETWORK_PRIVATE_KEY.value)) }}
                 key: {{ ternary "networkPrivateKey" .Values.secrets.env.NETWORK_PRIVATE_KEY.secretKey (not (empty .Values.secrets.env.NETWORK_PRIVATE_KEY.value)) }}
           - name: L1_RPC
             valueFrom:
               secretKeyRef:
-                name: {{ ternary (include "op-proposer.fullname" .) .Values.secrets.env.L1_RPC.secretName (not (empty .Values.secrets.env.L1_RPC.value)) }}
+                name: {{ ternary (include "app.fullname" .) .Values.secrets.env.L1_RPC.secretName (not (empty .Values.secrets.env.L1_RPC.value)) }}
                 key: {{ ternary "l1Url" .Values.secrets.env.L1_RPC.secretKey (not (empty .Values.secrets.env.L1_RPC.value)) }}
           {{- if .Values.config.metrics.enabled }}
           - name: PROPOSER_METRICS_PORT
