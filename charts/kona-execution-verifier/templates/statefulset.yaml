@@ -1,0 +1,154 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "app.fullname" . }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "app.fullname" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+      {{- if and .Values.podAnnotations (not (empty .Values.podAnnotations)) }}
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.config.telemetry.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.config.telemetry.port }}"
+        prometheus.io/path: "/metrics"
+      {{- end }}
+      labels:
+        {{- include "app.labels" . | nindent 8 }}
+        {{- if and .Values.podLabels (not (empty .Values.podLabels)) }}
+          {{- toYaml .Values.podLabels | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if and .Values.imagePullSecrets (not (empty .Values.imagePullSecrets)) }}
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "app.serviceAccountName" . }}
+      {{- if not ( empty .Values.podSecurityContext ) }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end}}
+      containers:
+        - name: {{ .Chart.Name }}
+          command: 
+            - "/bin/sh"
+            - "-c"
+          args: 
+            - >
+              exec execution-verifier
+              --l2-rpc "${KONA_L2_ENDPOINT}"
+              ${KONA_START_BLOCK:+--start-block "${KONA_START_BLOCK}"}
+              ${KONA_END_BLOCK:+--end-block "${KONA_END_BLOCK}"}
+              ${KONA_CONCURRENCY:+--concurrency "${KONA_CONCURRENCY}"}
+              {{- if .Values.persistence.enabled }}
+              --state-file "/state/progress"
+              {{- end}}
+              {{- if .Values.config.telemetry.enabled}}
+              --telemetry
+              {{- end}}
+          envFrom:
+            - configMapRef:
+                name: {{ include "app.fullname" . }}-config
+          env:
+          {{- if .Values.config.telemetry.enabled }}
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://127.0.0.1:4317"
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "grpc"
+            {{- end}}
+            {{- range $key, $value := .Values.config.app.extraEnv }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - name: data
+              mountPath: /state
+          {{- end }}
+          {{- if not ( empty .Values.securityContext ) }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.config.telemetry.enabled}}
+          {{- if and .Values.livenessProbe (not (empty .Values.livenessProbe)) }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if and .Values.readinessProbe (not (empty .Values.readinessProbe)) }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
+          {{- if and .Values.resources (not (empty .Values.resources)) }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
+      {{- if .Values.config.telemetry.enabled}}
+      initContainers:
+        - name: otel-colllector
+          image: "{{ .Values.otel.image.repository }}:{{ .Values.otel.image.tag}}"
+          restartPolicy: Always
+          args: ["--config=/conf/otelcol.yaml"]
+          ports:
+            - { name: otlp-grpc, containerPort: 4317 }
+            - { name: otlp-http, containerPort: 4318 }
+            - name: metrics
+              containerPort: {{ .Values.services.metrics.port | default 7300 }}
+              protocol: TCP
+          volumeMounts:
+            - { name: otel-config, mountPath: /conf, readOnly: true }
+          {{- if and .Values.otel.resources (not (empty .Values.otel.resources)) }}
+          resources:
+            {{- toYaml .Values.otel.resources | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: otel-config
+          configMap:
+            name: otel-colllector-config
+      {{- end }}
+      enableServiceLinks: {{ .Values.enableServiceLinks }}
+      {{- if and .Values.nodeSelector (not (empty .Values.nodeSelector)) }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if and .Values.affinity (not (empty .Values.affinity)) }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      {{- end }}
+      {{- if and .Values.tolerations (not (empty .Values.tolerations)) }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "op-geth.selectorLabels" . | nindent 8 }}
+        {{- with .Values.persistence.pvc.annotations }}
+        annotations:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+      spec:
+        accessModes:
+        - {{ .Values.persistence.pvc.accessMode }}
+        {{- if .Values.persistence.pvc.storageClass }}
+        {{- if eq .Values.persistence.pvc.storageClass "-" }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ .Values.persistence.pvc.storageClass | quote }}
+        {{- end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.pvc.size | quote }}
+  {{- end }}

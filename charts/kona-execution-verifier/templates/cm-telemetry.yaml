@@ -1,0 +1,68 @@
+
+{{- with .Values.config.telemetry}}
+{{- if .enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+data:
+  otelcol.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:           
+            endpoint: 127.0.0.1:4317
+          http:
+            endpoint: 127.0.0.1:4318
+
+    processors:
+      memory_limiter:
+        check_interval: 2s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+      batch:
+        send_batch_size: 8192
+        timeout: 2s
+
+    exporters:
+      {{- if .metrics.enabled}}
+      prometheus:
+        endpoint: "{{.metrics.address}}:{{.metrics.port}}"
+      {{- end }}
+
+    {{- if .traces.enabled}}
+      otlp/tempo:
+        endpoint: "{{.traces.endpoint}}"
+        tls:
+          insecure: true
+    {{- end }}
+
+    {{- if .logs.enabled}}
+      otlphttp/logs:
+        endpoint: "{{.logs.endpoint}}"
+        tls:
+          insecure: true
+    {{- end }}
+
+    service:
+      pipelines:
+        {{- if .logs.enabled}}
+        logs:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [otlphttp/logs]
+        {{- end }}
+        {{- if .metrics.enabled}}
+        metrics:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [prometheus]
+        {{- end }}
+        {{- if .traces.enabled}}
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [otlp/tempo]
+        {{- end }}
+{{- end}}
+{{- end}}
