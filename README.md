@@ -27,6 +27,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [forta-firewall-proxy](./charts/forta-firewall-proxy/README.md) - A Helm chart for Kubernetes
 - [image-annotator-webhook](./charts/image-annotator-webhook/README.md) - Deploys a kubernetes webhook to mutate podSpecs to include container images as annotations
 - [k8s-digester](./charts/k8s-digester/README.md) - K8S Digester translates images tags to shas
+- [kona-execution-verifier](./charts/kona-execution-verifier/README.md) - A Helm chart for the kona execution-verifier
 - [kong-celo-fullnode](./charts/kong-celo-fullnode/README.md) - Chart wrapper over celo-fullnode chart to adapt to Forno. It requires a Kong controller, kong ingressClass and kong crds installed in the cluster, and creates the Kong consumers, plugins and rate limits.
 - [konga](./charts/konga/README.md) - Chart which is used to run konga for Kong ingress
 - [llama-web3-proxy](./charts/llama-web3-proxy/README.md) - Deploys llama-web3-proxy for aggregating blockchain RPC providers.
