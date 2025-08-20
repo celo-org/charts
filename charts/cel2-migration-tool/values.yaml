@@ -21,12 +21,12 @@ pvc:
 downloadDeps:
   image:
     repository: alpine
-    tag: 3.19
+    tag: 3.22
     pullPolicy: IfNotPresent
 compressAndUpload:
   image:
     repository: alpine
-    tag: 3.19
+    tag: 3.22
     pullPolicy: IfNotPresent
 migrationTool:
   image:
