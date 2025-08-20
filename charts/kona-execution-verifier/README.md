@@ -19,15 +19,15 @@ A Helm chart for the kona execution-verifier
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| config.app.concurrency | string | `"25"` |  |
-| config.app.end_block | string | `""` |  |
-| config.app.extra-env | object | `{}` |  |
-| config.app.l2_url | string | `"ladidid"` |  |
-| config.app.start_block | string | `"123"` |  |
-| config.telemetry.enabled | bool | `true` |  |
-| config.telemetry.export_interval_ms | int | `5000` |  |
-| config.telemetry.otlp_endpoint | string | `"http://grafana-alloy.monitoring:4317"` |  |
-| config.telemetry.otlp_protocol | string | `"grpc"` |  |
+| config.app.concurrency | string | `"25"` | how many concurrent verification processes should run at the same time for historic blocks |
+| config.app.end_block | string | `""` | at what block to end the verification. If empty, the job will keep alive and continue to verify new block headers. |
+| config.app.extra-env | object | `{}` | extra environment variables passed to the app's container |
+| config.app.l2_url | string | `"op-geth-forno-rpc-0.mainnet-cel2:8545"` | required - url (incl port) of the WS enable archive-node op-geth RPC. |
+| config.app.start_block | string | `"1"` | required - at what block to start the verification. Should be post cel2 migration. |
+| config.telemetry.enabled | bool | `true` | wether to enable the app's telemetry |
+| config.telemetry.export_interval_ms | int | `5000` | how often telemetry data gets pushed to the otlp endpoint |
+| config.telemetry.otlp_endpoint | string | `"http://grafana-alloy.monitoring:4317"` | otlp endpoint for metrics, logs and traces |
+| config.telemetry.otlp_protocol | string | `"grpc"` | protocol to use with the otlp endpoint. grpc or http |
 | enableServiceLinks | bool | `false` | Kubernetes enableServiceLinks |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` | Chart full name override |

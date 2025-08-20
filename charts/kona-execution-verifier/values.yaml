@@ -23,16 +23,25 @@ extraArgs: []
 
 config:
   app:
-    start_block: ""                   # required
+    # -- required - at what block to start the verification. Should be post cel2 migration.
+    start_block: "1"
+    # -- required - url (incl port) of the WS enable archive-node op-geth RPC.
+    l2_url: "op-geth-forno-rpc-0.mainnet-cel2:8545"
+    # -- at what block to end the verification. If empty, the job will keep alive and continue to verify new block headers.
     end_block: ""
-    l2_url: ""                        # required
+    # -- how many concurrent verification processes should run at the same time for historic blocks
     concurrency: "25"
+    # -- extra environment variables passed to the app's container
     extra-env: {}
   telemetry:
+    # -- wether to enable the app's telemetry
     enabled: true
+    # -- how often telemetry data gets pushed to the otlp endpoint
     export_interval_ms: 5000
+    # -- otlp endpoint for metrics, logs and traces
     otlp_endpoint: "http://grafana-alloy.monitoring:4317"
-    otlp_protocol: "grpc"             # grpc or http
+    # -- protocol to use with the otlp endpoint. grpc or http
+    otlp_protocol: "grpc"
 
 persistence:
   enabled: true
