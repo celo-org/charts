@@ -26,13 +26,8 @@ A Helm chart for the kona execution-verifier
 | config.app.start_block | string | `"123"` |  |
 | config.telemetry.enabled | bool | `true` |  |
 | config.telemetry.export_interval_ms | int | `5000` |  |
-| config.telemetry.logs.enabled | bool | `true` |  |
-| config.telemetry.logs.endpoint | string | `"http://loki.monitoring:3100/otlp"` |  |
-| config.telemetry.metrics.address | string | `"0.0.0.0"` |  |
-| config.telemetry.metrics.enabled | bool | `true` |  |
-| config.telemetry.metrics.port | int | `7300` |  |
-| config.telemetry.traces.addr | string | `"http://grafana-agent.monitoring:4317"` |  |
-| config.telemetry.traces.enabled | bool | `true` |  |
+| config.telemetry.otlp_endpoint | string | `"http://grafana-alloy.monitoring:4317"` |  |
+| config.telemetry.otlp_protocol | string | `"grpc"` |  |
 | enableServiceLinks | bool | `false` | Kubernetes enableServiceLinks |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` | Chart full name override |
@@ -43,11 +38,7 @@ A Helm chart for the kona execution-verifier
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
-| otel.image.pullPolicy | string | `"IfNotPresent"` |  |
-| otel.image.repository | string | `"ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib"` |  |
-| otel.image.tag | string | `"0.132.0"` |  |
-| otel.resources | object | `{}` |  |
-| persistence.enable | bool | `false` |  |
+| persistence.enabled | bool | `true` |  |
 | persistence.pvc.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.pvc.annotations | object | `{}` |  |
 | persistence.pvc.size | string | `"1Gi"` |  |
@@ -62,11 +53,8 @@ A Helm chart for the kona execution-verifier
 | serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| services.metrics.annotations | object | `{}` |  |
-| services.metrics.enabled | bool | `true` |  |
-| services.metrics.port | int | `7300` |  |
-| services.metrics.publishNotReadyAddresses | bool | `true` |  |
-| services.metrics.type | string | `"ClusterIP"` |  |
+| services.headless.annotations | object | `{}` |  |
+| services.headless.publishNotReadyAddresses | bool | `true` |  |
 | tolerations | list | `[]` | Kubernetes tolerations |
 
 ----------------------------------------------

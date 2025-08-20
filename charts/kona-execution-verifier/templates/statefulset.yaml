@@ -16,11 +16,6 @@ spec:
       {{- if and .Values.podAnnotations (not (empty .Values.podAnnotations)) }}
         {{- toYaml .Values.podAnnotations | nindent 8 }}
       {{- end }}
-      {{- if .Values.config.telemetry.enabled }}
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "{{ .Values.config.telemetry.port }}"
-        prometheus.io/path: "/metrics"
-      {{- end }}
       labels:
         {{- include "app.labels" . | nindent 8 }}
         {{- if and .Values.podLabels (not (empty .Values.podLabels)) }}
@@ -58,11 +53,13 @@ spec:
             - configMapRef:
                 name: {{ include "app.fullname" . }}-config
           env:
-          {{- if .Values.config.telemetry.enabled }}
+            {{- with .Values.config.telemetry }}
+            {{- if .enabled }}
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: "http://127.0.0.1:4317"
+              value: "{{ .otlp_endpoint}}"
             - name: OTEL_EXPORTER_OTLP_PROTOCOL
-              value: "grpc"
+              value: "{{ .otlp_protocol}}"
+            {{- end}}
             {{- end}}
             {{- range $key, $value := .Values.config.app.extraEnv }}
             - name: {{ $key }}
@@ -79,7 +76,6 @@ spec:
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.config.telemetry.enabled}}
           {{- if and .Values.livenessProbe (not (empty .Values.livenessProbe)) }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
@@ -92,29 +88,6 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}
-      {{- if .Values.config.telemetry.enabled}}
-      initContainers:
-        - name: otel-colllector
-          image: "{{ .Values.otel.image.repository }}:{{ .Values.otel.image.tag}}"
-          restartPolicy: Always
-          args: ["--config=/conf/otelcol.yaml"]
-          ports:
-            - { name: otlp-grpc, containerPort: 4317 }
-            - { name: otlp-http, containerPort: 4318 }
-            - name: metrics
-              containerPort: {{ .Values.services.metrics.port | default 7300 }}
-              protocol: TCP
-          volumeMounts:
-            - { name: otel-config, mountPath: /conf, readOnly: true }
-          {{- if and .Values.otel.resources (not (empty .Values.otel.resources)) }}
-          resources:
-            {{- toYaml .Values.otel.resources | nindent 12 }}
-          {{- end }}
-      volumes:
-        - name: otel-config
-          configMap:
-            name: otel-colllector-config
-      {{- end }}
       enableServiceLinks: {{ .Values.enableServiceLinks }}
       {{- if and .Values.nodeSelector (not (empty .Values.nodeSelector)) }}
       nodeSelector:
@@ -133,10 +106,10 @@ spec:
     - metadata:
         name: data
         labels:
-          {{- include "op-geth.selectorLabels" . | nindent 8 }}
+          {{- include "app.selectorLabels" . | nindent 10 }}
         {{- with .Values.persistence.pvc.annotations }}
         annotations:
-          {{- toYaml . | nindent 8 }}
+          {{- toYaml . | nindent 10 }}
         {{- end }}
       spec:
         accessModes:

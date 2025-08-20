@@ -16,14 +16,6 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "edge"
 
-
-otel:
-  image:
-    repository: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib
-    pullPolicy: IfNotPresent
-    tag: "0.132.0"
-  resources: {}
-
 # -- Image pull secrets
 imagePullSecrets: []
 
@@ -39,19 +31,11 @@ config:
   telemetry:
     enabled: true
     export_interval_ms: 5000
-    metrics:
-      enabled: true
-      address: 0.0.0.0
-      port: 7300
-    logs:
-      enabled: true
-      endpoint: "http://loki.monitoring:3100/otlp"
-    traces:
-      enabled: true
-      addr: "http://grafana-agent.monitoring:4317"
+    otlp_endpoint: "http://grafana-alloy.monitoring:4317"
+    otlp_protocol: "grpc"             # grpc or http
 
 persistence:
-  enable: false
+  enabled: true
   pvc:
     size: 1Gi
     accessMode: ReadWriteOnce
@@ -69,10 +53,7 @@ serviceAccount:
   name: ""
 
 services:
-  metrics:
-    enabled: true
-    type: ClusterIP
-    port: 7300
+  headless:
     annotations: {}
     publishNotReadyAddresses: true
 
