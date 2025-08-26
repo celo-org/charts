@@ -44,31 +44,20 @@ spec:
           args:
             - |
               exec op-proposer
-          env:
-          - name: PRIVATE_KEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ ternary (include "app.fullname" .) .Values.secrets.env.PRIVATE_KEY.secretName (not (empty .Values.secrets.env.PRIVATE_KEY.value)) }}
-                key: {{ ternary "privateKey" .Values.secrets.env.PRIVATE_KEY.secretKey (not (empty .Values.secrets.env.PRIVATE_KEY.value)) }}
-          - name: NETWORK_PRIVATE_KEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ ternary (include "app.fullname" .) .Values.secrets.env.NETWORK_PRIVATE_KEY.secretName (not (empty .Values.secrets.env.NETWORK_PRIVATE_KEY.value)) }}
-                key: {{ ternary "networkPrivateKey" .Values.secrets.env.NETWORK_PRIVATE_KEY.secretKey (not (empty .Values.secrets.env.NETWORK_PRIVATE_KEY.value)) }}
-          - name: L1_RPC
-            valueFrom:
-              secretKeyRef:
-                name: {{ ternary (include "app.fullname" .) .Values.secrets.env.L1_RPC.secretName (not (empty .Values.secrets.env.L1_RPC.value)) }}
-                key: {{ ternary "l1Url" .Values.secrets.env.L1_RPC.secretKey (not (empty .Values.secrets.env.L1_RPC.value)) }}
-          {{- if .Values.config.metrics.enabled }}
-          - name: PROPOSER_METRICS_PORT
-            value: {{.Values.config.metrics.port | default 7300}}
-          {{- end}}
-          {{- $ := required "Missing required env var: config.env.FACTOY_ADDRESS" .Values.config.env.FACTORY_ADDRESS }}
-          {{- range $key, $val := .Values.config.env }}
-          - name: {{ $key }}
-            value: {{ $val | quote }}
-          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "app.fullname" . }}-env
+            {{- with .Values.config.secret_env.existing_name}}
+            # the secret ref comes later, so that eventual 
+            # overwrites from the secret ref win
+            - secretRef:
+                name: {{ . }}
+                optional: true
+            {{- end}}
+            # now finally the secret env-overwrites take precedence
+            - secretRef:
+                name: {{ include "app.fullname" . }}-env
+                optional: true
           {{- if not ( empty .Values.securityContext ) }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

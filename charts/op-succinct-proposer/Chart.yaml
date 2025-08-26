@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
 name: op-succinct-proposer
-description: A Helm chart for Fault Proof Monitoring
+description: A Helm chart for the op-succinct proposer
 type: application
 version: 0.1.0
 appVersion: "main"

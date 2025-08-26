@@ -12,12 +12,12 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-succinct/proposer
+  repository: us-west1-docker.pkg.dev/devopsre/op-succinct/proposer
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "edge"
+  tag: "sha-517461b" # TODO: set to a version tag once released
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -25,40 +25,57 @@ imagePullSecrets: []
 extraArgs: []
 
 config:
-  env:
-    # this excludes env-vars that could potentially be a secret (see "secrets below")
-    L1_BEACON_RPC: https://celo-l1-beacon.celo-networks-dev.org
-    L2_RPC: http://op-geth-sequencer-shared-rpc:8545
-    L2_NODE_RPC: http://op-node-sequencer-shared-rpc:9545
-    EIGENDA_PROXY_ADDRESS: "http://eigenda-proxy-api:4242" 
-    GAME_TYPE: 42
-    # required, this is the address of the DisputeGameFactoryProxy contract on the L1
-    FACTORY_ADDRESS: ""
-    ENABLE_GAME_RESOLUTION: true
-    MAX_GAMES_TO_CHECK_FOR_CHALLENGE: 100
-    MAX_GAMES_TO_CHECK_FOR_RESOLUTION: 100
-    MAX_GAMES_TO_CHECK_FOR_BOND_CLAIMING: 100
-    PROPOSAL_INTERVAL_IN_BLOCKS: 20
-    FETCH_INTERVAL: 30
+  endpoints:
+    # --URL of the L1 execution client
+    l1_execution: ""
+    # -- URL of the L1 consensus (beacon) client
+    l1_consensus: ""
+    # -- URL of the L2 execution (op-geth) client
+    l2_execution: ""
+    # -- URL of the L2 consensus (op-node) client
+    l2_consensus: ""
+    # -- URL of the EigenDA proxy
+    eigenda_proxy: ""
+  game:
+    # -- Address of the active L1 `DisputeGameFactoryProxy` address
+    dispute_game_factory_address: ""
+    # -- enable game-resolution
+    resolution: true
+    # -- maximum size of the queue that processes games for different operations
+    max_game_limits:
+      # -- queue size to challenge games
+      challenge: 100
+      # -- queue size to resolve games
+      resolution: 100
+      # -- queue size to reclaim bonds from games
+      bond_claiming: 100
+  intervals:
+    proposal: 20
+    fetch: 30
+  remote_signing:
+    # -- use a remote signer for signing the proposer l1 transactions instead
+    # -- of reading the "PRIVATE_KEY" env-var and signing locally.
+    enabled: true
+    # -- Address of the proposer, will get used as the 'from' address in `eth_signTransaction` call
+    proposer_address: ""
+    # -- Address of the op-signer-service that is responsible for the L1 batcher privkey, required when signing.remote = true
+    # -- Note that this currently only works, when TLS is disabled in the signer-service
+    endpoint: ""
+  # -- Use a secret to inject env-vars into the executor.
+  # -- The `NETWORK_PRIVATE_KEY` has to be present,
+  # -- the `PRIVATE_KEY` is only required when `config.remote_signing.enabled` is `false`.
+  secret_env:
+    # -- Use an existing kubernetes secret by it's secret name
+    existing_name: ""
+    # -- If any keys are present here,
+    # -- creates a new kubernetes secret, that injects arbitrary env-vars
+    # -- into the executor.
+    overwrites: {}
   metrics:
     enabled: true
     addr: 0.0.0.0
     port: 7300
 
-secrets:
-  env:
-    PRIVATE_KEY:
-      value: ""
-      secretName: ""
-      secretKey: ""
-    NETWORK_PRIVATE_KEY:
-      value: ""
-      secretName: ""
-      secretKey: ""
-    L1_RPC:
-      value: ""
-      secretName: ""
-      secretKey: ""
 
 serviceAccount:
   # -- Specifies whether a service account should be created
@@ -136,4 +153,3 @@ enableServiceLinks: false
 
 # -- Kubernetes pod affinity
 affinity: {}
-

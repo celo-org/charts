@@ -2,7 +2,7 @@
 
 ![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
 
-A Helm chart for Fault Proof Monitoring
+A Helm chart for the op-succinct proposer
 
 ## Maintainers
 
@@ -19,27 +19,34 @@ A Helm chart for Fault Proof Monitoring
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| config.env.EIGENDA_PROXY_ADDRESS | string | `"http://eigenda-proxy-api:4242"` |  |
-| config.env.ENABLE_GAME_RESOLUTION | bool | `true` |  |
-| config.env.FACTORY_ADDRESS | string | `""` |  |
-| config.env.FETCH_INTERVAL | int | `30` |  |
-| config.env.GAME_TYPE | int | `42` |  |
-| config.env.L1_BEACON_RPC | string | `"https://celo-l1-beacon.celo-networks-dev.org"` |  |
-| config.env.L2_NODE_RPC | string | `"http://op-node-sequencer-shared-rpc:9545"` |  |
-| config.env.L2_RPC | string | `"http://op-geth-sequencer-shared-rpc:8545"` |  |
-| config.env.MAX_GAMES_TO_CHECK_FOR_BOND_CLAIMING | int | `100` |  |
-| config.env.MAX_GAMES_TO_CHECK_FOR_CHALLENGE | int | `100` |  |
-| config.env.MAX_GAMES_TO_CHECK_FOR_RESOLUTION | int | `100` |  |
-| config.env.PROPOSAL_INTERVAL_IN_BLOCKS | int | `20` |  |
+| config.endpoints.eigenda_proxy | string | `""` | URL of the EigenDA proxy |
+| config.endpoints.l1_consensus | string | `""` | URL of the L1 consensus (beacon) client |
+| config.endpoints.l1_execution | string | `""` | URL of the L1 execution client |
+| config.endpoints.l2_consensus | string | `""` | URL of the L2 consensus (op-node) client |
+| config.endpoints.l2_execution | string | `""` | URL of the L2 execution (op-geth) client |
+| config.game.dispute_game_factory_address | string | `""` | Address of the active L1 `DisputeGameFactoryProxy` address |
+| config.game.max_game_limits | object | `{"bond_claiming":100,"challenge":100,"resolution":100}` | maximum size of the queue that processes games for different operations |
+| config.game.max_game_limits.bond_claiming | int | `100` | queue size to reclaim bonds from games |
+| config.game.max_game_limits.challenge | int | `100` | queue size to challenge games |
+| config.game.max_game_limits.resolution | int | `100` | queue size to resolve games |
+| config.game.resolution | bool | `true` | enable game-resolution |
+| config.intervals.fetch | int | `30` |  |
+| config.intervals.proposal | int | `20` |  |
 | config.metrics.addr | string | `"0.0.0.0"` |  |
 | config.metrics.enabled | bool | `true` |  |
 | config.metrics.port | int | `7300` |  |
+| config.remote_signing.enabled | bool | `true` | of reading the "PRIVATE_KEY" env-var and signing locally. |
+| config.remote_signing.endpoint | string | `""` | Note that this currently only works, when TLS is disabled in the signer-service |
+| config.remote_signing.proposer_address | string | `""` | Address of the proposer, will get used as the 'from' address in `eth_signTransaction` call |
+| config.secret_env | object | `{"existing_name":"","overwrites":{}}` | the `PRIVATE_KEY` is only required when `config.remote_signing.enabled` is `false`. |
+| config.secret_env.existing_name | string | `""` | Use an existing kubernetes secret by it's secret name |
+| config.secret_env.overwrites | object | `{}` | into the executor. |
 | enableServiceLinks | bool | `false` | Kubernetes enableServiceLinks |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-succinct/proposer"` | Image repository |
-| image.tag | string | `"edge"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/op-succinct/proposer"` | Image repository |
+| image.tag | string | `"sha-517461b"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
@@ -50,15 +57,6 @@ A Helm chart for Fault Proof Monitoring
 | readinessProbe | object | `{}` | Readiness probe configuration |
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
-| secrets.env.L1_RPC.secretKey | string | `""` |  |
-| secrets.env.L1_RPC.secretName | string | `""` |  |
-| secrets.env.L1_RPC.value | string | `""` |  |
-| secrets.env.NETWORK_PRIVATE_KEY.secretKey | string | `""` |  |
-| secrets.env.NETWORK_PRIVATE_KEY.secretName | string | `""` |  |
-| secrets.env.NETWORK_PRIVATE_KEY.value | string | `""` |  |
-| secrets.env.PRIVATE_KEY.secretKey | string | `""` |  |
-| secrets.env.PRIVATE_KEY.secretName | string | `""` |  |
-| secrets.env.PRIVATE_KEY.value | string | `""` |  |
 | securityContext | object | `{}` | Custom container security context |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
