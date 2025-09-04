@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "op-succinct-base.fullname" . }}
+  name: {{ include "op-succinct.fullname" . }}
   labels:
-    {{- include "op-succinct-base.labels" . | nindent 4 }}
+    {{- include "op-succinct.labels" . | nindent 4 }}
 spec:
-  serviceName: {{ include "op-succinct-base.fullname" . }}
+  serviceName: {{ include "op-succinct.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "op-succinct-base.selectorLabels" . | nindent 6 }}
+      {{- include "op-succinct.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -22,7 +22,7 @@ spec:
         prometheus.io/path: "/metrics"
       {{- end }}
       labels:
-        {{- include "op-succinct-base.labels" . | nindent 8 }}
+        {{- include "op-succinct.labels" . | nindent 8 }}
         {{- if and .Values.podLabels (not (empty .Values.podLabels)) }}
           {{- toYaml .Values.podLabels | nindent 8 }}
         {{- end }}
@@ -31,7 +31,7 @@ spec:
       imagePullSecrets:
         {{- toYaml .Values.imagePullSecrets | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "op-succinct-base.serviceAccountName" . }}
+      serviceAccountName: {{ include "op-succinct.serviceAccountName" . }}
       {{- if not ( empty .Values.podSecurityContext ) }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -43,10 +43,10 @@ spec:
             - -c
           args:
             - |
-              exec {{ .Values.app.binaryName }}
+              exec {{ include "op-succinct.binaryName" . }}
           envFrom:
             - configMapRef:
-                name: {{ include "op-succinct-base.fullname" . }}-env
+                name: {{ include "op-succinct.fullname" . }}-env
             {{- with .Values.config.secret_env.existing_name}}
             # the secret ref comes later, so that eventual 
             # overwrites from the secret ref win
@@ -56,13 +56,13 @@ spec:
             {{- end}}
             # now finally the secret env-overwrites take precedence
             - secretRef:
-                name: {{ include "op-succinct-base.fullname" . }}-env
+                name: {{ include "op-succinct.fullname" . }}-env
                 optional: true
           {{- if not ( empty .Values.securityContext ) }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           {{- end }}
-          image: {{ include "op-succinct-base.image" . }}
+          image: {{ include "op-succinct.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.config.metrics.enabled}}
           ports:

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "op-succinct-base.fullname" . }}-env
+  name: {{ include "op-succinct.fullname" . }}-env
 data:
   {{- with .Values.config}}
   {{- with .endpoints}}
@@ -19,7 +19,7 @@ data:
   {{- with .game}}
   FACTORY_ADDRESS: "{{ .dispute_game_factory_address }}"
   ENABLE_GAME_RESOLUTION: "{{ .resolution }}"
-  {{- if eq $.Values.app.type "challenger" }}
+  {{- if eq $.Values.mode "challenger" }}
   {{- if .malicious_challenge_percentage }}
   MALICIOUS_CHALLENGE_PERCENTAGE: "{{ .malicious_challenge_percentage }}"
   {{- end }}
@@ -31,7 +31,7 @@ data:
   {{- end}}
   {{- end}}
   {{- with .intervals}}
-  {{- if eq $.Values.app.type "proposer" }}
+  {{- if eq $.Values.mode "proposer" }}
   {{- if .proposal }}
   PROPOSAL_INTERVAL_IN_BLOCKS: "{{ .proposal}}"
   {{- end }}
@@ -47,6 +47,6 @@ data:
   {{- end }}
   {{- end}}
   {{- if .metrics.enabled }}
-  {{ include "op-succinct-base.metricsPortName" $ }}: "{{.metrics.port | default 7300}}"
+  {{ include "op-succinct.metricsPortName" $ }}: "{{.metrics.port | default 7300}}"
   {{- end}}
   {{- end}}

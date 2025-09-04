@@ -1,12 +1,9 @@
-# Default values for op-succinct-base.
+# Default values for op-succinct.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-app:
-  # -- The type of application (proposer or challenger)
-  type: ""
-  # -- The binary name to execute
-  binaryName: ""
+# -- Mode to run in (proposer or challenger)
+mode: "proposer"
 
 # -- Chart name override
 nameOverride: ""
@@ -17,7 +14,7 @@ fullnameOverride: ""
 replicaCount: 1
 
 image:
-  # -- Image repository base (will be combined with app.type)
+  # -- Image repository base (will be combined with mode, like <repository>/<mode>:<tag>)
   repository: us-west1-docker.pkg.dev/devopsre/op-succinct
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
