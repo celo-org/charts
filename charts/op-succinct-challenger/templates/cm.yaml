@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "app.fullname" . }}-env
+data:
+  {{- with .Values.config}}
+  {{- with .endpoints}}
+  L1_RPC: "{{ .l1_execution }}"
+  L2_RPC: "{{ .l2_execution }}"
+  EIGENDA_PROXY_ADDRESS: "{{ .eigenda_proxy }}"
+  {{- end}}
+  {{- with .game}}
+  GAME_TYPE: "42"
+  FACTORY_ADDRESS: "{{ .disputegamefactory_address }}"
+  ENABLE_GAME_RESOLUTION: "{{ .resolution }}"
+  {{- with .malicious_challenge_percentage}}
+  MALICIOUS_CHALLENGE_PERCENTAGE: "{{.}}"
+  {{- end}}
+  {{- with .max_game_limits}}
+  MAX_GAMES_TO_CHECK_FOR_CHALLENGE: "{{ .challenge }}"
+  MAX_GAMES_TO_CHECK_FOR_RESOLUTION: "{{ .resolution }}"
+  MAX_GAMES_TO_CHECK_FOR_BOND_CLAIMING: "{{ .bond_claiming }}"
+  {{- end}}
+  {{- end}}
+  {{- with .intervals}}
+  FETCH_INTERVAL: "{{ .fetch }}"
+  {{- end}}
+  {{- with .signing}}
+  SIGNER_URL: "{{ .Values.endpoints.signer }}"
+  SIGNER_ADDRESS: "{{ .proposer_address }}" 
+  {{- end}}
+  {{- if .metrics.enabled }}
+  CHALLENGER_METRICS_PORT: "{{.metrics.port | default 7300}}"
+  {{- end}}
+  {{- end}}
