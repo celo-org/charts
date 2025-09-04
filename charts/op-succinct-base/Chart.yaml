@@ -1,0 +1,12 @@
+---
+apiVersion: v2
+name: op-succinct-base
+description: A base Helm chart for op-succinct proposer and challenger
+type: library
+version: 0.1.0
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
+sources:
+  - https://github.com/celo-org/op-succinct

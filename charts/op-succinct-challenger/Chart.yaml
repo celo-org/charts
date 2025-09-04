@@ -11,3 +11,7 @@ maintainers:
     url: https://clabs.co
 sources:
   - https://github.com/celo-org/op-succinct
+dependencies:
+  - name: op-succinct-base
+    version: "0.1.0"
+    repository: "file://../op-succinct-base"

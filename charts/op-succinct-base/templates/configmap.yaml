@@ -1,20 +1,29 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "app.fullname" . }}-env
+  name: {{ include "op-succinct-base.fullname" . }}-env
 data:
   {{- with .Values.config}}
   {{- with .endpoints}}
   L1_RPC: "{{ .l1_execution }}"
+  {{- if .l1_consensus }}
   L1_BEACON_RPC: "{{ .l1_consensus }}"
+  {{- end }}
   L2_RPC: "{{ .l2_execution }}"
+  {{- if .l2_consensus }}
   L2_NODE_RPC: "{{ .l2_consensus }}"
+  {{- end }}
   EIGENDA_PROXY_ADDRESS: "{{ .eigenda_proxy }}"
   {{- end}}
   GAME_TYPE: "42"
   {{- with .game}}
-  FACTORY_ADDRESS: "{{ .disputegamefactory_address }}"
+  FACTORY_ADDRESS: "{{ .dispute_game_factory_address }}"
   ENABLE_GAME_RESOLUTION: "{{ .resolution }}"
+  {{- if eq $.Values.app.type "challenger" }}
+  {{- if .malicious_challenge_percentage }}
+  MALICIOUS_CHALLENGE_PERCENTAGE: "{{ .malicious_challenge_percentage }}"
+  {{- end }}
+  {{- end }}
   {{- with .max_game_limits}}
   MAX_GAMES_TO_CHECK_FOR_CHALLENGE: "{{ .challenge }}"
   MAX_GAMES_TO_CHECK_FOR_RESOLUTION: "{{ .resolution }}"
@@ -22,14 +31,22 @@ data:
   {{- end}}
   {{- end}}
   {{- with .intervals}}
+  {{- if eq $.Values.app.type "proposer" }}
+  {{- if .proposal }}
   PROPOSAL_INTERVAL_IN_BLOCKS: "{{ .proposal}}"
+  {{- end }}
+  {{- end }}
   FETCH_INTERVAL: "{{ .fetch }}"
   {{- end}}
-  {{- with .signing}}
-  SIGNER_URL: "{{ .Values.endpoints.signer }}"
-  SIGNER_ADDRESS: "{{ .proposer_address }}" 
+  {{- with .remote_signing}}
+  {{- if .endpoint }}
+  SIGNER_URL: "{{ .endpoint }}"
+  {{- end }}
+  {{- if .signer_address }}
+  SIGNER_ADDRESS: "{{ .signer_address }}"
+  {{- end }}
   {{- end}}
   {{- if .metrics.enabled }}
-  PROPOSER_METRICS_PORT: "{{.metrics.port | default 7300}}"
+  {{ include "op-succinct-base.metricsPortName" $ }}: "{{.metrics.port | default 7300}}"
   {{- end}}
   {{- end}}
