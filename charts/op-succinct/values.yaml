@@ -14,8 +14,9 @@ fullnameOverride: ""
 replicaCount: 1
 
 image:
-  # -- Image repository base (will be combined with mode, like <repository>/<mode>:<tag>)
-  repository: us-west1-docker.pkg.dev/devopsre/op-succinct
+  # dev-images/op-succinct%2Fproposer/
+  # -- Image repository base (will be combined with mode, like <repository>/op-succinct-<mode>:<tag>)
+  repository: us-west1-docker.pkg.dev/devopsre
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag

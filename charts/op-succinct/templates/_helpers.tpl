@@ -80,7 +80,7 @@ Get the binary name based on mode
 Get the full image name
 */}}
 {{- define "op-succinct.image" -}}
-{{- printf "%s/%s:%s" .Values.image.repository .Values.mode (.Values.image.tag | default .Chart.AppVersion) }}
+{{- printf "%s/op-succinct-%s:%s" .Values.image.repository .Values.mode (.Values.image.tag | default .Chart.AppVersion) }}
 {{- end }}
 
 {{/*
