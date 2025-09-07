@@ -33,7 +33,7 @@ data:
   {{- with .intervals}}
   {{- if eq $.Values.mode "proposer" }}
   {{- if .proposal }}
-  PROPOSAL_INTERVAL_IN_BLOCKS: "{{ .proposal}}"
+  PROPOSAL_INTERVAL: "{{ .proposal}}"
   {{- end }}
   {{- end }}
   FETCH_INTERVAL: "{{ .fetch }}"
