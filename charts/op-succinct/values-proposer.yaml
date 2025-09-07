@@ -1,0 +1,65 @@
+mode: "proposer"
+
+image:
+  # -- Image repository base (will be combined with mode, like <repository>/<mode>:<tag>)
+  # FIXME: the image push CI action doesn't use folders, but %2 
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images
+  # -- Image pullpolicy
+  pullPolicy: IfNotPresent
+  # -- Image tag
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "sha-c41debc" # TODO: set to a version tag once released
+
+config:
+  endpoints:
+    # --URL of the L1 execution client
+    l1_execution: "http://nethermind-sepolia.nethermind-sepolia:8545"
+    # -- URL of the L1 consensus (beacon) client (required for proposer)
+    l1_consensus: "http://nethermind-sepolia.nethermind-prysm-sepolia:4000"
+    # -- URL of the L2 execution (op-geth) client
+    l2_execution: "http://op-geth-sequencer-rpc-0:8545"
+    # -- URL of the L2 consensus (op-node) client (required for proposer)
+    l2_consensus: "http://op-node-sequencer-rpc-0:9545"
+    # -- URL of the EigenDA proxy
+    eigenda_proxy: "http://eigenda-proxy:4242"
+  game:
+    # -- Address of the active L1 `DisputeGameFactoryProxy` address
+    dispute_game_factory_address: "0xbb22CcF2FdD650554E16839a2e6482f8D903f2C9"
+    # -- enable game-resolution
+    resolution: true
+    # -- maximum size of the queue that processes games for different operations
+    max_game_limits:
+      # -- queue size to challenge games
+      challenge: 100
+      # -- queue size to resolve games
+      resolution: 100
+      # -- queue size to reclaim bonds from games
+      bond_claiming: 100
+  intervals:
+    # -- TODO: find out the "unit" and write  docstring
+    proposal: 2000
+    # -- TODO: find out the "unit" and write  docstring
+    fetch: 30
+  remote_signing:
+    # -- use a remote signer for signing the proposer l1 transactions instead
+    # -- of reading the "PRIVATE_KEY" env-var and signing locally.
+    enabled: false
+    # -- Address of the proposer, will get used as the 'from' address in `eth_signTransaction` call
+    signer_address: ""
+    # -- Address of the op-signer-service that is responsible for the L1 batcher privkey, required when signing.remote = true
+    # -- Note that this currently only works, when TLS is disabled in the signer-service
+    endpoint: ""
+  # -- Use a secret to inject env-vars into the executor.
+  # -- The `NETWORK_PRIVATE_KEY` has to be present,
+  # -- the `PRIVATE_KEY` is only required when `config.remote_signing.enabled` is `false`.
+  secret_env:
+    # -- Use an existing kubernetes secret by it's secret name
+    existing_name: "op-succinct-proposer-env"
+    # -- If any keys are present here,
+    # -- creates a new kubernetes secret, that injects arbitrary env-vars
+    # -- into the executor.
+    overwrites: {}
+  metrics:
+    enabled: true
+    addr: 0.0.0.0
+    port: 7300
