@@ -68,9 +68,9 @@ Get the binary name based on mode
 */}}
 {{- define "op-succinct.binaryName" -}}
 {{- if eq .Values.mode "proposer" }}
-{{- "op-proposer" }}
+{{- "proposer" }}
 {{- else if eq .Values.mode "challenger" }}
-{{- "op-challenger" }}
+{{- "challenger" }}
 {{- else }}
 {{- fail "mode must be either 'proposer' or 'challenger'" }}
 {{- end }}
