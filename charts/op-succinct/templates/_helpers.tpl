@@ -49,6 +49,7 @@ Selector labels
 {{- define "op-succinct.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "op-succinct.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+op-succinct/mode: {{ .Values.mode }}
 {{- end }}
 
 {{/*
