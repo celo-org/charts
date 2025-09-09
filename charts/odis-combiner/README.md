@@ -1,6 +1,6 @@
 # odis-combiner
 
-![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: odis-combiner-3.3.3](https://img.shields.io/badge/AppVersion-odis--combiner--3.3.3-informational?style=flat-square)
+![Version: 0.2.6](https://img.shields.io/badge/Version-0.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: odis-combiner-3.3.3](https://img.shields.io/badge/AppVersion-odis--combiner--3.3.3-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer in AKS
 
@@ -32,6 +32,7 @@ Helm chart for deploying Celo ODIS signer in AKS
 | env.blockchain.blockchainApiKey | string | `"kong-api-key"` | Env. Var BLOCKCHAIN_API_KEY. Won't be used if blockchainApiKeyExistingSecret is defined |
 | env.blockchain.blockchainApiKeyExistingSecret | string | `nil` | Existing secret for Env. Var BLOCKCHAIN_API_KEY. |
 | env.blockchain.blockchainProvider | string | `"https://alfajores-forno.celo-testnet.org"` | Env. Var BLOCKCHAIN_PROVIDER. |
+| env.blockchain.chainID | string | `""` | Env. Var CHAIN_ID. If not set, it won't be added to the deployment. 44220 for Celo Mainnet, 44787 for Celo Alfajores or 11142220 for Celo Sepolia. |
 | env.domain.domainEnabled | bool | `true` | Env. Var DOMAINS_API_ENABLED. |
 | env.domain.domainFullNodeDelayMs | string | `"100"` | Env. Var DOMAIN_FULL_NODE_DELAY_MS |
 | env.domain.domainFullNodeRetryCount | string | `"5"` | Env. Var DOMAIN_FULL_NODE_RETRY_COUNT |
