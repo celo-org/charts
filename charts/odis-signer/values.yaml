@@ -54,6 +54,8 @@ env:
     blockchainApiKey: null
     # -- Existing secret for forno API key.
     blockchainApiKeyExistingSecret: "odis-signer-forno-key"
+    # -- Env. Var CHAIN_ID. If not set, it won't be added to the deployment. 44220 for Celo Mainnet, 44787 for Celo Alfajores or 11142220 for Celo Sepolia.
+    chainID: ""
   db:
     # -- Env. Var DB_TYPE.
     type: "postgres"

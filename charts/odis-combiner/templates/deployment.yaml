@@ -66,6 +66,7 @@ spec:
             {{- include "odis-combiner.env-var" (dict "name" "LOG_FORMAT" "dict" .Values.env.log "value_name" "format") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "LOG_LEVEL" "dict" .Values.env.log "value_name" "level") | indent 12 }}
             {{- include "odis-combiner.env-var" (dict "name" "BLOCKCHAIN_PROVIDER" "dict" .Values.env.blockchain "value_name" "blockchainProvider") | indent 12 }}
+            {{- include "odis-combiner.env-var" (dict "name" "CHAIN_ID" "optional" true "dict" .Values.env.blockchain "value_name" "chainID") | indent 12 }}
             {{- if .Values.env.blockchain.blockchainApiKeyExistingSecret }}
             - name: BLOCKCHAIN_API_KEY
               valueFrom:

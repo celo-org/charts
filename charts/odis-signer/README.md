@@ -1,6 +1,6 @@
 # odis-signer
 
-![Version: 0.2.6](https://img.shields.io/badge/Version-0.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: odis-signer-3.1.2](https://img.shields.io/badge/AppVersion-odis--signer--3.1.2-informational?style=flat-square)
+![Version: 0.2.7](https://img.shields.io/badge/Version-0.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: odis-signer-3.1.2](https://img.shields.io/badge/AppVersion-odis--signer--3.1.2-informational?style=flat-square)
 
 Helm chart for deploying Celo ODIS signer
 
@@ -37,6 +37,7 @@ Helm chart for deploying Celo ODIS signer
 | env.blockchain.blockchainApiKey | string | `nil` | Env. Var BLOCKCHAIN_API_KEY. Won't be used if blockchainApiKeyExistingSecret is defined. |
 | env.blockchain.blockchainApiKeyExistingSecret | string | `"odis-signer-forno-key"` | Existing secret for forno API key. |
 | env.blockchain.blockchainProvider | string | `"https://alfajores-forno.celo-testnet.org"` | Env. Var BLOCKCHAIN_PROVIDER. |
+| env.blockchain.chainID | string | `""` | Env. Var CHAIN_ID. If not set, it won't be added to the deployment. 44220 for Celo Mainnet, 44787 for Celo Alfajores or 11142220 for Celo Sepolia. |
 | env.db.cloudSqlProxy | bool | `true` | Enable Cloud SQL proxy for GCP |
 | env.db.database | string | `"phoneNumberPrivacy"` | Env. Var DB_DATABASE. |
 | env.db.host | string | `"celo-testnet:us-central1:staging-pgpnp-centralus"` | Env. Var DB_HOST. If cloudSqlProxy is enabled, will be converted to 127.0.0.1 for odis-signer container |
