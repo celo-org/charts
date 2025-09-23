@@ -16,12 +16,13 @@ replicaCount: 1
 image:
   # dev-images/op-succinct%2Fproposer/
   # -- Image repository base (will be combined with mode, like <repository>/op-succinct-<mode>:<tag>)
-  repository: us-west1-docker.pkg.dev/devopsre
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct/proposer
+  # repository: us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-challenger
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "sha-517461b"  # TODO: set to a version tag once released
+  tag: "sha-d0582aa"  # TODO: set to a version tag once released
 
 # -- Image pull secrets
 imagePullSecrets: []

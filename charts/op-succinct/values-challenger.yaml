@@ -2,7 +2,7 @@ mode: "challenger"
 
 image:
   # -- Image repository base (will be combined with mode, like <repository>/<mode>:<tag>)
-  repository: us-west1-docker.pkg.dev/devopsre/dev-images
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-challenger
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag
