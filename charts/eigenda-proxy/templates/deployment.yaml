@@ -126,6 +126,15 @@ spec:
                 {{- if .Values.config.v2.blsOperatorStateRetrieverAddr }}
                 --eigenda.v2.bls-operator-state-retriever-addr={{ .Values.config.v2.blsOperatorStateRetrieverAddr }} \
                 {{- end }}
+                {{- if .Values.config.v2.network }}
+                --eigenda.v2.network={{ .Values.config.v2.network }} \
+                {{- end }}
+                {{- if .Values.config.v2.certVerifierRouterOrImmutableVerifierAddr }}
+                --eigenda.v2.cert-verifier-router-or-immutable-verifier-addr={{ .Values.config.v2.certVerifierRouterOrImmutableVerifierAddr }} \
+                {{- end }}
+                {{- if .Values.config.v2.eigendaDirectory }}
+                --eigenda.v2.eigenda-directory={{ .Values.config.v2.eigendaDirectory }} \
+                {{- end }}
                 --eigenda.v2.contract-call-timeout={{ .Values.config.v2.contractCallTimeout }} \
                 {{- if .Values.config.v2.disablePointEvaluation }}
                 --eigenda.v2.disable-point-evaluation \

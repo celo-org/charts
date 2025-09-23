@@ -1,6 +1,6 @@
 # eigenda-proxy
 
-![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Helm chart deploying Layr-Labs eigenda-proxy
 
@@ -59,14 +59,17 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.v2.blobVersion | int | `0` |  |
 | config.v2.blsOperatorStateRetrieverAddr | string | `""` |  |
 | config.v2.certVerifierAddr | string | `""` |  |
+| config.v2.certVerifierRouterOrImmutableVerifierAddr | string | `""` |  |
 | config.v2.contractCallTimeout | string | `"10s"` |  |
 | config.v2.disablePointEvaluation | bool | `false` |  |
 | config.v2.disableTls | bool | `false` |  |
 | config.v2.disperseBlobTimeout | string | `"2m0s"` |  |
 | config.v2.disperserRpc | string | `""` |  |
+| config.v2.eigendaDirectory | string | `""` |  |
 | config.v2.enabled | bool | `false` |  |
 | config.v2.ethRpc | string | `""` |  |
 | config.v2.maxBlobLength | string | `"16MiB"` |  |
+| config.v2.network | string | `""` |  |
 | config.v2.putRetries | int | `3` |  |
 | config.v2.relayTimeout | string | `"10s"` |  |
 | config.v2.serviceManagerAddr | string | `""` |  |

@@ -185,6 +185,10 @@ config:
       value: ""
       # secretName: test
       # secretKey: test
+    # New variables for 2.x versions
+    network: ""
+    certVerifierRouterOrImmutableVerifierAddr: ""
+    eigendaDirectory: ""
 
 log:
   level: info
