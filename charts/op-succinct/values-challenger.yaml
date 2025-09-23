@@ -28,6 +28,8 @@ config:
     max_game_limits:
       # -- queue size to challenge games
       challenge: 100
+      # -- queue size to defend games
+      defense: 100
       # -- queue size to resolve games
       resolution: 100
       # -- queue size to reclaim bonds from games

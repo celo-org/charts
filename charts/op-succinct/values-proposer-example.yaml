@@ -24,6 +24,8 @@ config:
       challenge: 100
       # -- queue size to resolve games
       resolution: 100
+      # -- queue size to defend games
+      defense: 100
       # -- queue size to reclaim bonds from games
       bond_claiming: 100
   intervals:

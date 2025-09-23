@@ -1,6 +1,6 @@
 # op-succinct
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
 
 A Helm chart for op-succinct proposer and challenger
 
@@ -26,9 +26,10 @@ A Helm chart for op-succinct proposer and challenger
 | config.endpoints.l2_execution | string | `""` | URL of the L2 execution (op-geth) client |
 | config.game.dispute_game_factory_address | string | `""` | Address of the active L1 `DisputeGameFactoryProxy` address |
 | config.game.malicious_challenge_percentage | string | `"0.0"` |  |
-| config.game.max_game_limits | object | `{"bond_claiming":100,"challenge":100,"resolution":100}` | maximum size of the queue that processes games for different operations |
+| config.game.max_game_limits | object | `{"bond_claiming":100,"challenge":100,"defense":100,"resolution":100}` | maximum size of the queue that processes games for different operations |
 | config.game.max_game_limits.bond_claiming | int | `100` | queue size to reclaim bonds from games |
 | config.game.max_game_limits.challenge | int | `100` | queue size to challenge games |
+| config.game.max_game_limits.defense | int | `100` | queue size to defend games |
 | config.game.max_game_limits.resolution | int | `100` | queue size to resolve games |
 | config.game.resolution | bool | `true` | enable game-resolution |
 | config.intervals.fetch | int | `30` | Fetch interval |
