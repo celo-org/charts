@@ -1,0 +1,22 @@
+{{- if .Values.services.metrics.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "op-succinct.fullname" . }}-metrics
+  labels:
+    {{- include "op-succinct.labels" . | nindent 4 }}
+  {{- with .Values.services.metrics.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.services.metrics.type }}
+  publishNotReadyAddresses: {{ .Values.services.metrics.publishNotReadyAddresses }}
+  ports:
+    - port: {{ .Values.services.metrics.port }}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    {{- include "op-succinct.selectorLabels" . | nindent 4 }}
+{{- end }}
