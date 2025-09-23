@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "op-succinct.fullname" . }}-env
 data:
+  SP1_PROVER: "network"
   {{- with .Values.config}}
   {{- with .endpoints}}
   L1_RPC: "{{ .l1_execution }}"
@@ -26,6 +27,7 @@ data:
   {{- end }}
   {{- with .max_game_limits}}
   MAX_GAMES_TO_CHECK_FOR_CHALLENGE: "{{ .challenge }}"
+  MAX_GAMES_TO_CHECK_FOR_DEFENSE: "{{ .defense }}"
   MAX_GAMES_TO_CHECK_FOR_RESOLUTION: "{{ .resolution }}"
   MAX_GAMES_TO_CHECK_FOR_BOND_CLAIMING: "{{ .bond_claiming }}"
   {{- end}}
