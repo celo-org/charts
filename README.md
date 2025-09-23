@@ -50,6 +50,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [op-proposer](./charts/op-proposer/README.md) - Celo implementation for op-proposer client (Optimism Rollup)
 - [op-proxyd](./charts/op-proxyd/README.md) - Celo implementation for OP proxyd
 - [op-signer-service](./charts/op-signer-service/README.md) - A Helm chart for OP signer service
+- [op-succinct](./charts/op-succinct/README.md) - A Helm chart for op-succinct proposer and challenger
 - [op-tx-overload](./charts/op-tx-overload/README.md) - Generate load on Optimism Bedrock using transactions with random calldata.
 - [op-ufm](./charts/op-ufm/README.md) - A Helm chart for OP User Facing Monitoring
 - [optics-keymaster](./charts/optics-keymaster/README.md) - Optics Keymaster

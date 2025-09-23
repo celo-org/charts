@@ -46,8 +46,8 @@ A Helm chart for op-succinct proposer and challenger
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/op-succinct"` | Image repository base (will be combined with app.type) |
-| image.tag | string | `"sha-517461b"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct/proposer"` | Image repository base (will be combined with mode, like <repository>/op-succinct-<mode>:<tag>) |
+| image.tag | string | `"sha-bd79cc6"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | mode | string | `"proposer"` | Mode to run in (proposer or challenger) |
