@@ -49,11 +49,11 @@ spec:
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
-                name: {{ $fullName }}-rpc
+                name: {{ $fullName }}-shared-rpc
                 port:
                   number: {{ $svcPort }}
               {{- else }}
-              serviceName: {{ $fullName }}-rpc
+              serviceName: {{ $fullName }}-shared-rpc
               servicePort: {{ $svcPort }}
               {{- end }}
           {{- end }}
