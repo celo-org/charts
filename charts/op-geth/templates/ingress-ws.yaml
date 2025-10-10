@@ -1,4 +1,4 @@
-{{- if and .Values.services.rpc.enabled .Values.ingress.ws.enabled -}}
+{{- if and .Values.services.rpc.sharedServiceEnabled .Values.ingress.ws.enabled -}}
 {{- $fullName := include "op-geth.fullname" . -}}
 {{- $svcPort := .Values.services.rpc.wsPort -}}
 {{- if and .Values.ingress.ws.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
