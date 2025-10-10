@@ -1,4 +1,4 @@
-{{- if and .Values.services.rpc.sharedServiceEnabled .Values.ingress.enabled -}}
+{{- if and .Values.services.rpc.enabled .Values.ingress.enabled -}}
 {{- $fullName := include "op-node.fullname" . -}}
 {{- $svcPort := .Values.services.rpc.port -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
@@ -49,11 +49,11 @@ spec:
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
-                name: {{ $fullName }}-shared-rpc
+                name: {{ $fullName }}-rpc
                 port:
                   number: {{ $svcPort }}
               {{- else }}
-              serviceName: {{ $fullName }}-shared-rpc
+              serviceName: {{ $fullName }}-rpc
               servicePort: {{ $svcPort }}
               {{- end }}
           {{- end }}
