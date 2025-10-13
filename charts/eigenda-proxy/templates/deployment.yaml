@@ -177,11 +177,11 @@ spec:
                 {{- if .Values.config.s3.path }}
                 --s3.path={{ .Values.config.s3.path }} \
                 {{- end }}
-                --metrics.enabled=true \
                 --metrics.addr=0.0.0.0 \
                 --metrics.port={{ .Values.services.metrics.port }} \
                 --log.format={{ .Values.log.format }} \
                 --log.level={{ .Values.log.level }} \
+                --apis.enabled=op-generic,standard,metrics
                 {{- with .Values.extraArgs }}
                 {{- range . }}
                 {{- tpl (.) $ | nindent 16 }} \
