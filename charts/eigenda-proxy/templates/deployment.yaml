@@ -181,7 +181,7 @@ spec:
                 --metrics.port={{ .Values.services.metrics.port }} \
                 --log.format={{ .Values.log.format }} \
                 --log.level={{ .Values.log.level }} \
-                --apis.enabled=op-generic,standard,metrics
+                --apis.enabled=op-generic,standard,metrics \
                 {{- with .Values.extraArgs }}
                 {{- range . }}
                 {{- tpl (.) $ | nindent 16 }} \
