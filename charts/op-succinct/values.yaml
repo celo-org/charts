@@ -44,20 +44,8 @@ config:
   game:
     # -- Address of the active L1 `DisputeGameFactoryProxy` address
     dispute_game_factory_address: ""
-    # -- enable game-resolution
-    resolution: true
     # Percentage (0.0-100.0) of valid games to challenge for testing defense mechanisms (challenger only)
     malicious_challenge_percentage: "0.0"
-    # -- maximum size of the queue that processes games for different operations
-    max_game_limits:
-      # -- queue size to challenge games
-      challenge: 100
-      # -- queue size to defend games
-      defense: 100
-      # -- queue size to resolve games
-      resolution: 100
-      # -- queue size to reclaim bonds from games
-      bond_claiming: 100
   intervals:
     # -- Proposal interval in blocks (proposer only)
     proposal: 20
