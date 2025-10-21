@@ -55,9 +55,11 @@ spec:
                 optional: true
             {{- end}}
             # now finally the secret env-overwrites take precedence
+            {{- if and .Values.config.secret_env.overwrites (not (empty .Values.config.secret_env.overwrites)) }}
             - secretRef:
-                name: {{ include "op-succinct.fullname" . }}-env
+                name: {{ include "op-succinct.fullname" . }}-env-overwrites
                 optional: true
+            {{- end }}
           {{- if not ( empty .Values.securityContext ) }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
