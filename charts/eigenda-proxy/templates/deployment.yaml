@@ -160,7 +160,7 @@ spec:
                 --storage.fallback-targets={{ .Values.config.storage.fallbackTargets }} \
                 {{- end }}
                 {{- if .Values.config.storage.writeOnMiss }}
-                --storage.write-on-miss \
+                --storage.write-on-cache-miss \
                 {{- end }}
                 {{- if .Values.config.s3.bucket }}
                 --s3.bucket={{ .Values.config.s3.bucket }} \
