@@ -8,7 +8,7 @@ data:
   {{- with .to_block}}
   KONA_END_BLOCK: "{{.}}"
   {{- end}}
-  KONA_L2_ENDPOINT: "ws://{{required "config.app.l2_url is required" .l2_url}}"
+  KONA_L2_ENDPOINT: "ws://{{required "config.app.l2_node_url is required" .l2_node_url}}"
   KONA_CONCURRENCY: "{{.concurrency}}"
   {{- end}}
   {{- with .Values.config.telemetry}}
