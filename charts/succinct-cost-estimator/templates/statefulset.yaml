@@ -38,29 +38,32 @@ spec:
             - "-c"
           args: 
             - >
-              exec execution-verifier
-              --l2-rpc "${KONA_L2_ENDPOINT}"
-              ${KONA_START_BLOCK:+--start-block "${KONA_START_BLOCK}"}
-              ${KONA_END_BLOCK:+--end-block "${KONA_END_BLOCK}"}
-              ${KONA_CONCURRENCY:+--concurrency "${KONA_CONCURRENCY}"}
-              {{- if .Values.persistence.enabled }}
-              --state-file "/state/progress"
-              {{- end}}
-              {{- if .Values.config.telemetry.enabled}}
-              --telemetry
-              {{- end}}
+              exec succinct-cost-estimator
+              --from {{ .Values.config.app.from_block }}
+              --to {{ .Values.config.app.to_block }}
+              --range {{ .Values.config.app.range }}
+              --batch-size {{ .Values.config.app.batch_size }}
+              --concurrency {{ .Values.config.app.concurrency }}
           envFrom:
             - configMapRef:
                 name: {{ include "app.fullname" . }}-config
           env:
-            {{- with .Values.config.telemetry }}
-            {{- if .enabled }}
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: "{{ .otlp_endpoint}}"
-            - name: OTEL_EXPORTER_OTLP_PROTOCOL
-              value: "{{ .otlp_protocol}}"
-            {{- end}}
-            {{- end}}
+            - name: EIGENDA_PROXY_ADDRESS
+              value: {{ .Values.config.app.eigenda_proxy_url }}
+            - name: L2_RPC
+              value: {{ .Values.config.app.l2_geth_url }}
+            - name: L2_NODE_RPC
+              value: {{ .Values.config.app.l2_node_url }}
+            - name: L1_RPC
+              value: {{ .Values.config.app.l1_url }}
+            - name: L1_BEACON_RPC
+              value: {{ .Values.config.app.l1_beacon_url }}
+            - name: SP1_PROVER
+              value: {{ .Values.config.app.sp1_prover }}
+            - name: OP_SUCCINCT_MOCK
+              value: {{ .Values.config.app.op_succinct_mock }}
+            - name: RUST_LOG
+              value: {{ .Values.config.app.rust_log }}
             {{- range $key, $value := .Values.config.app.extraEnv }}
             - name: {{ $key }}
               value: {{ $value | quote }}
