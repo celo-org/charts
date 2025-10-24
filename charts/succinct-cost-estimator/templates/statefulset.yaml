@@ -61,7 +61,7 @@ spec:
             - name: SP1_PROVER
               value: {{ .Values.config.app.sp1_prover }}
             - name: OP_SUCCINCT_MOCK
-              value: {{ .Values.config.app.op_succinct_mock }}
+              value: {{ .Values.config.app.op_succinct_mock | quote }}
             - name: RUST_LOG
               value: {{ .Values.config.app.rust_log }}
             {{- range $key, $value := .Values.config.app.extraEnv }}
