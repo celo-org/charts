@@ -31,7 +31,7 @@ A Helm chart for the succinct cost estimator
 | config.app.op_succinct_mock | bool | `true` | required - whether to use the mock op-succinct |
 | config.app.range | string | `"18000"` | required - number of blocks sent to every process to create N cost estimation jobs (1000, with 100 batch_size, will use that process to run 10 times the cost estimation, this saves a lot of context re-creation) to run in parallel (the range is split into N jobs, each job will process batch_size blocks) |
 | config.app.sp1_prover | string | `"mock"` | required - prover to use |
-| config.app.to_block | string | `""` | requiredat what block to end the estimation. |
+| config.app.to_block | string | `""` | required - at what block to end the estimation. |
 | enableServiceLinks | bool | `false` | Kubernetes enableServiceLinks |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` | Chart full name override |
