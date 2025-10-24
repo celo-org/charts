@@ -5,7 +5,7 @@ metadata:
 data:
   {{- with .Values.config.app}}
   KONA_START_BLOCK: "{{required "config.app.from_block is required" .from_block}}"
-  {{- with .end_block}}
+  {{- with .to_block}}
   KONA_END_BLOCK: "{{.}}"
   {{- end}}
   KONA_L2_ENDPOINT: "ws://{{required "config.app.l2_url is required" .l2_url}}"
