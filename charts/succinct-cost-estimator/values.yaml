@@ -47,6 +47,8 @@ config:
     sp1_prover: "mock"
     # -- required - whether to use the mock op-succinct
     op_succinct_mock: true
+    # -- log level
+    rust_log: "info"
     # -- extra environment variables passed to the app's container
     extra-env: {}
 
