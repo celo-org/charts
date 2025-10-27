@@ -62,6 +62,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [safe-config-service](./charts/safe-config-service/README.md) - Helm chart for deploying Celo Safe Config Service
 - [safe-transaction-service](./charts/safe-transaction-service/README.md) - Helm chart for deploying Celo Safe Transaction Service
 - [socket-exporter](./charts/socket-exporter/README.md) - A Helm chart for socket-exporter
+- [succinct-cost-estimator](./charts/succinct-cost-estimator/README.md) - A Helm chart for the succinct cost estimator
 - [team-trigger-workflow](./charts/team-trigger-workflow/README.md) - A Helm chart to run team-trigger-workflow at cLabs
 - [testnet](./charts/testnet/README.md) - Private Celo network Helm chart for Kubernetes
 - [ultragreen-dashboard](./charts/ultragreen-dashboard/README.md) - Celo Ultragreed Dashboard
