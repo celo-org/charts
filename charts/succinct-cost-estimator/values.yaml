@@ -32,7 +32,7 @@ config:
     # -- required - number of blocks to process in each cost estimation job
     batch_size: "1800"
     # -- how many concurrent cost estimation processes should run at the same time for historic blocks
-    concurrency: "20" 
+    concurrency: "20"
     # -- required - url of the eigenda proxy
     eigenda_proxy_url: "http://eigenda-proxy-succinct-api:4242"
     # -- required - url of the l2 geth
