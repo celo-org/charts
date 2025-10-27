@@ -26,7 +26,7 @@ config:
     # -- required - at what block to start the estimation. Should be in the last 2 weeks.
     from_block: "1"
     # -- required - at what block to end the estimation.
-    to_block: ""
+    to_block: "1"
     # -- required - number of blocks sent to every process to create N cost estimation jobs (1000, with 100 batch_size, will use that process to run 10 times the cost estimation, this saves a lot of context re-creation) to run in parallel (the range is split into N jobs, each job will process batch_size blocks)
     range: "18000"
     # -- required - number of blocks to process in each cost estimation job
