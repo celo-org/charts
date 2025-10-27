@@ -160,7 +160,7 @@ spec:
                 --storage.fallback-targets={{ .Values.config.storage.fallbackTargets }} \
                 {{- end }}
                 {{- if .Values.config.storage.writeOnMiss }}
-                --storage.write-on-miss \
+                --storage.write-on-cache-miss \
                 {{- end }}
                 {{- if .Values.config.s3.bucket }}
                 --s3.bucket={{ .Values.config.s3.bucket }} \
@@ -177,11 +177,11 @@ spec:
                 {{- if .Values.config.s3.path }}
                 --s3.path={{ .Values.config.s3.path }} \
                 {{- end }}
-                --metrics.enabled=true \
                 --metrics.addr=0.0.0.0 \
                 --metrics.port={{ .Values.services.metrics.port }} \
                 --log.format={{ .Values.log.format }} \
                 --log.level={{ .Values.log.level }} \
+                --apis.enabled=op-generic,op-keccak,standard,metrics \
                 {{- with .Values.extraArgs }}
                 {{- range . }}
                 {{- tpl (.) $ | nindent 16 }} \

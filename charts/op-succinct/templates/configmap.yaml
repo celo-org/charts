@@ -6,7 +6,9 @@ data:
   SP1_PROVER: "network"
   {{- with .Values.config}}
   {{- with .endpoints}}
+  {{- if .l1_execution}}
   L1_RPC: "{{ .l1_execution }}"
+  {{- end }}
   {{- if .l1_consensus }}
   L1_BEACON_RPC: "{{ .l1_consensus }}"
   {{- end }}
