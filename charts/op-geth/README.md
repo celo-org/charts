@@ -1,6 +1,6 @@
 # op-geth
 
-![Version: 0.3.9](https://img.shields.io/badge/Version-0.3.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.3.10](https://img.shields.io/badge/Version-0.3.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-geth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -49,6 +49,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.nodiscover | bool | `false` |  |
 | config.op-network | string | `"op-mainnet"` |  |
 | config.port | int | `30303` |  |
+| config.pprof.enabled | bool | `false` |  |
 | config.rollup.disabletxpoolgossip | bool | `true` |  |
 | config.rollup.halt | string | `"major"` |  |
 | config.rollup.sequencerhttp | string | `"https://mainnet-sequencer.optimism.io/"` |  |
@@ -176,6 +177,10 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | services.p2p.publishNotReadyAddresses | bool | `true` |  |
 | services.p2p.skipUDPService | bool | `false` |  |
 | services.p2p.type | string | `"ClusterIP"` |  |
+| services.pprof.enabled | bool | `false` |  |
+| services.pprof.port | int | `6061` |  |
+| services.pprof.publishNotReadyAddresses | bool | `true` |  |
+| services.pprof.type | string | `"ClusterIP"` |  |
 | services.rpc.httpPort | int | `8545` |  |
 | services.rpc.individualServiceEnabled | bool | `true` |  |
 | services.rpc.publishNotReadyAddresses | bool | `false` |  |
