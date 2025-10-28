@@ -1,9 +1,11 @@
-{{- with .Values.services.pprof }}
-{{- if .enabled }}
+{{- $replicas := .Values.replicaCount }}
+{{ range $index, $e := until (int $replicas) }}
+{{- with $.Values.services.pprof }}
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "op-geth.fullname" $ }}-pprof
+  name: {{ include "op-geth.fullname" $ }}-pprof-{{ $index }}
   {{- with .annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -13,26 +15,13 @@ metadata:
     {{- include "op-geth.labels" $ | nindent 4 }}
 spec:
   type: {{ .type }}
-  {{- with .loadBalancerIP }}
-  loadBalancerIP: {{ . }}
-  {{- end }}
-  {{- with .clusterIP }}
-  clusterIP: {{ . }}
-  {{- end }}
-  {{- with .externalTrafficPolicy }}
-  externalTrafficPolicy: {{ . }}
-  {{- end }}
-  {{- with .internalTrafficPolicy }}
-  internalTrafficPolicy: {{ . }}
-  {{- end }}
-  {{- with .publishNotReadyAddresses }}
-  publishNotReadyAddresses: {{ . }}
-  {{- end }}
+  publishNotReadyAddresses: {{ .publishNotReadyAddresses }}
   ports:
     - name: pprof
       port: {{ .port }}
       targetPort: pprof
   selector:
     {{- include "op-geth.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-geth.fullname" $ }}-{{ $index }}
 {{- end }}
 {{- end }}
