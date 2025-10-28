@@ -1,6 +1,6 @@
 # succinct-cost-estimator
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
 
 A Helm chart for the succinct cost estimator
 
@@ -20,19 +20,19 @@ A Helm chart for the succinct cost estimator
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
 | config.app.batch_size | string | `"1800"` | required - number of blocks to process in each cost estimation job |
-| config.app.concurrency | string | `"20"` | how many concurrent cost estimation processes should run at the same time for historic blocks |
-| config.app.eigenda_proxy_url | string | `"http://eigenda-proxy-succinct-api:4242"` | required - url of the eigenda proxy |
+| config.app.concurrency | string | `"2"` | how many concurrent cost estimation processes should run at the same time for historic blocks |
+| config.app.eigenda_proxy_url | string | `nil` | required - url of the eigenda proxy |
 | config.app.extra-env | object | `{}` | extra environment variables passed to the app's container |
-| config.app.from_block | string | `"1"` | required - at what block to start the estimation. Should be in the last 2 weeks. |
-| config.app.l1_beacon_url | string | `"https://ethereum-sepolia-beacon-api.publicnode.com"` | required - url of the l1 beacon |
-| config.app.l1_url | string | `"http://celo-sepolia-proxyd-l1-op-proxyd.celo-sepolia-cel2:8545"` | required - url of the l1 |
-| config.app.l2_geth_url | string | `"http://op-geth-sequencer-shared-rpc.celo-sepolia-cel2:8545"` | required - url of the l2 geth |
-| config.app.l2_node_url | string | `"http://op-node-sequencer-shared-rpc.celo-sepolia-cel2:9545"` | required - url of the l2 node |
-| config.app.op_succinct_mock | bool | `true` | required - whether to use the mock op-succinct |
+| config.app.from_block | string | `nil` | optional - at what block to start the estimation. Should be in the last 2 weeks. If not set, the job will start from the last finalized block. |
+| config.app.l1_beacon_url | string | `nil` | required - url of the l1 beacon |
+| config.app.l1_url | string | `nil` | required - url of the l1 |
+| config.app.l2_geth_url | string | `nil` | required - url of the l2 geth |
+| config.app.l2_node_url | string | `nil` | required - url of the l2 node |
+| config.app.op_succinct_mock | string | `nil` | required - whether to use the mock op-succinct |
 | config.app.range | string | `"18000"` | required - number of blocks sent to every process to create N cost estimation jobs (1000, with 100 batch_size, will use that process to run 10 times the cost estimation, this saves a lot of context re-creation) to run in parallel (the range is split into N jobs, each job will process batch_size blocks) |
-| config.app.rust_log | string | `"info"` | log level |
-| config.app.sp1_prover | string | `"mock"` | required - prover to use |
-| config.app.to_block | string | `"1"` | required - at what block to end the estimation. |
+| config.app.rust_log | string | `nil` | log level |
+| config.app.sp1_prover | string | `nil` | required - prover to use |
+| config.app.to_block | string | `nil` | optional - at what block to end the estimation. If not set, the job will set the to 2 weeks later from the from_block. |
 | enableServiceLinks | bool | `false` | Kubernetes enableServiceLinks |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` | Chart full name override |
