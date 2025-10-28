@@ -258,6 +258,11 @@ spec:
             --metrics.expensive \
             {{- end }}
             {{- end }}
+            {{- if .Values.config.pprof.enabled }}
+            --pprof \
+            --pprof.port=6061 \
+            --pprof.addr=0.0.0.0 \
+            {{- end }}
             --verbosity={{ .Values.config.verbosity }} \
             {{- with .Values.config.vmodule }}
             --log.vmodule={{ join "," . }} \
@@ -300,6 +305,10 @@ spec:
         {{- if .Values.config.metrics.enabled }}
         - name: metrics
           containerPort: 6060
+        {{- end }}
+        {{- if .Values.config.pprof.enabled }}
+        - name: pprof
+          containerPort: 6061
         {{- end }}
         {{- if not .Values.config.nodiscover }}
         - name: p2p-tcp

@@ -142,6 +142,11 @@ services:
     type: ClusterIP
     port: 6060
     publishNotReadyAddresses: true
+  pprof:
+    enabled: false
+    type: ClusterIP
+    port: 6061
+    publishNotReadyAddresses: true
   p2p:
     enabled: true       # disable if you are not using "snap" syncmode
     type: ClusterIP
@@ -345,6 +350,8 @@ config:
   metrics:
     enabled: false
     expensive: false
+  pprof:
+    enabled: false
 
 ## initContainers configuration
 init:
