@@ -48,9 +48,6 @@ spec:
               --range {{ .Values.config.app.range }}
               --batch-size {{ .Values.config.app.batch_size }}
               --concurrency {{ .Values.config.app.concurrency }}
-          envFrom:
-            - configMapRef:
-                name: {{ include "app.fullname" . }}-config
           env:
             - name: EIGENDA_PROXY_ADDRESS
               value: {{ .Values.config.app.eigenda_proxy_url }}
