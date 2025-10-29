@@ -133,4 +133,3 @@ enableServiceLinks: false
 
 # -- Kubernetes pod affinity
 affinity: {}
-
