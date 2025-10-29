@@ -34,15 +34,15 @@ config:
     # -- how many concurrent cost estimation processes should run at the same time for historic blocks
     concurrency: "2"
     # -- required - url of the eigenda proxy
-    eigenda_proxy_url: null
+    eigenda_proxy_url: "http://localhost:4242"
     # -- required - url of the l2 geth
-    l2_geth_url: null
+    l2_geth_url: "http://localhost:8545"
     # -- required - url of the l2 node
-    l2_node_url: null
+    l2_node_url: "http://localhost:9545"
     # -- required - url of the l1
-    l1_url: null
+    l1_url: "http://localhost:8545"
     # -- required - url of the l1 beacon
-    l1_beacon_url: null
+    l1_beacon_url: "https://ethereum-mainnet-beacon-api.publicnode.com"
     # -- required - prover to use
     sp1_prover: null
     # -- required - whether to use the mock op-succinct
