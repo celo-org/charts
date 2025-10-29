@@ -38,15 +38,16 @@ spec:
             - "-c"
           args: 
             - >
-              exec succinct-cost-estimator
+              exec parallel-cost-estimator
+              {{- if and .Values.config.app.from_block (not (empty .Values.config.app.from_block)) }}
               --from {{ .Values.config.app.from_block }}
+              {{- end }}
+              {{- if and .Values.config.app.to_block (not (empty .Values.config.app.to_block)) }}
               --to {{ .Values.config.app.to_block }}
+              {{- end }}
               --range {{ .Values.config.app.range }}
               --batch-size {{ .Values.config.app.batch_size }}
               --concurrency {{ .Values.config.app.concurrency }}
-          envFrom:
-            - configMapRef:
-                name: {{ include "app.fullname" . }}-config
           env:
             - name: EIGENDA_PROXY_ADDRESS
               value: {{ .Values.config.app.eigenda_proxy_url }}
@@ -62,8 +63,10 @@ spec:
               value: {{ .Values.config.app.sp1_prover }}
             - name: OP_SUCCINCT_MOCK
               value: {{ .Values.config.app.op_succinct_mock | quote }}
+            {{- if and .Values.config.app.rust_log (not (empty .Values.config.app.rust_log)) }}
             - name: RUST_LOG
               value: {{ .Values.config.app.rust_log }}
+            {{- end }}
             {{- range $key, $value := .Values.config.app.extraEnv }}
             - name: {{ $key }}
               value: {{ $value | quote }}

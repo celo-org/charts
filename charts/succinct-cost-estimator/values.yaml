@@ -23,32 +23,32 @@ extraArgs: []
 
 config:
   app:
-    # -- required - at what block to start the estimation. Should be in the last 2 weeks.
-    from_block: "1"
-    # -- required - at what block to end the estimation.
-    to_block: "1"
+    # -- optional - at what block to start the estimation. Should be in the last 2 weeks. If not set, the job will start from the last finalized block.
+    from_block: null
+    # -- optional - at what block to end the estimation. If not set, the job will set the to 2 weeks later from the from_block.
+    to_block: null
     # -- required - number of blocks sent to every process to create N cost estimation jobs (1000, with 100 batch_size, will use that process to run 10 times the cost estimation, this saves a lot of context re-creation) to run in parallel (the range is split into N jobs, each job will process batch_size blocks)
     range: "18000"
     # -- required - number of blocks to process in each cost estimation job
     batch_size: "1800"
     # -- how many concurrent cost estimation processes should run at the same time for historic blocks
-    concurrency: "20"
+    concurrency: "2"
     # -- required - url of the eigenda proxy
-    eigenda_proxy_url: "http://eigenda-proxy-succinct-api:4242"
+    eigenda_proxy_url: "http://localhost:4242"
     # -- required - url of the l2 geth
-    l2_geth_url: "http://op-geth-sequencer-shared-rpc.celo-sepolia-cel2:8545"
+    l2_geth_url: "http://localhost:8545"
     # -- required - url of the l2 node
-    l2_node_url: "http://op-node-sequencer-shared-rpc.celo-sepolia-cel2:9545"
+    l2_node_url: "http://localhost:9545"
     # -- required - url of the l1
-    l1_url: "http://celo-sepolia-proxyd-l1-op-proxyd.celo-sepolia-cel2:8545"
+    l1_url: "http://localhost:8545"
     # -- required - url of the l1 beacon
-    l1_beacon_url: "https://ethereum-sepolia-beacon-api.publicnode.com"
+    l1_beacon_url: "https://ethereum-mainnet-beacon-api.publicnode.com"
     # -- required - prover to use
-    sp1_prover: "mock"
+    sp1_prover: null
     # -- required - whether to use the mock op-succinct
-    op_succinct_mock: true
+    op_succinct_mock: null
     # -- log level
-    rust_log: "info"
+    rust_log: null
     # -- extra environment variables passed to the app's container
     extra-env: {}
 
