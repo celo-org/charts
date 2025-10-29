@@ -21,13 +21,13 @@ A Helm chart for the succinct cost estimator
 | affinity | object | `{}` | Kubernetes pod affinity |
 | config.app.batch_size | string | `"1800"` | required - number of blocks to process in each cost estimation job |
 | config.app.concurrency | string | `"2"` | how many concurrent cost estimation processes should run at the same time for historic blocks |
-| config.app.eigenda_proxy_url | string | `nil` | required - url of the eigenda proxy |
+| config.app.eigenda_proxy_url | string | `"http://localhost:4242"` | required - url of the eigenda proxy |
 | config.app.extra-env | object | `{}` | extra environment variables passed to the app's container |
 | config.app.from_block | string | `nil` | optional - at what block to start the estimation. Should be in the last 2 weeks. If not set, the job will start from the last finalized block. |
-| config.app.l1_beacon_url | string | `nil` | required - url of the l1 beacon |
-| config.app.l1_url | string | `nil` | required - url of the l1 |
-| config.app.l2_geth_url | string | `nil` | required - url of the l2 geth |
-| config.app.l2_node_url | string | `nil` | required - url of the l2 node |
+| config.app.l1_beacon_url | string | `"https://ethereum-mainnet-beacon-api.publicnode.com"` | required - url of the l1 beacon |
+| config.app.l1_url | string | `"http://localhost:8545"` | required - url of the l1 |
+| config.app.l2_geth_url | string | `"http://localhost:8545"` | required - url of the l2 geth |
+| config.app.l2_node_url | string | `"http://localhost:9545"` | required - url of the l2 node |
 | config.app.op_succinct_mock | string | `nil` | required - whether to use the mock op-succinct |
 | config.app.range | string | `"18000"` | required - number of blocks sent to every process to create N cost estimation jobs (1000, with 100 batch_size, will use that process to run 10 times the cost estimation, this saves a lot of context re-creation) to run in parallel (the range is split into N jobs, each job will process batch_size blocks) |
 | config.app.rust_log | string | `nil` | log level |
