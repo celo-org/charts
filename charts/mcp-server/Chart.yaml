@@ -1,0 +1,16 @@
+apiVersion: v2
+name: mcp-server
+description: A Helm chart for MCP Server flux159/mcp-server-kubernetes
+type: application
+version: 0.1.0
+appVersion: "v2.9.7"
+home: https://clabs.co
+sources:
+  - https://github.com/Flux159/mcp-server-kubernetes
+keywords:
+  - mcp
+  - kubernetes
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co

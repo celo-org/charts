@@ -32,6 +32,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [konga](./charts/konga/README.md) - Chart which is used to run konga for Kong ingress
 - [llama-web3-proxy](./charts/llama-web3-proxy/README.md) - Deploys llama-web3-proxy for aggregating blockchain RPC providers.
 - [load-test](./charts/load-test/README.md) - Chart which is used to run load test for a Celo Network
+- [mcp-server](./charts/mcp-server/README.md) - A Helm chart for MCP Server flux159/mcp-server-kubernetes
 - [nethermind](./charts/nethermind/README.md) - .NET Core Ethereum client
 - [odis-combiner](./charts/odis-combiner/README.md) - Helm chart for deploying Celo ODIS signer in AKS
 - [odis-loadtest](./charts/odis-loadtest/README.md) - Helm chart for deploying Celo ODIS load tests in GKE
