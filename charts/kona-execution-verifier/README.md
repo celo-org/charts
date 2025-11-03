@@ -1,6 +1,6 @@
 # kona-execution-verifier
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
 
 A Helm chart for the kona execution-verifier
 
@@ -47,6 +47,7 @@ A Helm chart for the kona execution-verifier
 | podLabels | object | `{}` | Custom pod labels |
 | podSecurityContext | object | `{}` | Custom pod security context |
 | readinessProbe | object | `{}` | Readiness probe configuration |
+| replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{}` | Container resources |
 | securityContext | object | `{}` | Custom container security context |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
