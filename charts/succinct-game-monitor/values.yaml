@@ -1,0 +1,136 @@
+# Default values for succinct-game-monitor.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+image:
+  # -- Image repository
+  repository: succinctlabs/op-succinct-game-monitor
+  # -- Image pullpolicy
+  pullPolicy: IfNotPresent
+  # -- Image tag
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+# -- Command to run in the container (overrides image ENTRYPOINT)
+command: []
+
+# -- Extra arguments to pass to the binary
+extraArgs: []
+
+config:
+  # -- Environment variables to pass to the container
+  # These will be created as a ConfigMap and mounted as env vars
+  env: {}
+    # EXAMPLE_VAR: "value"
+    # ANOTHER_VAR: "another_value"
+
+  # -- Secret environment variables to pass to the container
+  # These should be provided via a separate Secret resource
+  secretEnv: {}
+    # SECRET_VAR: "secret_value"
+
+  # -- Mount an env file into the container
+  # If enabled, creates a ConfigMap with the env file content
+  envFile:
+    enabled: false
+    # -- Path where the env file will be mounted in the container
+    mountPath: "/app/.env"
+    # -- Content of the env file
+    # Example:
+    # content: |
+    #   VAR1=value1
+    #   VAR2=value2
+    content: ""
+
+persistence:
+  enabled: false
+  pvc:
+    size: 1Gi
+    accessMode: ReadWriteOnce
+    storageClass: ""           # set to "-" if you want to manually create persistent volume
+    annotations: {}
+  # -- Mount path for persistent volume
+  mountPath: /data
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+services:
+  headless:
+    annotations: {}
+    publishNotReadyAddresses: true
+
+# -- Custom pod annotations
+podAnnotations: {}
+  # prometheus.io/path: /metrics
+  # prometheus.io/port: "8080"
+  # prometheus.io/scrape: "true"
+
+# -- Custom pod labels
+podLabels: {}
+
+# -- Custom pod security context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Custom container security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# -- Container resources
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- Liveness probe configuration
+livenessProbe: {}
+  # httpGet:
+  #   path: /healthz
+  #   port: healthz
+
+# -- Readiness probe configuration
+readinessProbe: {}
+  # httpGet:
+  #   path: /healthz
+  #   port: healthz
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes enableServiceLinks
+enableServiceLinks: false
+
+# -- Kubernetes pod affinity
+affinity: {}
+

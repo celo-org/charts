@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "app.fullname" . }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "app.fullname" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+      {{- if and .Values.podAnnotations (not (empty .Values.podAnnotations)) }}
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "app.labels" . | nindent 8 }}
+        {{- if and .Values.podLabels (not (empty .Values.podLabels)) }}
+          {{- toYaml .Values.podLabels | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if and .Values.imagePullSecrets (not (empty .Values.imagePullSecrets)) }}
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "app.serviceAccountName" . }}
+      {{- if not ( empty .Values.podSecurityContext ) }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end}}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- if and .Values.command (not (empty .Values.command)) }}
+          command:
+            {{- toYaml .Values.command | nindent 12 }}
+          {{- end }}
+          {{- if and .Values.extraArgs (not (empty .Values.extraArgs)) }}
+          args:
+            {{- toYaml .Values.extraArgs | nindent 12 }}
+          {{- end }}
+          {{- if or (and .Values.config.env (not (empty .Values.config.env))) (and .Values.config.secretEnv (not (empty .Values.config.secretEnv))) }}
+          env:
+            {{- range $key, $value := .Values.config.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.config.secretEnv }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "app.fullname" $ }}-secret
+                  key: {{ $key }}
+            {{- end }}
+          {{- end }}
+          {{- if or .Values.persistence.enabled .Values.config.envFile.enabled }}
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            - name: data
+              mountPath: {{ .Values.persistence.mountPath }}
+            {{- end }}
+            {{- if .Values.config.envFile.enabled }}
+            - name: env-file
+              mountPath: {{ .Values.config.envFile.mountPath }}
+              subPath: .env
+              readOnly: true
+            {{- end }}
+          {{- end }}
+          {{- if not ( empty .Values.securityContext ) }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if and .Values.livenessProbe (not (empty .Values.livenessProbe)) }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if and .Values.readinessProbe (not (empty .Values.readinessProbe)) }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
+          {{- if and .Values.resources (not (empty .Values.resources)) }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
+      {{- if .Values.config.envFile.enabled }}
+      volumes:
+        - name: env-file
+          configMap:
+            name: {{ include "app.fullname" . }}-env-file
+      {{- end }}
+      enableServiceLinks: {{ .Values.enableServiceLinks }}
+      {{- if and .Values.nodeSelector (not (empty .Values.nodeSelector)) }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if and .Values.affinity (not (empty .Values.affinity)) }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      {{- end }}
+      {{- if and .Values.tolerations (not (empty .Values.tolerations)) }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "app.selectorLabels" . | nindent 10 }}
+        {{- with .Values.persistence.pvc.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes:
+        - {{ .Values.persistence.pvc.accessMode }}
+        {{- if .Values.persistence.pvc.storageClass }}
+        {{- if eq .Values.persistence.pvc.storageClass "-" }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ .Values.persistence.pvc.storageClass | quote }}
+        {{- end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.pvc.size | quote }}
+  {{- end }}
+

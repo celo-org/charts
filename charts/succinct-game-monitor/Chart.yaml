@@ -1,0 +1,14 @@
+---
+apiVersion: v2
+name: succinct-game-monitor
+description: A Helm chart for the succinct game monitor
+type: application
+version: 0.1.0
+appVersion: "latest"
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
+sources:
+  - https://github.com/succinctlabs/op-succinct
+
