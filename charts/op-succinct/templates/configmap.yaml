@@ -4,6 +4,7 @@ metadata:
   name: {{ include "op-succinct.fullname" . }}-env
 data:
   SP1_PROVER: "network"
+  AGG_PROOF_MODE: "plonk"
   {{- with .Values.config}}
   {{- with .endpoints}}
   {{- if .l1_execution}}
