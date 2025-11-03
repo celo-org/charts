@@ -24,7 +24,7 @@
 #   - "--verbose"
 #   - "--log-level=debug"
 
-# Example 5: Using shell wrapper for complex startup
+# Example 4: Using shell wrapper for complex startup
 # command:
 #   - /bin/sh
 #   - -c
@@ -36,7 +36,7 @@
 #       --config=/app/.env \
 #       --log-level=info
 
-# Example 4: With persistence enabled
+# Example 5: With persistence enabled
 # persistence:
 #   enabled: true
 #   mountPath: /data
@@ -44,7 +44,7 @@
 #     size: 10Gi
 #     storageClass: "fast-ssd"
 
-# Example 5: With resource limits and monitoring
+# Example 6: With resource limits and monitoring
 # resources:
 #   limits:
 #     cpu: 1000m
@@ -58,7 +58,7 @@
 #   prometheus.io/port: "8080"
 #   prometheus.io/path: "/metrics"
 
-# Example 6: Custom image
+# Example 7: Custom image
 # image:
 #   repository: my-registry.io/succinct-game-monitor
 #   tag: "v1.0.0"
