@@ -37,19 +37,6 @@ config:
   secretEnv: {}
     # SECRET_VAR: "secret_value"
 
-  # -- Mount an env file into the container
-  # If enabled, creates a ConfigMap with the env file content
-  envFile:
-    enabled: false
-    # -- Path where the env file will be mounted in the container
-    mountPath: "/app/.env"
-    # -- Content of the env file
-    # Example:
-    # content: |
-    #   VAR1=value1
-    #   VAR2=value2
-    content: ""
-
 persistence:
   enabled: false
   pvc:

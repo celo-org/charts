@@ -55,18 +55,10 @@ spec:
                   key: {{ $key }}
             {{- end }}
           {{- end }}
-          {{- if or .Values.persistence.enabled .Values.config.envFile.enabled }}
+          {{- if .Values.persistence.enabled }}
           volumeMounts:
-            {{- if .Values.persistence.enabled }}
             - name: data
               mountPath: {{ .Values.persistence.mountPath }}
-            {{- end }}
-            {{- if .Values.config.envFile.enabled }}
-            - name: env-file
-              mountPath: {{ .Values.config.envFile.mountPath }}
-              subPath: .env
-              readOnly: true
-            {{- end }}
           {{- end }}
           {{- if not ( empty .Values.securityContext ) }}
           securityContext:
@@ -86,12 +78,6 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}
-      {{- if .Values.config.envFile.enabled }}
-      volumes:
-        - name: env-file
-          configMap:
-            name: {{ include "app.fullname" . }}-env-file
-      {{- end }}
       enableServiceLinks: {{ .Values.enableServiceLinks }}
       {{- if and .Values.nodeSelector (not (empty .Values.nodeSelector)) }}
       nodeSelector:

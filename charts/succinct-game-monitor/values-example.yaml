@@ -8,18 +8,7 @@
 #     GAME_MONITOR_INTERVAL: "60"
 #     LOG_LEVEL: "info"
 
-# Example 2: Using an env file
-# config:
-#   envFile:
-#     enabled: true
-#     mountPath: "/app/.env"
-#     content: |
-#       GAME_MONITOR_URL=https://example.com/api
-#       GAME_MONITOR_INTERVAL=60
-#       LOG_LEVEL=info
-#       API_KEY=your-api-key-here
-
-# Example 3: Using secret environment variables
+# Example 2: Using secret environment variables
 # config:
 #   env:
 #     GAME_MONITOR_URL: "https://example.com/api"
@@ -27,7 +16,7 @@
 #     API_KEY: "your-secret-api-key"
 #     PRIVATE_KEY: "your-private-key"
 
-# Example 4: Custom command and arguments
+# Example 3: Custom command and arguments
 # command:
 #   - /usr/local/bin/game-monitor
 # extraArgs:
@@ -47,7 +36,7 @@
 #       --config=/app/.env \
 #       --log-level=info
 
-# Example 6: With persistence enabled
+# Example 4: With persistence enabled
 # persistence:
 #   enabled: true
 #   mountPath: /data
