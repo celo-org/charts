@@ -44,7 +44,7 @@ config:
   secretEnv:
     # The below secret env vars are required.
     # L1_RPC:
-    #L1_BEACON_RPC:
+    # L1_BEACON_RPC:
     # L2_RPC:
     # L2_NODE_RPC:
     # EIGENDA_PROXY_ADDRESS:
