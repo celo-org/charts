@@ -37,17 +37,17 @@ config:
     OP_SUCCINCT_MOCK: true
     SP1_PROVER: mock
     # The dispute game factory address is required.
-    # DISPUTE_GAME_FACTORY_ADDRESS: 
+    # DISPUTE_GAME_FACTORY_ADDRESS:
 
   # -- Secret environment variables to pass to the container
   # These should be provided via a separate Secret resource
   secretEnv:
     # The below secret env vars are required.
-    # L1_RPC: 
-    #L1_BEACON_RPC: 
-    # L2_RPC: 
-    # L2_NODE_RPC: 
-    # EIGENDA_PROXY_ADDRESS: 
+    # L1_RPC:
+    #L1_BEACON_RPC:
+    # L2_RPC:
+    # L2_NODE_RPC:
+    # EIGENDA_PROXY_ADDRESS:
 
 persistence:
   enabled: true
