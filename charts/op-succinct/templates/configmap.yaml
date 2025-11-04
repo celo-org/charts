@@ -4,6 +4,7 @@ metadata:
   name: {{ include "op-succinct.fullname" . }}-env
 data:
   SP1_PROVER: "network"
+  AGG_PROOF_MODE: "plonk"
   {{- with .Values.config}}
   {{- with .endpoints}}
   {{- if .l1_execution}}
@@ -21,18 +22,11 @@ data:
   GAME_TYPE: "42"
   {{- with .game}}
   FACTORY_ADDRESS: "{{ .dispute_game_factory_address }}"
-  ENABLE_GAME_RESOLUTION: "{{ .resolution }}"
   {{- if eq $.Values.mode "challenger" }}
   {{- if .malicious_challenge_percentage }}
   MALICIOUS_CHALLENGE_PERCENTAGE: "{{ .malicious_challenge_percentage }}"
   {{- end }}
   {{- end }}
-  {{- with .max_game_limits}}
-  MAX_GAMES_TO_CHECK_FOR_CHALLENGE: "{{ .challenge }}"
-  MAX_GAMES_TO_CHECK_FOR_DEFENSE: "{{ .defense }}"
-  MAX_GAMES_TO_CHECK_FOR_RESOLUTION: "{{ .resolution }}"
-  MAX_GAMES_TO_CHECK_FOR_BOND_CLAIMING: "{{ .bond_claiming }}"
-  {{- end}}
   {{- end}}
   {{- with .intervals}}
   {{- if eq $.Values.mode "proposer" }}

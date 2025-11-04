@@ -7,6 +7,9 @@ nameOverride: ""
 # -- Chart full name override
 fullnameOverride: ""
 
+# -- Number of deployment replicas
+replicaCount: 1
+
 image:
   # -- Image repository
   repository: us-west1-docker.pkg.dev/devopsre/dev-images/celo-kona
