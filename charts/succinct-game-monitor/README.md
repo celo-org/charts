@@ -19,16 +19,14 @@ A Helm chart for the succinct game monitor
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
+| command | list | `[]` | Command to run in the container (overrides image ENTRYPOINT) |
 | config.env | object | `{}` | Environment variables to pass to the container These will be created as a ConfigMap and mounted as env vars |
-| config.envFile.content | string | `""` | Content of the env file Example: content: \|   VAR1=value1   VAR2=value2 |
-| config.envFile.enabled | bool | `false` | Mount an env file into the container If enabled, creates a ConfigMap with the env file content |
-| config.envFile.mountPath | string | `"/app/.env"` | Path where the env file will be mounted in the container |
 | config.secretEnv | object | `{}` | Secret environment variables to pass to the container These should be provided via a separate Secret resource |
 | enableServiceLinks | bool | `false` | Kubernetes enableServiceLinks |
 | extraArgs | list | `[]` | Extra arguments to pass to the binary |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"succinctlabs/op-succinct-game-monitor"` | Image repository |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct/game-monitor"` | Image repository |
 | image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
