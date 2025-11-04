@@ -9,7 +9,7 @@ fullnameOverride: ""
 
 image:
   # -- Image repository
-  repository: us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct/game-monitor
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-game-monitor
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag
