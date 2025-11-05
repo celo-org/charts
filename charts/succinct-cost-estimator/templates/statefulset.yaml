@@ -48,6 +48,14 @@ spec:
               --range {{ .Values.config.app.range }}
               --batch-size {{ .Values.config.app.batch_size }}
               --concurrency {{ .Values.config.app.concurrency }}
+              {{- if and .Values.config.app.reverse (not (empty .Values.config.app.reverse)) }}
+              --reverse {{ .Values.config.app.reverse | quote }}
+              {{- end }}
+              {{- with .Values.config.app.extraArgs }}
+              {{- range . }}
+              {{- tpl (.) $ | nindent 14 }} \
+              {{- end }}
+              {{- end }}
           env:
             - name: EIGENDA_PROXY_ADDRESS
               value: {{ .Values.config.app.eigenda_proxy_url }}
