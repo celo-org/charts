@@ -49,7 +49,7 @@ spec:
               --batch-size {{ .Values.config.app.batch_size }}
               --concurrency {{ .Values.config.app.concurrency }}
               {{- if and .Values.config.app.reverse (not (empty .Values.config.app.reverse)) }}
-              --reverse {{ .Values.config.app.reverse | quote }}
+              --reverse
               {{- end }}
               {{- with .Values.config.app.extraArgs }}
               {{- range . }}
