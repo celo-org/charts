@@ -45,7 +45,7 @@ spec:
               {{- if and .Values.config.app.to_block (not (empty .Values.config.app.to_block)) }}
               --to {{ .Values.config.app.to_block }}
               {{- end }}
-              {{- if and .Values.config.app.days (not (empty .Values.config.app.to_block)) }}
+              {{- if and .Values.config.app.days (not (empty .Values.config.app.days)) }}
               --days {{ .Values.config.app.days }}
               {{- end }}
               --range {{ .Values.config.app.range }}
