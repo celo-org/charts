@@ -21,6 +21,7 @@ A Helm chart for the succinct cost estimator
 | affinity | object | `{}` | Kubernetes pod affinity |
 | config.app.batch_size | string | `"1800"` | required - number of blocks to process in each cost estimation job |
 | config.app.concurrency | string | `"2"` | how many concurrent cost estimation processes should run at the same time for historic blocks |
+| config.app.days | string | `nil` | optional - number of days to estimate. Used if to_block is not set. If not set, the job will estimate 2 weeks. |
 | config.app.eigenda_proxy_url | string | `"http://localhost:4242"` | required - url of the eigenda proxy |
 | config.app.extra-env | object | `{}` | extra environment variables passed to the app's container |
 | config.app.from_block | string | `nil` | optional - at what block to start the estimation. Should be in the last 2 weeks. If not set, the job will start from the last finalized block. |
