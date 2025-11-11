@@ -3,7 +3,7 @@ apiVersion: v2
 name: succinct-cost-estimator
 description: A Helm chart for the succinct cost estimator
 type: application
-version: 0.1.6
+version: 0.1.7
 appVersion: "main"
 maintainers:
   - name: cLabs

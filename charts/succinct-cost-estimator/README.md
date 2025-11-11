@@ -1,6 +1,6 @@
 # succinct-cost-estimator
 
-![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
+![Version: 0.1.7](https://img.shields.io/badge/Version-0.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
 
 A Helm chart for the succinct cost estimator
 
@@ -29,8 +29,8 @@ A Helm chart for the succinct cost estimator
 | config.app.l1_url | string | `"http://localhost:8545"` | required - url of the l1 |
 | config.app.l2_geth_url | string | `"http://localhost:8545"` | required - url of the l2 geth |
 | config.app.l2_node_url | string | `"http://localhost:9545"` | required - url of the l2 node |
+| config.app.logs_only | bool | `true` | optional - whether to only log the costs. If true, the job will only log the costs and not save them as a csv file. |
 | config.app.op_succinct_mock | string | `nil` | required - whether to use the mock op-succinct |
-| config.app.range | string | `"18000"` | required - number of blocks sent to every process to create N cost estimation jobs (1000, with 100 batch_size, will use that process to run 10 times the cost estimation, this saves a lot of context re-creation) to run in parallel (the range is split into N jobs, each job will process batch_size blocks) |
 | config.app.rust_log | string | `nil` | log level |
 | config.app.sp1_prover | string | `nil` | required - prover to use |
 | config.app.to_block | string | `nil` | optional - at what block to end the estimation. If not set, the job will set the to 2 weeks later from the from_block. |
@@ -38,8 +38,8 @@ A Helm chart for the succinct cost estimator
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/celo-kona"` | Image repository |
-| image.tag | string | `"edge"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-parallel-cost-estimator"` | Image repository |
+| image.tag | string | `"sha-dac08eb"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |

@@ -9,12 +9,12 @@ fullnameOverride: ""
 
 image:
   # -- Image repository
-  repository: us-west1-docker.pkg.dev/devopsre/dev-images/celo-kona
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-parallel-cost-estimator
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "edge"
+  tag: "sha-dac08eb"
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -29,8 +29,6 @@ config:
     to_block: null
     # -- optional - number of days to estimate. Used if to_block is not set. If not set, the job will estimate 2 weeks.
     days: null
-    # -- required - number of blocks sent to every process to create N cost estimation jobs (1000, with 100 batch_size, will use that process to run 10 times the cost estimation, this saves a lot of context re-creation) to run in parallel (the range is split into N jobs, each job will process batch_size blocks)
-    range: "18000"
     # -- required - number of blocks to process in each cost estimation job
     batch_size: "1800"
     # -- how many concurrent cost estimation processes should run at the same time for historic blocks
@@ -51,6 +49,8 @@ config:
     op_succinct_mock: null
     # -- log level
     rust_log: null
+    # -- optional - whether to only log the costs. If true, the job will only log the costs and not save them as a csv file.
+    logs_only: true
     # -- extra environment variables passed to the app's container
     extra-env: {}
 
