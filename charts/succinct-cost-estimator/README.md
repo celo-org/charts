@@ -1,6 +1,6 @@
 # succinct-cost-estimator
 
-![Version: 0.1.7](https://img.shields.io/badge/Version-0.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
+![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
 
 A Helm chart for the succinct cost estimator
 
@@ -29,7 +29,7 @@ A Helm chart for the succinct cost estimator
 | config.app.l1_url | string | `"http://localhost:8545"` | required - url of the l1 |
 | config.app.l2_geth_url | string | `"http://localhost:8545"` | required - url of the l2 geth |
 | config.app.l2_node_url | string | `"http://localhost:9545"` | required - url of the l2 node |
-| config.app.logs_only | bool | `true` | optional - whether to only log the costs. If true, the job will only log the costs and not save them as a csv file. |
+| config.app.log_only | bool | `true` | optional - whether to only log the costs. If true, the job will only log the costs and not save them as a csv file. |
 | config.app.op_succinct_mock | string | `nil` | required - whether to use the mock op-succinct |
 | config.app.rust_log | string | `nil` | log level |
 | config.app.sp1_prover | string | `nil` | required - prover to use |
@@ -39,7 +39,7 @@ A Helm chart for the succinct cost estimator
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-parallel-cost-estimator"` | Image repository |
-| image.tag | string | `"sha-dac08eb"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"sha-ac2a057"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
