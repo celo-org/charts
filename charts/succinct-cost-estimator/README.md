@@ -39,7 +39,7 @@ A Helm chart for the succinct cost estimator
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
 | image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-parallel-cost-estimator"` | Image repository |
-| image.tag | string | `"edge"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"sha-dac08eb"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
