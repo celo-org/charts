@@ -53,8 +53,8 @@ spec:
               {{- if and .Values.config.app.reverse (not (empty .Values.config.app.reverse)) }}
               --reverse
               {{- end }}
-              {{- if and .Values.config.app.logs_only (not (empty .Values.config.app.logs_only)) }}
-              --logs-only
+              {{- if and .Values.config.app.log_only (not (empty .Values.config.app.log_only)) }}
+              --log-only
               {{- end }}
               {{- with .Values.config.app.extraArgs }}
               {{- range . }}
