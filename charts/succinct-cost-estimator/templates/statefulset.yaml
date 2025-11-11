@@ -45,9 +45,22 @@ spec:
               {{- if and .Values.config.app.to_block (not (empty .Values.config.app.to_block)) }}
               --to {{ .Values.config.app.to_block }}
               {{- end }}
-              --range {{ .Values.config.app.range }}
+              {{- if and .Values.config.app.days (not (empty .Values.config.app.days)) }}
+              --days {{ .Values.config.app.days }}
+              {{- end }}
               --batch-size {{ .Values.config.app.batch_size }}
               --concurrency {{ .Values.config.app.concurrency }}
+              {{- if and .Values.config.app.reverse (not (empty .Values.config.app.reverse)) }}
+              --reverse
+              {{- end }}
+              {{- if and .Values.config.app.logs_only (not (empty .Values.config.app.logs_only)) }}
+              --logs-only
+              {{- end }}
+              {{- with .Values.config.app.extraArgs }}
+              {{- range . }}
+              {{- tpl (.) $ | nindent 14 }} \
+              {{- end }}
+              {{- end }}
           env:
             - name: EIGENDA_PROXY_ADDRESS
               value: {{ .Values.config.app.eigenda_proxy_url }}
