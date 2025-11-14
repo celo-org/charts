@@ -238,7 +238,7 @@ config:
     protocol: ""                             # Used for multiReplica. Leave url empty if using multiReplica
     namePattern: ""                          # Used for multiReplica. Set to the op-geth sts name pattern. Example: "op-geth-validator-authrpc"
     port: ""                                 # Used for multiReplica. Authrpc port of op-geth L2 node with multiReplica
-    engineRPCTimeout: ""                              # Authrpc timeout
+    engineRPCTimeout: ""                     # Authrpc timeout
   rollup:
     config: "/celo"                         # path to rollup config json folder
     loadProtocolVersions: true         # load superchain contract
