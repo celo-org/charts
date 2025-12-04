@@ -54,7 +54,7 @@ data:
   }}
   GOOGLE_KEYRING:   {{ .keyring | quote }}
   GOOGLE_LOCATION:  {{ .location | quote }}
-  GOOGLE_PROJECT:   {{ .project_id | quote }}
+  GOOGLE_PROJECT_ID:   {{ .project_id | quote }}
   HSM_KEY_NAME:  {{ .hsm_key_name | quote }}
   HSM_KEY_VERSION:   {{ .hsm_key_version | quote }}
   {{- end }}
