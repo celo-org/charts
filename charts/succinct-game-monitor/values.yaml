@@ -21,12 +21,19 @@ imagePullSecrets: []
 
 # -- Command to run in the container (overrides image ENTRYPOINT)
 command: [game-monitor]
-  # Example:
-  # - /usr/local/bin/game-monitor
-  # - run
-
 
 # -- Extra arguments to pass to the binary
+#      --env-file <ENV_FILE>
+#          The environment file to use. This file should contain the following environment variables: [default: .env]
+#      --poll-interval <POLL_INTERVAL>
+#          The polling interval in seconds [default: 30]
+#      --max-concurrent <MAX_CONCURRENT>
+#          Maximum number of concurrent cost estimator processes [default: 5]
+#      --cost-estimator-binary-path <COST_ESTIMATOR_BINARY_PATH>
+#          The path to the cost estimator binary [default: cost-estimator]
+#      --logs-dir <LOGS_DIR>
+#          The directory under which to store the logs [default: logs]
+#      --start-index <START_INDEX>
 extraArgs: [--logs-dir=/logs]
 
 config:
@@ -52,7 +59,7 @@ config:
 persistence:
   enabled: true
   pvc:
-    size: 3Gi
+    size: 40Gi
     accessMode: ReadWriteOnce
     storageClass: ""           # set to "-" if you want to manually create persistent volume
     annotations: {}
