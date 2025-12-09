@@ -44,6 +44,21 @@ data:
   SIGNER_ADDRESS: "{{ .signer_address }}"
   {{- end }}
   {{- end}}
+  {{- with .google_kms_signing}}
+  {{- if and
+      (not (empty .keyring))
+      (not (empty .location))
+      (not (empty .project_id))
+      (not (empty .hsm_key_name))
+      (not (empty .hsm_key_version))
+  }}
+  GOOGLE_KEYRING:   {{ .keyring | quote }}
+  GOOGLE_LOCATION:  {{ .location | quote }}
+  GOOGLE_PROJECT_ID:   {{ .project_id | quote }}
+  HSM_KEY_NAME:  {{ .hsm_key_name | quote }}
+  HSM_KEY_VERSION:   {{ .hsm_key_version | quote }}
+  {{- end }}
+  {{- end }}
   {{- if .metrics.enabled }}
   {{ include "op-succinct.metricsPortName" $ }}: "{{.metrics.port | default 7300}}"
   {{- end}}

@@ -1,6 +1,6 @@
 # op-succinct
 
-![Version: 1.0.0-rc.1](https://img.shields.io/badge/Version-1.0.0--rc.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
+![Version: 1.0.0-rc.2](https://img.shields.io/badge/Version-1.0.0--rc.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
 
 A Helm chart for op-succinct proposer and challenger
 
@@ -26,6 +26,11 @@ A Helm chart for op-succinct proposer and challenger
 | config.endpoints.l2_execution | string | `""` | URL of the L2 execution (op-geth) client |
 | config.game.dispute_game_factory_address | string | `""` | Address of the active L1 `DisputeGameFactoryProxy` address |
 | config.game.malicious_challenge_percentage | string | `"0.0"` |  |
+| config.google_kms_signing.hsm_key_name | string | `""` | Name of the HSM key within the keyring |
+| config.google_kms_signing.hsm_key_version | int | `2` | Version number of the HSM key to use for signing |
+| config.google_kms_signing.keyring | string | `""` | GCP KMS keyring name containing the signing key |
+| config.google_kms_signing.location | string | `""` | GCP region/location where the KMS keyring is deployed, e.g., "global" |
+| config.google_kms_signing.project_id | string | `""` | GCP project ID where the KMS resources are located |
 | config.intervals.fetch | int | `30` | Fetch interval |
 | config.intervals.proposal | int | `20` | Proposal interval in blocks (proposer only) |
 | config.metrics.addr | string | `"0.0.0.0"` |  |

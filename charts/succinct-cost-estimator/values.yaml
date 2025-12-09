@@ -14,7 +14,7 @@ image:
   pullPolicy: IfNotPresent
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "sha-dac08eb"
+  tag: "sha-ac2a057"
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -50,7 +50,7 @@ config:
     # -- log level
     rust_log: null
     # -- optional - whether to only log the costs. If true, the job will only log the costs and not save them as a csv file.
-    logs_only: true
+    log_only: true
     # -- extra environment variables passed to the app's container
     extra-env: {}
 

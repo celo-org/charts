@@ -58,6 +58,21 @@ config:
     # -- Address of the op-signer-service that is responsible for the L1 batcher privkey, required when signing.remote = true
     # -- Note that this currently only works, when TLS is disabled in the signer-service
     endpoint: ""
+
+  # Google Cloud KMS signing configuration
+  # All fields must be provided together - they are passed to the gcloud KMS Rust SDK for transaction signing
+  google_kms_signing:
+    # -- GCP KMS keyring name containing the signing key
+    keyring: ""
+    # -- GCP region/location where the KMS keyring is deployed, e.g., "global"
+    location: ""
+    # -- GCP project ID where the KMS resources are located
+    project_id: ""
+    # -- Name of the HSM key within the keyring
+    hsm_key_name: ""
+    # -- Version number of the HSM key to use for signing
+    hsm_key_version: 2
+
   # -- Use a secret to inject env-vars into the executor.
   # -- The `NETWORK_PRIVATE_KEY` has to be present,
   # -- the `PRIVATE_KEY` is only required when `config.remote_signing.enabled` is `false`.
