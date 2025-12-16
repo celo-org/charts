@@ -14,13 +14,13 @@ fullnameOverride: ""
 replicaCount: 1
 
 image:
-  # -- Image repository base (will be combined with mode, like <repository>/op-succinct-<mode>:<tag>)
-  repository: us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct/proposer
+  # -- Image repository base
+  repository: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-succinct-proposer
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "sha-018b537"  # TODO: set to a version tag once released
+  tag: "1.0.2-rc.1"
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -44,6 +44,15 @@ config:
     dispute_game_factory_address: ""
     # Percentage (0.0-100.0) of valid games to challenge for testing defense mechanisms (challenger only)
     malicious_challenge_percentage: "0.0"
+    disable_monitor_only: false
+  proof:
+    agg_proof_mode: "plonk"
+    max_concurrent_range_proofs: 9
+    range_split_count: 9
+    range_gas_limit: 1000000000000
+    agg_cycle_limit: 1000000000000
+    agg_gas_limit: 1000000000000
+    timeout: 14400
   intervals:
     # -- Proposal interval in blocks (proposer only)
     proposal: 20

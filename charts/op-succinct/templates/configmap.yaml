@@ -4,7 +4,6 @@ metadata:
   name: {{ include "op-succinct.fullname" . }}-env
 data:
   SP1_PROVER: "network"
-  AGG_PROOF_MODE: "plonk"
   {{- with .Values.config}}
   {{- with .endpoints}}
   {{- if .l1_execution}}
@@ -26,6 +25,9 @@ data:
   {{- if .malicious_challenge_percentage }}
   MALICIOUS_CHALLENGE_PERCENTAGE: "{{ .malicious_challenge_percentage }}"
   {{- end }}
+  {{- if .disable_monitor_only }}
+  DISABLE_MONITOR_ONLY: {{ .disable_monitor_only | quote }}
+  {{- end }}
   {{- end }}
   {{- end}}
   {{- with .intervals}}
@@ -36,6 +38,31 @@ data:
   {{- end }}
   FETCH_INTERVAL: "{{ .fetch }}"
   {{- end}}
+  {{- if eq $.Values.mode "proposer" }}
+  {{- with .proof}}
+  {{- if .agg_proof_mode }}
+  AGG_PROOF_MODE: {{ .agg_proof_mode | quote }}
+  {{- end }}
+  {{- if .max_concurrent_range_proofs }}
+  MAX_CONCURRENT_RANGE_PROOFS: "{{ .max_concurrent_range_proofs }}"
+  {{- end }}
+  {{- if .range_split_count }}
+  RANGE_SPLIT_COUNT: "{{ .range_split_count }}"
+  {{- end }}
+  {{- if .range_gas_limit }}
+  RANGE_GAS_LIMIT: "{{ .range_gas_limit }}"
+  {{- end }}
+  {{- if .agg_cycle_limit }}
+  AGG_CYCLE_LIMIT: "{{ .agg_cycle_limit}}"
+  {{- end }}
+  {{- if .agg_gas_limit }}
+  AGG_GAS_LIMIT: "{{ .agg_gas_limit }}"
+  {{- end }}
+  {{- if .timeout }}
+  TIMEOUT: "{{ .timeout }}"
+  {{- end }}
+  {{- end }}
+  {{- end }}
   {{- with .remote_signing}}
   {{- if .endpoint }}
   SIGNER_URL: "{{ .endpoint }}"
