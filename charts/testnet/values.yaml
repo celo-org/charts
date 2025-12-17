@@ -55,7 +55,7 @@ genesis:
 geth:
   image:
     repository: us.gcr.io/celo-org/geth
-    tag: 1.8.8
+    tag: 1.8.9
   resources:
     requests:
       memory: "256Mi"
