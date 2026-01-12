@@ -42,16 +42,26 @@ config:
   game:
     # -- Address of the active L1 `DisputeGameFactoryProxy` address
     dispute_game_factory_address: ""
-    # Percentage (0.0-100.0) of valid games to challenge for testing defense mechanisms (challenger only)
+    # -- Percentage (0.0-100.0) of valid games to challenge for testing defense mechanisms (challenger only)
     malicious_challenge_percentage: "0.0"
+    # -- If the monitor-only mode is disabled, the challenger will try to send `challenge()` calls onchain in case of a challenger (challenger only).
     disable_monitor_only: false
   proof:
+    # -- Proof mode for aggregation proofs. `groth16` for Groth16 proofs, `plonk` for PLONK proofs.
+    # -- Changing the proof mode requires updating the SP1_VERIFIER address in contracts/src/fp/OPSuccinctFaultDisputeGame.sol to the corresponding verifier gateway contract.
     agg_proof_mode: "plonk"
-    max_concurrent_range_proofs: 9
-    range_split_count: 9
+    # -- The maximum number of concurrent range proof tasks. (default: 1)
+    # -- Increasing this feeds more work into the prover and host in parallel; tune carefully based
+    # -- on observed latency, and system resources before deviating from default.
+    max_concurrent_range_proofs: 1
+    # -- The number of segments to split the range into (1-16) (default: 1).
+    range_split_count: 1
+    # -- The gas limit to use for range proofs.
     range_gas_limit: "1000000000000"
     agg_cycle_limit: "1000000000000"
+    # -- 	The gas limit to use for aggregation proofs.
     agg_gas_limit: "1000000000000"
+    # -- The proving timeout (in seconds). Used as the server-side deadline for proof requests and as the client-side maximum wait time when polling for proof completion.
     timeout: 14400
   intervals:
     # -- Proposal interval in blocks (proposer only)
