@@ -24,9 +24,9 @@ A Helm chart for op-succinct proposer and challenger
 | config.endpoints.l1_execution | string | `""` | URL of the L1 execution client |
 | config.endpoints.l2_consensus | string | `""` | URL of the L2 consensus (op-node) client (proposer only) |
 | config.endpoints.l2_execution | string | `""` | URL of the L2 execution (op-geth) client |
-| config.game.disable_monitor_only | bool | `false` |  |
+| config.game.disable_monitor_only | bool | `false` | If the monitor-only mode is disabled, the challenger will try to send `challenge()` calls onchain in case of a challenger (challenger only). |
 | config.game.dispute_game_factory_address | string | `""` | Address of the active L1 `DisputeGameFactoryProxy` address |
-| config.game.malicious_challenge_percentage | string | `"0.0"` |  |
+| config.game.malicious_challenge_percentage | string | `"0.0"` | Percentage (0.0-100.0) of valid games to challenge for testing defense mechanisms (challenger only) |
 | config.google_kms_signing.hsm_key_name | string | `""` | Name of the HSM key within the keyring |
 | config.google_kms_signing.hsm_key_version | int | `2` | Version number of the HSM key to use for signing |
 | config.google_kms_signing.keyring | string | `""` | GCP KMS keyring name containing the signing key |
@@ -38,12 +38,13 @@ A Helm chart for op-succinct proposer and challenger
 | config.metrics.enabled | bool | `true` |  |
 | config.metrics.port | int | `7300` |  |
 | config.proof.agg_cycle_limit | string | `"1000000000000"` |  |
-| config.proof.agg_gas_limit | string | `"1000000000000"` |  |
-| config.proof.agg_proof_mode | string | `"plonk"` |  |
-| config.proof.max_concurrent_range_proofs | int | `9` |  |
-| config.proof.range_gas_limit | string | `"1000000000000"` |  |
-| config.proof.range_split_count | int | `9` |  |
-| config.proof.timeout | int | `14400` |  |
+| config.proof.agg_gas_limit | string | `"1000000000000"` | The gas limit to use for aggregation proofs. |
+| config.proof.agg_proof_mode | string | `"plonk"` | Changing the proof mode requires updating the SP1_VERIFIER address in contracts/src/fp/OPSuccinctFaultDisputeGame.sol to the corresponding verifier gateway contract. |
+| config.proof.max_concurrent_range_proofs | int | `1` | on observed latency, and system resources before deviating from default. |
+| config.proof.range_cycle_limit | string | `"1000000000000"` | The cycle limit to use for range proofs. |
+| config.proof.range_gas_limit | string | `"1000000000000"` | The gas limit to use for range proofs. |
+| config.proof.range_split_count | int | `1` | The number of segments to split the range into (1-16) (default: 1). |
+| config.proof.timeout | int | `14400` | The proving timeout (in seconds). Used as the server-side deadline for proof requests and as the client-side maximum wait time when polling for proof completion. |
 | config.remote_signing.enabled | bool | `true` | of reading the "PRIVATE_KEY" env-var and signing locally. |
 | config.remote_signing.endpoint | string | `""` | Note that this currently only works, when TLS is disabled in the signer-service |
 | config.remote_signing.signer_address | string | `""` | Address of the signer, will get used as the 'from' address in `eth_signTransaction` call |
