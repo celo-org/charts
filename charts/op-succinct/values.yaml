@@ -49,9 +49,9 @@ config:
     agg_proof_mode: "plonk"
     max_concurrent_range_proofs: 9
     range_split_count: 9
-    range_gas_limit: 1000000000000
-    agg_cycle_limit: 1000000000000
-    agg_gas_limit: 1000000000000
+    range_gas_limit: "1000000000000"
+    agg_cycle_limit: "1000000000000"
+    agg_gas_limit: "1000000000000"
     timeout: 14400
   intervals:
     # -- Proposal interval in blocks (proposer only)

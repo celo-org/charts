@@ -44,19 +44,25 @@ data:
   AGG_PROOF_MODE: {{ .agg_proof_mode | quote }}
   {{- end }}
   {{- if .max_concurrent_range_proofs }}
-  MAX_CONCURRENT_RANGE_PROOFS: "{{ .max_concurrent_range_proofs }}"
+  MAX_CONCURRENT_RANGE_PROOFS: {{ .max_concurrent_range_proofs | quote}}
   {{- end }}
   {{- if .range_split_count }}
-  RANGE_SPLIT_COUNT: "{{ .range_split_count }}"
+  RANGE_SPLIT_COUNT: {{ .range_split_count | quote}}
   {{- end }}
   {{- if .range_gas_limit }}
-  RANGE_GAS_LIMIT: "{{ .range_gas_limit }}"
+  RANGE_GAS_LIMIT: {{
+    include "op-succinct.decimalString" (dict "name" "range_gas_limit" "value" .range_gas_limit) | quote
+  }}
   {{- end }}
   {{- if .agg_cycle_limit }}
-  AGG_CYCLE_LIMIT: "{{ .agg_cycle_limit}}"
+  AGG_CYCLE_LIMIT: {{
+    include "op-succinct.decimalString" (dict "name" "agg_cycle_limit" "value" .agg_cycle_limit) | quote
+  }}
   {{- end }}
   {{- if .agg_gas_limit }}
-  AGG_GAS_LIMIT: "{{ .agg_gas_limit }}"
+  AGG_GAS_LIMIT: {{
+    include "op-succinct.decimalString" (dict "name" "agg_gas_limit" "value" .agg_gas_limit) | quote
+  }}
   {{- end }}
   {{- if .timeout }}
   TIMEOUT: "{{ .timeout }}"
@@ -90,3 +96,4 @@ data:
   {{ include "op-succinct.metricsPortName" $ }}: "{{.metrics.port | default 7300}}"
   {{- end}}
   {{- end}}
+

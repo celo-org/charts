@@ -37,11 +37,11 @@ A Helm chart for op-succinct proposer and challenger
 | config.metrics.addr | string | `"0.0.0.0"` |  |
 | config.metrics.enabled | bool | `true` |  |
 | config.metrics.port | int | `7300` |  |
-| config.proof.agg_cycle_limit | int | `1000000000000` |  |
-| config.proof.agg_gas_limit | int | `1000000000000` |  |
+| config.proof.agg_cycle_limit | string | `"1000000000000"` |  |
+| config.proof.agg_gas_limit | string | `"1000000000000"` |  |
 | config.proof.agg_proof_mode | string | `"plonk"` |  |
 | config.proof.max_concurrent_range_proofs | int | `9` |  |
-| config.proof.range_gas_limit | int | `1000000000000` |  |
+| config.proof.range_gas_limit | string | `"1000000000000"` |  |
 | config.proof.range_split_count | int | `9` |  |
 | config.proof.timeout | int | `14400` |  |
 | config.remote_signing.enabled | bool | `true` | of reading the "PRIVATE_KEY" env-var and signing locally. |
