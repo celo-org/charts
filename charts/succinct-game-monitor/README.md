@@ -1,6 +1,6 @@
 # succinct-game-monitor
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
 
 A Helm chart for the succinct game monitor
 
@@ -19,24 +19,24 @@ A Helm chart for the succinct game monitor
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Kubernetes pod affinity |
-| command | list | `[]` | Command to run in the container (overrides image ENTRYPOINT) |
-| config.env | object | `{}` | Environment variables to pass to the container These will be created as a ConfigMap and mounted as env vars |
-| config.secretEnv | object | `{}` | Secret environment variables to pass to the container These should be provided via a separate Secret resource |
+| command | list | `["game-monitor"]` | Command to run in the container (overrides image ENTRYPOINT) |
+| config.env | object | `{"OP_SUCCINCT_MOCK":true,"RUST_LOG":"info","SP1_PROVER":"mock"}` | Environment variables to pass to the container These will be created as a ConfigMap and mounted as env vars |
+| config.secretEnv | string | `nil` | Secret environment variables to pass to the container These should be provided via a separate Secret resource |
 | enableServiceLinks | bool | `false` | Kubernetes enableServiceLinks |
-| extraArgs | list | `[]` | Extra arguments to pass to the binary |
+| extraArgs | list | `["--logs-dir=/logs"]` | Extra arguments to pass to the binary      --env-file <ENV_FILE>          The environment file to use. This file should contain the following environment variables: [default: .env]      --poll-interval <POLL_INTERVAL>          The polling interval in seconds [default: 30]      --max-concurrent <MAX_CONCURRENT>          Maximum number of concurrent cost estimator processes [default: 5]      --cost-estimator-binary-path <COST_ESTIMATOR_BINARY_PATH>          The path to the cost estimator binary [default: cost-estimator]      --logs-dir <LOGS_DIR>          The directory under which to store the logs [default: logs]      --start-index <START_INDEX> |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct/game-monitor"` | Image repository |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-game-monitor"` | Image repository |
 | image.tag | string | `"latest"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
-| persistence.enabled | bool | `false` |  |
-| persistence.mountPath | string | `"/data"` | Mount path for persistent volume |
+| persistence.enabled | bool | `true` |  |
+| persistence.mountPath | string | `"/logs"` | Mount path for persistent volume |
 | persistence.pvc.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.pvc.annotations | object | `{}` |  |
-| persistence.pvc.size | string | `"1Gi"` |  |
+| persistence.pvc.size | string | `"40Gi"` |  |
 | persistence.pvc.storageClass | string | `""` |  |
 | podAnnotations | object | `{}` | Custom pod annotations |
 | podLabels | object | `{}` | Custom pod labels |

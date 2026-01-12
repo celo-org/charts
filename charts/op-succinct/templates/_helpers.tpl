@@ -93,3 +93,21 @@ Get the metrics port name based on app type
 {{- "CHALLENGER_METRICS_PORT" }}
 {{- end }}
 {{- end }}
+
+{{- define "op-succinct.decimalString" -}}
+{{- $name := .name -}}
+{{- $v := .value -}}
+
+{{- /* Treat unset / null / empty-string as "not provided" */ -}}
+{{- if or (eq $v nil) (and (kindIs "string" $v) (eq $v "")) -}}
+{{- "" -}}
+{{- else -}}
+  {{- if not (kindIs "string" $v) -}}
+    {{- fail (printf "values.%s must be a quoted string of digits (e.g. %s: \"1000000\"). Got %s." $name $name (kindOf $v)) -}}
+  {{- end -}}
+  {{- if not (regexMatch "^[0-9]+$" $v) -}}
+    {{- fail (printf "values.%s must be decimal digits only (no scientific notation). Got %q." $name $v) -}}
+  {{- end -}}
+  {{- $v -}}
+{{- end -}}
+{{- end -}}
