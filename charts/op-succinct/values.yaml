@@ -58,6 +58,8 @@ config:
     range_split_count: 1
     # -- The gas limit to use for range proofs.
     range_gas_limit: "1000000000000"
+    # -- The cycle limit to use for range proofs.
+    range_cycle_limit: "1000000000000"
     agg_cycle_limit: "1000000000000"
     # -- 	The gas limit to use for aggregation proofs.
     agg_gas_limit: "1000000000000"

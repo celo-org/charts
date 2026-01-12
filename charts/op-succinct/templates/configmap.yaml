@@ -54,6 +54,11 @@ data:
     include "op-succinct.decimalString" (dict "name" "range_gas_limit" "value" .range_gas_limit) | quote
   }}
   {{- end }}
+  {{- if .range_cycle_limit }}
+  RANGE_CYCLE_LIMIT: {{
+    include "op-succinct.decimalString" (dict "name" "range_cycle_limit" "value" .range_cycle_limit) | quote
+  }}
+  {{- end }}
   {{- if .agg_cycle_limit }}
   AGG_CYCLE_LIMIT: {{
     include "op-succinct.decimalString" (dict "name" "agg_cycle_limit" "value" .agg_cycle_limit) | quote
