@@ -1,6 +1,6 @@
 # kona-execution-verifier
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
 
 A Helm chart for the kona execution-verifier
 
@@ -23,7 +23,7 @@ A Helm chart for the kona execution-verifier
 | config.app.end_block | string | `""` | at what block to end the verification. If empty, the job will keep alive and continue to verify new block headers. |
 | config.app.extra-env | object | `{}` | extra environment variables passed to the app's container |
 | config.app.l2_url | string | `"op-geth-forno-rpc-0.mainnet-cel2:8545"` | required - url (incl port) of the WS enable archive-node op-geth RPC. |
-| config.app.start_block | string | `"1"` | required - at what block to start the verification. Should be post cel2 migration. |
+| config.app.start_block | string | `""` | if a value is given, the block number should be post cel2 migration, otherwise the execution fails. |
 | config.telemetry.enabled | bool | `true` | wether to enable the app's telemetry |
 | config.telemetry.export_interval_ms | int | `5000` | how often telemetry data gets pushed to the otlp endpoint |
 | config.telemetry.otlp_endpoint | string | `"http://grafana-alloy.monitoring:4317"` | otlp endpoint for metrics, logs and traces |

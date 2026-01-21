@@ -4,7 +4,9 @@ metadata:
   name: {{ include "app.fullname" . }}-config
 data:
   {{- with .Values.config.app}}
-  KONA_START_BLOCK: "{{required "config.app.start_block is required" .start_block}}"
+  {{- with .start_block}}
+  KONA_START_BLOCK: "{{.}}"
+  {{- end}}
   {{- with .end_block}}
   KONA_END_BLOCK: "{{.}}"
   {{- end}}

@@ -26,10 +26,11 @@ extraArgs: []
 
 config:
   app:
-    # -- required - at what block to start the verification. Should be post cel2 migration.
-    start_block: "1"
     # -- required - url (incl port) of the WS enable archive-node op-geth RPC.
     l2_url: "op-geth-forno-rpc-0.mainnet-cel2:8545"
+    # -- at what block to start the verification. If empty, the job will only execute incoming new latest heads.
+    # -- if a value is given, the block number should be post cel2 migration, otherwise the execution fails.
+    start_block: ""
     # -- at what block to end the verification. If empty, the job will keep alive and continue to verify new block headers.
     end_block: ""
     # -- how many concurrent verification processes should run at the same time for historic blocks
