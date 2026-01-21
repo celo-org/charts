@@ -61,7 +61,7 @@ spec:
               value: "{{ .otlp_protocol}}"
             {{- end}}
             {{- end}}
-            {{- range $key, $value := .Values.config.app.extraEnv }}
+            {{- range $key, $value := .Values.config.app.extra_env }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
