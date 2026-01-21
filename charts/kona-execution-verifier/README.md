@@ -21,7 +21,7 @@ A Helm chart for the kona execution-verifier
 | affinity | object | `{}` | Kubernetes pod affinity |
 | config.app.concurrency | string | `"25"` | how many concurrent verification processes should run at the same time for historic blocks |
 | config.app.end_block | string | `""` | at what block to end the verification. If empty, the job will keep alive and continue to verify new block headers. |
-| config.app.extra-env | object | `{}` | extra environment variables passed to the app's container |
+| config.app.extra_env | object | `{}` | extra environment variables passed to the app's container |
 | config.app.l2_url | string | `"op-geth-forno-rpc-0.mainnet-cel2:8545"` | required - url (incl port) of the WS enable archive-node op-geth RPC. |
 | config.app.start_block | string | `""` | if a value is given, the block number should be post cel2 migration, otherwise the execution fails. |
 | config.telemetry.enabled | bool | `true` | wether to enable the app's telemetry |

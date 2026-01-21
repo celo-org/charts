@@ -36,7 +36,7 @@ config:
     # -- how many concurrent verification processes should run at the same time for historic blocks
     concurrency: "25"
     # -- extra environment variables passed to the app's container
-    extra-env: {}
+    extra_env: {}
   telemetry:
     # -- wether to enable the app's telemetry
     enabled: true
