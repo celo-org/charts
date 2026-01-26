@@ -1,0 +1,9 @@
+---
+persistence:
+  enabled: false
+global:
+  JWTSecret: "a101010101010101010101010101010101010101010101010101010101010101"  # gitleaks:allow
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false

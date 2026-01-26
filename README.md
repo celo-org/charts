@@ -22,6 +22,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [common](./charts/common/README.md) - Helm chart with helper templates and functions for Celo nodes. Import into your chart with `dependencies` and use the templates and functions
 - [daily-chain-backup](./charts/daily-chain-backup/README.md) - A Helm chart for deploying cron job to periodically run chain backups and upload to GCS
 - [eigenda-proxy](./charts/eigenda-proxy/README.md) - Helm chart deploying Layr-Labs eigenda-proxy
+- [erigon](./charts/erigon/README.md) - Ethereum implementation on the efficiency frontier
 - [eth-funder](./charts/eth-funder/README.md) - A Helm chart for Kubernetes
 - [etherscan-exporter](./charts/etherscan-exporter/README.md) - A Helm chart for etherscan-exporter
 - [forta-firewall-proxy](./charts/forta-firewall-proxy/README.md) - A Helm chart for Kubernetes
