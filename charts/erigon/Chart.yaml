@@ -12,6 +12,10 @@ keywords:
 - erigon
 - p2p
 name: erigon
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
 sources:
 - https://github.com/ledgerwatch/erigon
 type: application
