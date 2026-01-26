@@ -1,0 +1,18 @@
+apiVersion: v2
+appVersion: 2.61.2
+dependencies:
+- name: common
+  repository: https://charts.stakewise.io/
+  version: 1.x.x
+description: Ethereum implementation on the efficiency frontier
+icon: https://storage.googleapis.com/stakewise-charts/stakewise.png
+keywords:
+- ethereum
+- blockchain
+- erigon
+- p2p
+name: erigon
+sources:
+- https://github.com/ledgerwatch/erigon
+type: application
+version: 2.61.2
