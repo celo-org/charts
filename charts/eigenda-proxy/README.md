@@ -1,6 +1,6 @@
 # eigenda-proxy
 
-![Version: 0.6.3](https://img.shields.io/badge/Version-0.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Helm chart deploying Layr-Labs eigenda-proxy
 
@@ -14,7 +14,7 @@ Helm chart deploying Layr-Labs eigenda-proxy
 
 ## Source Code
 
-* <https://github.com/Layr-Labs/eigenda-proxy/tree/main>
+* <https://github.com/Layr-Labs/eigenda/tree/master/api/proxy>
 * <https://celo.org>
 * <https://docs.celo.org>
 * <https://clabs.co>
@@ -57,8 +57,6 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.v2.blobCertifiedTimeout | string | `"30s"` |  |
 | config.v2.blobStatusPollInterval | string | `"1s"` |  |
 | config.v2.blobVersion | int | `0` |  |
-| config.v2.blsOperatorStateRetrieverAddr | string | `""` |  |
-| config.v2.certVerifierAddr | string | `""` |  |
 | config.v2.certVerifierRouterOrImmutableVerifierAddr | string | `""` |  |
 | config.v2.contractCallTimeout | string | `"10s"` |  |
 | config.v2.disablePointEvaluation | bool | `false` |  |
@@ -72,13 +70,12 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.v2.network | string | `""` |  |
 | config.v2.putRetries | int | `3` |  |
 | config.v2.relayTimeout | string | `"10s"` |  |
-| config.v2.serviceManagerAddr | string | `""` |  |
 | config.v2.signerPaymentKeyHex.value | string | `""` |  |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ghcr.io/layr-labs/eigenda-proxy"` |  |
-| image.tag | string | `"v1.8.2"` |  |
+| image.tag | string | `"2.6.0"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` |  |

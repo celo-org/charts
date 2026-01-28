@@ -8,7 +8,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/layr-labs/eigenda-proxy
   pullPolicy: Always
-  tag: v1.8.2
+  tag: 2.6.0
 
 imagePullSecrets: []
 nameOverride: ""
@@ -182,10 +182,9 @@ config:
       value: ""
       # secretName: test
       # secretKey: test
-    # New variables for 2.x versions
     network: ""
-    certVerifierRouterOrImmutableVerifierAddr: ""
     eigendaDirectory: ""
+    certVerifierRouterOrImmutableVerifierAddr: ""
 
 log:
   level: info
