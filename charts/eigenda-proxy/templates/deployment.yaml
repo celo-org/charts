@@ -108,15 +108,6 @@ spec:
                 --eigenda.v2.blob-certified-timeout={{ .Values.config.v2.blobCertifiedTimeout }} \
                 --eigenda.v2.blob-status-poll-interval={{ .Values.config.v2.blobStatusPollInterval }} \
                 --eigenda.v2.blob-version={{ .Values.config.v2.blobVersion }} \
-                {{- if .Values.config.v2.certVerifierAddr }}
-                --eigenda.v2.cert-verifier-addr={{ .Values.config.v2.certVerifierAddr }} \
-                {{- end }}
-                {{- if .Values.config.v2.serviceManagerAddr }}
-                --eigenda.v2.service-manager-addr={{ .Values.config.v2.serviceManagerAddr }} \
-                {{- end }}
-                {{- if .Values.config.v2.blsOperatorStateRetrieverAddr }}
-                --eigenda.v2.bls-operator-state-retriever-addr={{ .Values.config.v2.blsOperatorStateRetrieverAddr }} \
-                {{- end }}
                 {{- if .Values.config.v2.network }}
                 --eigenda.v2.network={{ .Values.config.v2.network }} \
                 {{- end }}

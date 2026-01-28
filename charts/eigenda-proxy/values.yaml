@@ -169,9 +169,6 @@ config:
     blobCertifiedTimeout: 30s
     blobStatusPollInterval: 1s
     blobVersion: 0
-    certVerifierAddr: ""
-    serviceManagerAddr: ""
-    blsOperatorStateRetrieverAddr: ""
     contractCallTimeout: 10s
     disablePointEvaluation: false
     disableTls: false
