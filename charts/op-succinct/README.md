@@ -1,6 +1,6 @@
 # op-succinct
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.2](https://img.shields.io/badge/AppVersion-1.0.2-informational?style=flat-square)
+![Version: 1.2.0-rc.1](https://img.shields.io/badge/Version-1.2.0--rc.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 A Helm chart for op-succinct proposer and challenger
 
@@ -62,6 +62,12 @@ A Helm chart for op-succinct proposer and challenger
 | mode | string | `"proposer"` | Mode to run in (proposer or challenger) |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
+| persistence.enabled | bool | `false` |  |
+| persistence.mountPath | string | `"/data"` |  |
+| persistence.pvc.accessMode | string | `"ReadWriteOnce"` |  |
+| persistence.pvc.annotations | object | `{}` |  |
+| persistence.pvc.size | string | `"1Gi"` |  |
+| persistence.pvc.storageClass | string | `""` |  |
 | podAnnotations | object | `{}` | Custom pod annotations |
 | podLabels | object | `{}` | Custom pod labels |
 | podSecurityContext | object | `{}` | Custom pod security context |

@@ -15,12 +15,12 @@ replicaCount: 1
 
 image:
   # -- Image repository base
-  repository: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-succinct-proposer
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-proposer
   # -- Image pullpolicy
   pullPolicy: IfNotPresent
   # -- Image tag
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "1.0.2"
+  tag: "sha-75e0698"
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -108,6 +108,15 @@ config:
     enabled: true
     addr: 0.0.0.0
     port: 7300
+
+persistence:
+  enabled: false
+  mountPath: /data
+  pvc:
+    size: 1Gi
+    accessMode: ReadWriteOnce
+    storageClass: ""           # set to "-" if you want to manually create persistent volume
+    annotations: {}
 
 serviceAccount:
   # -- Specifies whether a service account should be created
