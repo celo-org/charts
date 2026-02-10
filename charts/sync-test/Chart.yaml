@@ -1,0 +1,13 @@
+---
+name: sync-test
+apiVersion: v2
+version: 0.1.0
+description: Umbrella chart for running OP-Stack sync tests
+type: application
+dependencies:
+  - name: op-geth
+    repository: "file://../op-geth"
+    version: "0.3.11"
+  - name: op-node
+    repository: "file://../op-node"
+    version: "0.4.19"
