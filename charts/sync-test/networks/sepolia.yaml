@@ -1,0 +1,53 @@
+---
+# Celo sepolia network configuration
+
+op-geth:
+  config:
+    networkid: 11142220
+    rollup:
+      sequencerhttp: https://sequencer.celo-sepolia.celo-testnet.org
+    bootnodes:
+      - enode://369490db0153e75a2bbae7b78f984e8f0fd05e294de8ebdd4d63c7ed1766ef7aa3aaacba2fac0729354d9f361d757b97fd9755f463dad0954849d7de5bdeaf11@34.118.224.11:30303
+      - enode://ed906afda6386c86a7e5ad7cdb0bbc0e444c6c9f215c338eee2fa58271cf360e5d06d53fe1c1a7b0cb08bd22b5e71ddb7c0ba8023c0f4db25b86b3d0637d5c18@34.118.224.12:30303
+      - enode://a91969ca6a4c17adfb75f3cd645abc91d85dc0f802b8563cda7c23244644774d0772cab2023e63bd363e9f23d917f0e437a8a3080bec6d518ee1f5aa4bee27be@34.118.224.13:30303
+      - enode://06e838cdc2018d4c6bd5a6c6094dd9f08e9575827bd40c4f044595af731041802fdbc3918461dfbcb6efe1b9ad0dea0f209e290c772d31d85337d2580bccf4fb@34.118.224.30:30303
+      - enode://7fd35dfea27042fe008c74ea97c7a41254b293152730419a6e9bcd84bb03c7ced418c1043e2ef6ad63d2facca6fbdacfbf7c4bfcf33ee7e9a0e6b7eb0617595d@34.169.104.197:30303
+      - enode://151bcf170585971fc78129d9c16af355a1a53e1c825ce1ac20700ea754aa33eda60ca83de6f954bfed8d36c53f33295d93dbc3da9d549d6547d09467806b4b3d@104.199.124.11:30303
+      - enode://aa5fb766438ac5a0354eb2eec1c0c002b56bb2ce7ed44f0e76e019cbb931222faa9ecfb0fa0055c0c62a2fcf04492d4129349a1045dfef140585250281885e4b@34.83.115.97:30303
+      - enode://27c81ca466c99016d1595429afc68d66afb3ed9d5a2dd7f6a7797db23a4c826546a177b69b4932f3a75ce374b09d8ccc5b52dad615b3c47dbb8f6217d79ded22@35.247.1.226:30303
+
+  extraArgs:
+    - --rpc.txfeecap=0
+    - --history.transactions=0
+    - --txpool.nolocals
+
+  init:
+    genesis:
+      url: https://storage.googleapis.com/cel2-rollup-files/celo-sepolia/genesis.json
+    rollup:
+      url: https://storage.googleapis.com/cel2-rollup-files/celo-sepolia/rollup.json
+
+op-node:
+  secrets:
+    l1Url:
+      value: "http://celo-sepolia-proxyd-l1-op-proxyd:8545"
+    l1BeaconUrl:
+      value: "https://prysm.sepolia.cel2.celo-networks-dev.org"
+
+  config:
+    l1:
+      rpckind: standard
+      trustrpc: true
+    p2p:
+      bootnodes:
+        - enr:-J-4QDJ3WjxHT-doUydM7Abkh_VVhLzo7n6pwscXZH9ygYCOPB5OcTONp3NfMyV9pfDrNSXhIiAndkXIgQ_TvMiM0RSGAZg0C8J3gmlkgnY0gmlwhCJ24BSHb3BzdGFja4XMiKgFAIlzZWNwMjU2azGhAzaUkNsBU-daK7rnt4-YTo8P0F4pTejr3U1jx-0XZu96g3RjcIIkBoN1ZHCCJAY
+        - enr:-J-4QH61hLzPf3yZpXC1Txr8dKWKjGBx1OkQUVlPrhSbv9YXXjSdl-y-XTjXjxcg5zI43rirJ8w0-fa28wGdfMgCZ46GAZg0FnMwgmlkgnY0gmlwhCJ24BWHb3BzdGFja4XMiKgFAIlzZWNwMjU2azGhAu2Qav2mOGyGp-WtfNsLvA5ETGyfIVwzju4vpYJxzzYOg3RjcIIkBoN1ZHCCJAY
+        - enr:-J-4QARHov7wGILdhdOHp2yx9hY6ygedsJ8IZbkRq4RWpFxjM5uDglD9yk7XQIYZDidXD59Zmv1dXssMeuWWd3_ghdSGAZg0FslvgmlkgnY0gmlwhCJ24BaHb3BzdGFja4XMiKgFAIlzZWNwMjU2azGhAqkZacpqTBet-3XzzWRavJHYXcD4ArhWPNp8IyRGRHdNg3RjcIIkBoN1ZHCCJAY
+        - enr:-J-4QH6w9gXcn3P260lGAcsp-lncE399z3ENDlovYQSSf4iTUByVmj2md90bYuGGackJFurboYXFZYDagSLhRGKwbk-GAZg0KuKxgmlkgnY0gmlwhCJ24CiHb3BzdGFja4XMiKgFAIlzZWNwMjU2azGhAwboOM3CAY1Ma9WmxglN2fCOlXWCe9QMTwRFla9zEEGAg3RjcIIkBoN1ZHCCJAY
+        - enr:-J-4QIfSFLy1G3ChVv1eKIrhXajQAbP1c4XFxVb9B9dkHZ7XN_cjBq972Npgj-l75vGM9rnVx6-kd1-Tq1N4gWldvCyGAZg2WSqCgmlkgnY0gmlwhCJpeVSHb3BzdGFja4XMiKgFAIlzZWNwMjU2azGhA3_TXf6icEL-AIx06pfHpBJUspMVJzBBmm6bzYS7A8fOg3RjcIIkBoN1ZHCCJAY
+        - enr:-J-4QEbMTKrBfyAeq9hWlEchulzvt1gWA-wAGa_kUdWw1K-faR-AjFNzhcVGG7yDnRb1RptLDGWVpl-WXWhrgJ4TKEaGAZg2XFFugmlkgnY0gmlwhCKotN-Hb3BzdGFja4XMiKgFAIlzZWNwMjU2azGhAxUbzxcFhZcfx4Ep2cFq81WhpT4cglzhrCBwDqdUqjPtg3RjcIIkBoN1ZHCCJAY
+        - enr:-J-4QEawPak_hVU3h1wPZEGu7zLOv1C3k4WI8nHLUc83RqsRMauPtOPt8hYDFyxeJeaUyp0OUM0oyq-_9CEdshE1oWaGAZg2XLgDgmlkgnY0gmlwhCJSX5OHb3BzdGFja4XMiKgFAIlzZWNwMjU2azGhA6pft2ZDisWgNU6y7sHAwAK1a7LOftRPDnbgGcu5MSIvg3RjcIIkBoN1ZHCCJAY
+
+  init:
+    rollup:
+      url: https://storage.googleapis.com/cel2-rollup-files/celo-sepolia/rollup.json
