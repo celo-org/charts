@@ -1,0 +1,18 @@
+---
+# Consensus-layer sync: restore from snapshot, derive blocks from L1
+snapshot:
+  enabled: true
+
+op-geth:
+  config:
+    syncmode: full
+  init:
+    genesis:
+      enabled: false
+  persistence:
+    pvc:
+      size: 1100Gi
+
+op-node:
+  config:
+    syncmode: consensus-layer

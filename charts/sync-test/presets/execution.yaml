@@ -1,0 +1,18 @@
+---
+# Execution-layer sync: restore from snapshot, sync via p2p
+snapshot:
+  enabled: true
+
+op-geth:
+  config:
+    syncmode: full
+  init:
+    genesis:
+      enabled: false
+  persistence:
+    pvc:
+      size: 1100Gi
+
+op-node:
+  config:
+    syncmode: execution-layer

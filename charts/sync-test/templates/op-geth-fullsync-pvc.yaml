@@ -1,0 +1,23 @@
+{{- if .Values.snapshot.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-{{ .Release.Name }}-op-geth-0
+  labels:
+    {{- include "sync-test.labels" . | nindent 4 }}
+  annotations:
+    resize.topolvm.io/increase: "10%"
+    resize.topolvm.io/inodes-threshold: "10%"
+    resize.topolvm.io/storage_limit: "4000Gi"
+    resize.topolvm.io/threshold: "10%"
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: {{ .Values.snapshot.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.snapshot.storageSize }}
+  dataSource:
+    name: {{ .Values.snapshot.volumeSnapshotName }}
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
+{{- end }}

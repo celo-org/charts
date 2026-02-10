@@ -1,0 +1,15 @@
+---
+# Snap sync: fresh start, sync state via snap protocol
+snapshot:
+  enabled: false
+
+op-geth:
+  config:
+    syncmode: snap
+  init:
+    genesis:
+      enabled: true
+
+op-node:
+  config:
+    syncmode: execution-layer

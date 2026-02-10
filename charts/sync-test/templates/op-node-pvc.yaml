@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-{{ .Release.Name }}-op-node-0
+  labels:
+    {{- include "sync-test.labels" . | nindent 4 }}
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: {{ (index .Values "op-node").persistence.pvc.storageClass }}
+  resources:
+    requests:
+      storage: {{ (index .Values "op-node").persistence.pvc.size }}

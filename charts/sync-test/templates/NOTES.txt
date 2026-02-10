@@ -1,0 +1,14 @@
+{{- include "sync-test.validate" . -}}
+Sync test "{{ .Release.Name }}" deployed to namespace "{{ .Release.Namespace }}".
+
+Check pod status:
+  kubectl get pods -l app.kubernetes.io/instance={{ .Release.Name }} -n {{ .Release.Namespace }}
+
+Tail op-geth logs:
+  kubectl logs -f {{ .Release.Name }}-op-geth-0 -c op-geth -n {{ .Release.Namespace }}
+
+Tail op-node logs:
+  kubectl logs -f {{ .Release.Name }}-op-node-0 -c op-node -n {{ .Release.Namespace }}
+
+Cleanup:
+  helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
