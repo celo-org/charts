@@ -1,8 +1,6 @@
 # sync-test
 
-Umbrella chart for running Celo L2 sync tests. Deploys **op-geth** and **op-node** as subcharts with a single `helm install` command.
-
-Uses a shared eigenda-proxy instance (`http://eigenda-proxy-api:4242`) which is not deployed by this chart.
+Umbrella chart for running OP-Stack sync tests. Deploys **op-geth** and **op-node** as subcharts with a single `helm install` command.
 
 ## Prerequisites
 
@@ -15,6 +13,16 @@ Build subchart dependencies before first use:
 ```bash
 helm dependency build
 ```
+
+## Networks
+
+Network-specific configuration (bootnodes, L1 RPCs, genesis/rollup URLs, etc.) is provided via files in `networks/`:
+
+| Network | File |
+|---------|------|
+| Celo mainnet | `networks/mainnet.yaml` |
+
+To add a new network, create a new file in `networks/` with the required values. See `networks/mainnet.yaml` for reference.
 
 ## Sync Modes
 
@@ -38,11 +46,14 @@ helm dependency build
 
 ## Usage
 
+All commands use two `-f` flags: one for the network, one for the sync mode preset.
+
 ### Consensus sync
 
 ```bash
 helm install cr16-consensus . \
   -n <namespace> \
+  -f networks/mainnet.yaml \
   -f presets/consensus.yaml \
   --set snapshot.volumeSnapshotName=mainnet-cel2-migrated \
   --set op-geth.image.repository=us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth \
@@ -58,6 +69,7 @@ helm install cr16-consensus . \
 ```bash
 helm install cr16-execution . \
   -n <namespace> \
+  -f networks/mainnet.yaml \
   -f presets/execution.yaml \
   --set snapshot.volumeSnapshotName=mainnet-cel2-migrated \
   --set op-geth.image.repository=us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth \
@@ -73,6 +85,7 @@ helm install cr16-execution . \
 ```bash
 helm install cr16-snap . \
   -n <namespace> \
+  -f networks/mainnet.yaml \
   -f presets/snap.yaml \
   --set op-geth.image.repository=us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth \
   --set op-geth.image.tag=<commit-sha> \

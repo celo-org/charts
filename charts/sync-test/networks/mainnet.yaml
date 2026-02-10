@@ -1,0 +1,73 @@
+---
+# Celo mainnet network configuration
+
+op-geth:
+  config:
+    networkid: 42220
+    rollup:
+      sequencerhttp: https://cel2-sequencer.celo.org
+    bootnodes:
+      - enode://18b6ff0c1be6fa3ed54d0b3020c3c1e216e67ff31700b6e9d79e59a43ef026ddf512c716047a84189d62d006dd99e46ed1abbfb95bd117727c035035397802fe@10.48.10.1:30303
+      - enode://d420986903a93fc0917b6db38872fc02dbbfd2f88e2864293b32e4f8575a14e48365a3327fd557246f76e2ece154ff678dd0ce97ae76e24116e82c33d5a0add2@10.48.10.2:30303
+      - enode://c7bea45a19cf5c06c1a5b7442ef5021e30a6ace40099ba1fb1e40c41e74a3ba11f0f41a7bd349b3dfa9bb5359ce008fece23bd060ab7400bce3495547d654f57@10.48.10.3:30303
+      - enode://20b58be518271cdd408bde20600fad8f2d89254afbb718259fb6d12ceb5b4799c209ddb3125b7e6f3f169e3f12ca8568823236a4be3f2e75897ea7b55b26f916@10.48.10.10:30303
+      - enode://83dc881fb754555d103d7ab66caecf92c5ecf038689525597cc4c11d5aecfacea78b55404112cd4a2879395e9f532491b0e3ab909cdcfb025b675fbf431fc0eb@10.48.10.11:30303
+      - enode://3294b165dd5824911883fd65cc40598561eae3242900053189f2557fe1313af381418773dfcb1c0c9f328c51f309477c4a28c37d79511f9dc478a2caef510a3d@10.48.10.12:30303
+      - enode://28f4fcb7f38c1b012087f7aef25dcb0a1257ccf1cdc4caa88584dc25416129069b514908c8cead5d0105cb0041dd65cd4ee185ae0d379a586fb07b1447e9de38@34.169.39.223:30303
+      - enode://a9077c3e030206954c5c7f22cc16a32cb5013112aa8985e3575fadda7884a508384e1e63c077b7d9fcb4a15c716465d8585567f047c564ada2e823145591e444@34.169.212.31:30303
+      - enode://029b007a7a56acbaa8ea50ec62cda279484bf3843fae1646f690566f784aca50e7d732a9a0530f0541e5ed82ba9bf2a4e21b9021559c5b8b527b91c9c7a38579@34.82.139.199:30303
+      - enode://f3c96b73a5772c5efb48d5a33bf193e58080d826ba7f03e9d5bdef20c0634a4f83475add92ab6313b7a24aa4f729689efb36f5093e5d527bb25e823f8a377224@34.82.84.247:30303
+      - enode://daa5ad65d16bcb0967cf478d9f20544bf1b6de617634e452dff7b947279f41f408b548261d62483f2034d237f61cbcf92a83fc992dbae884156f28ce68533205@34.168.45.168:30303
+      - enode://c79d596d77268387e599695d23e941c14c220745052ea6642a71ef7df31a13874cb7f2ce2ecf5a8a458cfc9b5d9219ce3e8bc6e5c279656177579605a5533c4f@35.247.32.229:30303
+      - enode://4151336075dd08eb6c75bfd63855e8a4bd6fd0f91ae4a81b14930f2671e16aee55495c139380c16e1094a49691875e69e40a3a5e2b4960c7859e7eb5745f9387@35.205.149.224:30303
+      - enode://ab999db751265c714b171344de1972ed74348162de465a0444f56e50b8cfd048725b213ba1fe48c15e3dfb0638e685ea9a21b8447a54eb2962c6768f43018e5c@34.79.3.199:30303
+      - enode://9d86d92fb38a429330546fe1aefce264e1f55c5d40249b63153e7df744005fa3c1e2da295e307041fd30ab1c618715f362c932c28715bc20bed7ae4fc76dea81@34.77.144.164:30303
+      - enode://c82c31f21dd5bbb8dc35686ff67a4353382b4017c9ec7660a383ccb5b8e3b04c6d7aefe71203e550382f6f892795728570f8190afd885efcb7b78fa398608699@34.76.202.74:30303
+      - enode://3bad5f57ad8de6541f02e36d806b87e7e9ca6d533c956e89a56b3054ae85d608784f2cd948dc685f7d6bbd5a2f6dd1a23cc03e529ea370dd72d880864a2af6a3@104.199.93.87:30303
+      - enode://1decf3b8b9a0d0b8332d15218f3bf0ceb9606b0efe18f352c51effc14bbf1f4f3f46711e1d460230cb361302ceaad2be48b5b187ad946e50d729b34e463268d2@35.240.26.148:30303
+
+  extraArgs:
+    - --rpc.txfeecap=0
+    - --history.transactions=0
+    - --txpool.nolocals
+    - --rollup.historicalrpc=https://archive.cel1.mainnet.celo-testnet.org
+
+  init:
+    genesis:
+      url: https://storage.googleapis.com/cel2-rollup-files/celo/genesis.json
+    rollup:
+      url: https://storage.googleapis.com/cel2-rollup-files/celo/rollup.json
+
+op-node:
+  secrets:
+    l1Url:
+      value: "http://nethermind-mainnet.nethermind-mainnet:8545"
+    l1BeaconUrl:
+      value: "http://nethermind-prysm-mainnet.nethermind-mainnet:8080"
+
+  config:
+    l1:
+      rpckind: nethermind
+      trustrpc: true
+    p2p:
+      bootnodes:
+        - enr:-J64QJipvmFhMq6DVh6RR4HvIiiBtyy1NUg_QlnAAbf18SMqCxCPZtLgUiWED5p0HRVPv69Wth4YPsvdKXSUyh57mWuGAZXRp6HjgmlkgnY0gmlwhCJTtG-Hb3BzdGFja4TsyQIAiXNlY3AyNTZrMaECKPT8t_OMGwEgh_eu8l3LChJXzPHNxMqohYTcJUFhKQaDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QCxBGS49IQbkbwsUuVWt9CkMctMCRe0b-4dqRsLr4QJ1S52urWPUk2uhBU5uerRGpxWTZZW5FtJC-9gSBHN3cSiGAZXRp4rbgmlkgnY0gmlwhCKph0CHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaECqQd8PgMCBpVMXH8izBajLLUBMRKqiYXjV1-t2niEpQiDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QLG71bmmljNbLFx3qim6zXohKA3jbK_4C4d1cwixI-7VMoBIlnM6kWZVvvdWcbjTQ6QXB1LAO39eZWC4Heztj1-GAZXRpzUGgmlkgnY0gmlwhCKpySSHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaEDApsAenpWrLqo6lDsYs2ieUhL84Q_rhZG9pBWb3hKylCDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QDJnpw6akXZECAmUnblPj-eWpSzQ6tN48w3_Fd4ytqLDJKmPgBmQ1HTCgv1fbTlSQ8keJR6C9B6XW9clHNcZN4aGAZXW-XBDgmlkgnY0gmlwhCJTfzOHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaEC88lrc6V3LF77SNWjO_GT5YCA2Ca6fwPp1b3vIMBjSk-DdGNwgiQGg3VkcIIkBg
+        - enr:-J64QIXTVl0Opbdn20TSrkzpIZ4xQ54bERRlTmSeZ05dFLdlSbuRY7yn5tJeTPzsSldTw5V5E0qjEQcsfr20vMjTUDyGAZXRpiWygmlkgnY0gmlwhCPjrx6Hb3BzdGFja4TsyQIAiXNlY3AyNTZrMaED2qWtZdFrywlnz0eNnyBUS_G23mF2NORS3_e5RyefQfSDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QFAsbeR4xRSyVyQOk7bILUCoMjI2EnbZvo4UAK3842HMYw41-UZXdnQJH8lwvzWn7qsY3Vu73NuxzxWKn4XB5wiGAZXRpYPAgmlkgnY0gmlwhCJSxmKHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaEDx51ZbXcmg4flmWldI-lBwUwiB0UFLqZkKnHvffMaE4eDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QMDceggWhUFGoGkxhripbuonLB-_dwttWpph_waOxNclXWXRaIVgE2EhUMj1ns196oRndQE4BtoJ8dQQExszXNuGAZXRpbCngmlkgnY0gmlwhCJS1ISHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaEDtB9Cymm84rfF_nDxmO58UxQ7swuDm34cQzvwPKXLFzqDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QF6p1rP7IZ6JsU5pv0kMmDQaHy3ofeUZ6M3ehTD6L2foWNkbACvJxSSqXDSwogJO4FMPl3BqijB6ngvKqJTxwSmGAZXRn1amgmlkgnY0gmlwhCITW8aHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaECyMTpWNcGa7Nq1d0acdBhgBRPK-27i-OmsuEWQbwP7mSDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QCnITDG10yhpY8km4mL1plMy29S7iimK6Dnq2g2ZH7BaPPnKu9rDgHJU9J4xTL0-MGOECULknZbbiRXjoDzuDFCGAZXRnCmzgmlkgnY0gmlwhCKpL0uHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaECMZCZHMhWDBSseXGihlIxKm9EBpPvCBFzWiMIQRJZswSDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QAmTm5_a2jJkLiBMWm6EEnMUtPttGpctqkdsJV_GHWF8eFZAnxZTYFrIr9wNBPlnZBZs25NjtZLRFcmTuKR0pQyGAZXRnFWOgmlkgnY0gmlwhCJTTUmHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaECEdHFXhWWmK9lL4jdyDS4YUbTuqnKmw7ym61Dd9cKOSqDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QBkFWnkHTV0eoQ_fSge-4AK3CdgkZGoQ7iaYxj5HkRLmOUWWp-_pI7D5A2wKU1MsKkerpjj23i4k-J4cWN_zUp-GAZXaR0GFgmlkgnY0gmlwhCImtd-Hb3BzdGFja4TsyQIAiXNlY3AyNTZrMaEDQVEzYHXdCOtsdb_WOFXopL1v0Pka5KgbFJMPJnHhau6DdGNwgiQGg3VkcIIkBg
+        - enr:-J64QAp3g1m-5uX-_mBXWyo6ZQqAlnRcAt11Xwy0-ZzqaSrDSlg4adyOz6v9flzLgxYkVvXI50nJGs8GjLgT5bwDLtyGAZXQrD69gmlkgnY0gmlwhCJMJgaHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaECq5mdt1EmXHFLFxNE3hly7XQ0gWLeRloERPVuULjP0EiDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QFCZs1ePThNEsRxIIzbfDxYfap1nEyuPPpSUeeWOoPFWOp0zSEPwLEtXhG1eH-ipsB5CgtaVzcXOyT9hKeAeVVaGAZXQkaZ3gmlkgnY0gmlwhCO7ajaHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaEDnYbZL7OKQpMwVG_hrvziZOH1XF1AJJtjFT5990QAX6ODdGNwgiQGg3VkcIIkBg
+        - enr:-J64QLaIn1W3xO-kzeH2zScCP2zPCvXwfmPaCSXZKsIQhFXLeNIseCqV0eLxd_f8hcCT5BtPNznxIIhucpiI3qeUJiiGAZXaej0QgmlkgnY0gmlwhCJMELeHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaEDyCwx8h3Vu7jcNWhv9npDUzgrQBfJ7HZgo4PMtbjjsEyDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QGJFPZzLj2GLFgB4JhTde7rXChMNFERNbzrwYYTG7CY2SCSggFrU3VXczzWBvOoJWdbOMOzPuCI2klknGjruUxeGAZXQkf1LgmlkgnY0gmlwhGjHJzuHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaEDO61fV62N5lQfAuNtgGuH5-nKbVM8lW6JpWswVK6F1giDdGNwgiQGg3VkcIIkBg
+        - enr:-J64QEXleDl25w0qEG__wmDgwnzB0F5zapu00D_jM4qkCbA3WIcLC8rXPm8dcrKdZNBuNXJOtNE6c2_ZDkuQMvIuhjCGAZXQwDjFgmlkgnY0gmlwhCKMdU-Hb3BzdGFja4TsyQIAiXNlY3AyNTZrMaECHezzuLmg0LgzLRUhjzvwzrlgaw7-GPNSxR7_wUu_H0-DdGNwgiQGg3VkcIIkBg
+
+  init:
+    rollup:
+      url: https://storage.googleapis.com/cel2-rollup-files/celo/rollup.json
