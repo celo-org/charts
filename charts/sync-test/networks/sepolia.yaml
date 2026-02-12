@@ -27,6 +27,7 @@ op-geth:
     - --rpc.txfeecap=0
     - --history.transactions=0
     - --txpool.nolocals
+    - --rollup.superchain-upgrades=false
 
   init:
     genesis:
