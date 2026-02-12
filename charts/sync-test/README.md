@@ -6,7 +6,7 @@ Umbrella chart for running OP-Stack sync tests. Deploys **op-geth** and **op-nod
 
 - Kubernetes cluster
 - Helm 3
-- For consensus/execution modes: a VolumeSnapshot to restore from
+- For consensus/execution modes on mainnet: a VolumeSnapshot to restore from (not needed for sepolia)
 
 Build subchart dependencies before first use:
 
@@ -18,9 +18,10 @@ helm dependency build
 
 Network-specific configuration (bootnodes, L1 RPCs, genesis/rollup URLs, etc.) is provided via files in `networks/`:
 
-| Network | File |
-|---------|------|
-| Celo mainnet | `networks/mainnet.yaml` |
+| Network | File | Snapshot needed? |
+|---------|------|-----------------|
+| Celo mainnet | `networks/mainnet.yaml` | Yes (consensus/execution) |
+| Celo sepolia | `networks/sepolia.yaml` | No (started as L2) |
 
 To add a new network, create a new file in `networks/` with the required values. See `networks/mainnet.yaml` for reference.
 
@@ -46,15 +47,15 @@ To add a new network, create a new file in `networks/` with the required values.
 
 ## Usage
 
-All commands use two `-f` flags: one for the network, one for the sync mode preset.
+All commands use two `-f` flags: first the sync mode preset, then the network. The network file is applied last so it can override preset defaults (e.g. sepolia disables snapshots for all modes).
 
 ### Consensus sync
 
 ```bash
 helm install cr16-consensus . \
   -n <namespace> \
-  -f networks/mainnet.yaml \
   -f presets/consensus.yaml \
+  -f networks/mainnet.yaml \
   --set snapshot.volumeSnapshotName=mainnet-cel2-migrated \
   --set op-geth.image.repository=us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth \
   --set op-geth.image.tag=<commit-sha> \
@@ -69,8 +70,8 @@ helm install cr16-consensus . \
 ```bash
 helm install cr16-execution . \
   -n <namespace> \
-  -f networks/mainnet.yaml \
   -f presets/execution.yaml \
+  -f networks/mainnet.yaml \
   --set snapshot.volumeSnapshotName=mainnet-cel2-migrated \
   --set op-geth.image.repository=us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth \
   --set op-geth.image.tag=<commit-sha> \
@@ -85,8 +86,8 @@ helm install cr16-execution . \
 ```bash
 helm install cr16-snap . \
   -n <namespace> \
-  -f networks/mainnet.yaml \
   -f presets/snap.yaml \
+  -f networks/mainnet.yaml \
   --set op-geth.image.repository=us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth \
   --set op-geth.image.tag=<commit-sha> \
   --set op-node.image.repository=us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-node \

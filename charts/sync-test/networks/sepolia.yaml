@@ -1,5 +1,12 @@
 ---
 # Celo sepolia network configuration
+#
+# Sepolia started as an L2, so no VolumeSnapshot is needed for any sync mode.
+# This file overrides snapshot.enabled to false and enables genesis init,
+# regardless of which preset is used.
+
+snapshot:
+  enabled: false
 
 op-geth:
   config:
@@ -23,6 +30,7 @@ op-geth:
 
   init:
     genesis:
+      enabled: true
       url: https://storage.googleapis.com/cel2-rollup-files/celo-sepolia/genesis.json
     rollup:
       url: https://storage.googleapis.com/cel2-rollup-files/celo-sepolia/rollup.json
@@ -30,7 +38,7 @@ op-geth:
 op-node:
   secrets:
     l1Url:
-      value: "http://celo-sepolia-proxyd-l1-op-proxyd:8545"
+      value: "http://proxyd-sepolia-op-proxyd.proxyd-sepolia:8545"
     l1BeaconUrl:
       value: "https://prysm.sepolia.cel2.celo-networks-dev.org"
 
