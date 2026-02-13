@@ -61,6 +61,11 @@ op-geth:
         resize.topolvm.io/storage_limit: 4000Gi
         resize.topolvm.io/threshold: "10%"
 
+  resources:
+    requests:
+      cpu: 1
+      memory: 3Gi
+
   services:
     p2p:
       enabled: true
@@ -138,6 +143,11 @@ op-node:
         resize.topolvm.io/inodes-threshold: "10%"
         resize.topolvm.io/storage_limit: 50Gi
         resize.topolvm.io/threshold: "10%"
+
+  resources:
+    requests:
+      cpu: 400m
+      memory: 1Gi
 
   services:
     p2p:
