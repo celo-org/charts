@@ -55,8 +55,8 @@ A Helm chart for op-succinct proposer and challenger
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-succinct-proposer"` | Image repository base |
-| image.tag | string | `"1.0.2"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-proposer"` | Image repository base |
+| image.tag | string | `"sha-75e0698"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | mode | string | `"proposer"` | Mode to run in (proposer or challenger) |
