@@ -12,3 +12,7 @@ Tail op-node logs:
 
 Cleanup:
   helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
+  kubectl delete pvc data-{{ .Release.Name }}-op-geth-0 data-{{ .Release.Name }}-op-node-0 -n {{ .Release.Namespace }}
+
+NOTE: PVCs are protected with helm.sh/resource-policy=keep and are NOT
+deleted by helm uninstall. You must delete them manually (see above).
