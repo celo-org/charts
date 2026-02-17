@@ -1,12 +1,16 @@
+{{- if not (lookup "v1" "PersistentVolumeClaim" .Release.Namespace (printf "data-%s-op-node-0" .Release.Name)) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-{{ .Release.Name }}-op-node-0
   labels:
     {{- include "sync-test.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   accessModes: [ReadWriteOnce]
   storageClassName: {{ (index .Values "op-node").persistence.pvc.storageClass }}
   resources:
     requests:
       storage: {{ (index .Values "op-node").persistence.pvc.size }}
+{{- end }}

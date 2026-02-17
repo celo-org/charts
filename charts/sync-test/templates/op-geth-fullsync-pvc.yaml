@@ -1,4 +1,4 @@
-{{- if .Values.snapshot.enabled }}
+{{- if and .Values.snapshot.enabled (not (lookup "v1" "PersistentVolumeClaim" .Release.Namespace (printf "data-%s-op-geth-0" .Release.Name))) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -6,6 +6,7 @@ metadata:
   labels:
     {{- include "sync-test.labels" . | nindent 4 }}
   annotations:
+    helm.sh/resource-policy: keep
     resize.topolvm.io/increase: "10%"
     resize.topolvm.io/inodes-threshold: "10%"
     resize.topolvm.io/storage_limit: "4000Gi"
