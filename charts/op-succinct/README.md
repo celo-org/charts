@@ -1,6 +1,6 @@
 # op-succinct
 
-![Version: 1.1.0-rc.1](https://img.shields.io/badge/Version-1.1.0--rc.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main](https://img.shields.io/badge/AppVersion-main-informational?style=flat-square)
+![Version: 1.2.0-rc.1](https://img.shields.io/badge/Version-1.2.0--rc.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 A Helm chart for op-succinct proposer and challenger
 
@@ -55,13 +55,19 @@ A Helm chart for op-succinct proposer and challenger
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` | Chart full name override |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pullpolicy |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-succinct-proposer"` | Image repository base |
-| image.tag | string | `"1.0.2-rc.1"` | Image tag Overrides the image tag whose default is the chart appVersion. |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-proposer"` | Image repository base |
+| image.tag | string | `"sha-75e0698"` | Image tag Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | livenessProbe | object | `{}` | Liveness probe configuration |
 | mode | string | `"proposer"` | Mode to run in (proposer or challenger) |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
+| persistence.enabled | bool | `false` |  |
+| persistence.mountPath | string | `"/data"` |  |
+| persistence.pvc.accessMode | string | `"ReadWriteOnce"` |  |
+| persistence.pvc.annotations | object | `{}` |  |
+| persistence.pvc.size | string | `"1Gi"` |  |
+| persistence.pvc.storageClass | string | `""` |  |
 | podAnnotations | object | `{}` | Custom pod annotations |
 | podLabels | object | `{}` | Custom pod labels |
 | podSecurityContext | object | `{}` | Custom pod security context |

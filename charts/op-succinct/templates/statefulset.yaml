@@ -84,6 +84,11 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.persistence.mountPath }} 
+          {{- end }}
       enableServiceLinks: {{ .Values.enableServiceLinks }}
       {{- if and .Values.nodeSelector (not (empty .Values.nodeSelector)) }}
       nodeSelector:
@@ -97,3 +102,27 @@ spec:
       tolerations:
         {{- toYaml .Values.tolerations | nindent 8 }}
       {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "app.selectorLabels" . | nindent 10 }}
+        {{- with .Values.persistence.pvc.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes:
+        - {{ .Values.persistence.pvc.accessMode }}
+        {{- if .Values.persistence.pvc.storageClass }}
+        {{- if eq .Values.persistence.pvc.storageClass "-" }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ .Values.persistence.pvc.storageClass | quote }}
+        {{- end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.pvc.size | quote }}
+  {{- end }}
