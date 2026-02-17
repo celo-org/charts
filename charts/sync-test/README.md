@@ -140,6 +140,29 @@ kubectl logs -f <release-name>-op-geth-0 -c op-geth -n <namespace>
 kubectl logs -f <release-name>-op-node-0 -c op-node -n <namespace>
 ```
 
+### Grafana dashboard
+
+A pre-built Grafana dashboard is included in `dashboard.json`. It provides sync
+percentage gauges, chain head timeseries, peer counts, CPU/memory usage, and log
+panels for all three sync modes.
+
+To import it:
+
+1. Open Grafana and go to **Dashboards > New > Import**
+2. Click **Upload dashboard JSON file** and select `dashboard.json` (or paste its contents)
+3. Click **Import**
+
+The dashboard uses two template variables at the top:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `helm_release_prefix` | The release name prefix used during install (e.g. `cr16`, `mainnet`) | `cr16` |
+| `namespace` | Kubernetes namespace where the sync tests are running | `mainnet-sync-test` |
+
+The dashboard expects Prometheus and Loki datasources to be configured in
+Grafana. You may need to update the datasource UIDs in the JSON if yours differ
+from the defaults.
+
 ## Upgrading releases
 
 ```bash

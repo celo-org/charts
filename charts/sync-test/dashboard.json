@@ -1,0 +1,2593 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ddj3u5b4oqqdcb"
+      },
+      "description": "Sync percentage calculated as (local unsafe head / network received payload) * 100",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Chain Head"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Received Head"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0-21959849188",
+      "targets": [
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "expr": "(max(chain_head_block{namespace=\"$namespace\", pod=\"$helm_release_prefix-consensus-op-geth-0\"}) / max(op_node_default_refs_number{namespace=\"$namespace\", pod=\"$helm_release_prefix-consensus-op-node-0\", type=\"received_payload\"})) * 100",
+          "instant": true,
+          "legendFormat": "Sync %",
+          "queryType": "instant",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "expr": "max(chain_head_block{namespace=\"$namespace\", pod=\"$helm_release_prefix-consensus-op-geth-0\"})",
+          "instant": true,
+          "legendFormat": "Chain Head",
+          "queryType": "instant",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "expr": "max(op_node_default_refs_number{namespace=\"$namespace\", pod=\"$helm_release_prefix-consensus-op-node-0\", type=\"received_payload\"})",
+          "instant": true,
+          "legendFormat": "Received Head",
+          "queryType": "instant",
+          "range": false,
+          "refId": "C"
+        }
+      ],
+      "title": "Sync Percentage - Consensus",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ddj3u5b4oqqdcb"
+      },
+      "description": "Sync percentage calculated as (local unsafe head / network received payload) * 100",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Chain Head"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Received Head"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0-21959849188",
+      "targets": [
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "expr": "(max(chain_head_block{namespace=\"$namespace\", pod=\"$helm_release_prefix-execution-op-geth-0\"}) / max(op_node_default_refs_number{namespace=\"$namespace\", pod=\"$helm_release_prefix-execution-op-node-0\", type=\"received_payload\"})) * 100",
+          "instant": true,
+          "legendFormat": "Sync %",
+          "queryType": "instant",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "expr": "max(chain_head_block{namespace=\"$namespace\", pod=\"$helm_release_prefix-execution-op-geth-0\"})",
+          "instant": true,
+          "legendFormat": "Chain Head",
+          "queryType": "instant",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "expr": "max(op_node_default_refs_number{namespace=\"$namespace\", pod=\"$helm_release_prefix-execution-op-node-0\", type=\"received_payload\"})",
+          "instant": true,
+          "legendFormat": "Received Head",
+          "queryType": "instant",
+          "range": false,
+          "refId": "C"
+        }
+      ],
+      "title": "Sync Percentage - Execution",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ddj3u5b4oqqdcb"
+      },
+      "description": "Sync percentage calculated as (local unsafe head / network received payload) * 100",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Chain Head"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Received Head"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0-21959849188",
+      "targets": [
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "expr": "(max(chain_head_block{namespace=\"$namespace\", pod=\"$helm_release_prefix-snap-op-geth-0\"}) / max(op_node_default_refs_number{namespace=\"$namespace\", pod=\"$helm_release_prefix-snap-op-node-0\", type=\"received_payload\"})) * 100",
+          "instant": true,
+          "legendFormat": "Sync %",
+          "queryType": "instant",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "expr": "max(chain_head_block{namespace=\"$namespace\", pod=\"$helm_release_prefix-snap-op-geth-0\"})",
+          "instant": true,
+          "legendFormat": "Chain Head",
+          "queryType": "instant",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "app": "grafana-assistant-app",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "expr": "max(op_node_default_refs_number{namespace=\"$namespace\", pod=\"$helm_release_prefix-snap-op-node-0\", type=\"received_payload\"})",
+          "instant": true,
+          "legendFormat": "Received Head",
+          "queryType": "instant",
+          "range": false,
+          "refId": "C"
+        }
+      ],
+      "title": "Sync Percentage - Snap",
+      "type": "stat"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "id": 9,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 5
+          },
+          "id": 1,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (chain_head_block{namespace=\"$namespace\", pod=\"$helm_release_prefix-consensus-op-geth-0\"} > 0)",
+              "instant": false,
+              "legendFormat": "head_block",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (chain_head_safe{namespace=\"$namespace\", pod=\"$helm_release_prefix-consensus-op-geth-0\"} > 0)",
+              "instant": false,
+              "legendFormat": "head_safe",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (chain_head_finalized{namespace=\"$namespace\", pod=\"$helm_release_prefix-consensus-op-geth-0\"} > 0)",
+              "instant": false,
+              "legendFormat": "head_finalized",
+              "queryType": "range",
+              "range": true,
+              "refId": "C"
+            }
+          ],
+          "title": "Chain Head Block - Consensus",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 10
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 5
+          },
+          "id": 4,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (p2p_peers{namespace=\"$namespace\", pod=\"$helm_release_prefix-consensus-op-geth-0\"})",
+              "instant": false,
+              "legendFormat": "op-geth",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (op_node_default_p2p_peer_count{namespace=\"$namespace\", pod=\"$helm_release_prefix-consensus-op-node-0\"})",
+              "instant": false,
+              "legendFormat": "op-node",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "Peer Count - Consensus (op-geth + op-node)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*CPU.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "CPU Cores"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "left"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*Memory.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Memory"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 133
+          },
+          "id": 16,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"$namespace\", pod=~\"$helm_release_prefix-consensus-.*\", container=\"op-geth\"}[$__rate_interval]))",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"$namespace\", pod=~\"$helm_release_prefix-consensus-.*\", container=\"op-geth\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-consensus-.*\", container=\"op-geth\", resource=\"cpu\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "C"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-consensus-.*\", container=\"op-geth\", resource=\"memory\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "D"
+            }
+          ],
+          "title": "CPU & Memory Usage - Consensus - op-geth",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*CPU.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "CPU Cores"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "left"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*Memory.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Memory"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 133
+          },
+          "id": 19,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"$namespace\", pod=~\"$helm_release_prefix-consensus-.*\", container=\"op-node\"}[$__rate_interval]))",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"$namespace\", pod=~\"$helm_release_prefix-consensus-.*\", container=\"op-node\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-consensus-.*\", container=\"op-node\", resource=\"cpu\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "C"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-consensus-.*\", container=\"op-node\", resource=\"memory\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "D"
+            }
+          ],
+          "title": "CPU & Memory Usage - Consensus - op-node",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "ddj3u5bd0ejuod"
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 141
+          },
+          "id": 10,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showControls": false,
+            "showLabels": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "unwrappedColumns": false,
+            "wrapLogMessage": true
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "loki",
+                "uid": "ddj3u5bd0ejuod"
+              },
+              "expr": "{namespace=\"$namespace\", pod=\"$helm_release_prefix-consensus-op-geth-0\"}",
+              "instant": false,
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Consensus op-geth Logs",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "ddj3u5bd0ejuod"
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 141
+          },
+          "id": 11,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showControls": false,
+            "showLabels": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "unwrappedColumns": false,
+            "wrapLogMessage": true
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "loki",
+                "uid": "ddj3u5bd0ejuod"
+              },
+              "direction": "backward",
+              "editorMode": "code",
+              "expr": "{namespace=\"$namespace\", pod=\"$helm_release_prefix-consensus-op-node-0\"}",
+              "instant": false,
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Consensus op-node Logs",
+          "type": "logs"
+        }
+      ],
+      "title": "Consensus",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 8,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "head_block"
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": [
+                  {
+                    "id": "custom.hideFrom",
+                    "value": {
+                      "legend": false,
+                      "tooltip": true,
+                      "viz": true
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 6
+          },
+          "id": 2,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (chain_head_block{namespace=\"$namespace\", pod=\"$helm_release_prefix-execution-op-geth-0\"} > 0)",
+              "instant": false,
+              "legendFormat": "head_block",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (chain_head_safe{namespace=\"$namespace\", pod=\"$helm_release_prefix-execution-op-geth-0\"} > 0)",
+              "instant": false,
+              "legendFormat": "head_safe",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (chain_head_finalized{namespace=\"$namespace\", pod=\"$helm_release_prefix-execution-op-geth-0\"} > 0)",
+              "instant": false,
+              "legendFormat": "head_finalized",
+              "queryType": "range",
+              "range": true,
+              "refId": "C"
+            }
+          ],
+          "title": "Chain Head Block - Execution",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 10
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 6
+          },
+          "id": 5,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (p2p_peers{namespace=\"$namespace\", pod=\"$helm_release_prefix-execution-op-geth-0\"})",
+              "instant": false,
+              "legendFormat": "op-geth",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (op_node_default_p2p_peer_count{namespace=\"$namespace\", pod=\"$helm_release_prefix-execution-op-node-0\"})",
+              "instant": false,
+              "legendFormat": "op-node",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "Peer Count - Execution (op-geth + op-node)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*CPU.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "CPU Cores"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "left"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*Memory.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Memory"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 14
+          },
+          "id": 17,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"$namespace\", pod=~\"$helm_release_prefix-execution-.*\", container=\"op-geth\"}[$__rate_interval]))",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"$namespace\", pod=~\"$helm_release_prefix-execution-.*\", container=\"op-geth\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-execution-.*\", container=\"op-geth\", resource=\"cpu\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "C"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-execution-.*\", container=\"op-geth\", resource=\"memory\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "D"
+            }
+          ],
+          "title": "CPU & Memory Usage - Execution - op-geth",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*CPU.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "CPU Cores"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "left"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*Memory.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Memory"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 14
+          },
+          "id": 20,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"$namespace\", pod=~\"$helm_release_prefix-execution-.*\", container=\"op-node\"}[$__rate_interval]))",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"$namespace\", pod=~\"$helm_release_prefix-execution-.*\", container=\"op-node\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-execution-.*\", container=\"op-node\", resource=\"cpu\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "C"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-execution-.*\", container=\"op-node\", resource=\"memory\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "D"
+            }
+          ],
+          "title": "CPU & Memory Usage - Execution - op-node",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "ddj3u5bd0ejuod"
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 22
+          },
+          "id": 12,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showControls": false,
+            "showLabels": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "unwrappedColumns": false,
+            "wrapLogMessage": true
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "loki",
+                "uid": "ddj3u5bd0ejuod"
+              },
+              "expr": "{namespace=\"$namespace\", pod=\"$helm_release_prefix-execution-op-geth-0\"}",
+              "instant": false,
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Execution op-geth Logs",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "ddj3u5bd0ejuod"
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 22
+          },
+          "id": 13,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showControls": false,
+            "showLabels": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "unwrappedColumns": false,
+            "wrapLogMessage": true
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "loki",
+                "uid": "ddj3u5bd0ejuod"
+              },
+              "expr": "{namespace=\"$namespace\", pod=\"$helm_release_prefix-execution-op-node-0\"}",
+              "instant": false,
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Execution op-node Logs",
+          "type": "logs"
+        }
+      ],
+      "title": "Execution",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 7,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 55
+          },
+          "id": 3,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (chain_head_block{namespace=\"$namespace\", pod=\"$helm_release_prefix-snap-op-geth-0\"} > 0)",
+              "instant": false,
+              "legendFormat": "head_block",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (chain_head_safe{namespace=\"$namespace\", pod=\"$helm_release_prefix-snap-op-geth-0\"} > 0)",
+              "instant": false,
+              "legendFormat": "head_safe",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (chain_head_finalized{namespace=\"$namespace\", pod=\"$helm_release_prefix-snap-op-geth-0\"} > 0)",
+              "instant": false,
+              "legendFormat": "head_finalized",
+              "queryType": "range",
+              "range": true,
+              "refId": "C"
+            }
+          ],
+          "title": "Chain Head Block - Snap",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 20
+                  },
+                  {
+                    "color": "red",
+                    "value": 10
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 55
+          },
+          "id": 6,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (p2p_peers{namespace=\"$namespace\", pod=\"$helm_release_prefix-snap-op-geth-0\"})",
+              "instant": false,
+              "legendFormat": "op-geth",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "max by (pod) (op_node_default_p2p_peer_count{namespace=\"$namespace\", pod=\"$helm_release_prefix-snap-op-node-0\"})",
+              "instant": false,
+              "legendFormat": "op-node",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "Peer Count - Snap (op-geth + op-node)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*CPU.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "CPU Cores"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "left"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*Memory.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Memory"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 63
+          },
+          "id": 18,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"$namespace\", pod=~\"$helm_release_prefix-snap-.*\", container=\"op-geth\"}[$__rate_interval]))",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"$namespace\", pod=~\"$helm_release_prefix-snap-.*\", container=\"op-geth\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-snap-.*\", container=\"op-geth\", resource=\"cpu\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "C"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-snap-.*\", container=\"op-geth\", resource=\"memory\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "D"
+            }
+          ],
+          "title": "CPU & Memory Usage - Snap - op-geth",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ddj3u5b4oqqdcb"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*CPU.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "CPU Cores"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "left"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*Memory.*"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "Memory"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 63
+          },
+          "id": 21,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"$namespace\", pod=~\"$helm_release_prefix-snap-.*\", container=\"op-node\"}[$__rate_interval]))",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU",
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"$namespace\", pod=~\"$helm_release_prefix-snap-.*\", container=\"op-node\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory",
+              "queryType": "range",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-snap-.*\", container=\"op-node\", resource=\"cpu\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - CPU Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "C"
+            },
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "ddj3u5b4oqqdcb"
+              },
+              "expr": "sum by (pod) (kube_pod_container_resource_requests{namespace=\"$namespace\", pod=~\"$helm_release_prefix-snap-.*\", container=\"op-node\", resource=\"memory\"})",
+              "instant": false,
+              "legendFormat": "{{pod}} - Memory Requested",
+              "queryType": "range",
+              "range": true,
+              "refId": "D"
+            }
+          ],
+          "title": "CPU & Memory Usage - Snap - op-node",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "ddj3u5bd0ejuod"
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 71
+          },
+          "id": 14,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showControls": false,
+            "showLabels": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "unwrappedColumns": false,
+            "wrapLogMessage": true
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "loki",
+                "uid": "ddj3u5bd0ejuod"
+              },
+              "expr": "{namespace=\"$namespace\", pod=\"$helm_release_prefix-snap-op-geth-0\"}",
+              "instant": false,
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Snap op-geth Logs",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "ddj3u5bd0ejuod"
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 71
+          },
+          "id": 15,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showControls": false,
+            "showLabels": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "unwrappedColumns": false,
+            "wrapLogMessage": true
+          },
+          "pluginVersion": "12.4.0-21959849188",
+          "targets": [
+            {
+              "app": "grafana-assistant-app",
+              "datasource": {
+                "type": "loki",
+                "uid": "ddj3u5bd0ejuod"
+              },
+              "expr": "{namespace=\"$namespace\", pod=\"$helm_release_prefix-snap-op-node-0\"}",
+              "instant": false,
+              "queryType": "range",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Snap op-node Logs",
+          "type": "logs"
+        }
+      ],
+      "title": "Snap",
+      "type": "row"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allowCustomValue": true,
+        "current": {
+          "text": "cr16",
+          "value": "cr16"
+        },
+        "includeAll": false,
+        "label": "Helm release prefix",
+        "name": "helm_release_prefix",
+        "options": [],
+        "query": "cr16",
+        "type": "custom",
+        "valuesFormat": "csv"
+      },
+      {
+        "current": {
+          "text": "mainnet-sync-test",
+          "value": "mainnet-sync-test"
+        },
+        "label": "Namespace",
+        "name": "namespace",
+        "options": [],
+        "query": "mainnet-sync-test,sepolia-sync-test,sepolia-sync-test-pre-jovian",
+        "type": "custom",
+        "valuesFormat": "csv"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Synctest",
+  "uid": "pitbkt5",
+  "version": 27,
+  "weekStart": ""
+}
