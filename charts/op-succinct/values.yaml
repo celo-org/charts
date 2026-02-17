@@ -42,6 +42,8 @@ config:
   game:
     # -- Address of the active L1 `DisputeGameFactoryProxy` address
     dispute_game_factory_address: ""
+    # -- Address of the active L1 `AnchorStateRegistryProxy` address
+    anchor_state_registry_address: ""
     # -- Percentage (0.0-100.0) of valid games to challenge for testing defense mechanisms (challenger only)
     malicious_challenge_percentage: "0.0"
     # -- If the monitor-only mode is disabled, the challenger will try to send `challenge()` calls onchain in case of a challenger (challenger only).

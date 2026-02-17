@@ -26,6 +26,7 @@ data:
   GAME_TYPE: "42"
   {{- with .game}}
   FACTORY_ADDRESS: "{{ .dispute_game_factory_address }}"
+  ANCHOR_STATE_REGISTRY_ADDRESS: "{{ .anchor_state_registry_address }}"
   {{- if eq $.Values.mode "challenger" }}
   {{- if .malicious_challenge_percentage }}
   MALICIOUS_CHALLENGE_PERCENTAGE: "{{ .malicious_challenge_percentage }}"
