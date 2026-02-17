@@ -47,9 +47,40 @@ To add a new network, create a new file in `networks/` with the required values.
 
 ## Usage
 
+### Deploy all sync modes at once
+
+The `run-sync-tests.sh` script installs all three sync modes (snap, execution, consensus) in a single command. It generates random p2p keys for each release automatically.
+
+```bash
+./run-sync-tests.sh <network> [options]
+```
+
+| Option | Description |
+|--------|-------------|
+| `--geth-image <repo:tag>` | op-geth container image (required) |
+| `--node-image <repo:tag>` | op-node container image (required) |
+| `--snapshot <name>` | VolumeSnapshot name (required for consensus/execution on mainnet) |
+| `-n, --namespace <ns>` | Kubernetes namespace |
+| `--prefix <prefix>` | Release name prefix (default: network name) |
+| `--` | Pass remaining arguments to `helm install` |
+
+Example:
+
+```bash
+./run-sync-tests.sh mainnet \
+  -n mainnet-sync-test \
+  --geth-image us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth:abc123 \
+  --node-image us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-node:abc123 \
+  --snapshot mainnet-cel2-migrated
+```
+
+This creates three releases: `mainnet-snap`, `mainnet-execution`, and `mainnet-consensus`.
+
+### Deploy individual sync modes
+
 All commands use two `-f` flags: first the sync mode preset, then the network. The network file is applied last so it can override preset defaults (e.g. sepolia disables snapshots for all modes).
 
-### Consensus sync
+#### Consensus sync
 
 ```bash
 helm install cr16-consensus . \
@@ -65,7 +96,7 @@ helm install cr16-consensus . \
   --set op-node.secrets.p2pKeys.value=0x$(openssl rand -hex 32)
 ```
 
-### Execution sync
+#### Execution sync
 
 ```bash
 helm install cr16-execution . \
@@ -81,7 +112,7 @@ helm install cr16-execution . \
   --set op-node.secrets.p2pKeys.value=0x$(openssl rand -hex 32)
 ```
 
-### Snap sync
+#### Snap sync
 
 ```bash
 helm install cr16-snap . \
@@ -109,12 +140,39 @@ kubectl logs -f <release-name>-op-geth-0 -c op-geth -n <namespace>
 kubectl logs -f <release-name>-op-node-0 -c op-node -n <namespace>
 ```
 
-## Cleanup
+## Upgrading releases
 
-All PVCs are Helm-managed and deleted automatically on uninstall:
+```bash
+helm upgrade <release-name> . \
+  -n <namespace> --reuse-values \
+  --set op-geth.image.tag=<new-tag> \
+  --set op-node.image.tag=<new-tag>
+```
+
+### How PVCs are protected during upgrades
+
+Topolvm auto-resizes PVCs beyond the size in the chart values. If Helm tries to
+patch a PVC with the original (smaller) size, the upgrade fails. To avoid this,
+the PVC templates use Helm's `lookup` function to skip rendering when the PVC
+already exists. This means Helm won't try to patch it.
+
+However, when a resource disappears from the rendered templates, Helm treats it
+as "removed from the chart" and deletes it. The `helm.sh/resource-policy: keep`
+annotation on the PVC prevents this — it tells Helm to leave the resource alone
+even when it's no longer in the rendered output. The chart sets this annotation
+on PVCs at creation time.
+
+## Cleanup
 
 ```bash
 helm uninstall <release-name> -n <namespace>
+```
+
+PVCs have `helm.sh/resource-policy: keep` and are **not deleted** by
+`helm uninstall`. You must delete them manually:
+
+```bash
+kubectl delete pvc data-<release-name>-op-geth-0 data-<release-name>-op-node-0 -n <namespace>
 ```
 
 ## Architecture
@@ -123,7 +181,8 @@ The chart deploys:
 
 - **op-geth StatefulSet** (1 replica) -- execution engine
 - **op-node StatefulSet** (1 replica) -- consensus engine
-- **PVCs** -- Helm-managed for automatic cleanup
+- **PVCs** -- created by the chart (not StatefulSet volumeClaimTemplates) with
+  `helm.sh/resource-policy: keep` to survive upgrades and uninstalls
   - op-geth: restored from VolumeSnapshot (consensus/execution) or fresh (snap)
   - op-node: small disk for rollup config and safe head data
 
