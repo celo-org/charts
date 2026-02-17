@@ -9,9 +9,6 @@ op-geth:
   init:
     genesis:
       enabled: false
-  persistence:
-    pvc:
-      size: 1100Gi
 
 op-node:
   config:
