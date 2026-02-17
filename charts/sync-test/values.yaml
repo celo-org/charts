@@ -3,7 +3,7 @@
 snapshot:
   enabled: true
   storageClass: premium-rwo
-  storageSize: 1100Gi
+  storageSize: 25Gi
   volumeSnapshotName: ""  # REQUIRED for consensus/execution: set via --set snapshot.volumeSnapshotName=...
 
 # -- op-geth subchart values
@@ -53,7 +53,7 @@ op-geth:
 
   persistence:
     pvc:
-      size: 50Gi
+      size: 25Gi
       storageClass: premium-rwo
       annotations:
         resize.topolvm.io/increase: "10%"
@@ -63,8 +63,8 @@ op-geth:
 
   resources:
     requests:
-      cpu: 1
-      memory: 3Gi
+      cpu: 2.5
+      memory: 4.5Gi
 
   services:
     p2p:
