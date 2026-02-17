@@ -7,6 +7,9 @@ metadata:
     {{- include "sync-test.labels" . | nindent 4 }}
   annotations:
     helm.sh/resource-policy: keep
+    {{- with (index .Values "op-node").persistence.pvc.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   accessModes: [ReadWriteOnce]
   storageClassName: {{ (index .Values "op-node").persistence.pvc.storageClass }}

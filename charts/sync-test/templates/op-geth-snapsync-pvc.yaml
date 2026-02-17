@@ -7,10 +7,9 @@ metadata:
     {{- include "sync-test.labels" . | nindent 4 }}
   annotations:
     helm.sh/resource-policy: keep
-    resize.topolvm.io/increase: "10%"
-    resize.topolvm.io/inodes-threshold: "10%"
-    resize.topolvm.io/storage_limit: "4000Gi"
-    resize.topolvm.io/threshold: "10%"
+    {{- with (index .Values "op-geth").persistence.pvc.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   accessModes: [ReadWriteOnce]
   storageClassName: {{ (index .Values "op-geth").persistence.pvc.storageClass }}
