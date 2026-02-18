@@ -1,6 +1,6 @@
 # op-succinct
 
-![Version: 1.2.0-rc.1](https://img.shields.io/badge/Version-1.2.0--rc.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.2.0-rc.2](https://img.shields.io/badge/Version-1.2.0--rc.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for op-succinct proposer and challenger
 
@@ -24,6 +24,7 @@ A Helm chart for op-succinct proposer and challenger
 | config.endpoints.l1_execution | string | `""` | URL of the L1 execution client |
 | config.endpoints.l2_consensus | string | `""` | URL of the L2 consensus (op-node) client (proposer only) |
 | config.endpoints.l2_execution | string | `""` | URL of the L2 execution (op-geth) client |
+| config.game.anchor_state_registry_address | string | `""` | Address of the active L1 `AnchorStateRegistryProxy` address |
 | config.game.disable_monitor_only | bool | `false` | If the monitor-only mode is disabled, the challenger will try to send `challenge()` calls onchain in case of a challenger (challenger only). |
 | config.game.dispute_game_factory_address | string | `""` | Address of the active L1 `DisputeGameFactoryProxy` address |
 | config.game.malicious_challenge_percentage | string | `"0.0"` | Percentage (0.0-100.0) of valid games to challenge for testing defense mechanisms (challenger only) |

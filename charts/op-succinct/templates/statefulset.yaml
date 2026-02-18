@@ -107,7 +107,7 @@ spec:
     - metadata:
         name: data
         labels:
-          {{- include "app.selectorLabels" . | nindent 10 }}
+          {{- include "op-succinct.labels" . | nindent 10 }}
         {{- with .Values.persistence.pvc.annotations }}
         annotations:
           {{- toYaml . | nindent 10 }}

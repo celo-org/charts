@@ -3,8 +3,8 @@ apiVersion: v2
 name: op-succinct
 description: A Helm chart for op-succinct proposer and challenger
 type: application
-version: 1.2.0-rc.1
-appVersion: 1.1.0
+version: 1.2.0-rc.2
+appVersion: 2.0.0
 maintainers:
   - name: cLabs
     email: devops@clabs.co
