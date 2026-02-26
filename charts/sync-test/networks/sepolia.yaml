@@ -39,13 +39,13 @@ op-geth:
 op-node:
   secrets:
     l1Url:
-      value: "http://proxyd-sepolia-op-proxyd.proxyd-sepolia:8545"
+      value: "http://nethermind-sepolia.nethermind-sepolia:8545"
     l1BeaconUrl:
       value: "https://prysm.sepolia.cel2.celo-networks-dev.org"
 
   config:
     l1:
-      rpckind: standard
+      rpckind: nethermind
       trustrpc: true
     p2p:
       bootnodes:
