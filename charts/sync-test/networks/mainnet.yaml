@@ -31,7 +31,6 @@ op-geth:
     - --history.transactions=0
     - --txpool.nolocals
     - --rollup.historicalrpc=https://archive.cel1.mainnet.celo-testnet.org
-    - --rollup.superchain-upgrades=false
 
   init:
     genesis:
