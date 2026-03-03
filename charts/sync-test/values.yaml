@@ -1,9 +1,10 @@
 ---
-# Snapshot-based PVC configuration (used for consensus and execution sync modes)
+# Snapshot-based PVC configuration (used for mainnet consensus and execution sync modes)
+# The mainnet snapshot is 1035Gi so we give a little room here with 1100Gi.
 snapshot:
   enabled: true
   storageClass: premium-rwo
-  storageSize: 10Gi
+  storageSize: 1100Gi
   volumeSnapshotName: ""  # REQUIRED for consensus/execution: set via --set snapshot.volumeSnapshotName=...
 
 # -- op-geth subchart values
@@ -53,7 +54,9 @@ op-geth:
 
   persistence:
     pvc:
-      size: 10Gi
+      # At least 40Gi is required for a mainnet snap sync otherwise the volume
+      # tries to resize too many times in a short period.
+      size: 40Gi
       storageClass: premium-rwo
       annotations:
         resize.topolvm.io/increase: "10%"
