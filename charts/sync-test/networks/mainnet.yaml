@@ -3,6 +3,7 @@
 
 op-geth:
   config:
+    op-network: celo-mainnet
     networkid: 42220
     rollup:
       sequencerhttp: https://cel2-sequencer.celo.org
@@ -32,12 +33,6 @@ op-geth:
     - --txpool.nolocals
     - --rollup.historicalrpc=https://archive.cel1.mainnet.celo-testnet.org
 
-  init:
-    genesis:
-      url: https://storage.googleapis.com/cel2-rollup-files/celo/genesis.json
-    rollup:
-      url: https://storage.googleapis.com/cel2-rollup-files/celo/rollup.json
-
 op-node:
   secrets:
     l1Url:
@@ -46,6 +41,7 @@ op-node:
       value: "http://nethermind-prysm-mainnet.nethermind-mainnet:8080"
 
   config:
+    network: celo-mainnet
     l1:
       rpckind: nethermind
       trustrpc: true
@@ -67,7 +63,3 @@ op-node:
         - enr:-J64QLaIn1W3xO-kzeH2zScCP2zPCvXwfmPaCSXZKsIQhFXLeNIseCqV0eLxd_f8hcCT5BtPNznxIIhucpiI3qeUJiiGAZXaej0QgmlkgnY0gmlwhCJMELeHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaEDyCwx8h3Vu7jcNWhv9npDUzgrQBfJ7HZgo4PMtbjjsEyDdGNwgiQGg3VkcIIkBg
         - enr:-J64QGJFPZzLj2GLFgB4JhTde7rXChMNFERNbzrwYYTG7CY2SCSggFrU3VXczzWBvOoJWdbOMOzPuCI2klknGjruUxeGAZXQkf1LgmlkgnY0gmlwhGjHJzuHb3BzdGFja4TsyQIAiXNlY3AyNTZrMaEDO61fV62N5lQfAuNtgGuH5-nKbVM8lW6JpWswVK6F1giDdGNwgiQGg3VkcIIkBg
         - enr:-J64QEXleDl25w0qEG__wmDgwnzB0F5zapu00D_jM4qkCbA3WIcLC8rXPm8dcrKdZNBuNXJOtNE6c2_ZDkuQMvIuhjCGAZXQwDjFgmlkgnY0gmlwhCKMdU-Hb3BzdGFja4TsyQIAiXNlY3AyNTZrMaECHezzuLmg0LgzLRUhjzvwzrlgaw7-GPNSxR7_wUu_H0-DdGNwgiQGg3VkcIIkBg
-
-  init:
-    rollup:
-      url: https://storage.googleapis.com/cel2-rollup-files/celo/rollup.json

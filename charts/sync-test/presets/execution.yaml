@@ -6,9 +6,6 @@ snapshot:
 op-geth:
   config:
     syncmode: full
-  init:
-    genesis:
-      enabled: false
 
 op-node:
   config:

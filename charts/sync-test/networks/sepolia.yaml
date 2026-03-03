@@ -10,6 +10,7 @@ snapshot:
 
 op-geth:
   config:
+    op-network: celo-sep-sepolia
     networkid: 11142220
     rollup:
       sequencerhttp: https://sequencer.celo-sepolia.celo-testnet.org
@@ -28,13 +29,6 @@ op-geth:
     - --history.transactions=0
     - --txpool.nolocals
 
-  init:
-    genesis:
-      enabled: true
-      url: https://storage.googleapis.com/cel2-rollup-files/celo-sepolia/genesis.json
-    rollup:
-      url: https://storage.googleapis.com/cel2-rollup-files/celo-sepolia/rollup.json
-
 op-node:
   secrets:
     l1Url:
@@ -43,6 +37,7 @@ op-node:
       value: "https://prysm.sepolia.cel2.celo-networks-dev.org"
 
   config:
+    network: celo-sep-sepolia
     l1:
       rpckind: nethermind
       trustrpc: true
@@ -55,7 +50,3 @@ op-node:
         - enr:-J-4QIfSFLy1G3ChVv1eKIrhXajQAbP1c4XFxVb9B9dkHZ7XN_cjBq972Npgj-l75vGM9rnVx6-kd1-Tq1N4gWldvCyGAZg2WSqCgmlkgnY0gmlwhCJpeVSHb3BzdGFja4XMiKgFAIlzZWNwMjU2azGhA3_TXf6icEL-AIx06pfHpBJUspMVJzBBmm6bzYS7A8fOg3RjcIIkBoN1ZHCCJAY
         - enr:-J-4QEbMTKrBfyAeq9hWlEchulzvt1gWA-wAGa_kUdWw1K-faR-AjFNzhcVGG7yDnRb1RptLDGWVpl-WXWhrgJ4TKEaGAZg2XFFugmlkgnY0gmlwhCKotN-Hb3BzdGFja4XMiKgFAIlzZWNwMjU2azGhAxUbzxcFhZcfx4Ep2cFq81WhpT4cglzhrCBwDqdUqjPtg3RjcIIkBoN1ZHCCJAY
         - enr:-J-4QEawPak_hVU3h1wPZEGu7zLOv1C3k4WI8nHLUc83RqsRMauPtOPt8hYDFyxeJeaUyp0OUM0oyq-_9CEdshE1oWaGAZg2XLgDgmlkgnY0gmlwhCJSX5OHb3BzdGFja4XMiKgFAIlzZWNwMjU2azGhA6pft2ZDisWgNU6y7sHAwAK1a7LOftRPDnbgGcu5MSIvg3RjcIIkBoN1ZHCCJAY
-
-  init:
-    rollup:
-      url: https://storage.googleapis.com/cel2-rollup-files/celo-sepolia/rollup.json

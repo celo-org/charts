@@ -47,10 +47,8 @@ op-geth:
   init:
     genesis:
       enabled: false
-      url: ""  # Set via network file
     rollup:
       enabled: false
-      url: ""  # Set via network file
 
   persistence:
     pvc:
@@ -112,6 +110,10 @@ op-node:
     rollup:
       loadProtocolVersions: true
       halt: ""
+      # This needs to explicitly be set to an empty string to prevent passing
+      # the rollup.config flag which conflicts wih the network flag (configured
+      # in network specific yaml)
+      config: ""
     sequencer:
       enabled: false
     verifier:
@@ -133,10 +135,10 @@ op-node:
 
   init:
     rollup:
-      enabled: true
-      url: ""  # Set via network file
+      enabled: false
 
   persistence:
+    mountPath: "/celo"
     type: pvc
     pvc:
       size: 1Gi
