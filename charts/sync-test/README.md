@@ -7,6 +7,7 @@ Umbrella chart for running OP-Stack sync tests. Deploys **op-geth** and **op-nod
 - Kubernetes cluster
 - Helm 3
 - For consensus/execution modes on mainnet: a VolumeSnapshot to restore from (not needed for sepolia)
+- An EigenDA proxy running in the same namespace (default: `http://eigenda-proxy-api:4242`), or override `op-node.config.altda.daServer` with an alternate endpoint
 
 Build subchart dependencies before first use:
 
