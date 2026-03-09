@@ -147,7 +147,6 @@ config:
     # secretName: test
     # secretKey: test
   s3:
-    backup: null
     bucket: ""
     endpoint: ""
     enableTls: null

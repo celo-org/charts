@@ -43,7 +43,6 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.privateKey.value | string | `""` |  |
 | config.s3.accessKeyId.value | string | `""` |  |
 | config.s3.accessKeySecret.value | string | `""` |  |
-| config.s3.backup | string | `nil` |  |
 | config.s3.bucket | string | `""` |  |
 | config.s3.credentialType | string | `""` |  |
 | config.s3.enableTls | string | `nil` |  |
