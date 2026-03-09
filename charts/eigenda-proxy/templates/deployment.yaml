@@ -108,6 +108,7 @@ spec:
                 --eigenda.v2.blob-certified-timeout={{ .Values.config.v2.blobCertifiedTimeout }} \
                 --eigenda.v2.blob-status-poll-interval={{ .Values.config.v2.blobStatusPollInterval }} \
                 --eigenda.v2.blob-version={{ .Values.config.v2.blobVersion }} \
+                --eigenda.v2.client-ledger-mode={{ .Values.config.v2.clientLedgerMode }} \
                 {{- if .Values.config.v2.network }}
                 --eigenda.v2.network={{ .Values.config.v2.network }} \
                 {{- end }}
