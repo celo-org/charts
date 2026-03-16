@@ -1,0 +1,12 @@
+---
+# Execution-layer sync: restore from snapshot, sync via p2p
+snapshot:
+  enabled: true
+
+op-geth:
+  config:
+    syncmode: full
+
+op-node:
+  config:
+    syncmode: execution-layer

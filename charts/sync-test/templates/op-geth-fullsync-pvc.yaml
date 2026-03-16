@@ -1,0 +1,23 @@
+{{- if and .Values.snapshot.enabled (not (lookup "v1" "PersistentVolumeClaim" .Release.Namespace (printf "data-%s-op-geth-0" .Release.Name))) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-{{ .Release.Name }}-op-geth-0
+  labels:
+    {{- include "sync-test.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
+    {{- with (index .Values "op-geth").persistence.pvc.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: {{ .Values.snapshot.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.snapshot.storageSize }}
+  dataSource:
+    name: {{ .Values.snapshot.volumeSnapshotName }}
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
+{{- end }}
