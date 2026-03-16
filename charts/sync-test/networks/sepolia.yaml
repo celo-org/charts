@@ -10,7 +10,7 @@ snapshot:
 
 op-geth:
   config:
-    op-network: celo-sep-sepolia
+    op-network: celo-sepolia
     networkid: 11142220
     rollup:
       sequencerhttp: https://sequencer.celo-sepolia.celo-testnet.org
@@ -37,7 +37,7 @@ op-node:
       value: "https://prysm.sepolia.cel2.celo-networks-dev.org"
 
   config:
-    network: celo-sep-sepolia
+    network: celo-sepolia
     l1:
       rpckind: nethermind
       trustrpc: true
