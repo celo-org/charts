@@ -51,7 +51,7 @@ espresso:
   # -- L1 (Ethereum Mainnet) JSON-RPC provider URL
   # REQUIRED unless existingSecretRpc is set.
   # You must set this to your own Ethereum L1 HTTP RPC endpoint.
-  l1Provider: ""
+  l1Provider: "https://change-me.example.com"
 
   # -- Optional but recommended: L1 WebSocket provider(s) for block streaming
   # Comma-separated list of ws:// or wss:// endpoints.
