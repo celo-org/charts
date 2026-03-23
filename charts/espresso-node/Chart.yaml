@@ -1,0 +1,24 @@
+apiVersion: v2
+name: espresso-node
+description: Helm chart for running an Espresso Network sequencer node
+type: application
+version: 0.2.0
+appVersion: "20260302"
+keywords:
+  - espresso
+  - sequencer
+  - blockchain
+  - consensus
+home: https://docs.espressosys.com/network/guides/node-operators/running-a-sequencer-node
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+sources:
+  - https://github.com/EspressoSystems/espresso-network
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
+dependencies:
+  - name: postgresql
+    version: "16.4.1"
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled

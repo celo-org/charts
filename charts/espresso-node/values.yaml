@@ -1,0 +1,404 @@
+# -- Espresso Sequencer Helm Chart Values
+# Default configuration targets Espresso Mainnet 1.
+# Ref: https://docs.espressosys.com/network/releases/mainnet-1/running-a-mainnet-1-node
+
+# -- Number of replicas (typically 1 per unique staking key)
+replicaCount: 1
+
+image:
+  # -- Container image repository
+  repository: ghcr.io/espressosystems/espresso-sequencer/sequencer
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Image tag (defaults to appVersion in Chart.yaml)
+  tag: ""
+
+# -- Image pull secrets for private registries
+imagePullSecrets: []
+# -- Override the chart name
+nameOverride: ""
+# -- Override the full release name
+fullnameOverride: ""
+
+# =============================================================================
+# Node Mode
+# =============================================================================
+# Supported modes: "lightweight", "da", "archival"
+# - lightweight: consensus only, embedded SQLite DB, negligible storage
+# - da: DA committee eligible, query + SQL storage with pruning
+# - archival: full historical data, query + SQL storage without pruning
+# =============================================================================
+mode: "lightweight"
+
+# =============================================================================
+# Sequencer Command & Modules
+# =============================================================================
+# The command is auto-computed based on the mode above using /bin/sequencer-postgres.
+# Override this only if you need custom module configuration.
+# Mainnet 1 commands (per Espresso team 2026-02-23):
+#   lightweight: "/bin/sequencer-postgres -- http -- catchup -- status -- config"
+#   da:          "/bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config"
+#   archival:    "/bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config"
+commandOverride: ""
+
+# =============================================================================
+# Espresso Network Configuration (Mainnet 1 defaults)
+# =============================================================================
+espresso:
+  # -- Genesis file path inside the container (bundled with the Docker image)
+  genesisFile: "/genesis/mainnet.toml"
+
+  # -- L1 (Ethereum Mainnet) JSON-RPC provider URL
+  # REQUIRED unless existingSecretRpc is set.
+  # You must set this to your own Ethereum L1 HTTP RPC endpoint.
+  l1Provider: ""
+
+  # -- Optional but recommended: L1 WebSocket provider(s) for block streaming
+  # Comma-separated list of ws:// or wss:// endpoints.
+  # Decreases load on your HTTP provider.
+  l1WsProvider: ""
+
+  # -- Use an existing Kubernetes Secret for L1 RPC provider URLs
+  # The secret must contain key: ESPRESSO_SEQUENCER_L1_PROVIDER
+  # and optionally: ESPRESSO_SEQUENCER_L1_WS_PROVIDER
+  # When set, l1Provider and l1WsProvider values are ignored.
+  existingSecretRpc: ""
+
+  # -- CDN endpoint in host:port form (provided by Espresso for Mainnet)
+  cdnEndpoint: "cdn.main.net.espresso.network:1737"
+
+  # -- State relay server URL (provided by Espresso for Mainnet)
+  stateRelayServerUrl: "https://state-relay.main.net.espresso.network"
+
+  # -- Comma-separated list of peer URLs for catchup (max ~5 URLs recommended).
+  # DA/archival modes should use /v1 suffix.
+  # The value is auto-suffixed with /v1 for da/archival modes in the deployment template.
+  statePeers: "https://query.main.net.espresso.network"
+
+  # -- Comma-separated list of peer query service URLs (for DA/archival modes).
+  # Used by the query module to fetch missing data from peers.
+  apiPeers: ""
+
+  # -- Config peers URL for first-time network join.
+  # Used to fetch P2P configuration from a trusted node on first startup.
+  # After successful join, config is stored locally and this is not needed on restarts.
+  configPeers: "https://cache.main.net.espresso.network"
+
+  # -- Whether to participate in the DA committee
+  isDA: false
+
+  # -- Whether this is an archival node (stores all historical data)
+  isArchive: false
+
+  # ---------------------------------------------------------------------------
+  # Private Keys
+  # ---------------------------------------------------------------------------
+  # Keys can be provided via an existing secret or directly (not recommended
+  # for production). Use `keygen` to generate keys:
+  #   docker run ghcr.io/espressosystems/espresso-sequencer/sequencer:20260223 keygen -o /keys
+  # ---------------------------------------------------------------------------
+
+  # -- Use an existing Kubernetes Secret for private keys
+  # The secret must contain keys: ESPRESSO_SEQUENCER_PRIVATE_STAKING_KEY
+  # and ESPRESSO_SEQUENCER_PRIVATE_STATE_KEY
+  existingSecret: ""
+
+  # -- Private staking key (BLS key for signing consensus messages)
+  # Only used if existingSecret is empty. Store in a Secret in production.
+  privateStakingKey: ""
+
+  # -- Private state key (Schnorr key for signing finalized states)
+  # Only used if existingSecret is empty. Store in a Secret in production.
+  privateStateKey: ""
+
+  # ---------------------------------------------------------------------------
+  # libp2p Configuration
+  # ---------------------------------------------------------------------------
+
+  # -- Address to bind libp2p to (host:port, UDP)
+  libp2pBindAddress: "0.0.0.0:31000"
+
+  # -- Address advertised to other nodes (host:port, UDP)
+  # Set this to your node's externally reachable address.
+  libp2pAdvertiseAddress: ""
+
+  # -- Optional: comma-separated list of bootstrap nodes in multiaddress format
+  libp2pBootstrapNodes: ""
+
+  # ---------------------------------------------------------------------------
+  # L1 Client Tuning (optional, defaults are sensible)
+  # ---------------------------------------------------------------------------
+  l1:
+    eventsMaxBlockRange: ""
+    # -- Delay after failed L1 requests. Espresso team recommends "20s" for Non-DA nodes.
+    retryDelay: "20s"
+    pollingInterval: ""
+    blocksCacheSize: ""
+    eventsChannelCapacity: ""
+    subscriptionTimeout: ""
+    frequentFailureTolerance: ""
+    consecutiveFailureTolerance: ""
+    rateLimitDelay: ""
+    stakeTableUpdateInterval: ""
+    finalizedSafetyMargin: ""
+
+  # ---------------------------------------------------------------------------
+  # Logging
+  # ---------------------------------------------------------------------------
+  logging:
+    # -- Rust log level filter
+    rustLog: "warn,libp2p=off"
+    # -- Log output format (json recommended for production)
+    rustLogFormat: "json"
+
+  # ---------------------------------------------------------------------------
+  # Node Identity (for Espresso Node Validator Dashboard)
+  # ---------------------------------------------------------------------------
+  identity:
+    nodeName: ""
+    companyName: ""
+    companyWebsite: ""
+    operatingSystem: ""
+    nodeType: ""
+    networkType: ""
+    countryCode: ""
+    latitude: ""
+    longitude: ""
+
+  # ---------------------------------------------------------------------------
+  # HTTP API Configuration
+  # ---------------------------------------------------------------------------
+  api:
+    # -- Port for the HTTP API
+    port: 24000
+    # -- Maximum concurrent HTTP connections
+    maxConnections: ""
+
+  # ---------------------------------------------------------------------------
+  # Query Module (for da/archival modes)
+  # ---------------------------------------------------------------------------
+  query:
+    # -- Comma-separated list of peer query service URLs
+    peers: ""
+    # -- Fetch rate limit for missing data from peers
+    fetchRateLimit: ""
+    # -- Delay between active fetch requests
+    activeFetchDelay: ""
+    # -- Delay between chunk fetch requests
+    chunkFetchDelay: ""
+
+  # ---------------------------------------------------------------------------
+  # Storage Configuration
+  # ---------------------------------------------------------------------------
+  storage:
+    # -- Use embedded SQLite DB (for lightweight mode).
+    # Automatically set to true for lightweight mode in the deployment template.
+    embeddedDb: false
+    # -- Path inside the container for embedded SQLite storage (lightweight mode)
+    storagePath: "/data/sequencer/store"
+    # -- Postgres connection URI (alternative to individual fields below)
+    postgresUri: ""
+    # -- Postgres host (used if postgresUri is empty, defaults to subchart)
+    postgresHost: ""
+    # -- Postgres port
+    postgresPort: "5432"
+    # -- Postgres database name
+    postgresDatabase: "sequencer"
+    # -- Postgres user
+    postgresUser: "espresso"
+    # -- Postgres password (use existingSecret in production)
+    postgresPassword: ""
+    # -- Use TLS for Postgres connection
+    postgresUseTls: false
+
+  # ---------------------------------------------------------------------------
+  # Pruning (for da mode only)
+  # ---------------------------------------------------------------------------
+  pruning:
+    # -- Enable pruning of historical data
+    enabled: false
+    # -- Minimum data retention period
+    minimumRetention: "1d"
+    # -- Target data retention period
+    targetRetention: "7d"
+    # -- Storage threshold in bytes to trigger pruning
+    pruningThreshold: "100000000000"
+    # -- Maximum fraction of pruningThreshold to use (1-10000 scale)
+    maxUsage: ""
+    # -- Batch size for pruning operations
+    batchSize: ""
+    # -- Interval between pruning runs
+    interval: ""
+
+  # ---------------------------------------------------------------------------
+  # Extra environment variables (for any parameter not covered above)
+  # ---------------------------------------------------------------------------
+  extraEnv: []
+  # - name: MY_CUSTOM_VAR
+  #   value: "my-value"
+
+# =============================================================================
+# Persistence (for lightweight mode embedded SQLite DB)
+# =============================================================================
+persistence:
+  # -- Enable persistent volume for embedded DB storage
+  enabled: true
+  # -- Storage class (empty = default)
+  storageClass: ""
+  # -- Access modes
+  accessModes:
+    - ReadWriteOnce
+  # -- Storage size
+  size: 10Gi
+  # -- Annotations for the PVC
+  annotations: {}
+
+# =============================================================================
+# Service Account
+# =============================================================================
+serviceAccount:
+  # -- Create a service account
+  create: true
+  # -- Annotations for the service account
+  annotations: {}
+  # -- Service account name (auto-generated if empty)
+  name: ""
+  # -- Automount API credentials
+  automountServiceAccountToken: false
+
+# =============================================================================
+# Pod Configuration
+# =============================================================================
+
+# -- Pod annotations
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "24000"
+  prometheus.io/path: "/v1/status/metrics"
+
+# -- Pod labels
+podLabels: {}
+
+# -- Pod security context
+podSecurityContext: {}
+
+# -- Container security context
+securityContext: {}
+
+# =============================================================================
+# Services
+# =============================================================================
+service:
+  # -- Service type for the HTTP API
+  type: ClusterIP
+  # -- HTTP API service port
+  port: 24000
+
+  # -- Annotations for the HTTP API service
+  annotations: {}
+
+# -- Separate service for libp2p (UDP)
+libp2pService:
+  # -- Enable a dedicated service for libp2p
+  enabled: true
+  # -- Service type (LoadBalancer recommended for external reachability)
+  type: LoadBalancer
+  # -- libp2p service port (UDP)
+  port: 31000
+  # -- Annotations for the libp2p service
+  annotations: {}
+  # -- Pre-allocated static IP for the LoadBalancer (optional)
+  loadBalancerIP: ""
+
+# =============================================================================
+# Ingress (for HTTP API)
+# =============================================================================
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: espresso-node.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# =============================================================================
+# Resources
+# =============================================================================
+# Hardware requirements from Espresso docs:
+#   Non-DA Node: 1 Core CPU, 8GB memory
+#   DA Node (sequencer): 4 core CPU, 8GB memory
+resources:
+  requests:
+    cpu: "1"
+    memory: "8Gi"
+  limits:
+    memory: "8Gi"
+
+# =============================================================================
+# Probes
+# =============================================================================
+livenessProbe:
+  httpGet:
+    path: /healthcheck
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 5
+
+readinessProbe:
+  httpGet:
+    path: /healthcheck
+    port: http
+  initialDelaySeconds: 15
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+startupProbe:
+  httpGet:
+    path: /healthcheck
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 30
+
+# =============================================================================
+# Node selector, tolerations, affinity
+# =============================================================================
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# =============================================================================
+# PostgreSQL Subchart (Bitnami)
+# =============================================================================
+# Used when mode is "da" or "archival" and no external Postgres is configured.
+postgresql:
+  # -- Deploy a PostgreSQL instance via the Bitnami subchart
+  enabled: false
+  auth:
+    # -- Postgres admin username
+    username: espresso
+    # -- Postgres admin password
+    password: ""
+    # -- Database name to create
+    database: sequencer
+    # -- Use an existing secret for the password
+    existingSecret: ""
+  primary:
+    persistence:
+      # -- Enable persistence for PostgreSQL
+      enabled: true
+      # -- Storage size for PostgreSQL
+      size: 100Gi
+    resources:
+      requests:
+        cpu: "2"
+        memory: "4Gi"
+      limits:
+        memory: "4Gi"

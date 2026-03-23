@@ -1,0 +1,24 @@
+{{- if .Values.libp2pService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "espresso-node.fullname" . }}-libp2p
+  labels:
+    {{- include "espresso-node.labels" . | nindent 4 }}
+  {{- with .Values.libp2pService.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.libp2pService.type }}
+  {{- if .Values.libp2pService.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.libp2pService.loadBalancerIP | quote }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.libp2pService.port }}
+      targetPort: libp2p
+      protocol: UDP
+      name: libp2p
+  selector:
+    {{- include "espresso-node.selectorLabels" . | nindent 4 }}
+{{- end }}
