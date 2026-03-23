@@ -1,0 +1,97 @@
+Espresso Sequencer (Mainnet 1) has been deployed!
+
+Mode: {{ .Values.mode }}
+Image: {{ include "espresso-node.image" . }}
+Genesis: {{ .Values.espresso.genesisFile }}
+Command: {{ include "espresso-node.command" . | trim }}
+
+{{- if not .Values.espresso.l1Provider }}
+
+WARNING: espresso.l1Provider is not set!
+You MUST provide an Ethereum L1 HTTP RPC endpoint for the node to function.
+Update your values with:
+  espresso:
+    l1Provider: "https://your-ethereum-rpc-endpoint"
+{{- end }}
+
+{{- if not .Values.espresso.l1WsProvider }}
+
+NOTE: espresso.l1WsProvider is not set.
+A WebSocket L1 provider is recommended for Mainnet 1 to reduce load on your HTTP provider.
+  espresso:
+    l1WsProvider: "wss://your-ethereum-ws-endpoint"
+{{- end }}
+
+{{- if and (not .Values.espresso.existingSecret) (not .Values.espresso.privateStakingKey) }}
+
+WARNING: No private keys configured!
+Generate keys using:
+  docker run {{ include "espresso-node.image" . }} keygen -o /keys
+
+Then either:
+  1. Create a Kubernetes Secret and set espresso.existingSecret
+  2. Set espresso.privateStakingKey and espresso.privateStateKey in values
+
+The Secret must contain:
+  - ESPRESSO_SEQUENCER_PRIVATE_STAKING_KEY (BLS_SIGNING_KEY~...)
+  - ESPRESSO_SEQUENCER_PRIVATE_STATE_KEY (SCHNORR_SIGNING_KEY~...)
+{{- end }}
+
+{{- if not .Values.espresso.libp2pAdvertiseAddress }}
+
+NOTE: espresso.libp2pAdvertiseAddress is not set.
+Other nodes need to be able to reach your libp2p endpoint.
+Set this to your node's externally reachable address:port (UDP).
+{{- end }}
+
+=== STAKING REGISTRATION (Required for Mainnet 1) ===
+
+Your node must be registered in the Ethereum stake table and have ESP tokens
+delegated to participate in consensus. The top 100 nodes by delegated stake
+form the active set each epoch (~24 hours).
+
+Stake Table Contract (Ethereum Mainnet):
+  0xCeF474D372B5b09dEfe2aF187bf17338Dc704451
+
+1. Register your validator:
+   docker run -it \
+     -e L1_PROVIDER="<your-ethereum-rpc>" \
+     -e STAKE_TABLE_ADDRESS="0xCeF474D372B5b09dEfe2aF187bf17338Dc704451" \
+     -e MNEMONIC="<your-ethereum-mnemonic>" \
+     -e ACCOUNT_INDEX="0" \
+     -e CONSENSUS_PRIVATE_KEY="<your-BLS_SIGNING_KEY>" \
+     -e STATE_PRIVATE_KEY="<your-SCHNORR_SIGNING_KEY>" \
+     ghcr.io/espressosystems/espresso-node/staking-cli:main \
+     staking-cli register-validator \
+       --commission <commission-rate> \
+       --metadata-uri <your-node-status-url>/status/metrics
+
+2. Delegate ESP tokens to your validator:
+   docker run -it \
+     -e L1_PROVIDER="<your-ethereum-rpc>" \
+     -e STAKE_TABLE_ADDRESS="0xCeF474D372B5b09dEfe2aF187bf17338Dc704451" \
+     -e MNEMONIC="<your-ethereum-mnemonic>" \
+     -e ACCOUNT_INDEX="0" \
+     ghcr.io/espressosystems/espresso-node/staking-cli:main \
+     staking-cli delegate \
+       --validator-address <your-ethereum-address> \
+       --amount <delegation-amount>
+
+For more details: https://github.com/EspressoSystems/espresso-network/blob/main/staking-cli/README.md
+
+=== ACCESS ===
+
+To access the HTTP API:
+  kubectl port-forward svc/{{ include "espresso-node.fullname" . }} {{ .Values.service.port }}:{{ .Values.service.port }}
+
+Healthcheck:
+  curl http://localhost:{{ .Values.service.port }}/healthcheck
+
+Prometheus metrics:
+  curl http://localhost:{{ .Values.service.port }}/status/metrics
+
+Key metrics to monitor:
+  - consensus_current_view (should increment every 1-2s)
+  - consensus_last_decided_view (should track current_view)
+  - consensus_libp2p_num_connected_peers (should be > 0)
+  - consensus_number_of_timeouts_as_leader (should not increase frequently)
