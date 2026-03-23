@@ -24,19 +24,23 @@ fullnameOverride: ""
 # Node Mode
 # =============================================================================
 # Supported modes: "lightweight", "da", "archival"
-# - lightweight: consensus only, embedded SQLite DB, negligible storage
-# - da: DA committee eligible, query + SQL storage with pruning
-# - archival: full historical data, query + SQL storage without pruning
+# - lightweight: consensus only, local SQLite DB (/bin/sequencer-sqlite), negligible storage
+# - da: DA committee eligible, PostgreSQL storage (/bin/sequencer-postgres), with pruning
+# - archival: full historical data, PostgreSQL storage (/bin/sequencer-postgres), without pruning
 # =============================================================================
 mode: "lightweight"
 
 # =============================================================================
 # Sequencer Command & Modules
 # =============================================================================
-# The command is auto-computed based on the mode above using /bin/sequencer-postgres.
+# The command is auto-computed based on the mode above.
+# The binary is selected per mode:
+#   lightweight: /bin/sequencer-sqlite  (compiled with embedded SQLite, no external DB needed)
+#   da/archival: /bin/sequencer-postgres (compiled with PostgreSQL support)
+#
 # Override this only if you need custom module configuration.
-# Mainnet 1 commands (per Espresso team 2026-02-23):
-#   lightweight: "/bin/sequencer-postgres -- http -- catchup -- status -- config"
+# Auto-computed commands (per Espresso team 2026-02-23):
+#   lightweight: "/bin/sequencer-sqlite -- http -- catchup -- status -- config"
 #   da:          "/bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config"
 #   archival:    "/bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config"
 commandOverride: ""
@@ -377,7 +381,10 @@ affinity: {}
 # =============================================================================
 # PostgreSQL Subchart (Bitnami)
 # =============================================================================
-# Used when mode is "da" or "archival" and no external Postgres is configured.
+# Only needed for "da" or "archival" modes which use /bin/sequencer-postgres.
+# Lightweight mode uses /bin/sequencer-sqlite with local embedded storage — no Postgres needed.
+# Enable this to deploy a co-located PostgreSQL instance, or set
+# espresso.storage.postgresUri to point to an external Postgres.
 postgresql:
   # -- Deploy a PostgreSQL instance via the Bitnami subchart
   enabled: false
