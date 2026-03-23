@@ -84,21 +84,35 @@ PostgreSQL host - use subchart if enabled, otherwise use configured host
 {{- end }}
 
 {{/*
+Compute the sequencer binary based on mode.
+  - lightweight: /bin/sequencer-sqlite (compiled with embedded-db feature, uses SQLite)
+  - da/archival: /bin/sequencer-postgres (compiled with postgres support)
+*/}}
+{{- define "espresso-node.binary" -}}
+{{- if or (eq .Values.mode "da") (eq .Values.mode "archival") -}}
+/bin/sequencer-postgres
+{{- else -}}
+/bin/sequencer-sqlite
+{{- end -}}
+{{- end }}
+
+{{/*
 Compute the sequencer command based on mode.
-Mainnet 1 uses /bin/sequencer-postgres binary.
+Uses the appropriate binary for each storage backend.
 Commands per Espresso team instructions (2026-02-23):
-  Non-DA: /bin/sequencer-postgres -- http -- catchup -- status -- config
-  DA:     /bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
+  lightweight: /bin/sequencer-sqlite -- http -- catchup -- status -- config
+  da:          /bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
+  archival:    /bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
 */}}
 {{- define "espresso-node.command" -}}
 {{- if .Values.commandOverride }}
 {{- .Values.commandOverride }}
 {{- else if eq .Values.mode "da" }}
-/bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
+{{ include "espresso-node.binary" . }} -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
 {{- else if eq .Values.mode "archival" }}
-/bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
+{{ include "espresso-node.binary" . }} -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
 {{- else }}
-/bin/sequencer-postgres -- http -- catchup -- status -- config
+{{ include "espresso-node.binary" . }} -- http -- catchup -- status -- config
 {{- end }}
 {{- end }}
 
