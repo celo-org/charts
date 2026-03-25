@@ -33,16 +33,16 @@ mode: "lightweight"
 # =============================================================================
 # Sequencer Command & Modules
 # =============================================================================
-# The command is auto-computed based on the mode above.
-# The binary is selected per mode:
-#   lightweight: /bin/sequencer-sqlite  (compiled with embedded SQLite, no external DB needed)
-#   da/archival: /bin/sequencer-postgres (compiled with PostgreSQL support)
+# The command is auto-computed based on the mode above using /bin/sequencer,
+# a wrapper script that selects the correct binary based on ESPRESSO_SEQUENCER_EMBEDDED_DB:
+#   - lightweight (EMBEDDED_DB=true): routes to /bin/sequencer-sqlite (local SQLite storage)
+#   - da/archival (EMBEDDED_DB unset): routes to /bin/sequencer-postgres (PostgreSQL storage)
 #
 # Override this only if you need custom module configuration.
-# Auto-computed commands (per Espresso team 2026-02-23):
-#   lightweight: "/bin/sequencer-sqlite -- http -- catchup -- status -- config"
-#   da:          "/bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config"
-#   archival:    "/bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config"
+# Auto-computed commands:
+#   lightweight: "/bin/sequencer -- http -- catchup -- status -- config"
+#   da:          "/bin/sequencer -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config"
+#   archival:    "/bin/sequencer -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config"
 commandOverride: ""
 
 # =============================================================================
