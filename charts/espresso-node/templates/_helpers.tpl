@@ -98,21 +98,19 @@ Compute the sequencer binary based on mode.
 
 {{/*
 Compute the sequencer command based on mode.
-Uses the appropriate binary for each storage backend.
-Commands per Espresso team instructions (2026-02-23):
-  lightweight: /bin/sequencer-sqlite -- http -- catchup -- status -- config
-  da:          /bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
-  archival:    /bin/sequencer-postgres -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
+Uses /bin/sequencer wrapper which auto-selects the correct binary:
+  - When ESPRESSO_SEQUENCER_EMBEDDED_DB=true (lightweight): runs /bin/sequencer-sqlite
+  - Otherwise (da/archival): runs /bin/sequencer-postgres
 */}}
 {{- define "espresso-node.command" -}}
 {{- if .Values.commandOverride }}
 {{- .Values.commandOverride }}
 {{- else if eq .Values.mode "da" }}
-{{ include "espresso-node.binary" . }} -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
+/bin/sequencer -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
 {{- else if eq .Values.mode "archival" }}
-{{ include "espresso-node.binary" . }} -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
+/bin/sequencer -- http -- catchup -- query -- hotshot-events -- submit -- status -- storage-sql -- light-client -- explorer -- config
 {{- else }}
-{{ include "espresso-node.binary" . }} -- http -- catchup -- status -- config
+/bin/sequencer -- http -- catchup -- status -- config
 {{- end }}
 {{- end }}
 
