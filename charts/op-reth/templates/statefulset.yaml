@@ -235,10 +235,10 @@ spec:
             {{- end }}
             {{- with .Values.config.rollup }}
             {{- if .sequencerhttp }}
-            --rollup.sequencerhttp={{ .sequencerhttp }} \
+            --rollup.sequencer={{ .sequencerhttp }} \
             {{- end }}
             {{- with .disabletxpoolgossip }}
-            --rollup.disabletxpoolgossip \
+            --rollup.disable-tx-pool-gossip \
             {{- end }}
             {{- end }}
             {{- if .Values.config.ws.enabled }}
