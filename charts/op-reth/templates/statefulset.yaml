@@ -284,9 +284,9 @@ spec:
             --port={{ .Values.config.port }} \
             {{- end }}
             $natFlag \
-            {{- with .Values.config.state.scheme }}
-            --state.scheme={{ . }} \
-            {{- end }}
+            # {{- with .Values.config.state.scheme }}
+            # --state.scheme={{ . }} \
+            # {{- end }}
             {{- with .Values.extraArgs }}
             {{- range . }}
             {{- tpl (.) $ | nindent 12 }} \
