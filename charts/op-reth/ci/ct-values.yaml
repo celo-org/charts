@@ -26,3 +26,5 @@ services:
   rpc:
     sharedServiceEnabled: true
     individualServiceEnabled: true
+config:
+    op-network: ""
