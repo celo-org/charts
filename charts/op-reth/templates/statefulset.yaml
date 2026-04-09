@@ -214,10 +214,7 @@ spec:
             --networkid={{ int . }} \
             {{- end }}
             --chain=$datadir/genesis.json \
-            # --syncmode={{ .Values.config.syncmode }} \
-            # --gcmode={{ .Values.config.gcmode }} \
-            # --snapshot={{ .Values.config.snapshot }} \
-            # --maxpeers={{ .Values.config.maxpeers }} \
+            --maxpeers={{ .Values.config.maxpeers }} \
             {{- with .Values.config.full }}
             --full \
             {{- end }}
@@ -284,9 +281,6 @@ spec:
             --port={{ .Values.config.port }} \
             {{- end }}
             $natFlag \
-            # {{- with .Values.config.state.scheme }}
-            # --state.scheme={{ . }} \
-            # {{- end }}
             {{- with .Values.extraArgs }}
             {{- range . }}
             {{- tpl (.) $ | nindent 12 }} \
