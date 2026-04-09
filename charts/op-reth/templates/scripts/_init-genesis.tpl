@@ -11,12 +11,12 @@ if [ ! -f $datadir/.initialized ]; then
     wget -qO $datadir/genesis.json "{{ .Values.init.genesis.url }}"
     celo-reth init \
       --datadir={{ .Values.config.datadir }} \
-      --chain=$datadir/genesis.json \
       {{- with .Values.init.extraArgs }}
       {{- range . }}
       {{- tpl (.) $ | nindent 6 }} \
       {{- end }}
       {{- end }}
+      --chain=$datadir/genesis.json 
     echo "Successfully initialized from genesis file"
     {{- end }}
     touch $datadir/.initialized
