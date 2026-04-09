@@ -259,9 +259,6 @@ spec:
             --pprof.port=6061 \
             --pprof.addr=0.0.0.0 \
             {{- end }}
-            {{- with .Values.config.verbosity }}
-            --verbosity={{ . }} \
-            {{- end }}
             {{- with .Values.config.vmodule }}
             --log.vmodule={{ join "," . }} \
             {{- end }}
