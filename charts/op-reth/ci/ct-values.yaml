@@ -28,3 +28,7 @@ services:
     individualServiceEnabled: true
 config:
   op-network: ""
+init:
+  genesis:
+    enabled: true
+    url: https://storage.googleapis.com/cel2-rollup-files/celo-sepolia/genesis.json
