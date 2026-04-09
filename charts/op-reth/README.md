@@ -1,8 +1,8 @@
-# op-geth
+# op-reth
 
-![Version: 0.3.11](https://img.shields.io/badge/Version-0.3.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
-Celo implementation for op-geth execution engine (Optimism Rollup)
+Celo implementation for op-reth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
 
 **Homepage:** <https://clabs.co>
@@ -28,17 +28,15 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | command[0] | string | `"/bin/sh"` |  |
 | command[1] | string | `"-c"` |  |
 | config.authrpc.port | int | `8551` |  |
-| config.authrpc.vhosts[0] | string | `"*"` |  |
 | config.bootnodes | list | `[]` |  |
 | config.cache | int | `0` |  |
 | config.datadir | string | `"/celo"` |  |
-| config.gcmode | string | `"full"` |  |
+| config.full | bool | `true` |  |
 | config.http.api[0] | string | `"eth"` |  |
 | config.http.api[1] | string | `"net"` |  |
 | config.http.api[2] | string | `"web3"` |  |
 | config.http.corsdomain[0] | string | `"*"` |  |
 | config.http.port | int | `8545` |  |
-| config.http.vhosts[0] | string | `"*"` |  |
 | config.logFormat | string | `"json"` |  |
 | config.maxpeers | int | `50` |  |
 | config.metrics.enabled | bool | `false` |  |
@@ -53,11 +51,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.rollup.disabletxpoolgossip | bool | `true` |  |
 | config.rollup.halt | string | `"major"` |  |
 | config.rollup.sequencerhttp | string | `"https://mainnet-sequencer.optimism.io/"` |  |
-| config.snapshot | bool | `true` |  |
-| config.state.scheme | string | `""` |  |
-| config.syncmode | string | `"snap"` |  |
 | config.useHostPort | bool | `false` |  |
-| config.verbosity | int | `3` |  |
 | config.vmodule | list | `[]` |  |
 | config.ws.api[0] | string | `"eth"` |  |
 | config.ws.api[1] | string | `"net"` |  |
@@ -73,8 +67,8 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | extraVolumes | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth"` |  |
-| image.tag | string | `"latest"` |  |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/celo-kona-reth"` |  |
+| image.tag | string | `"pr-144"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.http.annotations | object | `{}` |  |
 | ingress.http.className | string | `""` |  |
