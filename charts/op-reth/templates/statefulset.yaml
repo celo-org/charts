@@ -214,7 +214,7 @@ spec:
             --networkid={{ int . }} \
             {{- end }}
             --chain=$datadir/genesis.json \
-            --maxpeers={{ .Values.config.maxpeers }} \
+            --max-peers={{ .Values.config.maxpeers }} \
             {{- with .Values.config.full }}
             --full \
             {{- end }}
@@ -224,13 +224,11 @@ spec:
             {{- end }}
             --authrpc.addr=0.0.0.0 \
             --authrpc.jwtsecret=$datadir/jwt.hex \
-            --authrpc.vhosts={{ join "," .Values.config.authrpc.vhosts }} \
             --authrpc.port={{ .Values.config.authrpc.port }} \
             --http \
             --http.addr=0.0.0.0 \
             --http.port={{ .Values.config.http.port }} \
             --http.api={{ join "," .Values.config.http.api }} \
-            --http.vhosts={{ join "," .Values.config.http.vhosts }} \
             --http.corsdomain={{ join "," .Values.config.http.corsdomain }} \
             {{- if .Values.config.cache }}
             --cache={{ .Values.config.cache }} \
@@ -242,9 +240,6 @@ spec:
             {{- with .disabletxpoolgossip }}
             --rollup.disabletxpoolgossip \
             {{- end }}
-            {{- with .halt }}
-            --rollup.halt={{ . }} \
-            {{- end }}
             {{- end }}
             {{- if .Values.config.ws.enabled }}
             --ws \
@@ -254,9 +249,7 @@ spec:
             --ws.port={{ .Values.config.ws.port }} \
             {{- end }}
             {{- if .Values.config.metrics.enabled }}
-            --metrics.addr=0.0.0.0 \
-            --metrics.port=6060 \
-            --metrics \
+            --metrics=0.0.0.0:6060 \
             {{- if .Values.config.metrics.expensive }}
             --metrics.expensive \
             {{- end }}
@@ -270,7 +263,7 @@ spec:
             {{- with .Values.config.vmodule }}
             --log.vmodule={{ join "," . }} \
             {{- end }}
-            --log.format={{ .Values.config.logFormat }} \
+            --log.stdout.format={{ .Values.config.logFormat }} \
             {{- with .Values.config.bootnodes }}
             --bootnodes={{ join "," . }} \
             {{- end }}

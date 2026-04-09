@@ -318,7 +318,6 @@ config:
     sequencerhttp: https://mainnet-sequencer.optimism.io/   # url of sequencer, depends on chosen network
   http:
     port: 8545
-    vhosts: ["*"]
     corsdomain: ["*"]
     api: ["eth", "net", "web3"]
   ws:
@@ -328,7 +327,6 @@ config:
     api: ["eth", "net", "web3"]
   authrpc:
     port: 8551
-    vhosts: ["*"]
   # state:
   #   scheme: ""              # possible values are: "path", "hash". "hash" is going to be deprecated soon
   cache: 0                  # disable by default, let geth automatically set proper value https://blog.ethereum.org/2023/09/12/geth-v1-13-0
