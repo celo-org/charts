@@ -27,4 +27,4 @@ services:
     sharedServiceEnabled: true
     individualServiceEnabled: true
 config:
-    op-network: ""
+  op-network: ""
