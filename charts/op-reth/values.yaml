@@ -333,7 +333,7 @@ config:
   # syncmode: snap            # possible values are: "snap", "full"
   # gcmode: full              # possible values are: "full", "archive"
   # snapshot: true            # enable state snapshot generation
-  # maxpeers: 50              # set to 0 if you don't use "snap" syncmode
+  maxpeers: 50              # set to 0 if you don't use "snap" syncmode
   full: true                # enable full mode, set to "" to enable archive mode
   nodiscover: false         # enable if you don't use "snap" syncmode
   networkid: ""             # network id. Empty string for known networks, custom id for custom rollups
