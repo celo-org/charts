@@ -331,6 +331,10 @@ config:
   useHostPort: false        # allocate hostPorts for P2P communication instead of K8S service
   nat: ""                   # NAT resolution method (any|none|upnp|publicip|extip:<IP>)
   bootnodes: []             # built-in bootnodes are used when empty
+  # List of enode URLs (enode://<hex-pubkey>@host:port) that are always-allowed and pinned against eviction.
+  # Joined with commas into --trusted-peers.
+  trustedPeers: []
+  trustedOnly: false        # if true (--trusted-only), reject any inbound or outbound peer not in trustedPeers — hard accept-list
   logFilter: ""             # RUST_LOG-style filter for stdout logs, e.g. "info,reth=debug"
   logFormat: "json"         # log format: json, log-fmt, or terminal
   metrics:

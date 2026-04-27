@@ -256,6 +256,12 @@ spec:
             {{- with .Values.config.bootnodes }}
             --bootnodes={{ join "," . }} \
             {{- end }}
+            {{- with .Values.config.trustedPeers }}
+            --trusted-peers={{ join "," . }} \
+            {{- end }}
+            {{- if .Values.config.trustedOnly }}
+            --trusted-only \
+            {{- end }}
             {{- with .Values.config.netrestrict }}
             --netrestrict={{ join "," . }} \
             {{- end }}
