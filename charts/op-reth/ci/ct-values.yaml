@@ -27,7 +27,7 @@ services:
     sharedServiceEnabled: true
     individualServiceEnabled: true
 config:
-  op-network: ""
+  chain: ""
 init:
   genesis:
     enabled: true

@@ -142,11 +142,6 @@ services:
     type: ClusterIP
     port: 6060
     publishNotReadyAddresses: true
-  pprof:
-    enabled: false
-    type: ClusterIP
-    port: 6061
-    publishNotReadyAddresses: true
   p2p:
     enabled: true       # disable if you are not using "snap" syncmode
     type: ClusterIP
@@ -308,9 +303,9 @@ secrets:
     secretName: ""
     secretKey: ""
 
-## Main op-geth config
+## Main celo-reth config
 config:
-  op-network: op-mainnet                                    # must be an empty string if you are using custom genesis (f.e. when network is not in superchain-registry)
+  chain: celo                                               # built-in chain name (e.g. celo, optimism, base) OR a path to a chain spec file. If empty, falls back to $datadir/genesis.json
   datadir: /celo                                            # data directory
   rollup:
     halt: major                                             # halt node on version mismatch, possible values: "major", "minor", "patch", "none"
@@ -327,28 +322,18 @@ config:
     api: ["eth", "net", "web3"]
   authrpc:
     port: 8551
-  # state:
-  #   scheme: ""              # possible values are: "path", "hash". "hash" is going to be deprecated soon
-  cache: 0                  # disable by default, let geth automatically set proper value https://blog.ethereum.org/2023/09/12/geth-v1-13-0
-  # syncmode: snap            # possible values are: "snap", "full"
-  # gcmode: full              # possible values are: "full", "archive"
-  # snapshot: true            # enable state snapshot generation
-  maxpeers: 50              # set to 0 if you don't use "snap" syncmode
-  full: true                # enable full mode, set to "" to enable archive mode
-  nodiscover: false         # enable if you don't use "snap" syncmode
-  networkid: ""             # network id. Empty string for known networks, custom id for custom rollups
-  netrestrict: []           # restrict network access to specific IPs
+  maxpeers: 50              # maximum total peers (inbound + outbound)
+  full: true                # run as full node (set to "" / false for archive)
+  disableDiscovery: false   # disable peer discovery service
+  networkId: ""             # optional override of chain spec network ID for P2P. Empty string for default
+  netrestrict: []           # restrict network access to specific CIDR ranges
   port: 30303               # TCP port for P2P communication
   useHostPort: false        # allocate hostPorts for P2P communication instead of K8S service
-  nat: ""                   # Override the p2p service ip/pod ips. refer to `geth --help` for other options
+  nat: ""                   # NAT resolution method (any|none|upnp|publicip|extip:<IP>)
   bootnodes: []             # built-in bootnodes are used when empty
-  vmodule: []               # per-module log verbosity
-  logFormat: "json"         # log format
-  # - rpc=5
+  logFilter: ""             # RUST_LOG-style filter for stdout logs, e.g. "info,reth=debug"
+  logFormat: "json"         # log format: json, log-fmt, or terminal
   metrics:
-    enabled: false
-    expensive: false
-  pprof:
     enabled: false
 
 ## initContainers configuration

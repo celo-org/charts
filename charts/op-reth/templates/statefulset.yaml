@@ -207,20 +207,21 @@ spec:
           [ -f $datadir/nodeKey ] && nodeKeyFlag="--p2p-secret-key=$datadir/nodeKey" || nodeKeyFlag=""
           exec celo-reth node \
             --datadir={{ .Values.config.datadir }} \
-            {{- with (get .Values.config "op-network") }}
-            --op-network={{ . }} \
-            {{- end }}
-            {{- with .Values.config.networkid }}
-            --networkid={{ int . }} \
-            {{- end }}
+            {{- if .Values.config.chain }}
+            --chain={{ .Values.config.chain }} \
+            {{- else }}
             --chain=$datadir/genesis.json \
+            {{- end }}
+            {{- with .Values.config.networkId }}
+            --network-id={{ int . }} \
+            {{- end }}
             --max-peers={{ .Values.config.maxpeers }} \
             {{- with .Values.config.full }}
             --full \
             {{- end }}
             $nodeKeyFlag \
-            {{- if .Values.config.nodiscover }}
-            --nodiscover \
+            {{- if .Values.config.disableDiscovery }}
+            --disable-discovery \
             {{- end }}
             --authrpc.addr=0.0.0.0 \
             --authrpc.jwtsecret=$datadir/jwt.hex \
@@ -230,9 +231,6 @@ spec:
             --http.port={{ .Values.config.http.port }} \
             --http.api={{ join "," .Values.config.http.api }} \
             --http.corsdomain={{ join "," .Values.config.http.corsdomain }} \
-            {{- if .Values.config.cache }}
-            --cache={{ .Values.config.cache }} \
-            {{- end }}
             {{- with .Values.config.rollup }}
             {{- if .sequencerhttp }}
             --rollup.sequencer={{ .sequencerhttp }} \
@@ -250,17 +248,9 @@ spec:
             {{- end }}
             {{- if .Values.config.metrics.enabled }}
             --metrics=0.0.0.0:6060 \
-            {{- if .Values.config.metrics.expensive }}
-            --metrics.expensive \
             {{- end }}
-            {{- end }}
-            {{- if .Values.config.pprof.enabled }}
-            --pprof \
-            --pprof.port=6061 \
-            --pprof.addr=0.0.0.0 \
-            {{- end }}
-            {{- with .Values.config.vmodule }}
-            --log.vmodule={{ join "," . }} \
+            {{- with .Values.config.logFilter }}
+            --log.stdout.filter={{ . }} \
             {{- end }}
             --log.stdout.format={{ .Values.config.logFormat }} \
             {{- with .Values.config.bootnodes }}
@@ -269,7 +259,7 @@ spec:
             {{- with .Values.config.netrestrict }}
             --netrestrict={{ join "," . }} \
             {{- end }}
-            {{- if not .Values.config.nodiscover }}
+            {{- if not .Values.config.disableDiscovery }}
             --port={{ .Values.config.port }} \
             {{- end }}
             $natFlag \
@@ -298,11 +288,7 @@ spec:
         - name: metrics
           containerPort: 6060
         {{- end }}
-        {{- if .Values.config.pprof.enabled }}
-        - name: pprof
-          containerPort: 6061
-        {{- end }}
-        {{- if not .Values.config.nodiscover }}
+        {{- if not .Values.config.disableDiscovery }}
         - name: p2p-tcp
           containerPort: {{ .Values.config.port }}
           {{- if .Values.config.useHostPort }}
