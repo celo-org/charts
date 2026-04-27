@@ -12,8 +12,8 @@ op-geth:
   replicaCount: 1
 
   image:
-    repository: ""  # REQUIRED: set via --set op-geth.image.repository=...
-    tag: ""         # REQUIRED: set via --set op-geth.image.tag=...
+    repository: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-geth
+    tag: celo-v2.2.2
 
   secrets:
     jwt: &jwt
@@ -81,8 +81,8 @@ op-node:
   replicaCount: 1
 
   image:
-    repository: ""  # REQUIRED: set via --set op-node.image.repository=...
-    tag: ""         # REQUIRED: set via --set op-node.image.tag=...
+    repository: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-node
+    tag: celo-v2.2.1
 
   secrets:
     jwt: *jwt
