@@ -10,30 +10,28 @@ fullnameOverride: ""
 
 replicaCount: 1
 serviceAccount:
-  # Specifies whether a service account should be created
+  # -- Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
+  # -- Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template.
   name: ""
 
 updateStrategy:
   type: RollingUpdate
 
-## --state.scheme=path promised to speed up shutdown
+# -- Grace period for the node to flush its DB and shut down cleanly.
 terminationGracePeriodSeconds: 300
 
-## Extra pod labels
+# -- Extra pod labels
 podLabels: {}
   # environment: production
 
-## This labels mark Geth node as ready to serve the traffic.
-## Used as selector for RPC service together with `.Values.podLabels` and default labels.
+# -- Labels marking the node as ready to serve traffic. Used as selector for the RPC service together with `.Values.podLabels` and default labels.
 podStatusLabels: {}
   # manualstatus: in-service
 
-## Extra pod annotations
+# -- Extra pod annotations
 podAnnotations: {}
 
 podSecurityContext:
@@ -50,24 +48,23 @@ securityContext:
   runAsGroup: 10001
   # readOnlyRootFilesystem: true
 
-## By disabling we fix "Unknown config environment variable envvar=GETH_"
-## Enable if your workload depends on this functionality
+# -- Disabled by default to avoid pod env vars leaking into celo-reth's CLI parsing. Enable only if your workload depends on Kubernetes service-link env vars.
 enableServiceLinks: false
 
-## Override op-geth command (can be templated)
+# -- Override the celo-reth container command (can be templated)
 command:
   - /bin/sh
   - -c
 
-## Extra op-geth arguments (can be templated)
+# -- Extra celo-reth CLI arguments (can be templated)
 extraArgs: []
 
-## Extra op-geth env vars (can be templated)
+# -- Extra celo-reth env vars (can be templated)
 extraEnv: []
-  # - name: GETH_LOG
-  #   value: "debug"
+  # - name: RUST_BACKTRACE
+  #   value: "1"
 
-## Extra init containers, can be templated
+# -- Extra init containers, can be templated
 extraInitContainers: []
   # - name: dumpconfig
   #   image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -77,7 +74,7 @@ extraInitContainers: []
   #   - name: config
   #     mountPath: /config
 
-## Sidecar containers, can be templated
+# -- Sidecar containers, can be templated
 sidecarContainers: []
   # - name: replica-mon
   #   image: us-docker.pkg.dev/oplabs-tools-artifacts/images/chain-mon:v1.1.1
@@ -110,18 +107,17 @@ sidecarContainers: []
   #       path: /healthz
   #       port: replica-mon
 
-# Extra volumeMounts for op-geth container, can be templated
+# -- Extra volumeMounts for the celo-reth container, can be templated
 extraVolumeMounts: []
   # - name: testvolume
   #   mountPath: /test
 
-# Extra volumes, can be templated
+# -- Extra volumes, can be templated
 extraVolumes: []
   # - name: testvolume
   #   persistentVolumeClaim:
   #     claimName: test-pvc
 
-## Services config
 services:
   rpc:
     sharedServiceEnabled: true
@@ -142,13 +138,9 @@ services:
     type: ClusterIP
     port: 6060
     publishNotReadyAddresses: true
-  pprof:
-    enabled: false
-    type: ClusterIP
-    port: 6061
-    publishNotReadyAddresses: true
   p2p:
-    enabled: true       # disable if you are not using "snap" syncmode
+    # -- Disable if no inbound P2P exposure is needed (e.g. outbound-only nodes that dial a fixed trusted-peer set).
+    enabled: true
     type: ClusterIP
     loadBalancerIPs: []
     clusterIPs: []
@@ -165,14 +157,14 @@ ingress:
       # kubernetes.io/tls-acme: "true"
       # cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts: []
-      # - host: geth.local
+      # - host: reth.local
       #   paths:
       #     - path: /
       #       pathType: ImplementationSpecific
     tls: []
-      # - secretName: geth-tls
+      # - secretName: reth-tls
       #   hosts:
-      #     - geth.local
+      #     - reth.local
   ws:
     enabled: false
     className: ""
@@ -181,16 +173,16 @@ ingress:
       # kubernetes.io/tls-acme: "true"
       # cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      # - host: geth-ws.local
+      # - host: reth-ws.local
       #   paths:
       #     - path: /
       #       pathType: ImplementationSpecific
     tls: []
-      # - secretName: geth-ws-tls
+      # - secretName: reth-ws-tls
       #   hosts:
-      #     - geth-ws.local
+      #     - reth-ws.local
 
-# Create Prometheus Operator serviceMonitor
+# -- Create a Prometheus Operator ServiceMonitor
 serviceMonitor:
   enabled: false
   # interval: 10s
@@ -200,20 +192,26 @@ serviceMonitor:
   # metricRelabelings: []
 
 persistence:
-  type: pvc                    # possible values are: "pvc", "hostPath"
+  # -- Backing storage type. Possible values: "pvc", "hostPath".
+  type: pvc
   pvc:
-    size: 5Gi                  # recommended disk size for op-mainnet full node
+    # -- Recommended disk size for op-mainnet full node.
+    size: 5Gi
     accessMode: ReadWriteOnce
-    storageClass: ""           # set to "-" if you want to manually create persistent volume
+    # -- Set to "-" to manually create the persistent volume.
+    storageClass: ""
     annotations: {}
       # resize.topolvm.io/increase: 10%
       # resize.topolvm.io/storage_limit: 500Gi
       # resize.topolvm.io/threshold: 10%
       # resize.topolvm.io/inodes-threshold: 5%
   hostPath:
-    path: /blockchain/optimism  # assume /blockchain is your host volume mount point
-    type: DirectoryOrCreate     # automaticaly create "optimism" directory if it doesn't exist
-  mountPath: ""                 # mount path for container fs, leave blank to use value from .Values.config.datadir
+    # -- Host volume mount point. Assumes /blockchain is your host volume mount point.
+    path: /blockchain/optimism
+    # -- Automatically create the directory if it does not exist.
+    type: DirectoryOrCreate
+  # -- Mount path inside the container. Leave blank to use the value from `.Values.config.datadir`.
+  mountPath: ""
 
 affinity: {}
 
@@ -233,20 +231,18 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-# .startupProbe.exec.command can also be in a templated string format
 startupProbe:
   enabled: false
   initialDelaySeconds: 10
   periodSeconds: 5
-  failureThreshold: 120960    # periodSeconds * failureThreshold = 7 days
+  # periodSeconds * failureThreshold = 7 days
+  failureThreshold: 120960
   timeoutSeconds: 10
   exec:
     command:
       - sh
       - /scripts/wait-for-sync.sh
 
-# .livenessProbe.exec.command can also be in a templated string format
-# If not using exec, set exec: null
 livenessProbe:
   enabled: false
   initialDelaySeconds: 120
@@ -260,8 +256,6 @@ livenessProbe:
       - /scripts/liveness.sh
       - "300"
 
-# .readinessProbe.exec.command can also be in a templated string format
-# If not using exec, set exec: null
 readinessProbe:
   enabled: false
   initialDelaySeconds: 60
@@ -277,7 +271,6 @@ readinessProbe:
 
 # Recommended readinessProbe when sequencing enabled (required for HA)
 # Check the endpoint renders in "linked" op-node
-# .readinessProbe.exec.command can also be in a templated string format
 # readinessProbe:
 #   enabled: true
 #   initialDelaySeconds: 2
@@ -295,27 +288,33 @@ readinessProbe:
 #         echo $response | jq -e '.result == true' > /dev/null || exit 1
 
 secrets:
-  # REQUIRED: JWT for communication with op-geth. In case of multiReplica, comma separated list of JWTs (or shared)
-  # Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   jwt:
+    # -- REQUIRED. JWT (hex) for engine-API auth with op-node. Comma-separated list for multi-replica. Takes precedence over `secretName` if non-empty.
     value: ""
+    # -- Name of an existing Secret holding the JWT, used when `value` is empty.
     secretName: ""
+    # -- Key inside `secretName` that holds the JWT.
     secretKey: ""
-  # REQUIRED: Private Key for the p2p. Comma separated list of keys if multiple replicas
-  # Either provide the secret name and key or the value directly. If value is not empty, it will have precedence over the secret.
   nodeKey:
+    # -- REQUIRED. P2P node private key (hex). Comma-separated list for multi-replica. Takes precedence over `secretName` if non-empty.
     value: ""
+    # -- Name of an existing Secret holding the node key, used when `value` is empty.
     secretName: ""
+    # -- Key inside `secretName` that holds the node key.
     secretKey: ""
 
-## Main op-geth config
 config:
-  op-network: op-mainnet                                    # must be an empty string if you are using custom genesis (f.e. when network is not in superchain-registry)
-  datadir: /celo                                            # data directory
+  # -- Built-in chain name (e.g. celo, optimism, base) OR a path to a chain spec file. If empty, falls back to `$datadir/genesis.json`.
+  chain: celo
+  # -- Data directory inside the container.
+  datadir: /celo
   rollup:
-    halt: major                                             # halt node on version mismatch, possible values: "major", "minor", "patch", "none"
-    disabletxpoolgossip: true                               # tx pool gossip not supported currently, so disable it
-    sequencerhttp: https://mainnet-sequencer.optimism.io/   # url of sequencer, depends on chosen network
+    # -- Halt node on op-node version mismatch. Possible values: "major", "minor", "patch", "none".
+    halt: major
+    # -- Disable txpool gossip on the rollup network. OP-stack rollups typically forward txs via `--rollup.sequencer` over HTTP, so P2P gossip is unwanted.
+    disabletxpoolgossip: true
+    # -- URL of the sequencer to forward `eth_sendRawTransaction` to. Leave empty to validate locally without forwarding.
+    sequencerhttp: https://mainnet-sequencer.optimism.io/
   http:
     port: 8545
     corsdomain: ["*"]
@@ -327,31 +326,37 @@ config:
     api: ["eth", "net", "web3"]
   authrpc:
     port: 8551
-  # state:
-  #   scheme: ""              # possible values are: "path", "hash". "hash" is going to be deprecated soon
-  cache: 0                  # disable by default, let geth automatically set proper value https://blog.ethereum.org/2023/09/12/geth-v1-13-0
-  # syncmode: snap            # possible values are: "snap", "full"
-  # gcmode: full              # possible values are: "full", "archive"
-  # snapshot: true            # enable state snapshot generation
-  maxpeers: 50              # set to 0 if you don't use "snap" syncmode
-  full: true                # enable full mode, set to "" to enable archive mode
-  nodiscover: false         # enable if you don't use "snap" syncmode
-  networkid: ""             # network id. Empty string for known networks, custom id for custom rollups
-  netrestrict: []           # restrict network access to specific IPs
-  port: 30303               # TCP port for P2P communication
-  useHostPort: false        # allocate hostPorts for P2P communication instead of K8S service
-  nat: ""                   # Override the p2p service ip/pod ips. refer to `geth --help` for other options
-  bootnodes: []             # built-in bootnodes are used when empty
-  vmodule: []               # per-module log verbosity
-  logFormat: "json"         # log format
-  # - rpc=5
+  # -- Maximum total peers (inbound + outbound).
+  maxpeers: 50
+  # -- Run as full node (true) or archive node (false / "").
+  full: true
+  # -- Disable the peer discovery service entirely.
+  disableDiscovery: false
+  # -- Optional override of the chain spec network ID for P2P. Empty string for default.
+  networkId: ""
+  # -- Restrict network access to specific CIDR ranges.
+  netrestrict: []
+  # -- TCP port for P2P communication.
+  port: 30303
+  # -- Allocate hostPorts for P2P communication instead of using a Kubernetes Service.
+  useHostPort: false
+  # -- NAT resolution method. Format: any|none|upnp|publicip|extip:<IP>.
+  nat: ""
+  # -- P2P discovery bootnodes. Built-in bootnodes are used when this list is empty.
+  bootnodes: []
+  # -- List of enode URLs (`enode://<hex-pubkey>@host:port`) that are always-allowed and pinned against eviction. Joined with commas into `--trusted-peers`.
+  trustedPeers: []
+    # - enode://abcd...@10.0.0.1:30303
+    # - enode://efgh...@10.0.0.2:30303
+  # -- If true (`--trusted-only`), reject any inbound or outbound peer not in `trustedPeers` — hard accept-list.
+  trustedOnly: false
+  # -- RUST_LOG-style filter for stdout logs (e.g. "info,reth=debug").
+  logFilter: ""
+  # -- Log format: json, log-fmt, or terminal.
+  logFormat: "json"
   metrics:
     enabled: false
-    expensive: false
-  pprof:
-    enabled: false
 
-## initContainers configuration
 init:
   chownData:
     enabled: false
@@ -370,10 +375,9 @@ init:
       repository: alpine
       tag: 3.19
       pullPolicy: IfNotPresent
-  ## Extra op-geth init genesis container arguments (can be templated)
+  # -- Extra arguments for the celo-reth init-genesis container (can be templated).
   extraArgs: []
 
-## S3 snapshot sync config
 s3config:
   image:
     repository: peakcom/s5cmd
@@ -402,16 +406,16 @@ s3config:
     secretAccessKey: REPLACEME
 
 initFromS3:
-  # enable initContainer
+  # -- Enable the init-from-S3 initContainer.
   enabled: false
-  # re-download snapshot from S3 on every pod start
+  # -- Re-download the snapshot from S3 on every pod start.
   force: false
 
 syncToS3:
-  # enable initContainer (won't enable actual sync)
+  # -- Enable the sync-to-S3 initContainer (this alone does not trigger a sync — see `cronjob`).
   enabled: false
-  # restart pod and trigger sync to S3 inside initContainer by schedule
   cronjob:
+    # -- Restart the pod and trigger sync to S3 inside the initContainer on a schedule.
     enabled: false
     image:
       repository: dysnix/kubectl

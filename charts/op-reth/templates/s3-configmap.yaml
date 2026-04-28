@@ -1,4 +1,7 @@
 {{- if or .Values.initFromS3.enabled .Values.syncToS3.enabled }}
+{{- fail "op-reth: S3 snapshot sync is disabled — its scripts target op-geth's <datadir>/geth/chaindata layout, which does not exist on reth. A reth-aware rewrite is in progress; do not enable initFromS3 or syncToS3 in the meantime." }}
+{{- end }}
+{{- if or .Values.initFromS3.enabled .Values.syncToS3.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
