@@ -310,7 +310,6 @@ spec:
         - name: pprof
           containerPort: 6061
         {{- end }}
-        {{- if not .Values.config.nodiscover }}
         - name: p2p-tcp
           containerPort: {{ .Values.config.port }}
           {{- if .Values.config.useHostPort }}
@@ -323,7 +322,6 @@ spec:
           hostPort: {{ .Values.config.port }}
           {{- end }}
           protocol: UDP
-        {{- end }}
         {{- if .Values.livenessProbe.enabled }}
         livenessProbe:
           {{- include "op-geth.healthcheck" (list $ .Values.livenessProbe) | nindent 10 }}
