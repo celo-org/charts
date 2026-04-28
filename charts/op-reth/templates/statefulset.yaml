@@ -265,8 +265,9 @@ spec:
             {{- with .Values.config.netrestrict }}
             --netrestrict={{ join "," . }} \
             {{- end }}
-            {{- if not .Values.config.disableDiscovery }}
             --port={{ .Values.config.port }} \
+            {{- if not .Values.config.disableDiscovery }}
+            --discovery.v5.port={{ .Values.config.port }} \
             {{- end }}
             $natFlag \
             {{- with .Values.extraArgs }}
