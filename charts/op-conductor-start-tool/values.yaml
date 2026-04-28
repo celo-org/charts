@@ -3,7 +3,7 @@ schedule: "0 0 30 2 0"
 suspend: true
 image:
   repository: alpine
-  tag: 3.19
+  tag: 3.23
   pullPolicy: IfNotPresent
 opNode:
   replicas: 3
