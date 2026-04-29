@@ -11,7 +11,7 @@ maintainers:
 dependencies:
   - name: op-geth
     repository: "file://../op-geth"
-    version: "0.3.11"
+    version: "0.3.12"
   - name: op-node
     repository: "file://../op-node"
     version: "0.4.20"
