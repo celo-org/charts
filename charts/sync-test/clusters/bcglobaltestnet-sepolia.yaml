@@ -1,0 +1,35 @@
+---
+# Sepolia on the bcglobaltestnet GKE cluster.
+#
+#   GCP project:  blockchaintestsglobaltestnet
+#   Kube context: bcgt
+#   Namespace:    sepolia-sync-test (by convention)
+#   Verify with:  kubectl config current-context
+#
+# In this cluster the Sepolia L1 RPC is provided by an in-namespace
+# Nethermind service, while the L1 beacon endpoint is served from a
+# public Prysm URL (no internal beacon node deployed here for sepolia).
+#
+# `trustrpc: true` is safe for the in-cluster Nethermind L1 — if you
+# point l1Url at an untrusted public RPC, set this to false.
+#
+# Pair with a presets/<mode>.yaml and networks/sepolia.yaml file. The
+# cluster file is applied LAST so cluster-specific values always win:
+#
+#   helm install ... \
+#     -f presets/consensus.yaml \
+#     -f networks/sepolia.yaml \
+#     -f clusters/bcglobaltestnet-sepolia.yaml \
+#     --kube-context bcgt -n sepolia-sync-test
+
+op-node:
+  secrets:
+    l1Url:
+      value: "http://nethermind-sepolia.nethermind-sepolia:8545"
+    l1BeaconUrl:
+      value: "https://prysm.sepolia.cel2.celo-networks-dev.org"
+  config:
+    l1:
+      # Tied to the L1 backend implementation in this cluster.
+      rpckind: nethermind
+      trustrpc: true

@@ -15,6 +15,10 @@ op-node:
   secrets:
     p2pKeys:
       value: "0x0000000000000000000000000000000000000000000000000000000000000001"
+    l1Url:
+      value: "http://example.invalid:8545"
+    l1BeaconUrl:
+      value: "http://example.invalid:8080"
 
 snapshot:
   enabled: false

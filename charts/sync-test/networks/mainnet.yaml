@@ -34,17 +34,8 @@ op-geth:
     - --rollup.historicalrpc=https://archive.cel1.mainnet.celo-testnet.org
 
 op-node:
-  secrets:
-    l1Url:
-      value: "http://nethermind-mainnet.nethermind-mainnet:8545"
-    l1BeaconUrl:
-      value: "http://nethermind-prysm-mainnet.nethermind-mainnet:8080"
-
   config:
     network: celo-mainnet
-    l1:
-      rpckind: nethermind
-      trustrpc: true
     p2p:
       bootnodes:
         - enr:-J64QJipvmFhMq6DVh6RR4HvIiiBtyy1NUg_QlnAAbf18SMqCxCPZtLgUiWED5p0HRVPv69Wth4YPsvdKXSUyh57mWuGAZXRp6HjgmlkgnY0gmlwhCJTtG-Hb3BzdGFja4TsyQIAiXNlY3AyNTZrMaECKPT8t_OMGwEgh_eu8l3LChJXzPHNxMqohYTcJUFhKQaDdGNwgiQGg3VkcIIkBg

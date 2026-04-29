@@ -87,9 +87,9 @@ op-node:
   secrets:
     jwt: *jwt
     l1Url:
-      value: ""     # Set via network file
+      value: ""     # Required: set via cluster file (clusters/<cluster>.yaml)
     l1BeaconUrl:
-      value: ""     # Set via network file
+      value: ""     # Required: set via cluster file (clusters/<cluster>.yaml)
     p2pKeys:
       value: ""  # REQUIRED: set via --set op-node.secrets.p2pKeys.value=0x$(openssl rand -hex 32)
 
@@ -99,8 +99,8 @@ op-node:
     syncmode: consensus-layer
     safedbPath: /celo/safedb
     l1:
-      rpckind: ""     # Set via network file
-      trustrpc: true
+      rpckind: ""     # Set via cluster file (clusters/<cluster>.yaml)
+      trustrpc: true  # Override in cluster file when using an untrusted L1 RPC
     l2:
       # Resolved at render time via tpl — produces e.g. http://cr16-consensus-op-geth-authrpc-0:8551
       url: "http://{{ .Release.Name }}-op-geth-authrpc-0:8551"

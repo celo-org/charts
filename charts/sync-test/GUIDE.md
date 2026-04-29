@@ -2,14 +2,14 @@
 
 Umbrella chart for running OP-Stack sync tests. Deploys **op-geth** and **op-node** as subcharts.
 
-Each `helm install` deploys one sync mode (snap, execution, or consensus) for one network (mainnet or sepolia). To exercise multiple modes against the same image, run `helm install` once per mode with a different release name — see [Running all three modes](#running-all-three-modes-for-a-network) below.
+Each `helm install` deploys one sync mode (snap, execution, or consensus) for one network (mainnet or sepolia) on one cluster.
 
 ## Architecture
 
 The chart deploys:
 
 - **op-geth StatefulSet** (1 replica) — execution engine
-- **op-node StatefulSet** (1 replica) — consensus engine
+- **op-node StatefulSet** (1 replica) — consensus engine, connects to an external L1 RPC + beacon endpoint
 - **PVCs** — created by the chart (not StatefulSet `volumeClaimTemplates`) with
   `helm.sh/resource-policy: keep` to survive upgrades and uninstalls
   - op-geth: restored from VolumeSnapshot (consensus/execution) or fresh (snap)
@@ -21,6 +21,7 @@ The op-node L2 URL is automatically derived from the release name (`http://<rele
 
 - Kubernetes cluster
 - Helm 3
+- An L1 RPC endpoint and L1 beacon endpoint reachable from the cluster (provided via a [cluster file](#clusters))
 - For consensus/execution modes on mainnet: a `VolumeSnapshot` to restore from (sepolia does not need one — it started life as an L2)
 
 Build subchart dependencies before first use:
@@ -35,7 +36,7 @@ It is assumed that synctests will be run in groups of 3, one for each of the con
 
 ## Networks
 
-Network-specific configuration (bootnodes, L1 RPCs, genesis/rollup URLs, etc.) is provided via files in `networks/`:
+Network-specific configuration (chain ID, sequencer URL, bootnodes, etc.) is provided via files in `networks/`. These files contain only **network-truth** — values that are the same regardless of which cluster you deploy to:
 
 | Network | File | Snapshot needed? |
 |---------|------|-----------------|
@@ -52,6 +53,27 @@ To add a new network, create a new file in `networks/`. See `networks/mainnet.ya
 | **Execution** | `presets/execution.yaml` | Restores from snapshot, syncs blocks via p2p |
 | **Snap** | `presets/snap.yaml` | Fresh start with genesis init, syncs state via snap protocol |
 
+## Clusters
+
+Some values depend on which Kubernetes cluster you're deploying to — most importantly the L1 RPC and L1 beacon endpoints. These live in `clusters/`:
+
+| Cluster file | GCP project / kube-context | Notes |
+|---|---|---|
+| `clusters/bcglobaltestnet-mainnet.yaml` | `blockchaintestsglobaltestnet` / `bcgt` | In-cluster Nethermind + Prysm for mainnet L1 |
+| `clusters/bcglobaltestnet-sepolia.yaml` | `blockchaintestsglobaltestnet` / `bcgt` | In-cluster Nethermind for L1 RPC, public Prysm URL for L1 beacon |
+
+Each cluster file documents in its header comment the kube-context, the namespace convention, and any caveats. The chart fails at template time if `op-node.secrets.l1Url.value` or `op-node.secrets.l1BeaconUrl.value` is missing — so forgetting `-f clusters/<cluster>.yaml` produces a clear error instead of a silent runtime failure.
+
+> [!IMPORTANT]
+> Helm cannot enforce that a values file matches the cluster you're deploying to — that's a kubectl/`--kube-context` concern. Always pass `--kube-context <ctx>` (or verify with `kubectl config current-context`) when using a cluster file. The cluster file's header comment lists the expected context.
+
+### Adding a new cluster
+
+1. Copy an existing `clusters/<cluster>.yaml` to a new file named after your target cluster.
+2. Update the header comment with the new GCP project, kube-context, and namespace convention.
+3. Replace `l1Url`, `l1BeaconUrl`, `rpckind`, and `trustrpc` with the values appropriate for that cluster's L1 backend.
+4. If your cluster does not run an EigenDA proxy at the default address, also override `op-node.config.altda.daServer` (or set `op-node.config.altda.enabled: false`).
+
 ## Required values
 
 Every install must provide:
@@ -60,7 +82,16 @@ Every install must provide:
 |-------|-------|
 | `op-geth.secrets.nodeKey.value` | 32-byte hex p2p private key. Generate with `0x$(openssl rand -hex 32)` |
 | `op-node.secrets.p2pKeys.value` | 32-byte hex p2p private key. Generate with `0x$(openssl rand -hex 32)` |
-| `snapshot.volumeSnapshotName` | Required **only when `snapshot.enabled: true`**, which is the default for the `consensus` and `execution` presets. The `snap` preset and `networks/sepolia.yaml` both set `snapshot.enabled: false`, so no snapshot is needed in those cases. The chart fails at template time with a clear `required` error if a snapshot is needed but missing — so an attempt to run a mainnet consensus/execution sync without `--set snapshot.volumeSnapshotName=...` will fail loudly. |
+| `op-node.secrets.l1Url.value` | L1 execution RPC endpoint. Provided by `clusters/<cluster>.yaml`. |
+| `op-node.secrets.l1BeaconUrl.value` | L1 beacon (consensus) endpoint. Provided by `clusters/<cluster>.yaml`. |
+| `snapshot.volumeSnapshotName` | Required only when `snapshot.enabled: true`, which is the default for the `consensus` and `execution` presets. The `snap` preset and `networks/sepolia.yaml` both set `snapshot.enabled: false`, so no snapshot is needed in those cases. |
+
+> [!WARNING]
+> A consensus or execution sync attempted without `--set snapshot.volumeSnapshotName=...` (when `snapshot.enabled: true`) will fail at template time with:
+> ```
+> Error: snapshot.volumeSnapshotName is required for consensus/execution mode
+> ```
+> Likewise, missing `l1Url` / `l1BeaconUrl` will fail at template time with a pointer to provide a cluster file.
 
 Container images default to current production releases (see `values.yaml`). To test a custom build, override the tag (and optionally the repository):
 
@@ -74,23 +105,29 @@ Container images default to current production releases (see `values.yaml`). To 
 
 ## Example usage
 
-All commands use two `-f` flags: first the sync mode preset, then the network file. The network file is applied last so it can override preset defaults (e.g. sepolia disables snapshots for all modes).
+Each install uses three `-f` flags, applied in order of increasing specificity so the most-specific file wins on conflicts:
 
-Commands below assume you are in the `sync-test` directory.
+1. `presets/<mode>.yaml` — sync mode (least specific)
+2. `networks/<network>.yaml` — network-truth (chain ID, bootnodes, etc.)
+3. `clusters/<cluster>.yaml` — cluster-specific endpoints (most specific)
 
-Note: The namespaces `mainnet-sync-test` and `sepolia-sync-test` exist on the
-blockchain global testnet (AKA cel2 testnet) cluster, where historically these
-tests were being run. The `mainnet-sync-test` namespace also contains a
-volumesnapshot called `mainnet-cel2-migrated` which can be used for mainnet
-syncs.
+Commands below assume you are in the `sync-test` directory and have set your kubectl context as documented in the cluster file's header (or pass `--kube-context <ctx>` explicitly).
+
+> [!NOTE]
+> The namespaces `mainnet-sync-test` and `sepolia-sync-test` exist on the
+> blockchain global testnet (AKA cel2 testnet) cluster, where historically these
+> tests were being run. The `mainnet-sync-test` namespace also contains a
+> volumesnapshot called `mainnet-cel2-migrated` which can be used for mainnet
+> syncs.
 
 ### Consensus sync (mainnet)
 
 ```bash
-helm install v2.2.2-consensus . \
-  -n mainnet-sync-test \
+helm install celo-rebase-16-consensus . \
+  --kube-context bcgt -n mainnet-sync-test \
   -f presets/consensus.yaml \
   -f networks/mainnet.yaml \
+  -f clusters/bcglobaltestnet-mainnet.yaml \
   --set snapshot.volumeSnapshotName=mainnet-cel2-migrated \
   --set op-geth.secrets.nodeKey.value=0x$(openssl rand -hex 32) \
   --set op-node.secrets.p2pKeys.value=0x$(openssl rand -hex 32)
@@ -99,10 +136,11 @@ helm install v2.2.2-consensus . \
 ### Execution sync (mainnet)
 
 ```bash
-helm install celo-reabse-16-execution . \
-  -n mainnet-sync-test \
+helm install celo-rebase-16-execution . \
+  --kube-context bcgt -n mainnet-sync-test \
   -f presets/execution.yaml \
   -f networks/mainnet.yaml \
+  -f clusters/bcglobaltestnet-mainnet.yaml \
   --set snapshot.volumeSnapshotName=mainnet-cel2-migrated \
   --set op-geth.secrets.nodeKey.value=0x$(openssl rand -hex 32) \
   --set op-node.secrets.p2pKeys.value=0x$(openssl rand -hex 32)
@@ -111,10 +149,11 @@ helm install celo-reabse-16-execution . \
 ### Snap sync (mainnet)
 
 ```bash
-helm install celo-reabse-16-snap . \
-  -n mainnet-sync-test \
+helm install celo-rebase-16-snap . \
+  --kube-context bcgt -n mainnet-sync-test \
   -f presets/snap.yaml \
   -f networks/mainnet.yaml \
+  -f clusters/bcglobaltestnet-mainnet.yaml \
   --set op-geth.secrets.nodeKey.value=0x$(openssl rand -hex 32) \
   --set op-node.secrets.p2pKeys.value=0x$(openssl rand -hex 32)
 ```
@@ -125,9 +164,10 @@ helm install celo-reabse-16-snap . \
 
 ```bash
 helm install sepolia-consensus . \
-  -n sepolia-sync-test \
+  --kube-context bcgt -n sepolia-sync-test \
   -f presets/consensus.yaml \
   -f networks/sepolia.yaml \
+  -f clusters/bcglobaltestnet-sepolia.yaml \
   --set op-geth.secrets.nodeKey.value=0x$(openssl rand -hex 32) \
   --set op-node.secrets.p2pKeys.value=0x$(openssl rand -hex 32)
 ```
@@ -163,7 +203,7 @@ The dashboard uses two template variables at the top:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `helm_release_prefix` | The release name prefix used during install (e.g. `celo-reabse-16`) | `celo-reabse-16` |
+| `helm_release_prefix` | The release name prefix used during install (e.g. `celo-rebase-16`) | `celo-rebase-16` |
 | `namespace` | Kubernetes namespace where the sync tests are running | `mainnet-sync-test` |
 
 The dashboard expects Prometheus and Loki datasources to be configured in

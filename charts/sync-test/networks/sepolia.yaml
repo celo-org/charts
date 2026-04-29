@@ -30,17 +30,8 @@ op-geth:
     - --txpool.nolocals
 
 op-node:
-  secrets:
-    l1Url:
-      value: "http://nethermind-sepolia.nethermind-sepolia:8545"
-    l1BeaconUrl:
-      value: "https://prysm.sepolia.cel2.celo-networks-dev.org"
-
   config:
     network: celo-sepolia
-    l1:
-      rpckind: nethermind
-      trustrpc: true
     p2p:
       bootnodes:
         - enr:-J-4QDJ3WjxHT-doUydM7Abkh_VVhLzo7n6pwscXZH9ygYCOPB5OcTONp3NfMyV9pfDrNSXhIiAndkXIgQ_TvMiM0RSGAZg0C8J3gmlkgnY0gmlwhCJ24BSHb3BzdGFja4XMiKgFAIlzZWNwMjU2azGhAzaUkNsBU-daK7rnt4-YTo8P0F4pTejr3U1jx-0XZu96g3RjcIIkBoN1ZHCCJAY
