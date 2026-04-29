@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "op-geth.fullname" . }}
+  name: {{ template "op-reth.fullname" . }}
   labels:
-    {{- include "op-geth.labels" . | nindent 4 }}
+    {{- include "op-reth.labels" . | nindent 4 }}
 spec:
-  serviceName: {{ template "op-geth.name" . }}
+  serviceName: {{ template "op-reth.name" . }}
   replicas: {{ .Values.replicaCount }}
   updateStrategy:
     {{- toYaml .Values.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      {{- include "op-geth.selectorLabels" . | nindent 6 }}
+      {{- include "op-reth.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -29,7 +29,7 @@ spec:
         prometheus.io/path: "/debug/metrics/prometheus"
         {{- end }}
       labels:
-        {{- include "op-geth.selectorLabels" . | nindent 8 }}
+        {{- include "op-reth.selectorLabels" . | nindent 8 }}
         {{- with .Values.podStatusLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -43,7 +43,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "op-geth.serviceAccountName" . }}
+      serviceAccountName: {{ include "op-reth.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
@@ -102,9 +102,9 @@ spec:
         - /scripts/init-from-s3.sh
         envFrom:
         - configMapRef:
-            name: {{ include "op-geth.fullname" $ }}-s3-config
+            name: {{ include "op-reth.fullname" $ }}-s3-config
         - secretRef:
-            name: {{ include "op-geth.fullname" $ }}-s3-secret
+            name: {{ include "op-reth.fullname" $ }}-s3-secret
         volumeMounts:
         - name: scripts
           mountPath: /scripts
@@ -126,9 +126,9 @@ spec:
         - /scripts/sync-to-s3.sh
         envFrom:
         - configMapRef:
-            name: {{ include "op-geth.fullname" $ }}-s3-config
+            name: {{ include "op-reth.fullname" $ }}-s3-config
         - secretRef:
-            name: {{ include "op-geth.fullname" $ }}-s3-secret
+            name: {{ include "op-reth.fullname" $ }}-s3-secret
         volumeMounts:
         - name: scripts
           mountPath: /scripts
@@ -162,13 +162,13 @@ spec:
         - name: JWT
           valueFrom:
             secretKeyRef:
-              name: {{ ternary (include "op-geth.fullname" .) .Values.secrets.jwt.secretName (not (empty .Values.secrets.jwt.value)) }}
+              name: {{ ternary (include "op-reth.fullname" .) .Values.secrets.jwt.secretName (not (empty .Values.secrets.jwt.value)) }}
               key: {{ ternary "jwt" .Values.secrets.jwt.secretKey (not (empty .Values.secrets.jwt.value)) }}
         {{- if or .Values.secrets.nodeKey.value .Values.secrets.nodeKey.secretName }}
         - name: NODEKEYS
           valueFrom:
             secretKeyRef:
-              name: {{ ternary (include "op-geth.fullname" .) .Values.secrets.nodeKey.secretName (not (empty .Values.secrets.nodeKey.value)) }}
+              name: {{ ternary (include "op-reth.fullname" .) .Values.secrets.nodeKey.secretName (not (empty .Values.secrets.nodeKey.value)) }}
               key: {{ ternary "nodeKey" .Values.secrets.nodeKey.secretKey (not (empty .Values.secrets.nodeKey.value)) }}
         {{- end }}
         {{- with .Values.securityContext }}
@@ -185,7 +185,7 @@ spec:
         {{- tpl (toYaml . | nindent 6) $ }}
       {{- end }}
       containers:
-      - name: op-geth
+      - name: op-reth
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         {{- with .Values.securityContext }}
@@ -204,43 +204,39 @@ spec:
           {{- else }}
           natFlag="--nat=extip:$(cat $datadir/announce_ip)"
           {{- end }}
-          [ -f $datadir/nodeKey ] && nodeKeyFlag="--nodekey=$datadir/nodeKey" || nodeKeyFlag=""
-          exec geth \
+          [ -f $datadir/nodeKey ] && nodeKeyFlag="--p2p-secret-key=$datadir/nodeKey" || nodeKeyFlag=""
+          exec celo-reth node \
             --datadir={{ .Values.config.datadir }} \
-            {{- with (get .Values.config "op-network") }}
-            --op-network={{ . }} \
+            {{- if .Values.config.chain }}
+            --chain={{ .Values.config.chain }} \
+            {{- else }}
+            --chain=$datadir/genesis.json \
             {{- end }}
-            {{- with .Values.config.networkid }}
-            --networkid={{ int . }} \
+            {{- with .Values.config.networkId }}
+            --network-id={{ int . }} \
             {{- end }}
-            --syncmode={{ .Values.config.syncmode }} \
-            --gcmode={{ .Values.config.gcmode }} \
-            --snapshot={{ .Values.config.snapshot }} \
-            --maxpeers={{ .Values.config.maxpeers }} \
+            --max-peers={{ .Values.config.maxpeers }} \
+            {{- with .Values.config.full }}
+            --full \
+            {{- end }}
             $nodeKeyFlag \
-            {{- if .Values.config.nodiscover }}
-            --nodiscover \
+            {{- if .Values.config.disableDiscovery }}
+            --disable-discovery \
             {{- end }}
             --authrpc.addr=0.0.0.0 \
             --authrpc.jwtsecret=$datadir/jwt.hex \
-            --authrpc.vhosts={{ join "," .Values.config.authrpc.vhosts }} \
             --authrpc.port={{ .Values.config.authrpc.port }} \
             --http \
             --http.addr=0.0.0.0 \
             --http.port={{ .Values.config.http.port }} \
             --http.api={{ join "," .Values.config.http.api }} \
-            --http.vhosts={{ join "," .Values.config.http.vhosts }} \
             --http.corsdomain={{ join "," .Values.config.http.corsdomain }} \
-            {{- if .Values.config.cache }}
-            --cache={{ .Values.config.cache }} \
-            {{- end }}
             {{- with .Values.config.rollup }}
             {{- if .sequencerhttp }}
-            --rollup.sequencerhttp={{ .sequencerhttp }} \
+            --rollup.sequencer={{ .sequencerhttp }} \
             {{- end }}
-            --rollup.disabletxpoolgossip={{ .disabletxpoolgossip }} \
-            {{- with .halt }}
-            --rollup.halt={{ . }} \
+            {{- with .disabletxpoolgossip }}
+            --rollup.disable-tx-pool-gossip \
             {{- end }}
             {{- end }}
             {{- if .Values.config.ws.enabled }}
@@ -251,36 +247,29 @@ spec:
             --ws.port={{ .Values.config.ws.port }} \
             {{- end }}
             {{- if .Values.config.metrics.enabled }}
-            --metrics.addr=0.0.0.0 \
-            --metrics.port=6060 \
-            --metrics \
-            {{- if .Values.config.metrics.expensive }}
-            --metrics.expensive \
+            --metrics=0.0.0.0:6060 \
             {{- end }}
+            {{- with .Values.config.logFilter }}
+            --log.stdout.filter={{ . }} \
             {{- end }}
-            {{- if .Values.config.pprof.enabled }}
-            --pprof \
-            --pprof.port=6061 \
-            --pprof.addr=0.0.0.0 \
-            {{- end }}
-            --verbosity={{ .Values.config.verbosity }} \
-            {{- with .Values.config.vmodule }}
-            --log.vmodule={{ join "," . }} \
-            {{- end }}
-            --log.format={{ .Values.config.logFormat }} \
+            --log.stdout.format={{ .Values.config.logFormat }} \
             {{- with .Values.config.bootnodes }}
             --bootnodes={{ join "," . }} \
+            {{- end }}
+            {{- with .Values.config.trustedPeers }}
+            --trusted-peers={{ join "," . }} \
+            {{- end }}
+            {{- if .Values.config.trustedOnly }}
+            --trusted-only \
             {{- end }}
             {{- with .Values.config.netrestrict }}
             --netrestrict={{ join "," . }} \
             {{- end }}
-            {{- if not .Values.config.nodiscover }}
             --port={{ .Values.config.port }} \
+            {{- if not .Values.config.disableDiscovery }}
+            --discovery.v5.port={{ .Values.config.port }} \
             {{- end }}
             $natFlag \
-            {{- with .Values.config.state.scheme }}
-            --state.scheme={{ . }} \
-            {{- end }}
             {{- with .Values.extraArgs }}
             {{- range . }}
             {{- tpl (.) $ | nindent 12 }} \
@@ -288,7 +277,7 @@ spec:
             {{- end }}
 
         env:
-        - name: GETH_DATADIR
+        - name: RETH_DATADIR
           value: {{ .Values.config.datadir }}
         {{-  with .Values.extraEnv }}
         {{- toYaml . | nindent 8 }}
@@ -306,10 +295,7 @@ spec:
         - name: metrics
           containerPort: 6060
         {{- end }}
-        {{- if .Values.config.pprof.enabled }}
-        - name: pprof
-          containerPort: 6061
-        {{- end }}
+        {{- if not .Values.config.disableDiscovery }}
         - name: p2p-tcp
           containerPort: {{ .Values.config.port }}
           {{- if .Values.config.useHostPort }}
@@ -322,17 +308,18 @@ spec:
           hostPort: {{ .Values.config.port }}
           {{- end }}
           protocol: UDP
+        {{- end }}
         {{- if .Values.livenessProbe.enabled }}
         livenessProbe:
-          {{- include "op-geth.healthcheck" (list $ .Values.livenessProbe) | nindent 10 }}
+          {{- include "op-reth.healthcheck" (list $ .Values.livenessProbe) | nindent 10 }}
         {{- end }}
         {{- if .Values.readinessProbe.enabled }}
         readinessProbe:
-          {{- include "op-geth.healthcheck" (list $ .Values.readinessProbe) | nindent 10 }}
+          {{- include "op-reth.healthcheck" (list $ .Values.readinessProbe) | nindent 10 }}
         {{- end }}
         {{- if .Values.startupProbe.enabled }}
         startupProbe:
-          {{- include "op-geth.healthcheck" (list $ .Values.startupProbe) | nindent 10 }}
+          {{- include "op-reth.healthcheck" (list $ .Values.startupProbe) | nindent 10 }}
         {{- end }}
         volumeMounts:
         - name: data
@@ -350,7 +337,7 @@ spec:
       volumes:
       - name: scripts
         configMap:
-          name: {{ template "op-geth.fullname" . }}-scripts
+          name: {{ template "op-reth.fullname" . }}-scripts
       {{- if eq .Values.persistence.type "hostPath" }}
       - name: data
         hostPath:
@@ -365,7 +352,7 @@ spec:
   - metadata:
       name: data
       labels:
-        {{- include "op-geth.selectorLabels" . | nindent 8 }}
+        {{- include "op-reth.selectorLabels" . | nindent 8 }}
       {{- with .Values.persistence.pvc.annotations }}
       annotations:
         {{- toYaml . | nindent 8 }}

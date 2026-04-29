@@ -147,7 +147,6 @@ config:
     # secretName: test
     # secretKey: test
   s3:
-    backup: null
     bucket: ""
     endpoint: ""
     enableTls: null
@@ -185,7 +184,10 @@ config:
     network: ""
     eigendaDirectory: ""
     certVerifierRouterOrImmutableVerifierAddr: ""
-
+    # We rely on the `"on-demand-only"`, but `"reservation-only"`, and `"reservation-and-on-demand"` (and `"legacy"`)
+    # are also possible. If any "reservation" type ledger is involved, it is required that a reservation is found
+    # for the corresponding payment-key's address, otherwise the proxy won't start up
+    clientLedgerMode: "on-demand-only"
 log:
   level: info
   format: json

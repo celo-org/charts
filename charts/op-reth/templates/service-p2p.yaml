@@ -1,0 +1,135 @@
+{{- $replicas := .Values.replicaCount }}
+{{ range $index, $e := until (int $replicas) }}
+{{- with $.Values.services.p2p }}
+{{- if and .enabled (not $.Values.config.useHostPort) }}
+{{- $loadBalancerIP := "" }}
+{{- $clusterIP := "" }}
+{{- if lt $index (len .loadBalancerIPs) }}
+  {{- $loadBalancerIP = index .loadBalancerIPs $index }}
+{{- end }}
+{{- if lt $index (len .clusterIPs) }}
+  {{- $clusterIP = index .clusterIPs $index }}
+{{- end }}
+{{- if eq .type "LoadBalancer" }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "op-reth.fullname" $ }}-p2p-{{ $index }}-tcp
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    service-type: p2p
+    {{- include "op-reth.labels" $ | nindent 4 }}
+spec:
+  type: {{ .type }}
+  {{- with $loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with $clusterIP }}
+  clusterIP: {{ . }}
+  {{- end }}
+  {{- with .externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .internalTrafficPolicy }}
+  internalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .publishNotReadyAddresses }}
+  publishNotReadyAddresses: {{ . }}
+  {{- end }}
+  ports:
+    - name: p2p-tcp
+      port: {{ .port }}
+      targetPort: p2p-tcp
+      protocol: TCP
+  selector:
+    {{- include "op-reth.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-reth.fullname" $ }}-{{ $index }}
+---
+{{- if not .skipUDPService }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "op-reth.fullname" $ }}-p2p-{{ $index }}-udp
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    service-type: p2p
+    {{- include "op-reth.labels" $ | nindent 4 }}
+spec:
+  type: {{ .type }}
+  {{- with $loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with $clusterIP }}
+  clusterIP: {{ . }}
+  {{- end }}
+  {{- with .externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .internalTrafficPolicy }}
+  internalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .publishNotReadyAddresses }}
+  publishNotReadyAddresses: {{ . }}
+  {{- end }}
+  ports:
+    - name: p2p-udp
+      port: {{ .port }}
+      targetPort: p2p-udp
+      protocol: UDP
+  selector:
+    {{- include "op-reth.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-reth.fullname" $ }}-{{ $index }}
+{{- end }}
+{{- else }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "op-reth.fullname" $ }}-p2p-{{ $index }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    service-type: p2p
+    {{- include "op-reth.labels" $ | nindent 4 }}
+spec:
+  type: {{ .type }}
+  {{- with $loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with $clusterIP }}
+  clusterIP: {{ . }}
+  {{- end }}
+  {{- with .externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .internalTrafficPolicy }}
+  internalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .publishNotReadyAddresses }}
+  publishNotReadyAddresses: {{ . }}
+  {{- end }}
+  ports:
+    - name: p2p-tcp
+      port: {{ .port }}
+      targetPort: p2p-tcp
+      protocol: TCP
+    - name: p2p-udp
+      port: {{ .port }}
+      targetPort: p2p-udp
+      protocol: UDP
+  selector:
+    {{- include "op-reth.selectorLabels" $ | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ template "op-reth.fullname" $ }}-{{ $index }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

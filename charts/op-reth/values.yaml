@@ -1,0 +1,424 @@
+---
+image:
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/celo-kona-reth
+  tag: pr-144
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template.
+  name: ""
+
+updateStrategy:
+  type: RollingUpdate
+
+# -- Grace period for the node to flush its DB and shut down cleanly.
+terminationGracePeriodSeconds: 300
+
+# -- Extra pod labels
+podLabels: {}
+  # environment: production
+
+# -- Labels marking the node as ready to serve traffic. Used as selector for the RPC service together with `.Values.podLabels` and default labels.
+podStatusLabels: {}
+  # manualstatus: in-service
+
+# -- Extra pod annotations
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 10001
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  allowPrivilegeEscalation: false
+  privileged: false
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  # readOnlyRootFilesystem: true
+
+# -- Disabled by default to avoid pod env vars leaking into celo-reth's CLI parsing. Enable only if your workload depends on Kubernetes service-link env vars.
+enableServiceLinks: false
+
+# -- Override the celo-reth container command (can be templated)
+command:
+  - /bin/sh
+  - -c
+
+# -- Extra celo-reth CLI arguments (can be templated)
+extraArgs: []
+
+# -- Extra celo-reth env vars (can be templated)
+extraEnv: []
+  # - name: RUST_BACKTRACE
+  #   value: "1"
+
+# -- Extra init containers, can be templated
+extraInitContainers: []
+  # - name: dumpconfig
+  #   image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+  #   imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+  #   command: ["--config", "/config/config.toml", "dumpconfig"]
+  #   volumeMounts:
+  #   - name: config
+  #     mountPath: /config
+
+# -- Sidecar containers, can be templated
+sidecarContainers: []
+  # - name: replica-mon
+  #   image: us-docker.pkg.dev/oplabs-tools-artifacts/images/chain-mon:v1.1.1
+  #   imagePullPolicy: IfNotPresent
+  #   args:
+  #     - start:replica-mon
+  #     - --referencerpcprovider=https://mainnet.optimism.io
+  #     - --targetrpcprovider=http://localhost:{{ .Values.config.http.port }}
+  #     - --hostname=0.0.0.0
+  #     - --port=7300
+  #   ports:
+  #     - name: replica-mon
+  #       containerPort: 7300
+  #   readinessProbe:
+  #     initialDelaySeconds: 30
+  #     periodSeconds: 5
+  #     successThreshold: 2
+  #     failureThreshold: 3
+  #     exec:
+  #       command:
+  #       - sh
+  #       - -c
+  #       - |
+  #         diff=$(curl -s localhost:7300/metrics | grep "^healthcheck_height" | cut -d' ' -f2)
+  #         test $diff -le 60 && exit 0 || exit 1
+  #   livenessProbe:
+  #     initialDelaySeconds: 60
+  #     periodSeconds: 30
+  #     httpGet:
+  #       path: /healthz
+  #       port: replica-mon
+
+# -- Extra volumeMounts for the celo-reth container, can be templated
+extraVolumeMounts: []
+  # - name: testvolume
+  #   mountPath: /test
+
+# -- Extra volumes, can be templated
+extraVolumes: []
+  # - name: testvolume
+  #   persistentVolumeClaim:
+  #     claimName: test-pvc
+
+services:
+  rpc:
+    sharedServiceEnabled: true
+    individualServiceEnabled: true
+    publishNotReadyAddresses: false
+    type: ClusterIP
+    httpPort: 8545
+    wsPort: 8545
+  authrpc:
+    enabled: true
+    type: ClusterIP
+    loadBalancerIPs: []
+    clusterIPs: []
+    port: 8551
+    publishNotReadyAddresses: true
+  metrics:
+    enabled: true
+    type: ClusterIP
+    port: 6060
+    publishNotReadyAddresses: true
+  p2p:
+    # -- Disable if no inbound P2P exposure is needed (e.g. outbound-only nodes that dial a fixed trusted-peer set).
+    enabled: true
+    type: ClusterIP
+    loadBalancerIPs: []
+    clusterIPs: []
+    port: 30303
+    annotations: {}
+    publishNotReadyAddresses: true
+    skipUDPService: false
+ingress:
+  http:
+    enabled: false
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+      # cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts: []
+      # - host: reth.local
+      #   paths:
+      #     - path: /
+      #       pathType: ImplementationSpecific
+    tls: []
+      # - secretName: reth-tls
+      #   hosts:
+      #     - reth.local
+  ws:
+    enabled: false
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+      # cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      # - host: reth-ws.local
+      #   paths:
+      #     - path: /
+      #       pathType: ImplementationSpecific
+    tls: []
+      # - secretName: reth-ws-tls
+      #   hosts:
+      #     - reth-ws.local
+
+# -- Create a Prometheus Operator ServiceMonitor
+serviceMonitor:
+  enabled: false
+  # interval: 10s
+  # scrapeTimeout: 2s
+  # honorLabels: true
+  # relabelings: []
+  # metricRelabelings: []
+
+persistence:
+  # -- Backing storage type. Possible values: "pvc", "hostPath".
+  type: pvc
+  pvc:
+    # -- Recommended disk size for op-mainnet full node.
+    size: 5Gi
+    accessMode: ReadWriteOnce
+    # -- Set to "-" to manually create the persistent volume.
+    storageClass: ""
+    annotations: {}
+      # resize.topolvm.io/increase: 10%
+      # resize.topolvm.io/storage_limit: 500Gi
+      # resize.topolvm.io/threshold: 10%
+      # resize.topolvm.io/inodes-threshold: 5%
+  hostPath:
+    # -- Host volume mount point. Assumes /blockchain is your host volume mount point.
+    path: /blockchain/optimism
+    # -- Automatically create the directory if it does not exist.
+    type: DirectoryOrCreate
+  # -- Mount path inside the container. Leave blank to use the value from `.Values.config.datadir`.
+  mountPath: ""
+
+affinity: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+startupProbe:
+  enabled: false
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  # periodSeconds * failureThreshold = 7 days
+  failureThreshold: 120960
+  timeoutSeconds: 10
+  exec:
+    command:
+      - sh
+      - /scripts/wait-for-sync.sh
+
+livenessProbe:
+  enabled: false
+  initialDelaySeconds: 120
+  periodSeconds: 60
+  successThreshold: 1
+  failureThreshold: 10
+  timeoutSeconds: 10
+  exec:
+    command:
+      - sh
+      - /scripts/liveness.sh
+      - "300"
+
+readinessProbe:
+  enabled: false
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 2
+  timeoutSeconds: 5
+  exec:
+    command:
+      - sh
+      - /scripts/readiness.sh
+      - "60"
+
+# Recommended readinessProbe when sequencing enabled (required for HA)
+# Check the endpoint renders in "linked" op-node
+# readinessProbe:
+#   enabled: true
+#   initialDelaySeconds: 2
+#   periodSeconds: 4
+#   successThreshold: 1
+#   failureThreshold: 2
+#   timeoutSeconds: 2
+#   exec:
+#     command:
+#       - /bin/sh
+#       - -c
+#       - |
+#         RID=$(echo $HOSTNAME | sed 's/{{ .Release.Name }}-//')
+#         response=$(wget --quiet --timeout=1 --header="Content-Type: application/json" --post-data='{"jsonrpc":"2.0","method":"admin_sequencerActive","id":1}' -O- http://{{ .Release.Name | replace "geth" "node" }}-$RID:9545)
+#         echo $response | jq -e '.result == true' > /dev/null || exit 1
+
+secrets:
+  jwt:
+    # -- REQUIRED. JWT (hex) for engine-API auth with op-node. Comma-separated list for multi-replica. Takes precedence over `secretName` if non-empty.
+    value: ""
+    # -- Name of an existing Secret holding the JWT, used when `value` is empty.
+    secretName: ""
+    # -- Key inside `secretName` that holds the JWT.
+    secretKey: ""
+  nodeKey:
+    # -- REQUIRED. P2P node private key (hex). Comma-separated list for multi-replica. Takes precedence over `secretName` if non-empty.
+    value: ""
+    # -- Name of an existing Secret holding the node key, used when `value` is empty.
+    secretName: ""
+    # -- Key inside `secretName` that holds the node key.
+    secretKey: ""
+
+config:
+  # -- Built-in chain name (e.g. celo, optimism, base) OR a path to a chain spec file. If empty, falls back to `$datadir/genesis.json`.
+  chain: celo
+  # -- Data directory inside the container.
+  datadir: /celo
+  rollup:
+    # -- Halt node on op-node version mismatch. Possible values: "major", "minor", "patch", "none".
+    halt: major
+    # -- Disable txpool gossip on the rollup network. OP-stack rollups typically forward txs via `--rollup.sequencer` over HTTP, so P2P gossip is unwanted.
+    disabletxpoolgossip: true
+    # -- URL of the sequencer to forward `eth_sendRawTransaction` to. Leave empty to validate locally without forwarding.
+    sequencerhttp: https://mainnet-sequencer.optimism.io/
+  http:
+    port: 8545
+    corsdomain: ["*"]
+    api: ["eth", "net", "web3"]
+  ws:
+    enabled: false
+    port: 8545
+    origins: ["*"]
+    api: ["eth", "net", "web3"]
+  authrpc:
+    port: 8551
+  # -- Maximum total peers (inbound + outbound).
+  maxpeers: 50
+  # -- Run as full node (true) or archive node (false / "").
+  full: true
+  # -- Disable the peer discovery service entirely.
+  disableDiscovery: false
+  # -- Optional override of the chain spec network ID for P2P. Empty string for default.
+  networkId: ""
+  # -- Restrict network access to specific CIDR ranges.
+  netrestrict: []
+  # -- TCP port for P2P communication.
+  port: 30303
+  # -- Allocate hostPorts for P2P communication instead of using a Kubernetes Service.
+  useHostPort: false
+  # -- NAT resolution method. Format: any|none|upnp|publicip|extip:<IP>.
+  nat: ""
+  # -- P2P discovery bootnodes. Built-in bootnodes are used when this list is empty.
+  bootnodes: []
+  # -- List of enode URLs (`enode://<hex-pubkey>@host:port`) that are always-allowed and pinned against eviction. Joined with commas into `--trusted-peers`.
+  trustedPeers: []
+    # - enode://abcd...@10.0.0.1:30303
+    # - enode://efgh...@10.0.0.2:30303
+  # -- If true (`--trusted-only`), reject any inbound or outbound peer not in `trustedPeers` — hard accept-list.
+  trustedOnly: false
+  # -- RUST_LOG-style filter for stdout logs (e.g. "info,reth=debug").
+  logFilter: ""
+  # -- Log format: json, log-fmt, or terminal.
+  logFormat: "json"
+  metrics:
+    enabled: false
+
+init:
+  chownData:
+    enabled: false
+    image:
+      repository: alpine
+      tag: 3.19
+      pullPolicy: IfNotPresent
+  genesis:
+    enabled: false
+    url: ""
+  rollup:
+    enabled: false
+    url: ""
+  parameters:
+    image:
+      repository: alpine
+      tag: 3.19
+      pullPolicy: IfNotPresent
+  # -- Extra arguments for the celo-reth init-genesis container (can be templated).
+  extraArgs: []
+
+s3config:
+  image:
+    repository: peakcom/s5cmd
+    tag: v2.2.2
+    pullPolicy: IfNotPresent
+  # local storage config
+  local:
+    # datadir containing the state you want to upload (can be templated)
+    datadir: "{{ .Values.config.datadir }}/geth/chaindata"
+    # this file marks node as already initialized from snapshot
+    # should be placed outside of the datadir you are uploading
+    initializedFile: "{{ .Values.config.datadir }}/.initialized"
+  # remote storage config
+  remote:
+    # Assuming your S3 bucket name is `my-snapshot-bucket` and base directory name is Helm release name
+    # snapshot will be uploaded to {{ .baseUrl }}/upload directory
+    baseUrl: my-snapshot-bucket/{{ .Release.Name }}
+    # Any S3-compatible object storage service should be supported, but has only been tested with GCS.
+    # I.e. Amazon S3, MinIO, DigitalOcean Spaces, CloudFlare R2.
+    # endpointUrl: https://storage.googleapis.com
+    endpointUrl: ""
+    # How to create access key
+    # AWS S3 https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html
+    # GCS    https://cloud.google.com/storage/docs/authentication/managing-hmackeys#create
+    accessKeyId: REPLACEME
+    secretAccessKey: REPLACEME
+
+initFromS3:
+  # -- Enable the init-from-S3 initContainer.
+  enabled: false
+  # -- Re-download the snapshot from S3 on every pod start.
+  force: false
+
+syncToS3:
+  # -- Enable the sync-to-S3 initContainer (this alone does not trigger a sync — see `cronjob`).
+  enabled: false
+  cronjob:
+    # -- Restart the pod and trigger sync to S3 inside the initContainer on a schedule.
+    enabled: false
+    image:
+      repository: dysnix/kubectl
+      tag: v1.29
+      pullPolicy: IfNotPresent
+    schedule: "0 2 * * *"

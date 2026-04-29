@@ -1,6 +1,6 @@
 # eigenda-proxy
 
-![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.0](https://img.shields.io/badge/AppVersion-2.6.0-informational?style=flat-square)
 
 Helm chart deploying Layr-Labs eigenda-proxy
 
@@ -43,7 +43,6 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.privateKey.value | string | `""` |  |
 | config.s3.accessKeyId.value | string | `""` |  |
 | config.s3.accessKeySecret.value | string | `""` |  |
-| config.s3.backup | string | `nil` |  |
 | config.s3.bucket | string | `""` |  |
 | config.s3.credentialType | string | `""` |  |
 | config.s3.enableTls | string | `nil` |  |
@@ -58,6 +57,7 @@ Helm chart deploying Layr-Labs eigenda-proxy
 | config.v2.blobStatusPollInterval | string | `"1s"` |  |
 | config.v2.blobVersion | int | `0` |  |
 | config.v2.certVerifierRouterOrImmutableVerifierAddr | string | `""` |  |
+| config.v2.clientLedgerMode | string | `"on-demand-only"` |  |
 | config.v2.contractCallTimeout | string | `"10s"` |  |
 | config.v2.disablePointEvaluation | bool | `false` |  |
 | config.v2.disableTls | bool | `false` |  |

@@ -1,0 +1,394 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "espresso-node.fullname" . }}
+  labels:
+    {{- include "espresso-node.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "espresso-node.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "espresso-node.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "espresso-node.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "espresso-node.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: sequencer
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: {{ include "espresso-node.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - |
+              exec {{ include "espresso-node.command" . | trim }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.espresso.api.port }}
+              protocol: TCP
+            - name: libp2p
+              containerPort: {{ (split ":" .Values.espresso.libp2pBindAddress)._1 | default "31000" }}
+              protocol: UDP
+          env:
+            # -----------------------------------------------------------------
+            # Required parameters
+            # -----------------------------------------------------------------
+            - name: ESPRESSO_SEQUENCER_GENESIS_FILE
+              value: {{ .Values.espresso.genesisFile | quote }}
+            {{- if .Values.espresso.existingSecretRpc }}
+            - name: ESPRESSO_SEQUENCER_L1_PROVIDER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.espresso.existingSecretRpc }}
+                  key: ESPRESSO_SEQUENCER_L1_PROVIDER
+            {{- else }}
+            - name: ESPRESSO_SEQUENCER_L1_PROVIDER
+              value: {{ required "espresso.l1Provider or espresso.existingSecretRpc is required" .Values.espresso.l1Provider | quote }}
+            {{- end }}
+            - name: ESPRESSO_SEQUENCER_CDN_ENDPOINT
+              value: {{ .Values.espresso.cdnEndpoint | quote }}
+            - name: ESPRESSO_STATE_RELAY_SERVER_URL
+              value: {{ .Values.espresso.stateRelayServerUrl | quote }}
+            - name: ESPRESSO_SEQUENCER_STATE_PEERS
+              value: {{ include "espresso-node.statePeers" . | quote }}
+            - name: ESPRESSO_SEQUENCER_LIBP2P_BIND_ADDRESS
+              value: {{ .Values.espresso.libp2pBindAddress | quote }}
+            {{- if .Values.espresso.libp2pAdvertiseAddress }}
+            - name: ESPRESSO_SEQUENCER_LIBP2P_ADVERTISE_ADDRESS
+              value: {{ .Values.espresso.libp2pAdvertiseAddress | quote }}
+            {{- end }}
+            # -----------------------------------------------------------------
+            # Config peers (for first-time network join)
+            # -----------------------------------------------------------------
+            {{- if .Values.espresso.configPeers }}
+            - name: ESPRESSO_SEQUENCER_CONFIG_PEERS
+              value: {{ .Values.espresso.configPeers | quote }}
+            {{- end }}
+            # -----------------------------------------------------------------
+            # Private keys (from Secret)
+            # -----------------------------------------------------------------
+            {{- if or .Values.espresso.existingSecret .Values.espresso.privateStakingKey .Values.espresso.privateStateKey }}
+            - name: ESPRESSO_SEQUENCER_PRIVATE_STAKING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "espresso-node.secretName" . }}
+                  key: ESPRESSO_SEQUENCER_PRIVATE_STAKING_KEY
+            - name: ESPRESSO_SEQUENCER_PRIVATE_STATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "espresso-node.secretName" . }}
+                  key: ESPRESSO_SEQUENCER_PRIVATE_STATE_KEY
+            {{- end }}
+            # -----------------------------------------------------------------
+            # HTTP API
+            # -----------------------------------------------------------------
+            - name: ESPRESSO_SEQUENCER_API_PORT
+              value: {{ .Values.espresso.api.port | quote }}
+            {{- if .Values.espresso.api.maxConnections }}
+            - name: ESPRESSO_SEQUENCER_MAX_CONNECTIONS
+              value: {{ .Values.espresso.api.maxConnections | quote }}
+            {{- end }}
+            # -----------------------------------------------------------------
+            # Logging
+            # -----------------------------------------------------------------
+            - name: RUST_LOG
+              value: {{ .Values.espresso.logging.rustLog | quote }}
+            - name: RUST_LOG_FORMAT
+              value: {{ .Values.espresso.logging.rustLogFormat | quote }}
+            # -----------------------------------------------------------------
+            # DA committee
+            # -----------------------------------------------------------------
+            {{- if or .Values.espresso.isDA (eq .Values.mode "da") }}
+            - name: ESPRESSO_SEQUENCER_IS_DA
+              value: "true"
+            {{- end }}
+            # -----------------------------------------------------------------
+            # Archival mode
+            # -----------------------------------------------------------------
+            {{- if or .Values.espresso.isArchive (eq .Values.mode "archival") }}
+            - name: ESPRESSO_SEQUENCER_ARCHIVE
+              value: "true"
+            {{- end }}
+            # -----------------------------------------------------------------
+            # Embedded DB (lightweight mode)
+            # -----------------------------------------------------------------
+            {{- if eq .Values.mode "lightweight" }}
+            - name: ESPRESSO_SEQUENCER_EMBEDDED_DB
+              value: "true"
+            - name: ESPRESSO_SEQUENCER_STORAGE_PATH
+              value: {{ .Values.espresso.storage.storagePath | quote }}
+            {{- end }}
+            # -----------------------------------------------------------------
+            # Optional: L1 WebSocket provider
+            # -----------------------------------------------------------------
+            {{- if .Values.espresso.existingSecretRpc }}
+            - name: ESPRESSO_SEQUENCER_L1_WS_PROVIDER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.espresso.existingSecretRpc }}
+                  key: ESPRESSO_SEQUENCER_L1_WS_PROVIDER
+                  optional: true
+            {{- else if .Values.espresso.l1WsProvider }}
+            - name: ESPRESSO_SEQUENCER_L1_WS_PROVIDER
+              value: {{ .Values.espresso.l1WsProvider | quote }}
+            {{- end }}
+            # -----------------------------------------------------------------
+            # Optional: libp2p bootstrap nodes
+            # -----------------------------------------------------------------
+            {{- if .Values.espresso.libp2pBootstrapNodes }}
+            - name: ESPRESSO_SEQUENCER_LIBP2P_BOOTSTRAP_NODES
+              value: {{ .Values.espresso.libp2pBootstrapNodes | quote }}
+            {{- end }}
+            # -----------------------------------------------------------------
+            # L1 Client Tuning
+            # -----------------------------------------------------------------
+            {{- if .Values.espresso.l1.eventsMaxBlockRange }}
+            - name: ESPRESSO_SEQUENCER_L1_EVENTS_MAX_BLOCK_RANGE
+              value: {{ .Values.espresso.l1.eventsMaxBlockRange | quote }}
+            {{- end }}
+            {{- if .Values.espresso.l1.retryDelay }}
+            - name: ESPRESSO_SEQUENCER_L1_RETRY_DELAY
+              value: {{ .Values.espresso.l1.retryDelay | quote }}
+            {{- end }}
+            {{- if .Values.espresso.l1.pollingInterval }}
+            - name: ESPRESSO_SEQUENCER_L1_POLLING_INTERVAL
+              value: {{ .Values.espresso.l1.pollingInterval | quote }}
+            {{- end }}
+            {{- if .Values.espresso.l1.blocksCacheSize }}
+            - name: ESPRESSO_SEQUENCER_L1_BLOCKS_CACHE_SIZE
+              value: {{ .Values.espresso.l1.blocksCacheSize | quote }}
+            {{- end }}
+            {{- if .Values.espresso.l1.eventsChannelCapacity }}
+            - name: ESPRESSO_SEQUENCER_L1_EVENTS_CHANNEL_CAPACITY
+              value: {{ .Values.espresso.l1.eventsChannelCapacity | quote }}
+            {{- end }}
+            {{- if .Values.espresso.l1.subscriptionTimeout }}
+            - name: ESPRESSO_SEQUENCER_L1_SUBSCRIPTION_TIMEOUT
+              value: {{ .Values.espresso.l1.subscriptionTimeout | quote }}
+            {{- end }}
+            {{- if .Values.espresso.l1.frequentFailureTolerance }}
+            - name: ESPRESSO_SEQUENCER_L1_FREQUENT_FAILURE_TOLERANCE
+              value: {{ .Values.espresso.l1.frequentFailureTolerance | quote }}
+            {{- end }}
+            {{- if .Values.espresso.l1.consecutiveFailureTolerance }}
+            - name: ESPRESSO_SEQUENCER_L1_CONSECUTIVE_FAILURE_TOLERANCE
+              value: {{ .Values.espresso.l1.consecutiveFailureTolerance | quote }}
+            {{- end }}
+            {{- if .Values.espresso.l1.rateLimitDelay }}
+            - name: ESPRESSO_SEQUENCER_L1_RATE_LIMIT_DELAY
+              value: {{ .Values.espresso.l1.rateLimitDelay | quote }}
+            {{- end }}
+            {{- if .Values.espresso.l1.stakeTableUpdateInterval }}
+            - name: ESPRESSO_SEQUENCER_L1_STAKE_TABLE_UPDATE_INTERVAL
+              value: {{ .Values.espresso.l1.stakeTableUpdateInterval | quote }}
+            {{- end }}
+            {{- if .Values.espresso.l1.finalizedSafetyMargin }}
+            - name: ESPRESSO_SEQUENCER_L1_FINALIZED_SAFETY_MARGIN
+              value: {{ .Values.espresso.l1.finalizedSafetyMargin | quote }}
+            {{- end }}
+            # -----------------------------------------------------------------
+            # SQL Storage (da/archival modes)
+            # -----------------------------------------------------------------
+            {{- if or (eq .Values.mode "da") (eq .Values.mode "archival") }}
+            {{- if .Values.espresso.storage.postgresUri }}
+            - name: ESPRESSO_SEQUENCER_POSTGRES_URI
+              value: {{ .Values.espresso.storage.postgresUri | quote }}
+            {{- else }}
+            - name: ESPRESSO_SEQUENCER_POSTGRES_HOST
+              value: {{ include "espresso-node.postgresHost" . | quote }}
+            - name: ESPRESSO_SEQUENCER_POSTGRES_PORT
+              value: {{ .Values.espresso.storage.postgresPort | quote }}
+            - name: ESPRESSO_SEQUENCER_POSTGRES_DATABASE
+              value: {{ .Values.espresso.storage.postgresDatabase | quote }}
+            - name: ESPRESSO_SEQUENCER_POSTGRES_USER
+              value: {{ .Values.espresso.storage.postgresUser | quote }}
+            {{- if .Values.espresso.storage.postgresPassword }}
+            - name: ESPRESSO_SEQUENCER_POSTGRES_PASSWORD
+              value: {{ .Values.espresso.storage.postgresPassword | quote }}
+            {{- else if .Values.postgresql.enabled }}
+            - name: ESPRESSO_SEQUENCER_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "espresso-node.fullname" . }}-postgresql
+                  key: password
+            {{- end }}
+            {{- if .Values.espresso.storage.postgresUseTls }}
+            - name: ESPRESSO_SEQUENCER_POSTGRES_USE_TLS
+              value: "true"
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            # -----------------------------------------------------------------
+            # Query module peers (da/archival modes)
+            # -----------------------------------------------------------------
+            {{- if and (or (eq .Values.mode "da") (eq .Values.mode "archival")) .Values.espresso.apiPeers }}
+            - name: ESPRESSO_SEQUENCER_API_PEERS
+              value: {{ .Values.espresso.apiPeers | quote }}
+            {{- end }}
+            {{- if .Values.espresso.query.fetchRateLimit }}
+            - name: ESPRESSO_SEQUENCER_FETCH_RATE_LIMIT
+              value: {{ .Values.espresso.query.fetchRateLimit | quote }}
+            {{- end }}
+            {{- if .Values.espresso.query.activeFetchDelay }}
+            - name: ESPRESSO_SEQUENCER_ACTIVE_FETCH_DELAY
+              value: {{ .Values.espresso.query.activeFetchDelay | quote }}
+            {{- end }}
+            {{- if .Values.espresso.query.chunkFetchDelay }}
+            - name: ESPRESSO_SEQUENCER_CHUNK_FETCH_DELAY
+              value: {{ .Values.espresso.query.chunkFetchDelay | quote }}
+            {{- end }}
+            # -----------------------------------------------------------------
+            # Pruning (da mode)
+            # -----------------------------------------------------------------
+            {{- if and (eq .Values.mode "da") .Values.espresso.pruning.enabled }}
+            - name: ESPRESSO_SEQUENCER_POSTGRES_PRUNE
+              value: "true"
+            - name: ESPRESSO_SEQUENCER_PRUNER_MINIMUM_RETENTION
+              value: {{ .Values.espresso.pruning.minimumRetention | quote }}
+            - name: ESPRESSO_SEQUENCER_PRUNER_TARGET_RETENTION
+              value: {{ .Values.espresso.pruning.targetRetention | quote }}
+            - name: ESPRESSO_SEQUENCER_PRUNER_PRUNING_THRESHOLD
+              value: {{ .Values.espresso.pruning.pruningThreshold | quote }}
+            {{- if .Values.espresso.pruning.maxUsage }}
+            - name: ESPRESSO_SEQUENCER_PRUNER_MAX_USAGE
+              value: {{ .Values.espresso.pruning.maxUsage | quote }}
+            {{- end }}
+            {{- if .Values.espresso.pruning.batchSize }}
+            - name: ESPRESSO_SEQUENCER_PRUNER_BATCH_SIZE
+              value: {{ .Values.espresso.pruning.batchSize | quote }}
+            {{- end }}
+            {{- if .Values.espresso.pruning.interval }}
+            - name: ESPRESSO_SEQUENCER_PRUNER_INTERVAL
+              value: {{ .Values.espresso.pruning.interval | quote }}
+            {{- end }}
+            {{- end }}
+            # -----------------------------------------------------------------
+            # Node Identity (Dashboard)
+            # -----------------------------------------------------------------
+            {{- if .Values.espresso.identity.nodeName }}
+            - name: ESPRESSO_SEQUENCER_IDENTITY_NODE_NAME
+              value: {{ .Values.espresso.identity.nodeName | quote }}
+            {{- end }}
+            {{- if .Values.espresso.identity.companyName }}
+            - name: ESPRESSO_SEQUENCER_IDENTITY_COMPANY_NAME
+              value: {{ .Values.espresso.identity.companyName | quote }}
+            {{- end }}
+            {{- if .Values.espresso.identity.companyWebsite }}
+            - name: ESPRESSO_SEQUENCER_IDENTITY_COMPANY_WEBSITE
+              value: {{ .Values.espresso.identity.companyWebsite | quote }}
+            {{- end }}
+            {{- if .Values.espresso.identity.operatingSystem }}
+            - name: ESPRESSO_SEQUENCER_IDENTITY_OPERATING_SYSTEM
+              value: {{ .Values.espresso.identity.operatingSystem | quote }}
+            {{- end }}
+            {{- if .Values.espresso.identity.nodeType }}
+            - name: ESPRESSO_SEQUENCER_IDENTITY_NODE_TYPE
+              value: {{ .Values.espresso.identity.nodeType | quote }}
+            {{- end }}
+            {{- if .Values.espresso.identity.networkType }}
+            - name: ESPRESSO_SEQUENCER_IDENTITY_NETWORK_TYPE
+              value: {{ .Values.espresso.identity.networkType | quote }}
+            {{- end }}
+            {{- if .Values.espresso.identity.countryCode }}
+            - name: ESPRESSO_SEQUENCER_IDENTITY_COUNTRY_CODE
+              value: {{ .Values.espresso.identity.countryCode | quote }}
+            {{- end }}
+            {{- if .Values.espresso.identity.latitude }}
+            - name: ESPRESSO_SEQUENCER_IDENTITY_LATITUDE
+              value: {{ .Values.espresso.identity.latitude | quote }}
+            {{- end }}
+            {{- if .Values.espresso.identity.longitude }}
+            - name: ESPRESSO_SEQUENCER_IDENTITY_LONGITUDE
+              value: {{ .Values.espresso.identity.longitude | quote }}
+            {{- end }}
+            # -----------------------------------------------------------------
+            # Extra environment variables
+            # -----------------------------------------------------------------
+            {{- with .Values.espresso.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- if eq .Values.mode "lightweight" }}
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.espresso.storage.storagePath | quote }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- if and (eq .Values.mode "lightweight") (not .Values.persistence.enabled) }}
+      volumes:
+        - name: data
+          emptyDir: {}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if and (eq .Values.mode "lightweight") .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "espresso-node.labels" . | nindent 10 }}
+        {{- with .Values.persistence.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes:
+          {{- range .Values.persistence.accessModes }}
+          - {{ . | quote }}
+          {{- end }}
+        {{- if .Values.persistence.storageClass }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size | quote }}
+  {{- end }}

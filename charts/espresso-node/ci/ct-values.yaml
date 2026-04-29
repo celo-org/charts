@@ -1,0 +1,22 @@
+---
+# CI test values for chart-testing (ct install) in a kind cluster.
+# Provides dummy keys and a real L1 endpoint so the sequencer can start.
+espresso:
+  l1Provider: "https://1rpc.io/eth"
+  # Dummy keys for CI only (not valid for real consensus)  # gitleaks:allow
+  privateStakingKey: "BLS_VER_1~a101010101010101010101010101010101010101010101010101010101010101"  # gitleaks:allow
+  privateStateKey: "SCHNORR_VER_1~b202020202020202020202020202020202020202020202020202020202020202"  # gitleaks:allow
+
+# Disable probes — the node won't become healthy in a kind cluster
+# (no real CDN/state-relay connectivity)
+livenessProbe: null
+readinessProbe: null
+startupProbe: null
+
+# Lower resource requests for kind cluster
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    memory: "512Mi"
