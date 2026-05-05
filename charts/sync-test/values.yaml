@@ -1,0 +1,164 @@
+---
+# Snapshot-based PVC configuration (used for mainnet consensus and execution sync modes)
+# The mainnet snapshot is 1035Gi so we give a little room here with 1100Gi.
+snapshot:
+  enabled: true
+  storageClass: premium-rwo
+  storageSize: 1100Gi
+  volumeSnapshotName: ""  # REQUIRED for consensus/execution: set via --set snapshot.volumeSnapshotName=...
+
+# -- op-geth subchart values
+op-geth:
+  replicaCount: 1
+
+  image:
+    repository: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-geth
+    tag: celo-v2.2.2
+
+  secrets:
+    jwt: &jwt
+      value: "4602272743680c6e128634f6a3db7078ca5f74d0f2f3db960a9a9717e72a270c"
+    nodeKey:
+      value: ""  # REQUIRED: set via --set op-geth.secrets.nodeKey.value=0x$(openssl rand -hex 32)
+
+  config:
+    op-network: ""
+    networkid: ""   # Set via network file
+    datadir: /celo
+    syncmode: full
+    gcmode: full
+    snapshot: true
+    maxpeers: 300
+    nodiscover: false
+    bootnodes: []   # Set via network file
+    http:
+      api: [eth, net, web3, debug, txpool, engine]
+    ws:
+      enabled: true
+      api: [eth, net, debug, txpool, engine]
+    rollup:
+      disabletxpoolgossip: true
+      sequencerhttp: ""  # Set via network file
+    metrics:
+      enabled: true
+
+  extraArgs: []  # Set via network file (e.g. --rollup.historicalrpc)
+
+  init:
+    genesis:
+      enabled: false
+    rollup:
+      enabled: false
+
+  persistence:
+    pvc:
+      # At least 40Gi is required for a mainnet snap sync otherwise the volume
+      # tries to resize too many times in a short period.
+      size: 40Gi
+      storageClass: premium-rwo
+      annotations:
+        resize.topolvm.io/increase: "10%"
+        resize.topolvm.io/inodes-threshold: "10%"
+        resize.topolvm.io/storage_limit: 4000Gi
+        resize.topolvm.io/threshold: "10%"
+
+  resources:
+    requests:
+      cpu: 2.5
+      memory: 4.5Gi
+
+  services:
+    p2p:
+      enabled: true
+      type: ClusterIP
+
+  ingress:
+    http:
+      enabled: false
+
+# -- op-node subchart values
+op-node:
+  replicaCount: 1
+
+  image:
+    repository: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-node
+    tag: celo-v2.2.1
+
+  secrets:
+    jwt: *jwt
+    l1Url:
+      value: ""     # Required: set via cluster file (clusters/<cluster>.yaml)
+    l1BeaconUrl:
+      value: ""     # Required: set via cluster file (clusters/<cluster>.yaml)
+    p2pKeys:
+      value: ""  # REQUIRED: set via --set op-node.secrets.p2pKeys.value=0x$(openssl rand -hex 32)
+
+  config:
+    network: ""
+    enableAdmin: true
+    syncmode: consensus-layer
+    safedbPath: /celo/safedb
+    l1:
+      rpckind: ""     # Set via cluster file (clusters/<cluster>.yaml)
+      trustrpc: true  # Override in cluster file when using an untrusted L1 RPC
+    l2:
+      # Resolved at render time via tpl — produces e.g. http://cr16-consensus-op-geth-authrpc-0:8551
+      url: "http://{{ .Release.Name }}-op-geth-authrpc-0:8551"
+      protocol: ""
+      namePattern: ""
+      port: ""
+    rollup:
+      loadProtocolVersions: true
+      halt: ""
+      # This needs to explicitly be set to an empty string to prevent passing
+      # the rollup.config flag which conflicts wih the network flag (configured
+      # in network specific yaml)
+      config: ""
+    sequencer:
+      enabled: false
+    verifier:
+      l1Confs: 4
+    altda:
+      enabled: true
+      daServer: http://eigenda-proxy-api:4242
+      daService: true
+      verifyOnRead: false
+    metrics:
+      enabled: true
+    p2p:
+      nat: false
+      port: 9222
+      peers:
+        hi: 400
+        lo: 250
+      bootnodes: []  # Set via network file
+
+  init:
+    rollup:
+      enabled: false
+
+  persistence:
+    mountPath: "/celo"
+    type: pvc
+    pvc:
+      size: 1Gi
+      storageClass: standard-rwo
+      annotations:
+        resize.topolvm.io/increase: "10%"
+        resize.topolvm.io/inodes-threshold: "10%"
+        resize.topolvm.io/storage_limit: 50Gi
+        resize.topolvm.io/threshold: "10%"
+
+  resources:
+    requests:
+      cpu: 400m
+      memory: 1Gi
+
+  services:
+    p2p:
+      enabled: true
+      type: ClusterIP
+      port: 9222
+      publishNotReadyAddresses: true
+
+  terminationGracePeriodSeconds: 30

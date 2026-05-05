@@ -1,0 +1,36 @@
+---
+# Mainnet on the bcglobaltestnet GKE cluster.
+#
+#   GCP project:  blockchaintestsglobaltestnet
+#   Kube context: bcgt
+#   Namespace:    mainnet-sync-test (by convention)
+#   Verify with:  kubectl config current-context
+#
+# Provides L1 endpoint URLs as deployed in this specific cluster: both
+# the Nethermind L1 RPC and the Prysm consensus client run as in-namespace
+# services and are reachable via cluster-internal DNS.
+#
+# `trustrpc: true` is safe here because the L1 endpoint is our own
+# Nethermind service inside the cluster — for an untrusted public L1 RPC
+# you would want this set to false.
+#
+# Pair with a presets/<mode>.yaml and networks/mainnet.yaml file. The
+# cluster file is applied LAST so cluster-specific values always win:
+#
+#   helm install ... \
+#     -f presets/consensus.yaml \
+#     -f networks/mainnet.yaml \
+#     -f clusters/bcglobaltestnet-mainnet.yaml \
+#     --kube-context bcgt -n mainnet-sync-test
+
+op-node:
+  secrets:
+    l1Url:
+      value: "http://nethermind-mainnet.nethermind-mainnet:8545"
+    l1BeaconUrl:
+      value: "http://nethermind-prysm-mainnet.nethermind-mainnet:8080"
+  config:
+    l1:
+      # Tied to the L1 backend implementation in this cluster.
+      rpckind: nethermind
+      trustrpc: true

@@ -47,7 +47,7 @@ echo "$advertiseIp" > "$datadir/advertiseIP"
 # Get the L2 url
 l2Url=""
 if [ -n "{{ .Values.config.l2.url }}" ]; then
-  l2Url="{{ .Values.config.l2.url }}"
+  l2Url="{{ tpl .Values.config.l2.url . }}"
 else
   l2Url="{{ .Values.config.l2.protocol }}://{{ .Values.config.l2.namePattern }}-$RID:{{ .Values.config.l2.port }}"
 fi

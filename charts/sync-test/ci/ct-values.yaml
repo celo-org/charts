@@ -1,0 +1,24 @@
+---
+# CI-only values to satisfy required parameters during linting/templating
+op-geth:
+  image:
+    repository: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-geth
+    tag: ci-test
+  secrets:
+    nodeKey:
+      value: "0x0000000000000000000000000000000000000000000000000000000000000001"
+
+op-node:
+  image:
+    repository: us-west1-docker.pkg.dev/blockchaintestsglobaltestnet/dev-images/op-node
+    tag: ci-test
+  secrets:
+    p2pKeys:
+      value: "0x0000000000000000000000000000000000000000000000000000000000000001"
+    l1Url:
+      value: "http://example.invalid:8545"
+    l1BeaconUrl:
+      value: "http://example.invalid:8080"
+
+snapshot:
+  enabled: false

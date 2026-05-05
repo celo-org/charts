@@ -165,13 +165,18 @@ jobs:
               if cat "./${chart}/Chart.yaml" | grep -E '^type' | grep 'application' >/dev/null; then
                 # Skipping clean-pvcs as .Release.Namespace does not exist in helm template
                 if [ "${chart}" != "charts/clean-pvcs" ]; then
+                  # Use ci/ct-values.yaml if present (provides required values for charts that need them)
+                  ci_values=""
+                  if [ -f "./${chart}/ci/ct-values.yaml" ]; then
+                    ci_values="-f ./${chart}/ci/ct-values.yaml"
+                  fi
                   echo "Templating ${chart}."
-                  helm template "./${chart}/" -f "./${chart}/values.yaml"
+                  helm template "./${chart}/" -f "./${chart}/values.yaml" ${ci_values}
                   # Skipping celo-fullnode-backups as kind has not volumesnapshot and gemini cannot be installed
                   if [ "${chart}" != "charts/celo-fullnode-backups" ]; then
                     echo "Validating ${chart} templates."
                     # Check against K8s API
-                    helm template "./${chart}/" -f "./${chart}/values.yaml" --validate
+                    helm template "./${chart}/" -f "./${chart}/values.yaml" ${ci_values} --validate
                   fi
                 fi
               fi
@@ -195,7 +200,7 @@ jobs:
           --chart-dirs charts,charts-private
           --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup
           --excluded-charts blockscout,akeyless-gadmin-producer,ultragreen-dashboard,kong-celo-fullnode
-          --excluded-charts eigenda-proxy,nethermind,prysm,op-conductor,espresso-node
+          --excluded-charts eigenda-proxy,nethermind,prysm,op-conductor,espresso-node,sync-test
           --chart-repos bitnami=https://charts.bitnami.com/bitnami,stakewise=https://charts.stakewise.io/
   helm-docs:
     runs-on: 'ubuntu-latest'
