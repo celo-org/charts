@@ -362,7 +362,7 @@ init:
     enabled: false
     image:
       repository: alpine
-      tag: 3.19
+      tag: 3.23
       pullPolicy: IfNotPresent
   genesis:
     enabled: false
@@ -373,7 +373,7 @@ init:
   parameters:
     image:
       repository: alpine
-      tag: 3.19
+      tag: 3.23
       pullPolicy: IfNotPresent
   # -- Extra arguments for the celo-reth init-genesis container (can be templated).
   extraArgs: []
