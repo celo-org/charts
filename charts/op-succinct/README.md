@@ -1,6 +1,6 @@
 # op-succinct
 
-![Version: 1.2.0-rc.2](https://img.shields.io/badge/Version-1.2.0--rc.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 1.2.0-rc.3](https://img.shields.io/badge/Version-1.2.0--rc.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for op-succinct proposer and challenger
 
@@ -52,6 +52,8 @@ A Helm chart for op-succinct proposer and challenger
 | config.secret_env | object | `{"existing_name":"","overwrites":{}}` | the `PRIVATE_KEY` is only required when `config.remote_signing.enabled` is `false`. |
 | config.secret_env.existing_name | string | `""` | Use an existing kubernetes secret by it's secret name |
 | config.secret_env.overwrites | object | `{}` | into the executor. |
+| config.sync.l1_confirmations | string | `""` | Number of L1 blocks behind `latest` to pin reads during sync cycles, as a safety margin for lagging load-balanced RPC backends (proposer only; defaults to 0 = use latest). |
+| config.tx.confirmation_timeout | string | `""` | Timeout (in seconds) for waiting on L1 transaction confirmations |
 | enableServiceLinks | bool | `false` | Kubernetes enableServiceLinks |
 | extraArgs | list | `[]` |  |
 | fullnameOverride | string | `""` | Chart full name override |

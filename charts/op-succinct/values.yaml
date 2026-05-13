@@ -72,6 +72,12 @@ config:
     proposal: 20
     # -- Fetch interval
     fetch: 30
+  tx:
+    # -- Timeout (in seconds) for waiting on L1 transaction confirmations
+    confirmation_timeout: ""
+  sync:
+    # -- Number of L1 blocks behind `latest` to pin reads during sync cycles, as a safety margin for lagging load-balanced RPC backends (proposer only; defaults to 0 = use latest).
+    l1_confirmations: ""
   remote_signing:
     # -- use a remote signer for signing the l1 transactions instead
     # -- of reading the "PRIVATE_KEY" env-var and signing locally.

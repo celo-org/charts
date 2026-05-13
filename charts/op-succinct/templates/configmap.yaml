@@ -44,7 +44,17 @@ data:
   {{- end }}
   FETCH_INTERVAL: "{{ .fetch }}"
   {{- end}}
+  {{- with .tx}}
+  {{- if .confirmation_timeout }}
+  TX_CONFIRMATION_TIMEOUT: "{{ .confirmation_timeout }}"
+  {{- end }}
+  {{- end}}
   {{- if eq $.Values.mode "proposer" }}
+  {{- with .sync}}
+  {{- if .l1_confirmations }}
+  SYNC_L1_CONFIRMATIONS: "{{ .l1_confirmations }}"
+  {{- end }}
+  {{- end}}
   {{- with .proof}}
   {{- if .agg_proof_mode }}
   AGG_PROOF_MODE: {{ .agg_proof_mode | quote }}
