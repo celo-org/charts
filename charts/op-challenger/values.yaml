@@ -174,7 +174,7 @@ init:
     enabled: true
     image:
       repository: alpine
-      tag: 3.19
+      tag: 3.23
       pullPolicy: IfNotPresent
     urls:
       deployment-l1.json: ""
