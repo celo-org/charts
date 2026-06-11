@@ -161,9 +161,16 @@ resources: {}
 
 affinity: {}
 
+topologySpreadConstraints: []
+
 nodeSelector: {}
 
 tolerations: []
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: ""
+  maxUnavailable: ""
 
 persistence:
   type: pvc
