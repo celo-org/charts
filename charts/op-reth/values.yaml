@@ -312,7 +312,7 @@ config:
     # -- Disable txpool gossip on the rollup network. OP-stack rollups typically forward txs via `--rollup.sequencer` over HTTP, so P2P gossip is unwanted.
     disabletxpoolgossip: true
     # -- URL of the sequencer to forward `eth_sendRawTransaction` to. Leave empty to validate locally without forwarding.
-    sequencerhttp: https://mainnet-sequencer.optimism.io/
+    sequencerhttp: ""
   http:
     port: 8545
     corsdomain: ["*"]

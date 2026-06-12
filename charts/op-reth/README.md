@@ -67,7 +67,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.prune.transactionLookup.distance | string | `""` | Block distance for `mode: distance`. |
 | config.prune.transactionLookup.mode | string | `""` | Prune transaction lookup data. One of: "", "full", "distance", "before". |
 | config.rollup.disabletxpoolgossip | bool | `true` | Disable txpool gossip on the rollup network. OP-stack rollups typically forward txs via `--rollup.sequencer` over HTTP, so P2P gossip is unwanted. |
-| config.rollup.sequencerhttp | string | `"https://mainnet-sequencer.optimism.io/"` | URL of the sequencer to forward `eth_sendRawTransaction` to. Leave empty to validate locally without forwarding. |
+| config.rollup.sequencerhttp | string | `""` | URL of the sequencer to forward `eth_sendRawTransaction` to. Leave empty to validate locally without forwarding. |
 | config.trustedOnly | bool | `false` | If true (`--trusted-only`), reject any inbound or outbound peer not in `trustedPeers` — hard accept-list. |
 | config.trustedPeers | list | `[]` | List of enode URLs (`enode://<hex-pubkey>@host:port`) that are always-allowed and pinned against eviction. Joined with commas into `--trusted-peers`. |
 | config.useHostPort | bool | `false` | Allocate hostPorts for P2P communication instead of using a Kubernetes Service. |
