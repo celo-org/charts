@@ -1,6 +1,6 @@
 # op-reth
 
-![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-reth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -45,6 +45,27 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.netrestrict | list | `[]` | Restrict network access to specific CIDR ranges. |
 | config.networkId | string | `""` | Optional override of the chain spec network ID for P2P. Empty string for default. |
 | config.port | int | `30303` | TCP port for P2P communication. |
+| config.prune.accountHistory.before | string | `""` | Block number for `mode: before`. |
+| config.prune.accountHistory.distance | string | `""` | Block distance for `mode: distance`. |
+| config.prune.accountHistory.mode | string | `""` | Prune account history. One of: "", "full", "distance", "before". |
+| config.prune.blockInterval | string | `""` | Minimum pruning interval measured in blocks. Empty string omits the flag. |
+| config.prune.bodies.before | string | `""` | Block number for `mode: before`. |
+| config.prune.bodies.distance | string | `""` | Block distance for `mode: distance`. |
+| config.prune.bodies.mode | string | `""` | Prune bodies. One of: "", "pre-merge", "distance", "before". |
+| config.prune.minimumDistance | string | `""` | Minimum pruning distance from the tip. Empty string omits the flag. |
+| config.prune.receipts.before | string | `""` | Block number for `mode: before`. |
+| config.prune.receipts.distance | string | `""` | Block distance for `mode: distance`. |
+| config.prune.receipts.mode | string | `""` | Prune receipt data. One of: "", "full", "pre-merge", "distance", "before". |
+| config.prune.receiptsLogFilter | list | `[]` | Receipts log filters. Each item is rendered as `--prune.receiptslogfilter=<value>`. |
+| config.prune.senderRecovery.before | string | `""` | Block number for `mode: before`. |
+| config.prune.senderRecovery.distance | string | `""` | Block distance for `mode: distance`. |
+| config.prune.senderRecovery.mode | string | `""` | Prune sender recovery data. One of: "", "full", "distance", "before". |
+| config.prune.storageHistory.before | string | `""` | Block number for `mode: before`. |
+| config.prune.storageHistory.distance | string | `""` | Block distance for `mode: distance`. |
+| config.prune.storageHistory.mode | string | `""` | Prune storage history. One of: "", "full", "distance", "before". |
+| config.prune.transactionLookup.before | string | `""` | Block number for `mode: before`. |
+| config.prune.transactionLookup.distance | string | `""` | Block distance for `mode: distance`. |
+| config.prune.transactionLookup.mode | string | `""` | Prune transaction lookup data. One of: "", "full", "distance", "before". |
 | config.rollup.disabletxpoolgossip | bool | `true` | Disable txpool gossip on the rollup network. OP-stack rollups typically forward txs via `--rollup.sequencer` over HTTP, so P2P gossip is unwanted. |
 | config.rollup.halt | string | `"major"` | Halt node on op-node version mismatch. Possible values: "major", "minor", "patch", "none". |
 | config.rollup.sequencerhttp | string | `"https://mainnet-sequencer.optimism.io/"` | URL of the sequencer to forward `eth_sendRawTransaction` to. Leave empty to validate locally without forwarding. |
