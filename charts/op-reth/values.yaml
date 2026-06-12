@@ -356,6 +356,55 @@ config:
   logFormat: "json"
   metrics:
     enabled: false
+  prune:
+    # -- Minimum pruning interval measured in blocks. Empty string omits the flag.
+    blockInterval: ""
+    senderRecovery:
+      # -- Prune sender recovery data. One of: "", "full", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    transactionLookup:
+      # -- Prune transaction lookup data. One of: "", "full", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    receipts:
+      # -- Prune receipt data. One of: "", "full", "pre-merge", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    # -- Receipts log filters. Each item is rendered as `--prune.receiptslogfilter=<value>`.
+    receiptsLogFilter: []
+    accountHistory:
+      # -- Prune account history. One of: "", "full", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    storageHistory:
+      # -- Prune storage history. One of: "", "full", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    bodies:
+      # -- Prune bodies. One of: "", "pre-merge", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    # -- Minimum pruning distance from the tip. Empty string omits the flag.
+    minimumDistance: ""
 
 init:
   chownData:

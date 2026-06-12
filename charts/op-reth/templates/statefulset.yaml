@@ -249,6 +249,73 @@ spec:
             {{- if .Values.config.metrics.enabled }}
             --metrics=0.0.0.0:6060 \
             {{- end }}
+            {{- with .Values.config.prune.blockInterval }}
+            --prune.block-interval={{ . }} \
+            {{- end }}
+            {{- with .Values.config.prune.senderRecovery }}
+            {{- if eq .mode "full" }}
+            --prune.sender-recovery.full \
+            {{- else if eq .mode "distance" }}
+            --prune.sender-recovery.distance={{ .distance }} \
+            {{- else if eq .mode "before" }}
+            --prune.sender-recovery.before={{ .before }} \
+            {{- end }}
+            {{- end }}
+            {{- with .Values.config.prune.transactionLookup }}
+            {{- if eq .mode "full" }}
+            --prune.transaction-lookup.full \
+            {{- else if eq .mode "distance" }}
+            --prune.transaction-lookup.distance={{ .distance }} \
+            {{- else if eq .mode "before" }}
+            --prune.transaction-lookup.before={{ .before }} \
+            {{- end }}
+            {{- end }}
+            {{- with .Values.config.prune.receipts }}
+            {{- if eq .mode "full" }}
+            --prune.receipts.full \
+            {{- else if eq .mode "pre-merge" }}
+            --prune.receipts.pre-merge \
+            {{- else if eq .mode "distance" }}
+            --prune.receipts.distance={{ .distance }} \
+            {{- else if eq .mode "before" }}
+            --prune.receipts.before={{ .before }} \
+            {{- end }}
+            {{- end }}
+            {{- with .Values.config.prune.receiptsLogFilter }}
+            {{- range . }}
+            --prune.receiptslogfilter={{ . }} \
+            {{- end }}
+            {{- end }}
+            {{- with .Values.config.prune.accountHistory }}
+            {{- if eq .mode "full" }}
+            --prune.account-history.full \
+            {{- else if eq .mode "distance" }}
+            --prune.account-history.distance={{ .distance }} \
+            {{- else if eq .mode "before" }}
+            --prune.account-history.before={{ .before }} \
+            {{- end }}
+            {{- end }}
+            {{- with .Values.config.prune.storageHistory }}
+            {{- if eq .mode "full" }}
+            --prune.storage-history.full \
+            {{- else if eq .mode "distance" }}
+            --prune.storage-history.distance={{ .distance }} \
+            {{- else if eq .mode "before" }}
+            --prune.storage-history.before={{ .before }} \
+            {{- end }}
+            {{- end }}
+            {{- with .Values.config.prune.bodies }}
+            {{- if eq .mode "pre-merge" }}
+            --prune.bodies.pre-merge \
+            {{- else if eq .mode "distance" }}
+            --prune.bodies.distance={{ .distance }} \
+            {{- else if eq .mode "before" }}
+            --prune.bodies.before={{ .before }} \
+            {{- end }}
+            {{- end }}
+            {{- with .Values.config.prune.minimumDistance }}
+            --prune.minimum-distance={{ . }} \
+            {{- end }}
             {{- with .Values.config.logFilter }}
             --log.stdout.filter={{ . }} \
             {{- end }}
