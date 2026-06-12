@@ -152,6 +152,9 @@ spec:
             {{- if .Values.config.l2.engineRPCTimeout }}
             --l2.engine-rpc-timeout={{ .Values.config.l2.engineRPCTimeout }} \
             {{- end }}
+            {{- if .Values.config.l2.engineKind }}
+            --l2.enginekind={{ .Values.config.l2.engineKind }} \
+            {{- end }}
             --l2=$(cat $datadir/l2Url) \
             --l2.jwt-secret=$datadir/jwt.hex \
             --rpc.addr=0.0.0.0 \
