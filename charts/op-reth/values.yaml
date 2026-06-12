@@ -380,7 +380,7 @@ config:
       distance: ""
       # -- Block number for `mode: before`.
       before: ""
-    # -- Receipts log filters. Each item is rendered as `--prune.receiptslogfilter=<value>`.
+    # -- Receipts log filters. Items are comma-joined into a single `--prune.receiptslogfilter` flag (the binary rejects repeated flags). Item format: `<address>:<full|distance:<blocks>|before:<block_number>>`. Mutually exclusive with `receipts.mode`.
     receiptsLogFilter: []
     accountHistory:
       # -- Prune account history. One of: "", "full", "distance", "before".

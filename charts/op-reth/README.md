@@ -56,7 +56,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.prune.receipts.before | string | `""` | Block number for `mode: before`. |
 | config.prune.receipts.distance | string | `""` | Block distance for `mode: distance`. |
 | config.prune.receipts.mode | string | `""` | Prune receipt data. One of: "", "full", "pre-merge", "distance", "before". |
-| config.prune.receiptsLogFilter | list | `[]` | Receipts log filters. Each item is rendered as `--prune.receiptslogfilter=<value>`. |
+| config.prune.receiptsLogFilter | list | `[]` | Receipts log filters. Items are comma-joined into a single `--prune.receiptslogfilter` flag (the binary rejects repeated flags). Item format: `<address>:<full|distance:<blocks>|before:<block_number>>`. Mutually exclusive with `receipts.mode`. |
 | config.prune.senderRecovery.before | string | `""` | Block number for `mode: before`. |
 | config.prune.senderRecovery.distance | string | `""` | Block distance for `mode: distance`. |
 | config.prune.senderRecovery.mode | string | `""` | Prune sender recovery data. One of: "", "full", "distance", "before". |
