@@ -49,6 +49,10 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
@@ -147,6 +151,9 @@ spec:
             {{- end }}
             {{- if .Values.config.l2.engineRPCTimeout }}
             --l2.engine-rpc-timeout={{ .Values.config.l2.engineRPCTimeout }} \
+            {{- end }}
+            {{- if .Values.config.l2.engineKind }}
+            --l2.enginekind={{ .Values.config.l2.engineKind }} \
             {{- end }}
             --l2=$(cat $datadir/l2Url) \
             --l2.jwt-secret=$datadir/jwt.hex \

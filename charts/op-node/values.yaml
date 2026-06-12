@@ -161,9 +161,16 @@ resources: {}
 
 affinity: {}
 
+topologySpreadConstraints: []
+
 nodeSelector: {}
 
 tolerations: []
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: ""
+  maxUnavailable: ""
 
 persistence:
   type: pvc
@@ -239,6 +246,7 @@ config:
     namePattern: ""                          # Used for multiReplica. Set to the op-geth sts name pattern. Example: "op-geth-validator-authrpc"
     port: ""                                 # Used for multiReplica. Authrpc port of op-geth L2 node with multiReplica
     engineRPCTimeout: ""                     # Authrpc timeout
+    engineKind: ""                           # Engine type, e.g. geth or reth. Empty defaults to geth
   rollup:
     config: "/celo"                         # path to rollup config json folder
     loadProtocolVersions: true         # load superchain contract
