@@ -1,6 +1,6 @@
 # op-conductor
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0](https://img.shields.io/badge/AppVersion-v1.8.0-informational?style=flat-square)
 
 Helm chart deploying OP Conductor, a HA controller for op-node
 
@@ -66,6 +66,9 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | persistence.pvc.size | string | `"1Gi"` |  |
 | persistence.pvc.storageClass | string | `""` |  |
 | persistence.type | string | `"pvc"` |  |
+| podDisruptionBudget.enabled | bool | `false` |  |
+| podDisruptionBudget.maxUnavailable | string | `""` |  |
+| podDisruptionBudget.minAvailable | string | `""` |  |
 | podManagementPolicy | string | `"Parallel"` |  |
 | podSecurityContext | object | `{}` |  |
 | replicaCount | int | `1` |  |
@@ -85,6 +88,7 @@ Helm chart deploying OP Conductor, a HA controller for op-node
 | statefulset.labels | object | `{}` |  |
 | statefulset.podAnnotations | object | `{}` |  |
 | tolerations | list | `[]` |  |
+| topologySpreadConstraints | list | `[]` |  |
 | updateStrategy.type | string | `"RollingUpdate"` |  |
 
 ----------------------------------------------
