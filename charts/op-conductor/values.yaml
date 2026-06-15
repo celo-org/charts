@@ -3,7 +3,13 @@ replicaCount: 1
 podManagementPolicy: Parallel
 nodeSelector: {}
 affinity: {}
+topologySpreadConstraints: []
 tolerations: []
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: ""
+  maxUnavailable: ""
 
 init:
   image:

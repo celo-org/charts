@@ -1,0 +1,21 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+{{- if and (empty .Values.podDisruptionBudget.minAvailable) (empty .Values.podDisruptionBudget.maxUnavailable) }}
+{{- fail "podDisruptionBudget requires either minAvailable or maxUnavailable" }}
+{{- end }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "op-conductor.fullname" . }}
+  labels:
+    {{- include "op-conductor.labels" . | nindent 4 }}
+spec:
+  {{- with .Values.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ . }}
+  {{- end }}
+  {{- with .Values.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ . }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "op-conductor.selectorLabels" . | nindent 6 }}
+{{- end }}
