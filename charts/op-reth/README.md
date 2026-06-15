@@ -132,6 +132,9 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | persistence.pvc.storageClass | string | `""` | Set to "-" to manually create the persistent volume. |
 | persistence.type | string | `"pvc"` | Backing storage type. Possible values: "pvc", "hostPath". |
 | podAnnotations | object | `{}` | Extra pod annotations |
+| podDisruptionBudget.enabled | bool | `false` |  |
+| podDisruptionBudget.maxUnavailable | string | `""` |  |
+| podDisruptionBudget.minAvailable | string | `""` |  |
 | podLabels | object | `{}` | Extra pod labels |
 | podSecurityContext.fsGroup | int | `10001` |  |
 | podStatusLabels | object | `{}` | Labels marking the node as ready to serve traffic. Used as selector for the RPC service together with `.Values.podLabels` and default labels. |
@@ -211,6 +214,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | syncToS3.enabled | bool | `false` | Enable the sync-to-S3 initContainer (this alone does not trigger a sync — see `cronjob`). |
 | terminationGracePeriodSeconds | int | `300` | Grace period for the node to flush its DB and shut down cleanly. |
 | tolerations | list | `[]` |  |
+| topologySpreadConstraints | list | `[]` |  |
 | updateStrategy.type | string | `"RollingUpdate"` |  |
 
 ----------------------------------------------
