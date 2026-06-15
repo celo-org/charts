@@ -219,6 +219,13 @@ nodeSelector: {}
 
 tolerations: []
 
+topologySpreadConstraints: []
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: ""
+  maxUnavailable: ""
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -309,12 +316,10 @@ config:
   # -- Data directory inside the container.
   datadir: /celo
   rollup:
-    # -- Halt node on op-node version mismatch. Possible values: "major", "minor", "patch", "none".
-    halt: major
     # -- Disable txpool gossip on the rollup network. OP-stack rollups typically forward txs via `--rollup.sequencer` over HTTP, so P2P gossip is unwanted.
     disabletxpoolgossip: true
     # -- URL of the sequencer to forward `eth_sendRawTransaction` to. Leave empty to validate locally without forwarding.
-    sequencerhttp: https://mainnet-sequencer.optimism.io/
+    sequencerhttp: ""
   http:
     port: 8545
     corsdomain: ["*"]
@@ -356,6 +361,55 @@ config:
   logFormat: "json"
   metrics:
     enabled: false
+  prune:
+    # -- Minimum pruning interval measured in blocks. Empty string omits the flag.
+    blockInterval: ""
+    senderRecovery:
+      # -- Prune sender recovery data. One of: "", "full", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    transactionLookup:
+      # -- Prune transaction lookup data. One of: "", "full", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    receipts:
+      # -- Prune receipt data. One of: "", "full", "pre-merge", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    # -- Receipts log filters. Items are comma-joined into a single `--prune.receiptslogfilter` flag (the binary rejects repeated flags). Item format: `<address>:<full|distance:<blocks>|before:<block_number>>`. Mutually exclusive with `receipts.mode`.
+    receiptsLogFilter: []
+    accountHistory:
+      # -- Prune account history. One of: "", "full", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    storageHistory:
+      # -- Prune storage history. One of: "", "full", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    bodies:
+      # -- Prune bodies. One of: "", "pre-merge", "distance", "before".
+      mode: ""
+      # -- Block distance for `mode: distance`.
+      distance: ""
+      # -- Block number for `mode: before`.
+      before: ""
+    # -- Minimum pruning distance from the tip. Empty string omits the flag.
+    minimumDistance: ""
 
 init:
   chownData:

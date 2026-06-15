@@ -60,6 +60,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       initContainers:
       {{- if .Values.init.chownData.enabled }}
       - name: chown-data
@@ -248,6 +252,88 @@ spec:
             {{- end }}
             {{- if .Values.config.metrics.enabled }}
             --metrics=0.0.0.0:6060 \
+            {{- end }}
+            {{- with .Values.config.prune }}
+            {{- if and .receiptsLogFilter (default dict .receipts).mode }}
+            {{- fail "config.prune.receiptsLogFilter is mutually exclusive with config.prune.receipts.mode (celo-reth rejects --prune.receiptslogfilter combined with --prune.receipts.*)" }}
+            {{- end }}
+            {{- with .blockInterval }}
+            --prune.block-interval={{ int64 . }} \
+            {{- end }}
+            {{- with .senderRecovery }}
+            {{- if eq .mode "full" }}
+            --prune.sender-recovery.full \
+            {{- else if eq .mode "distance" }}
+            --prune.sender-recovery.distance={{ int64 (required "config.prune.senderRecovery.distance is required when mode=distance" .distance) }} \
+            {{- else if eq .mode "before" }}
+            --prune.sender-recovery.before={{ int64 (required "config.prune.senderRecovery.before is required when mode=before" .before) }} \
+            {{- else if .mode }}
+            {{- fail (printf "unsupported config.prune.senderRecovery.mode %q: expected \"\", \"full\", \"distance\" or \"before\"" .mode) }}
+            {{- end }}
+            {{- end }}
+            {{- with .transactionLookup }}
+            {{- if eq .mode "full" }}
+            --prune.transaction-lookup.full \
+            {{- else if eq .mode "distance" }}
+            --prune.transaction-lookup.distance={{ int64 (required "config.prune.transactionLookup.distance is required when mode=distance" .distance) }} \
+            {{- else if eq .mode "before" }}
+            --prune.transaction-lookup.before={{ int64 (required "config.prune.transactionLookup.before is required when mode=before" .before) }} \
+            {{- else if .mode }}
+            {{- fail (printf "unsupported config.prune.transactionLookup.mode %q: expected \"\", \"full\", \"distance\" or \"before\"" .mode) }}
+            {{- end }}
+            {{- end }}
+            {{- with .receipts }}
+            {{- if eq .mode "full" }}
+            --prune.receipts.full \
+            {{- else if eq .mode "pre-merge" }}
+            --prune.receipts.pre-merge \
+            {{- else if eq .mode "distance" }}
+            --prune.receipts.distance={{ int64 (required "config.prune.receipts.distance is required when mode=distance" .distance) }} \
+            {{- else if eq .mode "before" }}
+            --prune.receipts.before={{ int64 (required "config.prune.receipts.before is required when mode=before" .before) }} \
+            {{- else if .mode }}
+            {{- fail (printf "unsupported config.prune.receipts.mode %q: expected \"\", \"full\", \"pre-merge\", \"distance\" or \"before\"" .mode) }}
+            {{- end }}
+            {{- end }}
+            {{- with .receiptsLogFilter }}
+            --prune.receiptslogfilter={{ join "," . }} \
+            {{- end }}
+            {{- with .accountHistory }}
+            {{- if eq .mode "full" }}
+            --prune.account-history.full \
+            {{- else if eq .mode "distance" }}
+            --prune.account-history.distance={{ int64 (required "config.prune.accountHistory.distance is required when mode=distance" .distance) }} \
+            {{- else if eq .mode "before" }}
+            --prune.account-history.before={{ int64 (required "config.prune.accountHistory.before is required when mode=before" .before) }} \
+            {{- else if .mode }}
+            {{- fail (printf "unsupported config.prune.accountHistory.mode %q: expected \"\", \"full\", \"distance\" or \"before\"" .mode) }}
+            {{- end }}
+            {{- end }}
+            {{- with .storageHistory }}
+            {{- if eq .mode "full" }}
+            --prune.storage-history.full \
+            {{- else if eq .mode "distance" }}
+            --prune.storage-history.distance={{ int64 (required "config.prune.storageHistory.distance is required when mode=distance" .distance) }} \
+            {{- else if eq .mode "before" }}
+            --prune.storage-history.before={{ int64 (required "config.prune.storageHistory.before is required when mode=before" .before) }} \
+            {{- else if .mode }}
+            {{- fail (printf "unsupported config.prune.storageHistory.mode %q: expected \"\", \"full\", \"distance\" or \"before\"" .mode) }}
+            {{- end }}
+            {{- end }}
+            {{- with .bodies }}
+            {{- if eq .mode "pre-merge" }}
+            --prune.bodies.pre-merge \
+            {{- else if eq .mode "distance" }}
+            --prune.bodies.distance={{ int64 (required "config.prune.bodies.distance is required when mode=distance" .distance) }} \
+            {{- else if eq .mode "before" }}
+            --prune.bodies.before={{ int64 (required "config.prune.bodies.before is required when mode=before" .before) }} \
+            {{- else if .mode }}
+            {{- fail (printf "unsupported config.prune.bodies.mode %q: expected \"\", \"pre-merge\", \"distance\" or \"before\"" .mode) }}
+            {{- end }}
+            {{- end }}
+            {{- with .minimumDistance }}
+            --prune.minimum-distance={{ int64 . }} \
+            {{- end }}
             {{- end }}
             {{- with .Values.config.logFilter }}
             --log.stdout.filter={{ . }} \
