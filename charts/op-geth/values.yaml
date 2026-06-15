@@ -217,9 +217,16 @@ persistence:
 
 affinity: {}
 
+topologySpreadConstraints: []
+
 nodeSelector: {}
 
 tolerations: []
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: ""
+  maxUnavailable: ""
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
