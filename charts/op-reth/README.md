@@ -1,6 +1,6 @@
 # op-reth
 
-![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-reth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -138,6 +138,13 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | podLabels | object | `{}` | Extra pod labels |
 | podSecurityContext.fsGroup | int | `10001` |  |
 | podStatusLabels | object | `{}` | Labels marking the node as ready to serve traffic. Used as selector for the RPC service together with `.Values.podLabels` and default labels. |
+| proofsHistory | object | `{"enabled":false,"minSyncedBlock":1,"storagePath":"","storageVersion":"v2","verificationInterval":0,"window":1209600}` | Historical-proofs ExEx ("Bounded History Sidecar"): persists state/withdrawal proofs to a dedicated MDBX store and serves them via an `eth_getProof` override. A one-time, idempotent `celo-reth proofs init` initContainer anchors the store at the current chain tip (celo-reth refuses to launch with `--proofs-history` against an uninitialized store). Init is skipped while the node head is below `minSyncedBlock` (e.g. an empty datadir still doing initial sync), and the node only receives the `--proofs-history` flags once the store is initialized — so the feature is safe to leave enabled across restarts and for snapshot- or genesis-bootstrapped nodes. |
+| proofsHistory.enabled | bool | `false` | Enable the proofs-history init container and node flags. |
+| proofsHistory.minSyncedBlock | int | `1` | Minimum head block (from the headers static files) required before `proofs init` runs and the node launches with `--proofs-history`. Guards against initializing while the node is still doing its initial sync. |
+| proofsHistory.storagePath | string | `""` | Filesystem path for the MDBX proofs store. Empty defaults to `<datadir>/proofs-history`. |
+| proofsHistory.storageVersion | string | `"v2"` | On-disk store schema version. One of: "v1", "v2". v2 = history-aware reads at any block within the window. |
+| proofsHistory.verificationInterval | int | `0` | Re-verification interval in blocks. 0 omits the flag (uses celo-reth's default). |
+| proofsHistory.window | int | `1209600` | Retention window in BLOCKS. Proofs accumulate forward from the init point (no backfill); older proofs are pruned. 1209600 = reth's MAX_ETH_PROOF_WINDOW cap (~14 days at 1s blocks). |
 | readinessProbe.enabled | bool | `false` |  |
 | readinessProbe.exec.command[0] | string | `"sh"` |  |
 | readinessProbe.exec.command[1] | string | `"/scripts/readiness.sh"` |  |

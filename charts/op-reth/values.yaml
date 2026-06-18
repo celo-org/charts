@@ -451,6 +451,27 @@ snapshot:
   # -- Extra arguments appended to `celo-reth download` (can be templated).
   extraArgs: []
 
+# -- Historical-proofs ExEx ("Bounded History Sidecar"): persists state/withdrawal proofs to a
+# dedicated MDBX store and serves them via an `eth_getProof` override. A one-time, idempotent
+# `celo-reth proofs init` initContainer anchors the store at the current chain tip (celo-reth
+# refuses to launch with `--proofs-history` against an uninitialized store). Init is skipped while
+# the node head is below `minSyncedBlock` (e.g. an empty datadir still doing initial sync), and the
+# node only receives the `--proofs-history` flags once the store is initialized — so the feature is
+# safe to leave enabled across restarts and for snapshot- or genesis-bootstrapped nodes.
+proofsHistory:
+  # -- Enable the proofs-history init container and node flags.
+  enabled: false
+  # -- Filesystem path for the MDBX proofs store. Empty defaults to `<datadir>/proofs-history`.
+  storagePath: ""
+  # -- On-disk store schema version. One of: "v1", "v2". v2 = history-aware reads at any block within the window.
+  storageVersion: v2
+  # -- Retention window in BLOCKS. Proofs accumulate forward from the init point (no backfill); older proofs are pruned. 1209600 = reth's MAX_ETH_PROOF_WINDOW cap (~14 days at 1s blocks).
+  window: 1209600
+  # -- Re-verification interval in blocks. 0 omits the flag (uses celo-reth's default).
+  verificationInterval: 0
+  # -- Minimum head block (from the headers static files) required before `proofs init` runs and the node launches with `--proofs-history`. Guards against initializing while the node is still doing its initial sync.
+  minSyncedBlock: 1
+
 s3config:
   image:
     repository: peakcom/s5cmd
