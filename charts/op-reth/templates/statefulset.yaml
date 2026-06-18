@@ -200,6 +200,21 @@ spec:
           mountPath: /scripts
         - name: data
           mountPath: {{ .Values.persistence.mountPath | default .Values.config.datadir }}
+      {{- if .Values.proofsHistory.enabled }}
+      - name: init-proofs-history
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        command: ["sh", "/scripts/init-proofs-history.sh"]
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: data
+          mountPath: {{ .Values.persistence.mountPath | default .Values.config.datadir }}
+      {{- end }}
       {{- with .Values.extraInitContainers }}
         {{- tpl (toYaml . | nindent 6) $ }}
       {{- end }}
@@ -224,6 +239,12 @@ spec:
           natFlag="--nat=extip:$(cat $datadir/announce_ip)"
           {{- end }}
           [ -f $datadir/nodeKey ] && nodeKeyFlag="--p2p-secret-key=$datadir/nodeKey" || nodeKeyFlag=""
+          {{- if .Values.proofsHistory.enabled }}
+          proofsHistoryFlags=""
+          if [ -f $datadir/.proofs-initialized ]; then
+            proofsHistoryFlags="--proofs-history --proofs-history.storage-path={{ .Values.proofsHistory.storagePath | default (printf "%s/proofs-history" .Values.config.datadir) }} --proofs-history.storage-version={{ .Values.proofsHistory.storageVersion }} --proofs-history.window={{ .Values.proofsHistory.window | int64 }}{{ if gt (int64 .Values.proofsHistory.verificationInterval) 0 }} --proofs-history.verification-interval={{ .Values.proofsHistory.verificationInterval | int64 }}{{ end }}"
+          fi
+          {{- end }}
           exec celo-reth node \
             --datadir={{ .Values.config.datadir }} \
             {{- if .Values.config.chain }}
@@ -371,6 +392,9 @@ spec:
             --discovery.v5.port={{ .Values.config.port }} \
             {{- end }}
             $natFlag \
+            {{- if .Values.proofsHistory.enabled }}
+            $proofsHistoryFlags \
+            {{- end }}
             {{- with .Values.extraArgs }}
             {{- range . }}
             {{- tpl (.) $ | nindent 12 }} \

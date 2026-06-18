@@ -19,6 +19,10 @@ data:
   init-from-snapshot.sh: |-
     {{- include (print $.Template.BasePath "/scripts/_init-from-snapshot.tpl") . | nindent 4 }}
   {{- end }}
+  {{- if .Values.proofsHistory.enabled }}
+  init-proofs-history.sh: |-
+    {{- include (print $.Template.BasePath "/scripts/_init-proofs-history.tpl") . | nindent 4 }}
+  {{- end }}
   {{- if or .Values.syncToS3.enabled .Values.initFromS3.enabled }}
   init-from-s3.sh: |-
     {{- include (print $.Template.BasePath "/scripts/_init-from-s3.tpl") . | nindent 4 }}
