@@ -15,6 +15,10 @@ data:
     {{- include (print $.Template.BasePath "/scripts/_init-genesis.tpl") . | nindent 4 }}
   split-parameters.sh: |-
     {{- include (print $.Template.BasePath "/scripts/_split-parameters.tpl") . | nindent 4 }}
+  {{- if .Values.snapshot.enabled }}
+  init-from-snapshot.sh: |-
+    {{- include (print $.Template.BasePath "/scripts/_init-from-snapshot.tpl") . | nindent 4 }}
+  {{- end }}
   {{- if or .Values.syncToS3.enabled .Values.initFromS3.enabled }}
   init-from-s3.sh: |-
     {{- include (print $.Template.BasePath "/scripts/_init-from-s3.tpl") . | nindent 4 }}

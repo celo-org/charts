@@ -432,6 +432,25 @@ init:
   # -- Extra arguments for the celo-reth init-genesis container (can be templated).
   extraArgs: []
 
+# -- Bootstrap an empty datadir from a published snapshot using `celo-reth download`
+# (manifest-based, served by default from snapshots.celo.org). This is an alternative to
+# `init.genesis` / `initFromS3`; the init container runs before `init-genesis` and shares
+# the `$datadir/.initialized` marker, so it is a no-op once the node is initialized and
+# safe to leave enabled across restarts.
+snapshot:
+  # -- Enable the snapshot-download initContainer.
+  enabled: false
+  # -- Re-download even if the datadir is already initialized (bypasses the `$datadir/.initialized` guard).
+  force: false
+  # -- Component set to download. One of: "minimal", "full", "archive". Always passed so the interactive selection TUI is never triggered inside the init container. Use "archive" for archive nodes (`config.full: false`).
+  components: full
+  # -- Override the snapshot manifest URL. Empty uses celo-reth's per-chain default (`https://snapshots.celo.org/mainnet/manifest.json` for chain `celo`, `https://snapshots.celo.org/celo-sepolia/manifest.json` for `celo-sepolia`). Mutually exclusive with `url`.
+  manifestUrl: ""
+  # -- Download a single archive (`.tar.zst` / `.tar.lz4`) from this URL instead of a manifest. Mutually exclusive with `manifestUrl`.
+  url: ""
+  # -- Extra arguments appended to `celo-reth download` (can be templated).
+  extraArgs: []
+
 s3config:
   image:
     repository: peakcom/s5cmd
