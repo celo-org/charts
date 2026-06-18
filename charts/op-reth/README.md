@@ -1,6 +1,6 @@
 # op-reth
 
-![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-reth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -199,6 +199,13 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | services.rpc.type | string | `"ClusterIP"` |  |
 | services.rpc.wsPort | int | `8545` |  |
 | sidecarContainers | list | `[]` | Sidecar containers, can be templated |
+| snapshot | object | `{"components":"full","enabled":false,"extraArgs":[],"force":false,"manifestUrl":"","url":""}` | Bootstrap an empty datadir from a published snapshot using `celo-reth download` (manifest-based, served by default from snapshots.celo.org). This is an alternative to `init.genesis` / `initFromS3`; the init container runs before `init-genesis` and shares the `$datadir/.initialized` marker, so it is a no-op once the node is initialized and safe to leave enabled across restarts. |
+| snapshot.components | string | `"full"` | Component set to download. One of: "minimal", "full", "archive". Always passed so the interactive selection TUI is never triggered inside the init container. Use "archive" for archive nodes (`config.full: false`). |
+| snapshot.enabled | bool | `false` | Enable the snapshot-download initContainer. |
+| snapshot.extraArgs | list | `[]` | Extra arguments appended to `celo-reth download` (can be templated). |
+| snapshot.force | bool | `false` | Re-download even if the datadir is already initialized (bypasses the `$datadir/.initialized` guard). |
+| snapshot.manifestUrl | string | `""` | Override the snapshot manifest URL. Empty uses celo-reth's per-chain default (`https://snapshots.celo.org/mainnet/manifest.json` for chain `celo`, `https://snapshots.celo.org/celo-sepolia/manifest.json` for `celo-sepolia`). Mutually exclusive with `url`. |
+| snapshot.url | string | `""` | Download a single archive (`.tar.zst` / `.tar.lz4`) from this URL instead of a manifest. Mutually exclusive with `manifestUrl`. |
 | startupProbe.enabled | bool | `false` |  |
 | startupProbe.exec.command[0] | string | `"sh"` |  |
 | startupProbe.exec.command[1] | string | `"/scripts/wait-for-sync.sh"` |  |
