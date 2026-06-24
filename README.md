@@ -61,6 +61,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [pr-url-checker-app](./charts/pr-url-checker-app/README.md) - A Helm chart to run pr-url-checker-app at cLabs
 - [prom-aggregation-gateway](./charts/prom-aggregation-gateway/README.md) - cLabs prometheus aggregation gateway
 - [prysm](./charts/prysm/README.md) - Go implementation of Ethereum proof of stake.
+- [rogue-sequencer-watcher](./charts/rogue-sequencer-watcher/README.md) - Detects OP-Stack sequencer equivocation (misconfigured 2nd sequencer or stolen-key / external rogue sequencer)
 - [rosetta](./charts/rosetta/README.md) - Rosetta Client for Celo Networks
 - [safe-client-gateway](./charts/safe-client-gateway/README.md) - Helm chart for deploying Celo Safe Client Gateway
 - [safe-config-service](./charts/safe-config-service/README.md) - Helm chart for deploying Celo Safe Config Service

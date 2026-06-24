@@ -49,7 +49,7 @@ Detects OP-Stack sequencer equivocation (misconfigured 2nd sequencer or stolen-k
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector (prefer a pool OUTSIDE the sequencer trust domain) |
 | podAnnotations | object | `{"prometheus.io/path":"/metrics","prometheus.io/port":"9100","prometheus.io/scrape":"true"}` | Custom pod annotations (default: Prometheus scrape on the metrics port) |
-| podSecurityContext | object | `{"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}` | Custom pod security context (image is distroless/nonroot) |
+| podSecurityContext | object | `{"fsGroup":65532,"runAsGroup":65532,"runAsNonRoot":true,"runAsUser":65532,"seccompProfile":{"type":"RuntimeDefault"}}` | Custom pod security context (image is distroless/nonroot; UID/GID 65532) |
 | readinessProbe | object | `{"httpGet":{"path":"/healthz","port":"http"},"timeoutSeconds":5}` | Readiness probe configuration |
 | replicaCount | int | `1` | Number of deployment replicas |
 | resources | object | `{"limits":{"cpu":"200m","memory":"128Mi"},"requests":{"cpu":"25m","memory":"64Mi"}}` | Container resources |
