@@ -256,8 +256,11 @@ spec:
             --network-id={{ int . }} \
             {{- end }}
             --max-peers={{ .Values.config.maxpeers }} \
-            {{- with .Values.config.full }}
+            {{- $nodeMode := include "op-reth.nodeMode" . }}
+            {{- if eq $nodeMode "full" }}
             --full \
+            {{- else if eq $nodeMode "minimal" }}
+            --minimal \
             {{- end }}
             $nodeKeyFlag \
             {{- if .Values.config.disableDiscovery }}

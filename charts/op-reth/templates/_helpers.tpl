@@ -82,3 +82,36 @@ exec:
 {{- omit $root "enabled" | toYaml }}
 {{- end }}
 {{- end }}
+
+{{/*
+op-reth.nodeMode: effective node mode driving the celo-reth `--full` / `--minimal`
+prune flag. Precedence: an explicit .Values.nodeMode ("archive"|"full"|"minimal")
+wins; otherwise fall back to the deprecated .Values.config.full (true => "full"),
+defaulting to "archive" (no prune flag = full history).
+*/}}
+{{- define "op-reth.nodeMode" -}}
+{{- $mode := .Values.nodeMode | default "" -}}
+{{- if $mode -}}
+{{- if not (has $mode (list "archive" "full" "minimal")) -}}
+{{- fail (printf "nodeMode must be one of \"archive\", \"full\" or \"minimal\"; got %q" $mode) -}}
+{{- end -}}
+{{- $mode -}}
+{{- else if .Values.config.full -}}
+full
+{{- else -}}
+archive
+{{- end -}}
+{{- end -}}
+
+{{/*
+op-reth.snapshotComponents: snapshot tier passed to `celo-reth download`.
+Precedence: an explicit .Values.nodeMode wins; otherwise the deprecated
+.Values.snapshot.components.
+*/}}
+{{- define "op-reth.snapshotComponents" -}}
+{{- if .Values.nodeMode -}}
+{{- include "op-reth.nodeMode" . -}}
+{{- else -}}
+{{- .Values.snapshot.components -}}
+{{- end -}}
+{{- end -}}

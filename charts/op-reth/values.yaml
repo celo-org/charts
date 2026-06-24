@@ -310,6 +310,15 @@ secrets:
     # -- Key inside `secretName` that holds the node key.
     secretKey: ""
 
+# -- Unified node mode driving BOTH the celo-reth node prune flag AND the snapshot
+# download tier. One of "archive", "full" or "minimal":
+# archive => no prune flag (full history) / download `--archive`;
+# full => `--full` / download `--full`;
+# minimal => `--minimal` / download `--minimal`.
+# Empty ("") falls back to the deprecated `config.full` (node) and `snapshot.components`
+# (download); when set, nodeMode supersedes both. Do not combine with `config.prune.*`.
+nodeMode: ""
+
 config:
   # -- Built-in chain name (e.g. celo, optimism, base) OR a path to a chain spec file. If empty, falls back to `$datadir/genesis.json`.
   chain: celo
@@ -333,7 +342,7 @@ config:
     port: 8551
   # -- Maximum total peers (inbound + outbound).
   maxpeers: 50
-  # -- Run as full node (true) or archive node (false / "").
+  # -- DEPRECATED: prefer the top-level `nodeMode`. Run as full node (true) or archive node (false / ""). Ignored when `nodeMode` is set.
   full: true
   # -- Disable the peer discovery service entirely.
   disableDiscovery: false
@@ -442,7 +451,7 @@ snapshot:
   enabled: false
   # -- Re-download even if the datadir is already initialized (bypasses the `$datadir/.initialized` guard).
   force: false
-  # -- Component set to download. One of: "minimal", "full", "archive". Always passed so the interactive selection TUI is never triggered inside the init container. Use "archive" for archive nodes (`config.full: false`).
+  # -- DEPRECATED: prefer the top-level `nodeMode`. Component set to download. One of: "minimal", "full", "archive". Used only when `nodeMode` is empty. Always passed so the interactive selection TUI is never triggered inside the init container.
   components: full
   # -- Override the snapshot manifest URL. Empty uses celo-reth's per-chain default (`https://snapshots.celo.org/mainnet/manifest.json` for chain `celo`, `https://snapshots.celo.org/celo-sepolia/manifest.json` for `celo-sepolia`). Mutually exclusive with `url`.
   manifestUrl: ""

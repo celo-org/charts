@@ -1,6 +1,6 @@
 # op-reth
 
-![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.6](https://img.shields.io/badge/Version-0.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-reth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -31,7 +31,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.chain | string | `"celo"` | Built-in chain name (e.g. celo, optimism, base) OR a path to a chain spec file. If empty, falls back to `$datadir/genesis.json`. |
 | config.datadir | string | `"/celo"` | Data directory inside the container. |
 | config.disableDiscovery | bool | `false` | Disable the peer discovery service entirely. |
-| config.full | bool | `true` | Run as full node (true) or archive node (false / ""). |
+| config.full | bool | `true` | DEPRECATED: prefer the top-level `nodeMode`. Run as full node (true) or archive node (false / ""). Ignored when `nodeMode` is set. |
 | config.http.api[0] | string | `"eth"` |  |
 | config.http.api[1] | string | `"net"` |  |
 | config.http.api[2] | string | `"web3"` |  |
@@ -122,6 +122,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | livenessProbe.successThreshold | int | `1` |  |
 | livenessProbe.timeoutSeconds | int | `10` |  |
 | nameOverride | string | `""` |  |
+| nodeMode | string | `""` | Unified node mode driving BOTH the celo-reth node prune flag AND the snapshot download tier. One of "archive", "full" or "minimal": archive => no prune flag (full history) / download `--archive`; full => `--full` / download `--full`; minimal => `--minimal` / download `--minimal`. Empty ("") falls back to the deprecated `config.full` (node) and `snapshot.components` (download); when set, nodeMode supersedes both. Do not combine with `config.prune.*`. |
 | nodeSelector | object | `{}` |  |
 | persistence.hostPath.path | string | `"/blockchain/optimism"` | Host volume mount point. Assumes /blockchain is your host volume mount point. |
 | persistence.hostPath.type | string | `"DirectoryOrCreate"` | Automatically create the directory if it does not exist. |
@@ -207,7 +208,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | services.rpc.wsPort | int | `8545` |  |
 | sidecarContainers | list | `[]` | Sidecar containers, can be templated |
 | snapshot | object | `{"components":"full","enabled":false,"extraArgs":[],"force":false,"manifestUrl":"","url":""}` | Bootstrap an empty datadir from a published snapshot using `celo-reth download` (manifest-based, served by default from snapshots.celo.org). This is an alternative to `init.genesis` / `initFromS3`; the init container runs before `init-genesis` and shares the `$datadir/.initialized` marker, so it is a no-op once the node is initialized and safe to leave enabled across restarts. |
-| snapshot.components | string | `"full"` | Component set to download. One of: "minimal", "full", "archive". Always passed so the interactive selection TUI is never triggered inside the init container. Use "archive" for archive nodes (`config.full: false`). |
+| snapshot.components | string | `"full"` | DEPRECATED: prefer the top-level `nodeMode`. Component set to download. One of: "minimal", "full", "archive". Used only when `nodeMode` is empty. Always passed so the interactive selection TUI is never triggered inside the init container. |
 | snapshot.enabled | bool | `false` | Enable the snapshot-download initContainer. |
 | snapshot.extraArgs | list | `[]` | Extra arguments appended to `celo-reth download` (can be templated). |
 | snapshot.force | bool | `false` | Re-download even if the datadir is already initialized (bypasses the `$datadir/.initialized` guard). |
