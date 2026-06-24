@@ -1,0 +1,112 @@
+# Default values for rogue-sequencer-watcher.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+# -- Number of deployment replicas
+replicaCount: 1
+
+image:
+  # -- Image repository
+  repository: us-west1-docker.pkg.dev/devopsre/rogue-sequencer-watcher/rogue-sequencer-watcher
+  # -- Image pullpolicy
+  pullPolicy: IfNotPresent
+  # -- Image tag. Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+config:
+  # -- REQUIRED. Comma-separated L2 RPC endpoints as `name=url`. Include at least
+  # one INDEPENDENT / off-infra endpoint so detection survives a compromise of our
+  # own infra. Example: "forno=http://op-geth-forno-rpc:8545,independent=https://<off-infra>"
+  endpoints: ""
+  # -- Poll cadence.
+  pollInterval: "2s"
+  # -- Blocks fetched below the head each poll.
+  lookback: "20"
+  # -- Polls a conflicting hash must survive before it counts (filters transient reorgs).
+  persistPolls: "5"
+  # -- Heights retained in memory below the max head.
+  keepHeights: "2000"
+  # -- Metrics listen address.
+  metricsAddr: ":9100"
+  # -- Per-RPC timeout.
+  rpcTimeout: "5s"
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Custom pod annotations (default: Prometheus scrape on the metrics port)
+podAnnotations:
+  prometheus.io/path: /metrics
+  prometheus.io/port: "9100"
+  prometheus.io/scrape: "true"
+
+# -- Custom pod security context (image is distroless/nonroot; UID/GID 65532)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+  seccompProfile:
+    type: RuntimeDefault
+
+# -- Custom container security context
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# -- Liveness probe configuration
+livenessProbe:
+  timeoutSeconds: 5
+  httpGet:
+    path: /healthz
+    port: http
+
+# -- Readiness probe configuration
+readinessProbe:
+  timeoutSeconds: 5
+  httpGet:
+    path: /healthz
+    port: http
+
+# -- Startup probe configuration
+startupProbe:
+  timeoutSeconds: 5
+  failureThreshold: 30
+  periodSeconds: 5
+  httpGet:
+    path: /healthz
+    port: http
+
+# -- Container resources
+resources:
+  requests:
+    cpu: 25m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+# -- Kubernetes node selector (prefer a pool OUTSIDE the sequencer trust domain)
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes pod affinity
+affinity: {}
