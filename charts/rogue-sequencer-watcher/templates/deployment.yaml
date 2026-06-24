@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rogue-sequencer-watcher.fullname" . }}
+  labels:
+    {{- include "rogue-sequencer-watcher.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "rogue-sequencer-watcher.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "rogue-sequencer-watcher.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "rogue-sequencer-watcher.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 9100
+              protocol: TCP
+          env:
+            - name: WATCHER_ENDPOINTS
+              value: {{ required "config.endpoints is required (name=url,name=url,...; include >=1 off-infra endpoint)" .Values.config.endpoints | quote }}
+            - name: WATCHER_POLL_INTERVAL
+              value: {{ .Values.config.pollInterval | quote }}
+            - name: WATCHER_LOOKBACK
+              value: {{ .Values.config.lookback | quote }}
+            - name: WATCHER_PERSIST_POLLS
+              value: {{ .Values.config.persistPolls | quote }}
+            - name: WATCHER_KEEP_HEIGHTS
+              value: {{ .Values.config.keepHeights | quote }}
+            - name: WATCHER_METRICS_ADDR
+              value: {{ .Values.config.metricsAddr | quote }}
+            - name: WATCHER_RPC_TIMEOUT
+              value: {{ .Values.config.rpcTimeout | quote }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /healthz
+              port: http
+            {{- end }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /healthz
+              port: http
+            {{- end }}
+          {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+            {{- if not .httpGet }}
+            httpGet:
+              path: /healthz
+              port: http
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

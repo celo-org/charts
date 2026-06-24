@@ -1,0 +1,33 @@
+# Test values for rogue-sequencer-watcher (CI lint/template).
+replicaCount: 1
+
+image:
+  repository: us-west1-docker.pkg.dev/devopsre/rogue-sequencer-watcher/rogue-sequencer-watcher
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+config:
+  # config.endpoints is REQUIRED — set so `helm template`/lint renders.
+  endpoints: "forno=http://op-geth-forno-rpc:8545,independent=https://example-offinfra-rpc"
+  pollInterval: "2s"
+  persistPolls: "5"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations:
+  prometheus.io/path: /metrics
+  prometheus.io/port: "9100"
+  prometheus.io/scrape: "true"
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
