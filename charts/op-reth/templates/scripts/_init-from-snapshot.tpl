@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 set -e
-{{- if not (has .Values.snapshot.components (list "minimal" "full" "archive")) }}
-{{- fail (printf "snapshot.components must be one of \"minimal\", \"full\" or \"archive\"; got %q" .Values.snapshot.components) }}
+{{- $components := include "op-reth.snapshotComponents" . }}
+{{- if not (has $components (list "minimal" "full" "archive")) }}
+{{- fail (printf "snapshot download component (nodeMode or snapshot.components) must be one of \"minimal\", \"full\" or \"archive\"; got %q" $components) }}
 {{- end }}
 {{- if and .Values.snapshot.manifestUrl .Values.snapshot.url }}
 {{- fail "snapshot.manifestUrl and snapshot.url are mutually exclusive" }}
@@ -16,7 +17,7 @@ if [ -f "$datadir/.initialized" ]; then
 fi
 {{- end }}
 
-echo "Bootstrapping datadir from snapshot via 'celo-reth download --{{ .Values.snapshot.components }}'..."
+echo "Bootstrapping datadir from snapshot via 'celo-reth download --{{ $components }} --resumable'..."
 celo-reth download \
   --datadir={{ .Values.config.datadir }} \
 {{- if .Values.config.chain }}
@@ -28,13 +29,13 @@ celo-reth download \
 {{- with .Values.snapshot.url }}
   --url={{ . }} \
 {{- end }}
-  --force \
+  --resumable \
 {{- with .Values.snapshot.extraArgs }}
 {{- range . }}
   {{ tpl . $ }} \
 {{- end }}
 {{- end }}
-  --{{ .Values.snapshot.components }}
+  --{{ $components }}
 
 touch "$datadir/.initialized"
 echo "Snapshot download complete; datadir marked initialized."
