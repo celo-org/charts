@@ -71,7 +71,7 @@ geth:
   # -- Image for the celo-blockchain statefulset
   image:
     repository: us.gcr.io/celo-org/geth
-    tag: 1.8.8
+    tag: 1.8.9
     imagePullPolicy: IfNotPresent
   # -- Resources for `geth` container
   resources:
