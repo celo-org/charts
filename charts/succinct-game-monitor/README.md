@@ -1,6 +1,6 @@
 # succinct-game-monitor
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
 
 A Helm chart for the succinct game monitor
 
@@ -21,7 +21,7 @@ A Helm chart for the succinct game monitor
 | affinity | object | `{}` | Kubernetes pod affinity |
 | command | list | `["game-monitor"]` | Command to run in the container (overrides image ENTRYPOINT) |
 | config.env | object | `{"OP_SUCCINCT_MOCK":true,"RUST_LOG":"info","SP1_PROVER":"mock"}` | Environment variables to pass to the container These will be created as a ConfigMap and mounted as env vars |
-| config.secretEnv | string | `nil` | Secret environment variables to pass to the container These should be provided via a separate Secret resource |
+| config.secretEnv | string | `nil` | Secret environment variables to pass to the container These are rendered into a Secret resource created by THIS chart from the inline values below (so the values live in the release, e.g. git). Use for non-sensitive-in-git cases only. |
 | enableServiceLinks | bool | `false` | Kubernetes enableServiceLinks |
 | extraArgs | list | `["--logs-dir=/logs"]` | Extra arguments to pass to the binary      --env-file <ENV_FILE>          The environment file to use. This file should contain the following environment variables: [default: .env]      --poll-interval <POLL_INTERVAL>          The polling interval in seconds [default: 30]      --max-concurrent <MAX_CONCURRENT>          Maximum number of concurrent cost estimator processes [default: 5]      --cost-estimator-binary-path <COST_ESTIMATOR_BINARY_PATH>          The path to the cost estimator binary [default: cost-estimator]      --logs-dir <LOGS_DIR>          The directory under which to store the logs [default: logs]      --start-index <START_INDEX> |
 | fullnameOverride | string | `""` | Chart full name override |
@@ -44,6 +44,7 @@ A Helm chart for the succinct game monitor
 | readinessProbe | object | `{}` | Readiness probe configuration |
 | replicas | int | `1` | Number of replicas |
 | resources | object | `{}` | Container resources |
+| secretEnv | object | `{}` | External secret environment variables, injected from EXISTING Secret resources via secretKeyRef (NOT created by this chart). These are rendered before config.env, so config.env values may reference them with $(VAR) k8s dependent-env expansion. Example:   secretEnv:     HETZNER_FSN_API_KEY:       secretName: mainnet-cel2-secrets       secretKey: hetznerFsnApiKey |
 | securityContext | object | `{}` | Custom container security context |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |

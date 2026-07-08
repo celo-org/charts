@@ -50,7 +50,9 @@ config:
     # DISPUTE_GAME_FACTORY_ADDRESS:
 
   # -- Secret environment variables to pass to the container
-  # These should be provided via a separate Secret resource
+  # These are rendered into a Secret resource created by THIS chart from the
+  # inline values below (so the values live in the release, e.g. git). Use for
+  # non-sensitive-in-git cases only.
   secretEnv:
     # The below secret env vars are required.
     # L1_RPC:
@@ -58,6 +60,17 @@ config:
     # L2_RPC:
     # L2_NODE_RPC:
     # EIGENDA_PROXY_ADDRESS:
+
+# -- External secret environment variables, injected from EXISTING Secret
+# resources via secretKeyRef (NOT created by this chart). These are rendered
+# before config.env, so config.env values may reference them with $(VAR) k8s
+# dependent-env expansion.
+# Example:
+#   secretEnv:
+#     HETZNER_FSN_API_KEY:
+#       secretName: mainnet-cel2-secrets
+#       secretKey: hetznerFsnApiKey
+secretEnv: {}
 
 persistence:
   enabled: true
