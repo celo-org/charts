@@ -41,8 +41,18 @@ spec:
           args:
             {{- toYaml .Values.extraArgs | nindent 12 }}
           {{- end }}
-          {{- if or (and .Values.config.env (not (empty .Values.config.env))) (and .Values.config.secretEnv (not (empty .Values.config.secretEnv))) }}
+          {{- if or (and .Values.secretEnv (not (empty .Values.secretEnv))) (and .Values.config.env (not (empty .Values.config.env))) (and .Values.config.secretEnv (not (empty .Values.config.secretEnv))) }}
           env:
+            {{- /* External secret refs are rendered first so that config.env values may
+                   reference them via $(VAR) k8s dependent-env expansion (a var can only
+                   reference other vars defined earlier in the same env list). */}}
+            {{- range $key, $value := .Values.secretEnv }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $value.secretName }}
+                  key: {{ $value.secretKey }}
+            {{- end }}
             {{- range $key, $value := .Values.config.env }}
             - name: {{ $key }}
               value: {{ $value | quote }}
