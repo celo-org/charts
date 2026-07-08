@@ -1,6 +1,6 @@
 # op-reth
 
-![Version: 0.0.6](https://img.shields.io/badge/Version-0.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.7](https://img.shields.io/badge/Version-0.0.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-reth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -85,8 +85,8 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | extraVolumes | list | `[]` | Extra volumes, can be templated |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/dev-images/celo-kona-reth"` |  |
-| image.tag | string | `"pr-144"` |  |
+| image.repository | string | `"us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-reth"` |  |
+| image.tag | string | `"celo-v1.0.0@sha256:b0fdd2dcd0623faa5f1015eb6432b035397ba14ca84e64a76afc77b5f6909543"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.http.annotations | object | `{}` |  |
 | ingress.http.className | string | `""` |  |
@@ -139,9 +139,10 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | podLabels | object | `{}` | Extra pod labels |
 | podSecurityContext.fsGroup | int | `10001` |  |
 | podStatusLabels | object | `{}` | Labels marking the node as ready to serve traffic. Used as selector for the RPC service together with `.Values.podLabels` and default labels. |
-| proofsHistory | object | `{"enabled":false,"minSyncedBlock":1,"storagePath":"","storageVersion":"v2","verificationInterval":0,"window":1209600}` | Historical-proofs ExEx ("Bounded History Sidecar"): persists state/withdrawal proofs to a dedicated MDBX store and serves them via an `eth_getProof` override. A one-time, idempotent `celo-reth proofs init` initContainer anchors the store at the current chain tip (celo-reth refuses to launch with `--proofs-history` against an uninitialized store). Init is skipped while the node head is below `minSyncedBlock` (e.g. an empty datadir still doing initial sync), and the node only receives the `--proofs-history` flags once the store is initialized — so the feature is safe to leave enabled across restarts and for snapshot- or genesis-bootstrapped nodes. |
+| proofsHistory | object | `{"enabled":false,"init":{"initAtCurrentHead":false},"minSyncedBlock":1,"storagePath":"","storageVersion":"v2","verificationInterval":0,"window":1209600}` | Historical-proofs ExEx ("Bounded History Sidecar"): persists state/withdrawal proofs to a dedicated MDBX store and serves them via an `eth_getProof` override. A one-time, idempotent `celo-reth proofs init` initContainer anchors the store at the node's current canonical head (celo-reth refuses to launch with `--proofs-history` against an uninitialized store). The store only fills FORWARD from the anchor (no backfill), so the anchor MUST NOT sit behind the live network tip on a pruned node: archive nodes can backfill a gap, but full/minimal nodes cannot and the proof window then freezes forever. Archive nodes therefore initialize immediately; pruned nodes are NOT auto-initialized — they run without `--proofs-history` until `init.initAtCurrentHead` is set (see below). The node only receives the `--proofs-history` flags once the store is initialized, so the feature is safe to leave enabled across restarts. |
 | proofsHistory.enabled | bool | `false` | Enable the proofs-history init container and node flags. |
-| proofsHistory.minSyncedBlock | int | `1` | Minimum head block (from the headers static files) required before `proofs init` runs and the node launches with `--proofs-history`. Guards against initializing while the node is still doing its initial sync. |
+| proofsHistory.init.initAtCurrentHead | bool | `false` | Allow a full/minimal (pruned) node to run `proofs init` at its current canonical head. A pruned node cannot backfill a gap between the proof anchor and the live tip, so its store must be anchored AT the live tip; because the init container cannot detect live-tip sync on its own, pruned nodes are NOT auto-initialized. Run the node until it is fully synced to the tip, then set this `true` and restart to anchor at the current head. Ignored by archive nodes (they initialize immediately and can backfill). To re-anchor an already-wedged store, delete the proofs store dir and `<datadir>/.proofs-initialized` first, then restart. |
+| proofsHistory.minSyncedBlock | int | `1` | Minimum head block (from the headers static files) required before `proofs init` runs and the node launches with `--proofs-history`. Guards against initializing while the node is still doing its initial sync. Coarse (static-file granularity), so it does not by itself protect a pruned node from anchoring behind the live tip — see `init.initAtCurrentHead`. |
 | proofsHistory.storagePath | string | `""` | Filesystem path for the MDBX proofs store. Empty defaults to `<datadir>/proofs-history`. |
 | proofsHistory.storageVersion | string | `"v2"` | On-disk store schema version. One of: "v1", "v2". v2 = history-aware reads at any block within the window. |
 | proofsHistory.verificationInterval | int | `0` | Re-verification interval in blocks. 0 omits the flag (uses celo-reth's default). |

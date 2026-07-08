@@ -1,7 +1,7 @@
 ---
 image:
-  repository: us-west1-docker.pkg.dev/devopsre/dev-images/celo-kona-reth
-  tag: pr-144
+  repository: us-west1-docker.pkg.dev/devopsre/celo-blockchain-public/op-reth
+  tag: celo-v1.0.0@sha256:b0fdd2dcd0623faa5f1015eb6432b035397ba14ca84e64a76afc77b5f6909543
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -462,11 +462,14 @@ snapshot:
 
 # -- Historical-proofs ExEx ("Bounded History Sidecar"): persists state/withdrawal proofs to a
 # dedicated MDBX store and serves them via an `eth_getProof` override. A one-time, idempotent
-# `celo-reth proofs init` initContainer anchors the store at the current chain tip (celo-reth
-# refuses to launch with `--proofs-history` against an uninitialized store). Init is skipped while
-# the node head is below `minSyncedBlock` (e.g. an empty datadir still doing initial sync), and the
-# node only receives the `--proofs-history` flags once the store is initialized — so the feature is
-# safe to leave enabled across restarts and for snapshot- or genesis-bootstrapped nodes.
+# `celo-reth proofs init` initContainer anchors the store at the node's current canonical head
+# (celo-reth refuses to launch with `--proofs-history` against an uninitialized store). The store
+# only fills FORWARD from the anchor (no backfill), so the anchor MUST NOT sit behind the live
+# network tip on a pruned node: archive nodes can backfill a gap, but full/minimal nodes cannot and
+# the proof window then freezes forever. Archive nodes therefore initialize immediately; pruned
+# nodes are NOT auto-initialized — they run without `--proofs-history` until `init.initAtCurrentHead`
+# is set (see below). The node only receives the `--proofs-history` flags once the store is
+# initialized, so the feature is safe to leave enabled across restarts.
 proofsHistory:
   # -- Enable the proofs-history init container and node flags.
   enabled: false
@@ -478,8 +481,11 @@ proofsHistory:
   window: 1209600
   # -- Re-verification interval in blocks. 0 omits the flag (uses celo-reth's default).
   verificationInterval: 0
-  # -- Minimum head block (from the headers static files) required before `proofs init` runs and the node launches with `--proofs-history`. Guards against initializing while the node is still doing its initial sync.
+  # -- Minimum head block (from the headers static files) required before `proofs init` runs and the node launches with `--proofs-history`. Guards against initializing while the node is still doing its initial sync. Coarse (static-file granularity), so it does not by itself protect a pruned node from anchoring behind the live tip — see `init.initAtCurrentHead`.
   minSyncedBlock: 1
+  init:
+    # -- Allow a full/minimal (pruned) node to run `proofs init` at its current canonical head. A pruned node cannot backfill a gap between the proof anchor and the live tip, so its store must be anchored AT the live tip; because the init container cannot detect live-tip sync on its own, pruned nodes are NOT auto-initialized. Run the node until it is fully synced to the tip, then set this `true` and restart to anchor at the current head. Ignored by archive nodes (they initialize immediately and can backfill). To re-anchor an already-wedged store, delete the proofs store dir and `<datadir>/.proofs-initialized` first, then restart.
+    initAtCurrentHead: false
 
 s3config:
   image:
