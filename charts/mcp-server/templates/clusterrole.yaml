@@ -46,11 +46,14 @@ rules:
       - "events.k8s.io"
       - "flowcontrol.apiserver.k8s.io"
       - "gateway.networking.k8s.io"
+      - "internal.apiserver.k8s.io"
       - "networking.k8s.io"
       - "node.k8s.io"
       - "policy"
       - "rbac.authorization.k8s.io"
+      - "resource.k8s.io"
       - "scheduling.k8s.io"
       - "storage.k8s.io"
+      - "storagemigration.k8s.io"
     resources: ["*"]
     verbs: ["get", "list", "watch"]
