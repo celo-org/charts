@@ -5,24 +5,55 @@ metadata:
   labels:
     {{- include "mcp-server.labels" . | nindent 4 }}
 rules:
+  # Core API group (""): read every core resource EXCEPT secrets.
+  # RBAC has no deny rule, so secrets are excluded by simply not granting
+  # them here. A wildcard over resources would re-include secrets, so the
+  # core resources are enumerated explicitly.
   - apiGroups: [""]
     resources:
-      - pods
-      - services
+      - bindings
+      - componentstatuses
       - configmaps
       - endpoints
-      - persistentvolumeclaims
-      - persistentvolumes
-      - replicationcontrollers
+      - events
+      - limitranges
       - namespaces
       - nodes
-      - events
-      - resourcequotas
-      - limitranges
-      - bindings
+      - persistentvolumeclaims
+      - persistentvolumes
+      - pods
+      - pods/log
       - podtemplates
+      - replicationcontrollers
+      - resourcequotas
       - serviceaccounts
+      - services
     verbs: ["get", "list", "watch"]
-  - apiGroups: ["apps"]
+  # Non-core API groups: wildcard read. Secrets live only in the core group,
+  # so wildcarding resources here cannot expose them. Covers CRDs
+  # (apiextensions.k8s.io) and the Gateway API used for routing. Add any
+  # custom CRD API group needed for read access to this list.
+  - apiGroups:
+      - "admissionregistration.k8s.io"
+      - "apiextensions.k8s.io"
+      - "apiregistration.k8s.io"
+      - "apps"
+      - "autoscaling"
+      - "batch"
+      - "certificates.k8s.io"
+      - "coordination.k8s.io"
+      - "discovery.k8s.io"
+      - "events.k8s.io"
+      - "flowcontrol.apiserver.k8s.io"
+      - "gateway.networking.k8s.io"
+      - "internal.apiserver.k8s.io"
+      - "networking.k8s.io"
+      - "node.k8s.io"
+      - "policy"
+      - "rbac.authorization.k8s.io"
+      - "resource.k8s.io"
+      - "scheduling.k8s.io"
+      - "storage.k8s.io"
+      - "storagemigration.k8s.io"
     resources: ["*"]
     verbs: ["get", "list", "watch"]
