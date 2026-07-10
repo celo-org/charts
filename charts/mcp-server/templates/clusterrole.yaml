@@ -30,30 +30,65 @@ rules:
       - services
     verbs: ["get", "list", "watch"]
   # Non-core API groups: wildcard read. Secrets live only in the core group,
-  # so wildcarding resources here cannot expose them. Covers CRDs
-  # (apiextensions.k8s.io) and the Gateway API used for routing. Add any
-  # custom CRD API group needed for read access to this list.
+  # so wildcarding resources here cannot expose them. Covers the standard
+  # built-in groups plus every custom CRD API group observed across the
+  # target clusters: GKE platform, cert-manager, external-secrets, Envoy
+  # and Gateway API, monitoring (Prometheus operator, Grafana, Google
+  # Managed Prometheus), Trivy, Kong and others.
+  # Listing a group that is absent on a given cluster is a harmless no-op;
+  # add new CRD API groups here as they appear.
   - apiGroups:
+      - "acme.cert-manager.io"
       - "admissionregistration.k8s.io"
       - "apiextensions.k8s.io"
       - "apiregistration.k8s.io"
       - "apps"
+      - "aquasecurity.github.io"
+      - "auto.gke.io"
       - "autoscaling"
+      - "autoscaling.gke.io"
+      - "autoscaling.k8s.io"
+      - "autoscaling.x-k8s.io"
       - "batch"
+      - "cert-manager.io"
       - "certificates.k8s.io"
+      - "cloud.google.com"
+      - "configuration.konghq.com"
       - "coordination.k8s.io"
+      - "datalayer.gke.io"
       - "discovery.k8s.io"
       - "events.k8s.io"
+      - "external-secrets.io"
       - "flowcontrol.apiserver.k8s.io"
+      - "gateway.envoyproxy.io"
       - "gateway.networking.k8s.io"
+      - "gateway.networking.x-k8s.io"
+      - "generators.external-secrets.io"
+      - "hub.gke.io"
+      - "inference.networking.k8s.io"
       - "internal.apiserver.k8s.io"
+      - "internal.autoscaling.gke.io"
+      - "internal.autoscaling.k8s.io"
+      - "migration.k8s.io"
+      - "monitoring.coreos.com"
+      - "monitoring.gke.io"
+      - "monitoring.googleapis.com"
+      - "monitoring.grafana.com"
+      - "networking.gke.io"
       - "networking.k8s.io"
+      - "node.gke.io"
       - "node.k8s.io"
+      - "nodemanagement.gke.io"
       - "policy"
+      - "policy.sigstore.dev"
       - "rbac.authorization.k8s.io"
       - "resource.k8s.io"
+      - "scalingpolicy.kope.io"
       - "scheduling.k8s.io"
+      - "security.cloud.google.com"
+      - "snapshot.storage.k8s.io"
       - "storage.k8s.io"
       - "storagemigration.k8s.io"
+      - "warden.gke.io"
     resources: ["*"]
     verbs: ["get", "list", "watch"]

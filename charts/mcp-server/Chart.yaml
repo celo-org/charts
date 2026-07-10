@@ -2,7 +2,7 @@ apiVersion: v2
 name: mcp-server
 description: A Helm chart for MCP Server flux159/mcp-server-kubernetes
 type: application
-version: 0.2.0
+version: 0.3.0
 appVersion: "v2.9.7"
 home: https://clabs.co
 sources:
