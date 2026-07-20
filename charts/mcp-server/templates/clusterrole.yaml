@@ -34,7 +34,8 @@ rules:
   # built-in groups plus every custom CRD API group observed across the
   # target clusters: GKE platform, cert-manager, external-secrets, Envoy
   # and Gateway API, monitoring (Prometheus operator, Grafana, Google
-  # Managed Prometheus), Trivy, Kong and others.
+  # Managed Prometheus), the metrics-server aggregated API backing
+  # `kubectl top` (metrics.k8s.io), Trivy, Kong and others.
   # Listing a group that is absent on a given cluster is a harmless no-op;
   # add new CRD API groups here as they appear.
   - apiGroups:
@@ -68,6 +69,7 @@ rules:
       - "internal.apiserver.k8s.io"
       - "internal.autoscaling.gke.io"
       - "internal.autoscaling.k8s.io"
+      - "metrics.k8s.io"
       - "migration.k8s.io"
       - "monitoring.coreos.com"
       - "monitoring.gke.io"
