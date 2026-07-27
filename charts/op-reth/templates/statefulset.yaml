@@ -281,6 +281,33 @@ spec:
             {{- with .disabletxpoolgossip }}
             --rollup.disable-tx-pool-gossip \
             {{- end }}
+            {{- with .historicalRpc }}
+            --rollup.historicalrpc={{ . }} \
+            {{- end }}
+            {{- end }}
+            {{- if .Values.config.txpool.nolocals }}
+            --txpool.nolocals \
+            {{- end }}
+            {{- if ne (toString .Values.config.rpc.txFeeCap) "" }}
+            --rpc.txfeecap={{ .Values.config.rpc.txFeeCap }} \
+            {{- end }}
+            {{- if ne (toString .Values.config.rpc.maxBlocksPerFilter) "" }}
+            --rpc.max-blocks-per-filter={{ int64 .Values.config.rpc.maxBlocksPerFilter }} \
+            {{- end }}
+            {{- if ne (toString .Values.config.minSuggestedPriorityFee) "" }}
+            --min-suggested-priority-fee={{ int64 .Values.config.minSuggestedPriorityFee }} \
+            {{- end }}
+            {{- if .Values.config.storage.v2 }}
+            --storage.v2=true \
+            {{- end }}
+            {{- if ne (toString .Values.config.engine.memoryBlockBufferTarget) "" }}
+            --engine.memory-block-buffer-target={{ int64 .Values.config.engine.memoryBlockBufferTarget }} \
+            {{- end }}
+            {{- with .Values.config.builder.interval }}
+            --builder.interval={{ . }} \
+            {{- end }}
+            {{- if gt (int .Values.config.verbosity) 0 }}
+            -{{ repeat (int .Values.config.verbosity) "v" }} \
             {{- end }}
             {{- if .Values.config.ws.enabled }}
             --ws \
