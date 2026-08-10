@@ -1,0 +1,13 @@
+---
+apiVersion: v2
+name: celox
+description: Transaction load generator for Celo chains, with CIP-64 fee-currency, calldata and contract-storage workloads.
+type: application
+version: 0.1.0
+appVersion: "570fb7ee5fe1a43b35b3ecffb92a798187e8af53"
+sources:
+  - https://github.com/palango/celox
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co

@@ -1,0 +1,34 @@
+{{- if eq .Values.kind "Job" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "celox.fullname" . }}
+  labels:
+    {{- include "celox.labels" . | nindent 4 }}
+spec:
+  backoffLimit: {{ .Values.job.backoffLimit }}
+  {{- with .Values.job.ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ . }}
+  {{- end }}
+  # One pod per run: see the replicas comment in deployment.yaml for why celox
+  # cannot be fanned out across a shared root key.
+  parallelism: 1
+  completions: 1
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "celox.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      # Never, not OnFailure: celox's exit code is the result of the load test,
+      # so a failed run must stay failed and visible rather than be retried in
+      # place against a chain whose state has already moved on.
+      restartPolicy: Never
+      {{- include "celox.podSpec" . | nindent 6 }}
+{{- end }}

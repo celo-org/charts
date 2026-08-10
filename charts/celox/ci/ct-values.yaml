@@ -1,0 +1,14 @@
+---
+# Values used by the "Templating charts" CI step, which renders the chart and
+# validates it against the Kubernetes API. Keeps `kind: Deployment` so the
+# default path stays covered, and adds the secret wiring so that branch renders
+# too. celox itself is excluded from `ct install`: it needs a funded key and a
+# live chain, so it cannot come up in a kind cluster.
+secretEnv:
+  CELOX_PRIVATE_KEY:
+    secretName: celox
+    secretKey: privateKey
+resources:
+  requests:
+    cpu: 200m
+    memory: 128Mi
