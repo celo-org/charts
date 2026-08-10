@@ -1,0 +1,32 @@
+{{- if eq .Values.kind "Deployment" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "celox.fullname" . }}
+  labels:
+    {{- include "celox.labels" . | nindent 4 }}
+spec:
+  # Deliberately not configurable. celox derives its sender keys as
+  # keccak256(root_key || "celox" || index) over 0..senders, with no per-replica
+  # offset, so a second replica sharing the same root key would drive the very
+  # same accounts and the two would fight over nonces. Scale load with
+  # config.tps and config.senders instead.
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "celox.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "celox.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      restartPolicy: Always
+      {{- include "celox.podSpec" . | nindent 6 }}
+{{- end }}

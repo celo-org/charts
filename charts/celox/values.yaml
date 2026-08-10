@@ -1,0 +1,131 @@
+# Default values for celox.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+# -- Workload primitive. `Deployment` soaks until scaled down; `Job` runs once
+# and its exit code is the verdict (celox exits 0 only if every transaction it
+# sent was confirmed with status 1), which makes it usable as a CI gate.
+# A `Job` needs `config.duration` set, or it never terminates.
+kind: Deployment
+
+config:
+  # -- JSON-RPC endpoint of the target chain
+  rpcUrl: http://op-reth-sequencer-shared-rpc:8545
+  # -- Workload to generate. One of `transfer`, `calldata`, `cip64`, `storage`.
+  workload: transfer
+  # -- Target transactions per second across all senders
+  tps: 10
+  # -- Number of sender accounts, derived deterministically from the root key
+  senders: 10
+  # -- Maximum transactions in flight per sender. Nodes cap pending
+  # transactions per account (16 in reth), so a deeper window only earns
+  # rejections.
+  window: 10
+  # -- How long to send for, e.g. `30m`. Empty means run until stopped, which
+  # is only valid for `kind: Deployment`.
+  duration: ""
+  # -- Native balance each sender is topped up to at startup, in CELO
+  fund: "0.1"
+  # -- Fee-currency balance each sender is topped up to, in whole tokens.
+  # Only used by the `cip64` workload.
+  fundToken: "1"
+  # -- Fee currency address. Required by the `cip64` workload, ignored
+  # otherwise. Validated against the chain's FeeCurrencyDirectory; adapter
+  # currencies (USDC, USDT) are rejected because celox cannot move them to
+  # fund senders.
+  feeCurrency: ""
+  # -- Calldata payload size in bytes. Only used by the `calldata` workload.
+  dataSize: 1024
+  # -- Storage slots each transaction writes. Only used by the `storage` workload.
+  writes: 5
+  # -- Slot range the `storage` workload writes into. A wide range grows the
+  # state trie; a narrow one contends on hot slots.
+  keySpace: 1000000
+  # -- How long to wait for a receipt before counting a transaction as dropped
+  receiptTimeout: 15s
+  # -- How often to poll for receipts. Raising this reduces the read load
+  # celox itself puts on the node.
+  pollInterval: 250ms
+
+# -- Extra args appended to the celox command, as a list.
+extraArgs: []
+  # - --tps=250
+
+# -- Env vars mounted from a secret. celox reads the root key from
+# `CELOX_PRIVATE_KEY` and refuses a command-line flag, so it must be set here.
+secretEnv: {}
+  # CELOX_PRIVATE_KEY:
+  #   secretName: "celox"
+  #   secretKey: "privateKey"
+
+# -- Settings that apply only when `kind: Job`
+job:
+  # -- Retries before the Job is marked failed. Zero keeps a failed load test
+  # failed instead of silently re-running it.
+  backoffLimit: 0
+  # -- Delete the finished Job (and its pod) this many seconds after it ends.
+  # Null keeps it until deleted by hand.
+  ttlSecondsAfterFinished: 86400
+
+image:
+  # -- Image repository
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/celox
+  # -- Image pullpolicy
+  pullPolicy: IfNotPresent
+  # -- Image tag. Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automount: false
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Custom pod annotations
+podAnnotations: {}
+
+# -- Custom pod labels
+podLabels: {}
+
+# -- Custom pod security context
+podSecurityContext: {}
+  # fsGroup: 10001
+
+# -- Custom container security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 10001
+
+# -- Container resources
+resources: {}
+  # limits:
+  #   cpu: 1
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 500m
+  #   memory: 256Mi
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes pod affinity
+affinity: {}
