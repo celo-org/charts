@@ -1,6 +1,6 @@
 # celox
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 88c6677](https://img.shields.io/badge/AppVersion-88c6677-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2f30c8e](https://img.shields.io/badge/AppVersion-2f30c8e-informational?style=flat-square)
 
 Transaction load generator for Celo chains, with CIP-64 fee-currency, calldata and contract-storage workloads.
 
@@ -75,7 +75,7 @@ no Service and no scrape annotations.
 | config.keySpace | int | `1000000` | Slot range the `storage` workload writes into. A wide range grows the state trie; a narrow one contends on hot slots. |
 | config.pollInterval | string | `"250ms"` | How often to poll for receipts. Raising this reduces the read load celox itself puts on the node. |
 | config.receiptTimeout | string | `"15s"` | How long to wait for a receipt before counting a transaction as dropped |
-| config.recipient | string | `"self"` | Where the `transfer` workload sends. `self` burns gas without touching any other account, which measures the raw transaction-per-second ceiling. `fresh` mints a brand-new account per transaction, growing the account trie. Ignored by every other workload. |
+| config.recipient | string | `"self"` | Destination mode for the `transfer` and `cip64` workloads; ignored by the others. `self` burns gas without touching any other account, which measures the raw transaction-per-second ceiling. `fresh` targets a brand-new address per transaction: under `transfer` that mints an account and grows the account trie, and under `cip64` it sends 1 wei of the fee currency, writing a token balance slot that was zero on top of the fee debit and credit. |
 | config.rpcUrl | string | `"http://op-reth-sequencer-shared-rpc:8545"` | JSON-RPC endpoint of the target chain |
 | config.senders | int | `10` | Number of sender accounts, derived deterministically from the root key |
 | config.tps | int | `10` | Target transactions per second across all senders |
