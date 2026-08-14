@@ -18,6 +18,11 @@ config:
   rpcUrl: http://op-reth-sequencer-shared-rpc:8545
   # -- Workload to generate. One of `transfer`, `calldata`, `cip64`, `storage`.
   workload: transfer
+  # -- Where the `transfer` workload sends. `self` burns gas without touching
+  # any other account, which measures the raw transaction-per-second ceiling.
+  # `fresh` mints a brand-new account per transaction, growing the account
+  # trie. Ignored by every other workload.
+  recipient: self
   # -- Target transactions per second across all senders
   tps: 10
   # -- Number of sender accounts, derived deterministically from the root key
