@@ -14,7 +14,7 @@ podDisruptionBudget:
 init:
   image:
     repository: alpine
-    tag: 3.19
+    tag: 3.24
     pullPolicy: IfNotPresent
   rollup:
     url: https://storage.googleapis.com/cel2-rollup-files/dango/rollup.json
