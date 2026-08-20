@@ -18,6 +18,14 @@ config:
   rpcUrl: http://op-reth-sequencer-shared-rpc:8545
   # -- Workload to generate. One of `transfer`, `calldata`, `cip64`, `storage`.
   workload: transfer
+  # -- Destination mode for the `transfer` and `cip64` workloads; ignored by
+  # the others. `self` burns gas without touching any other account, which
+  # measures the raw transaction-per-second ceiling. `fresh` targets a
+  # brand-new address per transaction: under `transfer` that mints an account
+  # and grows the account trie, and under `cip64` it sends 1 wei of the fee
+  # currency, writing a token balance slot that was zero on top of the fee
+  # debit and credit.
+  recipient: self
   # -- Target transactions per second across all senders
   tps: 10
   # -- Number of sender accounts, derived deterministically from the root key
