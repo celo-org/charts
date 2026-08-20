@@ -366,7 +366,7 @@ init:
     enabled: false
     image:
       repository: alpine
-      tag: 3.19
+      tag: 3.24
       pullPolicy: IfNotPresent
   genesis:
     enabled: false
@@ -377,7 +377,7 @@ init:
   parameters:
     image:
       repository: alpine
-      tag: 3.19
+      tag: 3.24
       pullPolicy: IfNotPresent
   ## Extra op-geth init genesis container arguments (can be templated)
   extraArgs: []
