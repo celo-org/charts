@@ -1,0 +1,9 @@
+---
+# Values used by chart-testing (ct install) only. The default values.yaml leaves
+# image.tag empty (pinned per ArgoCD overlay), which renders an invalid image
+# reference; set a concrete tag here so the test render/install is valid.
+image:
+  tag: latest
+# --proposal-interval is required by the daemon and has no default.
+extraArgs:
+  - --proposal-interval=1800
