@@ -201,7 +201,7 @@ jobs:
           --excluded-charts akeyless-gcp-producer,celo-fullnode-backups,common,daily-chain-backup
           --excluded-charts blockscout,akeyless-gadmin-producer,ultragreen-dashboard,kong-celo-fullnode
           --excluded-charts eigenda-proxy,nethermind,prysm,op-conductor,espresso-node,sync-test
-          --excluded-charts celox,succinct-game-monitor-embedded
+          --excluded-charts celox
           --chart-repos bitnami=https://charts.bitnami.com/bitnami,stakewise=https://charts.stakewise.io/
   helm-docs:
     runs-on: 'ubuntu-latest'
