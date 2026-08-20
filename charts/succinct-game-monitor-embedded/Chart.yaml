@@ -1,0 +1,17 @@
+---
+apiVersion: v2
+name: succinct-game-monitor-embedded
+description: >-
+  Single in-process OP Succinct game monitor. Discovers fault-dispute games
+  on-chain and runs cost-estimation (witness generation + SP1 prove) in one
+  process, bounded by a shared cgroup memory budget. Replaces the
+  subprocess-based succinct-game-monitor.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co
+sources:
+  - https://github.com/succinctlabs/op-succinct

@@ -1,0 +1,64 @@
+# Default values for succinct-game-monitor-embedded.
+# Per-environment overlays live in
+# argocd/<cluster>-cluster-gcp/deployments/<env>/succinct-game-monitor-embedded.yaml
+
+# Number of StatefulSet replicas. Set to 0 to scale the daemon down.
+replicas: 1
+
+image:
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/op-succinct-game-monitor-embedded
+  pullPolicy: IfNotPresent
+  # Pinned per overlay as sha-<gitsha>@sha256:<digest>.
+  tag: ""
+
+# Entrypoint binary. Overridden per overlay; the embedded daemon takes a flat
+# flag set (no `run` subcommand).
+command: [game-monitor-embedded]
+
+# Daemon flags, appended after `command`. --proposal-interval is REQUIRED and
+# has no default, so it must be set in every overlay.
+extraArgs: []
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+config:
+  # Rendered as container env vars. The daemon reads connection details and the
+  # OP_SUCCINCT_MOCK / SP1_PROVER mock switches from here; `.env` is optional.
+  env: {}
+
+serviceAccount:
+  create: true
+  automount: true
+  name: ""
+  annotations: {}
+
+# Headless service fronting the StatefulSet (stable DNS, no cluster IP).
+services:
+  headless:
+    annotations: {}
+    publishNotReadyAddresses: true
+
+# On-disk witness/stdin cache and progress.json. Mounted at `mountPath`; point
+# --cache-dir / --progress-file underneath it via extraArgs.
+persistence:
+  enabled: true
+  pvc:
+    size: 50Gi
+    accessMode: ReadWriteOnce
+    storageClass: ""
+  mountPath: /data
+
+# Memory admission reads the cgroup limit (memory.max), so set resources.limits.memory
+# in every overlay — without it the daemon falls back to the in-flight count cap only.
+resources: {}
+
+enableServiceLinks: false
+
+podAnnotations: {}
+podLabels: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
