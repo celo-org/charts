@@ -91,6 +91,9 @@ celox reads it as f64, and Rust's float parser accepts that form.
 {{- else if .Values.config.duration }}
 - --duration={{ .Values.config.duration }}
 {{- end }}
+{{- if or (eq .Values.config.workload "transfer") (eq .Values.config.workload "cip64") }}
+- --recipient={{ .Values.config.recipient }}
+{{- end }}
 {{- if eq .Values.config.workload "calldata" }}
 - --data-size={{ int64 .Values.config.dataSize }}
 {{- end }}
