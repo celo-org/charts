@@ -329,6 +329,29 @@ config:
     disabletxpoolgossip: true
     # -- URL of the sequencer to forward `eth_sendRawTransaction` to. Leave empty to validate locally without forwarding.
     sequencerhttp: ""
+    # -- RPC endpoint serving pre-migration (cel1) historical data (`--rollup.historicalrpc`). Empty string omits the flag.
+    historicalRpc: ""
+  txpool:
+    # -- Disable price exemptions and journaling for locally submitted transactions (`--txpool.nolocals`). Recommended on RPC/sequencer nodes so local txs get no special treatment.
+    nolocals: false
+  rpc:
+    # -- Cap in ether on transaction fees accepted via RPC (`--rpc.txfeecap`). Set to "0" to disable the cap. Empty string omits the flag (binary default: 1.0 ether).
+    txFeeCap: ""
+    # -- Maximum block range allowed per `eth_getLogs` filter (`--rpc.max-blocks-per-filter`). Set to "0" for unlimited. Empty string omits the flag.
+    maxBlocksPerFilter: ""
+  # -- Floor in wei for the priority fee suggested by the gas price oracle via `eth_maxPriorityFeePerGas` (`--min-suggested-priority-fee`). Empty string omits the flag.
+  minSuggestedPriorityFee: ""
+  storage:
+    # -- Use the v2 storage layout (`--storage.v2=true`).
+    v2: false
+  engine:
+    # -- Target number of most recent blocks kept in memory (`--engine.memory-block-buffer-target`). Empty string omits the flag.
+    memoryBlockBufferTarget: ""
+  builder:
+    # -- Interval at which the payload builder rebuilds the in-progress block (`--builder.interval`, e.g. "100ms"). Only meaningful on sequencers. Empty string omits the flag.
+    interval: ""
+  # -- Log verbosity (0-5), rendered as `-v` repeated N times (e.g. 3 => `-vvv`). 0 omits the flag.
+  verbosity: 0
   http:
     port: 8545
     corsdomain: ["*"]

@@ -1,6 +1,6 @@
 # op-reth
 
-![Version: 0.0.7](https://img.shields.io/badge/Version-0.0.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.8](https://img.shields.io/badge/Version-0.0.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-reth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -28,9 +28,11 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | command | list | `["/bin/sh","-c"]` | Override the celo-reth container command (can be templated) |
 | config.authrpc.port | int | `8551` |  |
 | config.bootnodes | list | `[]` | P2P discovery bootnodes. Built-in bootnodes are used when this list is empty. |
+| config.builder.interval | string | `""` | Interval at which the payload builder rebuilds the in-progress block (`--builder.interval`, e.g. "100ms"). Only meaningful on sequencers. Empty string omits the flag. |
 | config.chain | string | `"celo"` | Built-in chain name (e.g. celo, optimism, base) OR a path to a chain spec file. If empty, falls back to `$datadir/genesis.json`. |
 | config.datadir | string | `"/celo"` | Data directory inside the container. |
 | config.disableDiscovery | bool | `false` | Disable the peer discovery service entirely. |
+| config.engine.memoryBlockBufferTarget | string | `""` | Target number of most recent blocks kept in memory (`--engine.memory-block-buffer-target`). Empty string omits the flag. |
 | config.full | bool | `true` | DEPRECATED: prefer the top-level `nodeMode`. Run as full node (true) or archive node (false / ""). Ignored when `nodeMode` is set. |
 | config.http.api[0] | string | `"eth"` |  |
 | config.http.api[1] | string | `"net"` |  |
@@ -41,6 +43,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.logFormat | string | `"json"` | Log format: json, log-fmt, or terminal. |
 | config.maxpeers | int | `50` | Maximum total peers (inbound + outbound). |
 | config.metrics.enabled | bool | `false` |  |
+| config.minSuggestedPriorityFee | string | `""` | Floor in wei for the priority fee suggested by the gas price oracle via `eth_maxPriorityFeePerGas` (`--min-suggested-priority-fee`). Empty string omits the flag. |
 | config.nat | string | `""` | NAT resolution method. Format: any|none|upnp|publicip|extip:<IP>. |
 | config.netrestrict | list | `[]` | Restrict network access to specific CIDR ranges. |
 | config.networkId | string | `""` | Optional override of the chain spec network ID for P2P. Empty string for default. |
@@ -67,10 +70,16 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | config.prune.transactionLookup.distance | string | `""` | Block distance for `mode: distance`. |
 | config.prune.transactionLookup.mode | string | `""` | Prune transaction lookup data. One of: "", "full", "distance", "before". |
 | config.rollup.disabletxpoolgossip | bool | `true` | Disable txpool gossip on the rollup network. OP-stack rollups typically forward txs via `--rollup.sequencer` over HTTP, so P2P gossip is unwanted. |
+| config.rollup.historicalRpc | string | `""` | RPC endpoint serving pre-migration (cel1) historical data (`--rollup.historicalrpc`). Empty string omits the flag. |
 | config.rollup.sequencerhttp | string | `""` | URL of the sequencer to forward `eth_sendRawTransaction` to. Leave empty to validate locally without forwarding. |
+| config.rpc.maxBlocksPerFilter | string | `""` | Maximum block range allowed per `eth_getLogs` filter (`--rpc.max-blocks-per-filter`). Set to "0" for unlimited. Empty string omits the flag. |
+| config.rpc.txFeeCap | string | `""` | Cap in ether on transaction fees accepted via RPC (`--rpc.txfeecap`). Set to "0" to disable the cap. Empty string omits the flag (binary default: 1.0 ether). |
+| config.storage.v2 | bool | `false` | Use the v2 storage layout (`--storage.v2=true`). |
 | config.trustedOnly | bool | `false` | If true (`--trusted-only`), reject any inbound or outbound peer not in `trustedPeers` — hard accept-list. |
 | config.trustedPeers | list | `[]` | List of enode URLs (`enode://<hex-pubkey>@host:port`) that are always-allowed and pinned against eviction. Joined with commas into `--trusted-peers`. |
+| config.txpool.nolocals | bool | `false` | Disable price exemptions and journaling for locally submitted transactions (`--txpool.nolocals`). Recommended on RPC/sequencer nodes so local txs get no special treatment. |
 | config.useHostPort | bool | `false` | Allocate hostPorts for P2P communication instead of using a Kubernetes Service. |
+| config.verbosity | int | `0` | Log verbosity (0-5), rendered as `-v` repeated N times (e.g. 3 => `-vvv`). 0 omits the flag. |
 | config.ws.api[0] | string | `"eth"` |  |
 | config.ws.api[1] | string | `"net"` |  |
 | config.ws.api[2] | string | `"web3"` |  |
