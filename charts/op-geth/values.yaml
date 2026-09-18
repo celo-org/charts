@@ -223,6 +223,11 @@ nodeSelector: {}
 
 tolerations: []
 
+## Used to assign priority to pods
+## ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
+##
+priorityClassName: ""
+
 podDisruptionBudget:
   enabled: false
   minAvailable: ""

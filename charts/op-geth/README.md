@@ -1,6 +1,6 @@
 # op-geth
 
-![Version: 0.3.13](https://img.shields.io/badge/Version-0.3.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.3.14](https://img.shields.io/badge/Version-0.3.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-geth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -126,6 +126,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | podLabels | object | `{}` |  |
 | podSecurityContext.fsGroup | int | `10001` |  |
 | podStatusLabels | object | `{}` |  |
+| priorityClassName | string | `""` |  |
 | readinessProbe.enabled | bool | `false` |  |
 | readinessProbe.exec.command[0] | string | `"sh"` |  |
 | readinessProbe.exec.command[1] | string | `"/scripts/readiness.sh"` |  |
