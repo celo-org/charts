@@ -1,6 +1,6 @@
 # op-reth
 
-![Version: 0.0.7](https://img.shields.io/badge/Version-0.0.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.0.8](https://img.shields.io/badge/Version-0.0.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-reth execution engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree/main/dysnix/op-geth).
@@ -139,6 +139,7 @@ Initially based on [dysnix/charts/op-geth](https://github.com/dysnix/charts/tree
 | podLabels | object | `{}` | Extra pod labels |
 | podSecurityContext.fsGroup | int | `10001` |  |
 | podStatusLabels | object | `{}` | Labels marking the node as ready to serve traffic. Used as selector for the RPC service together with `.Values.podLabels` and default labels. |
+| priorityClassName | string | `""` |  |
 | proofsHistory | object | `{"enabled":false,"init":{"initAtCurrentHead":false},"minSyncedBlock":1,"storagePath":"","storageVersion":"v2","verificationInterval":0,"window":1209600}` | Historical-proofs ExEx ("Bounded History Sidecar"): persists state/withdrawal proofs to a dedicated MDBX store and serves them via an `eth_getProof` override. A one-time, idempotent `celo-reth proofs init` initContainer anchors the store at the node's current canonical head (celo-reth refuses to launch with `--proofs-history` against an uninitialized store). The store only fills FORWARD from the anchor (no backfill), so the anchor MUST NOT sit behind the live network tip on a pruned node: archive nodes can backfill a gap, but full/minimal nodes cannot and the proof window then freezes forever. Archive nodes therefore initialize immediately; pruned nodes are NOT auto-initialized — they run without `--proofs-history` until `init.initAtCurrentHead` is set (see below). The node only receives the `--proofs-history` flags once the store is initialized, so the feature is safe to leave enabled across restarts. |
 | proofsHistory.enabled | bool | `false` | Enable the proofs-history init container and node flags. |
 | proofsHistory.init.initAtCurrentHead | bool | `false` | Allow a full/minimal (pruned) node to run `proofs init` at its current canonical head. A pruned node cannot backfill a gap between the proof anchor and the live tip, so its store must be anchored AT the live tip; because the init container cannot detect live-tip sync on its own, pruned nodes are NOT auto-initialized. Run the node until it is fully synced to the tip, then set this `true` and restart to anchor at the current head. Ignored by archive nodes (they initialize immediately and can backfill). To re-anchor an already-wedged store, delete the proofs store dir and `<datadir>/.proofs-initialized` first, then restart. |
