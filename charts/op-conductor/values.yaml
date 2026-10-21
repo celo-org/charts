@@ -60,6 +60,9 @@ config:
     forceBootstrap: false
     server:
       id: ""
+    # Number of log entries that triggers a raft snapshot and log compaction.
+    # Leave empty to use op-conductor's default (8192).
+    snapshotThreshold: ""
   healthcheck:
     interval: 10
     minPeerCount: 1
@@ -75,6 +78,10 @@ config:
     port: 7300
   network: ""
   paused: false
+
+## Extra op-conductor arguments (can be templated)
+extraArgs: []
+
 podSecurityContext: {}
 
 persistence:
