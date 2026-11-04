@@ -83,14 +83,14 @@ A list of best practices when writing Helm charts can be found in the [`docs/` f
 
 This repo uses GitHub Actions to automatically perform the following:
 
-- On Pull Request using the [`helm_test.yaml` workflow](./.github/workflows/helm_test.yml): check that chart version is bumped in `Chart.yaml`, lint, template, install/delete and test the modified charts in a Kind cluster. If the previous checks are OK, it will autogenerate a README for the chart using [helm-docs](https://github.com/norwoodj/helm-docs).
+- On Pull Request using the [`helm_test.yaml` workflow](./.github/workflows/helm_test.yml): check that chart version is bumped in `Chart.yaml`, lint, template, install/delete and test the modified charts in a Kind cluster. If the previous checks are OK, it checks that the chart READMEs are up to date with [helm-docs](https://github.com/norwoodj/helm-docs): run `helm-docs` (v1.14.2) at the repo root before pushing.
 - On push to `main` using the [`helm_release` workflow](./.github/workflows/helm_release.yml): publish the new Helm release (version in `Chart.yaml`) in OCI format to Artifact Registry (project `devops`, URL `oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci`).
 
 ### Technologies
 
 - For checking the `Chart.yaml` version, linting, installing/deleting and testing a chart the [chart-testing Action](https://github.com/helm/chart-testing-action) is used (based on the [helm/chart-testing](https://github.com/helm/chart-testing) CLI tool).
 - For spinning a Kind cluster the [Kind Action](https://github.com/helm/kind-action) is used (based on [kind tool](https://kind.sigs.k8s.io/)).
-- For autogenerating the chart README, a custom workflow based on [helm-docs](https://github.com/norwoodj/helm-docs) is used.
+- For checking the chart READMEs, a custom workflow based on [helm-docs](https://github.com/norwoodj/helm-docs) is used.
 - For publishing a new chart release to Artifact Registry (project `devops`, URL `oci://us-west1-docker.pkg.dev/devopsre/clabs-public-oci`), a custom workflow is used.
 
 ## Installing a chart with custom values

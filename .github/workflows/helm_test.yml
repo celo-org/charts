@@ -10,7 +10,6 @@ jobs:
   # Only run tests and generate docs if Helm files have changed.
   helm-change:
     runs-on: 'ubuntu-latest'
-    if: ${{ ! startsWith(github.triggering_actor, 'akeyless') }}
     permissions:
       pull-requests: read
     outputs:
@@ -33,7 +32,7 @@ jobs:
 
   helm-test:
     needs: helm-change
-    if: ${{ needs.helm-change.outputs.charts-change == 'true' && ! startsWith(github.triggering_actor, 'akeyless') }}
+    if: ${{ needs.helm-change.outputs.charts-change == 'true' }}
     runs-on: 'ubuntu-latest'
     env:
       HELM_VERSION: "v3.14.1"
@@ -203,28 +202,17 @@ jobs:
           --excluded-charts eigenda-proxy,nethermind,prysm,op-conductor,espresso-node,sync-test
           --excluded-charts celox
           --chart-repos bitnami=https://charts.bitnami.com/bitnami,stakewise=https://charts.stakewise.io/
+  # Check only: CI has no write token, so a stale README fails the job instead of being committed.
   helm-docs:
     runs-on: 'ubuntu-latest'
-    if: ${{ ! startsWith(github.triggering_actor, 'akeyless') }}
     needs: 'helm-test'
     env:
       HELM_DOCS_VERSION: "1.14.2"
     permissions:
-      id-token: write
+      contents: read
     steps:
-      - name: "Get GitHub Token from Akeyless"
-        id: get_auth_token
-        uses:
-          docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
-        with:
-          api-url: https://api.gateway.akeyless.celo-networks-dev.org
-          access-id: p-kf9vjzruht6l
-          dynamic-secrets: '{"/dynamic-secrets/keys/github/charts/contents=write,pull_requests=write":"PAT"}'
-
       - name: "Checkout current PR"
         uses: actions/checkout@v4
-        with:
-          token: ${{ env.PAT }}
 
       - name: "Install helm-docs"
         run: |
@@ -273,8 +261,11 @@ jobs:
           # Run the update_markdown function with the specified markdown file
           update_markdown "README.md"
 
-      - name: "Commit updated README.md to the branch if changed"
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: '[Automatic] - Update chart README.md'
-          file_pattern: 'README.md charts/**/README.md charts-private/**/README.md'
+      - name: "Fail if any README is out of date"
+        run: |
+          if [ -n "$(git status --porcelain -- '*README.md')" ]; then
+            git status --short -- '*README.md'
+            git --no-pager diff -- '*README.md'
+            echo "::error::Chart READMEs are out of date. Run helm-docs v${HELM_DOCS_VERSION} at the repo root and commit the result (a new chart also needs its line in the README.md chart list)."
+            exit 1
+          fi
