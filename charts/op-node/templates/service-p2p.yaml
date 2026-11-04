@@ -15,8 +15,8 @@
   {{- $nodePort = index .nodePorts $index }}
 {{- end }}
 ---
-{{- /* In case of LoadBalancer, we cannot mix different protocols (tcp/udp) in the same LB, so we split in two svcs */ -}}
-{{- if eq .type "LoadBalancer" }}
+{{- /* LoadBalancer: one Service per protocol (tcp/udp), unless mixedProtocol is set and the cloud supports mixed-protocol LoadBalancers */ -}}
+{{- if and (eq .type "LoadBalancer") (not .mixedProtocol) }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -98,7 +98,7 @@ spec:
     {{- include "op-node.selectorLabels" $ | nindent 4 }}
     statefulset.kubernetes.io/pod-name: {{ template "op-node.fullname" $ }}-{{ $index }}
 {{- end }}
-{{- /* In case of ClusterIP, we cannot set same ClusterIP to different svcs, so we use just one */ -}}
+{{- /* ClusterIP/NodePort, or LoadBalancer with mixedProtocol: one Service with both ports (a ClusterIP cannot be shared by two svcs) */ -}}
 {{- else }}
 apiVersion: v1
 kind: Service
@@ -113,6 +113,9 @@ metadata:
     {{- include "op-node.labels" $ | nindent 4 }}
 spec:
   type: {{ .type }}
+  {{- if and (eq .type "LoadBalancer") .loadBalancerClass }}
+  loadBalancerClass: {{ .loadBalancerClass }}
+  {{- end }}
   {{- with $loadBalancerIP }}
   loadBalancerIP: {{ . }}
   {{- end }}

@@ -73,6 +73,13 @@ services:
     annotations: {}
     publishNotReadyAddresses: true
     skipUDPService: false
+    # -- LoadBalancer only: one Service per replica (`-p2p-N`) carrying both the TCP and the UDP port,
+    # instead of a `-p2p-N-tcp`/`-p2p-N-udp` pair, so each replica uses one IP and one forwarding rule.
+    # Needs a cloud provider with mixed-protocol LoadBalancer support (on GKE, set loadBalancerClass).
+    # Turning it on for an existing release replaces the Services; delete the old pair first to free a static IP.
+    mixedProtocol: false
+    # -- loadBalancerClass for the mixedProtocol LoadBalancer Service, e.g. networking.gke.io/l4-regional-external
+    loadBalancerClass: ""
   rpc:
     sharedServiceEnabled: true
     individualServiceEnabled: true
