@@ -1,6 +1,6 @@
 # op-node
 
-![Version: 0.4.22](https://img.shields.io/badge/Version-0.4.22-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
+![Version: 0.4.23](https://img.shields.io/badge/Version-0.4.23-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 Celo implementation for op-node consensus engine (Optimism Rollup)
 Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree/main/dysnix/op-node).
@@ -159,7 +159,9 @@ Initially based on [dysnix/charts/op-node](https://github.com/dysnix/charts/tree
 | services.p2p.annotations | object | `{}` |  |
 | services.p2p.clusterIPs | list | `[]` |  |
 | services.p2p.enabled | bool | `true` |  |
+| services.p2p.loadBalancerClass | string | `""` | loadBalancerClass for the mixedProtocol LoadBalancer Service, e.g. networking.gke.io/l4-regional-external |
 | services.p2p.loadBalancerIPs | list | `[]` |  |
+| services.p2p.mixedProtocol | bool | `false` | LoadBalancer only: one Service per replica (`-p2p-N`) carrying both the TCP and the UDP port, instead of a `-p2p-N-tcp`/`-p2p-N-udp` pair, so each replica uses one IP and one forwarding rule. Needs a cloud provider with mixed-protocol LoadBalancer support (on GKE, set loadBalancerClass). Turning it on for an existing release replaces the Services; delete the old pair first to free a static IP. |
 | services.p2p.nodePorts | list | `[]` |  |
 | services.p2p.port | int | `9222` |  |
 | services.p2p.publishNotReadyAddresses | bool | `true` |  |

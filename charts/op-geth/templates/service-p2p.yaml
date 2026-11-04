@@ -10,7 +10,8 @@
 {{- if lt $index (len .clusterIPs) }}
   {{- $clusterIP = index .clusterIPs $index }}
 {{- end }}
-{{- if eq .type "LoadBalancer" }}
+{{- /* LoadBalancer: one Service per protocol (tcp/udp), unless mixedProtocol is set and the cloud supports mixed-protocol LoadBalancers */ -}}
+{{- if and (eq .type "LoadBalancer") (not .mixedProtocol) }}
 ---
 apiVersion: v1
 kind: Service
@@ -102,6 +103,9 @@ metadata:
     {{- include "op-geth.labels" $ | nindent 4 }}
 spec:
   type: {{ .type }}
+  {{- if and (eq .type "LoadBalancer") .loadBalancerClass }}
+  loadBalancerClass: {{ .loadBalancerClass }}
+  {{- end }}
   {{- with $loadBalancerIP }}
   loadBalancerIP: {{ . }}
   {{- end }}
