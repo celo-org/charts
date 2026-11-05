@@ -1,6 +1,6 @@
 # op-succinct
 
-![Version: 1.2.0-rc.3](https://img.shields.io/badge/Version-1.2.0--rc.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 1.2.0-rc.4](https://img.shields.io/badge/Version-1.2.0--rc.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for op-succinct proposer and challenger
 
@@ -22,7 +22,7 @@ A Helm chart for op-succinct proposer and challenger
 | config.endpoints.eigenda_proxy | string | `""` | URL of the EigenDA proxy |
 | config.endpoints.l1_consensus | string | `""` | URL of the L1 consensus (beacon) client (proposer only) |
 | config.endpoints.l1_execution | string | `""` | URL of the L1 execution client |
-| config.endpoints.l2_consensus | string | `""` | URL of the L2 consensus (op-node) client (proposer only) |
+| config.endpoints.l2_consensus | string | `""` | URL of one L2 consensus (op-node) client paired with l2_execution (proposer and challenger) |
 | config.endpoints.l2_execution | string | `""` | URL of the L2 execution (op-geth) client |
 | config.game.anchor_state_registry_address | string | `""` | Address of the active L1 `AnchorStateRegistryProxy` address |
 | config.game.disable_monitor_only | bool | `false` | If the monitor-only mode is disabled, the challenger will try to send `challenge()` calls onchain in case of a challenger (challenger only). |
@@ -52,7 +52,7 @@ A Helm chart for op-succinct proposer and challenger
 | config.secret_env | object | `{"existing_name":"","overwrites":{}}` | the `PRIVATE_KEY` is only required when `config.remote_signing.enabled` is `false`. |
 | config.secret_env.existing_name | string | `""` | Use an existing kubernetes secret by it's secret name |
 | config.secret_env.overwrites | object | `{}` | into the executor. |
-| config.sync.l1_confirmations | string | `""` | Number of L1 blocks behind `latest` to pin reads during sync cycles, as a safety margin for lagging load-balanced RPC backends (proposer only; defaults to 0 = use latest). |
+| config.sync.l1_confirmations | string | `""` | Number of L1 blocks behind `latest` to pin reads during sync cycles, as a safety margin for lagging load-balanced RPC backends (proposer and challenger; defaults to 0 = use latest). |
 | config.tx.confirmation_timeout | string | `""` | Timeout (in seconds) for waiting on L1 transaction confirmations |
 | enableServiceLinks | bool | `false` | Kubernetes enableServiceLinks |
 | extraArgs | list | `[]` |  |

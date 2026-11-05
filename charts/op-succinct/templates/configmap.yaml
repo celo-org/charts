@@ -49,12 +49,12 @@ data:
   TX_CONFIRMATION_TIMEOUT: "{{ .confirmation_timeout }}"
   {{- end }}
   {{- end}}
-  {{- if eq $.Values.mode "proposer" }}
   {{- with .sync}}
   {{- if .l1_confirmations }}
   SYNC_L1_CONFIRMATIONS: "{{ .l1_confirmations }}"
   {{- end }}
   {{- end}}
+  {{- if eq $.Values.mode "proposer" }}
   {{- with .proof}}
   {{- if .agg_proof_mode }}
   AGG_PROOF_MODE: {{ .agg_proof_mode | quote }}
