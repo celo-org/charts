@@ -1,0 +1,10 @@
+# Validate challenger resources without starting a process that needs RPCs and signer credentials.
+replicaCount: 0
+mode: challenger
+
+config:
+  endpoints:
+    l2_execution: http://l2-execution:8545
+    l2_consensus: http://op-node:9545
+  sync:
+    l1_confirmations: 5
