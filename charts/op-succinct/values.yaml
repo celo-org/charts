@@ -35,7 +35,7 @@ config:
     l1_consensus: ""
     # -- URL of the L2 execution (op-geth) client
     l2_execution: ""
-    # -- URL of the L2 consensus (op-node) client (proposer only)
+    # -- URL of one L2 consensus (op-node) client paired with l2_execution (proposer and challenger)
     l2_consensus: ""
     # -- URL of the EigenDA proxy
     eigenda_proxy: ""
@@ -76,7 +76,7 @@ config:
     # -- Timeout (in seconds) for waiting on L1 transaction confirmations
     confirmation_timeout: ""
   sync:
-    # -- Number of L1 blocks behind `latest` to pin reads during sync cycles, as a safety margin for lagging load-balanced RPC backends (proposer only; defaults to 0 = use latest).
+    # -- Number of L1 blocks behind `latest` to pin reads during sync cycles, as a safety margin for lagging load-balanced RPC backends (proposer and challenger; defaults to 0 = use latest).
     l1_confirmations: ""
   remote_signing:
     # -- use a remote signer for signing the l1 transactions instead
