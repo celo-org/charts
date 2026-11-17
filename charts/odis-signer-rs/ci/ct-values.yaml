@@ -1,0 +1,9 @@
+---
+# Standalone settings for chart-testing: built-in keys, no full node, SQLite in the /tmp emptyDir.
+# Without BLOCKCHAIN_PROVIDER the signer skips the chain ID check and gives every account the mock quota.
+config:
+  chainID: "11142220"
+keystore:
+  type: Mock
+database:
+  url: "sqlite:/tmp/signer.db"

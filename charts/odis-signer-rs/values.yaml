@@ -1,0 +1,220 @@
+# Default values for odis-signer-rs.
+#
+# Deploys the Rust port of the ODIS signer (social-connect `rust/signer`). It serves the phone number
+# privacy endpoints (`/sign`, `/quotaStatus`) with the same API as the TS signer; the domain endpoints
+# answer 503. Its configuration differs from the TS signer chart (`odis-signer`): see
+# https://github.com/celo-org/social-connect/blob/main/rust/signer/CHANGELOG.md before moving a TS
+# signer release to this chart.
+#
+# Optional settings left empty ("" or null) are not added to the container, so the signer uses its
+# own default. Do not set a numeric or boolean setting to an empty string by other means (for example
+# through `extraEnv`): the Rust signer refuses to start on an empty number or boolean.
+
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+# -- Number of deployment replicas
+replicaCount: 1
+
+# -- Deployment update strategy
+strategy: {}
+  # type: Recreate
+
+image:
+  # -- Image repository. Images built from `main` and from `odis-rs-signer-*` release tags are pushed to
+  # `us-west1-docker.pkg.dev/devopsre/social-connect/odis-signer` with an `rs-` or `odis-rs-signer-` tag.
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/odis-signer
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Image tag. Defaults to the chart appVersion. Can include a digest (`tag@sha256:...`).
+  tag: ""
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account. Use `iam.gke.io/gcp-service-account` to give the
+  # signer access to its key in Google Secret Manager through Workload Identity.
+  annotations: {}
+    # iam.gke.io/gcp-service-account: odis-signer0@my-project.iam.gserviceaccount.com
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Port the signer listens on (env. var SERVER_PORT). 3000 matches the TS signer chart.
+port: 3000
+
+service:
+  # -- Service type
+  type: ClusterIP
+  # -- Service port
+  port: 3000
+
+config:
+  # -- Env. var PHONE_NUMBER_PRIVACY_API_ENABLED. Serve `/sign` and `/quotaStatus`.
+  pnpAPIEnabled: true
+  # -- (string) Required. Env. var CHAIN_ID. 42220 for Celo Mainnet, 11142220 for Celo Sepolia. The signer
+  # refuses to start if the full node reports a different chain ID.
+  chainID: ""
+  # -- (string) Env. var ODIS_SIGNER_TIMEOUT. Limit in milliseconds for one request. Signer default: 5000.
+  odisSignerTimeout: ""
+  # -- (string) Env. var QUERY_PRICE_PER_CUSD. Signer default: 0.001.
+  queryPricePerCusd: ""
+  # -- (string) Env. var ACCOUNTS_CONTRACT_ADDRESS. Overrides the address selected by CHAIN_ID.
+  accountsContractAddress: ""
+  # -- (string) Env. var ODIS_PAYMENTS_CONTRACT_ADDRESS. Overrides the address selected by CHAIN_ID.
+  odisPaymentsContractAddress: ""
+
+log:
+  # -- Env. var LOG_FORMAT. `json` or `text`. The TS signer's `stackdriver` and `human` stop the signer.
+  format: json
+  # -- Env. var RUST_LOG. A tracing EnvFilter directive, for example `info` or `odis_signer=debug,info`.
+  level: info
+
+blockchain:
+  # -- Env. var BLOCKCHAIN_PROVIDER. Full node RPC URL. Required unless keystore.type is Mock.
+  provider: ""
+  # -- Env. var BLOCKCHAIN_API_KEY (forno `apiKey` header). If set, the chart creates a secret for it.
+  # Ignored when apiKeyExistingSecret is set.
+  apiKey: ""
+  # -- Existing secret holding BLOCKCHAIN_API_KEY.
+  apiKeyExistingSecret: ""
+  # -- Key in apiKeyExistingSecret. `forno-key` matches the TS signer chart.
+  apiKeyExistingSecretKey: forno-key
+  # -- (string) Env. var FULL_NODE_TIMEOUT_MS. Limit for one lookup, retries included. Signer default: 1000.
+  fullNodeTimeoutMs: ""
+  # -- (string) Env. var FULL_NODE_RETRY_COUNT. Retries after the first try (TS RETRY_COUNT counted all tries). Signer default: 5.
+  fullNodeRetryCount: ""
+  # -- (string) Env. var FULL_NODE_RETRY_DELAY_MS. Signer default: 100.
+  fullNodeRetryDelayMs: ""
+
+keystore:
+  # -- Env. var KEYSTORE_TYPE. `GoogleSecretManager`, or `Mock` for development (built-in keys).
+  type: GoogleSecretManager
+  # -- Env. var KEYSTORE_GOOGLE_PROJECT_ID. Required for GoogleSecretManager.
+  gcpProjectID: ""
+  # -- (string) Env. var PHONE_NUMBER_PRIVACY_KEY_NAME_BASE. Secret name without the `-<version>` suffix. Signer default: phoneNumberPrivacy.
+  pnpKeyNameBase: ""
+  # -- (string) Env. var PHONE_NUMBER_PRIVACY_LATEST_KEY_VERSION. Signer default: 1.
+  pnpKeyLatestVersion: ""
+
+# The signer reads its database only from DATABASE_URL. The chart sets it in one of three ways, first match wins:
+# 1. `database.urlExistingSecret`: DATABASE_URL is read from that secret.
+# 2. `database.url`: the chart stores the URL in a secret it creates.
+# 3. `database.host`: the chart builds `postgres://<username>:<password>@<host>:<port>/<name>[?sslmode=<sslMode>]`
+#    and takes the password from `passwordExistingSecret` (or `password`). Kubernetes substitutes the
+#    password as is, so it must not contain characters that need URL encoding (`@ : / ? # %` and similar).
+#    Use option 1 otherwise.
+# With none of them set the signer uses in-memory SQLite, which it allows only with keystore.type Mock.
+database:
+  # -- Existing secret holding the full DATABASE_URL.
+  urlExistingSecret: ""
+  # -- Key in urlExistingSecret.
+  urlExistingSecretKey: database-url
+  # -- Full DATABASE_URL (`postgres://...` or `sqlite:/tmp/signer.db`). Stored in a secret the chart creates.
+  url: ""
+  # -- Postgres host. The Bitnami release next to the TS signer is `<release>-db-postgresql-hl`.
+  host: ""
+  # -- Postgres port
+  port: 5432
+  # -- Postgres database name
+  name: phoneNumberPrivacy
+  # -- Postgres user
+  username: ""
+  # -- Postgres password. If set, the chart creates a secret for it. Ignored when passwordExistingSecret is set.
+  password: ""
+  # -- Existing secret holding the Postgres password.
+  passwordExistingSecret: ""
+  # -- Key in passwordExistingSecret. `db-password` matches the TS signer chart.
+  passwordExistingSecretKey: db-password
+  # -- `sslmode` added to the built URL (`disable`, `prefer`, `require`, `verify-full`). Empty leaves it out,
+  # which uses TLS only if the server offers it, without verifying the certificate.
+  sslMode: ""
+  # -- (string) Env. var DB_TIMEOUT. Limit in milliseconds for one statement and for the wait for a connection. Signer default: 1000.
+  timeoutMs: ""
+  # -- Env. var MIGRATE_LEGACY_DATA. Set to true for the first start on a TS signer's Postgres database: it
+  # imports the TS tables once. Stop the TS signer first. Without it the signer refuses to start on a
+  # database that holds unimported TS tables. Can be set back to false after the import.
+  migrateLegacyData: false
+
+requestPruning:
+  # -- (string) Env. var REQUEST_PRUNING_DAYS. Signer default: 7.
+  days: ""
+  # -- (string) Env. var REQUEST_PRUNING_INTERVAL_SECS. The signer prunes at start, then on this interval. 0 disables pruning. Signer default: 86400.
+  intervalSecs: ""
+
+# -- Extra environment variables for the signer container
+extraEnv: []
+  # - name: MOCK_TOTAL_QUOTA
+  #   value: "10"
+
+# -- Custom pod annotations
+podAnnotations: {}
+  # prometheus.io/path: /metrics
+  # prometheus.io/port: "3000"
+  # prometheus.io/scrape: "true"
+
+# -- Custom pod labels
+podLabels: {}
+
+# -- Pod security context. The image runs as `nobody` (65534).
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  fsGroup: 65534
+  seccompProfile:
+    type: RuntimeDefault
+
+# -- Container security context. `/tmp` is a writable emptyDir.
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# -- Startup probe. The signer binds its port only after it has fetched its key, checked the chain ID and
+# prepared the database, which includes the one-time legacy import. The default allows 10 minutes.
+startupProbe:
+  httpGet:
+    path: /status
+    port: http
+  periodSeconds: 10
+  failureThreshold: 60
+
+# -- Liveness probe
+livenessProbe:
+  httpGet:
+    path: /status
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Readiness probe
+readinessProbe:
+  httpGet:
+    path: /status
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Container resources
+resources: {}
+  # requests:
+  #   cpu: 250m
+  #   memory: 256Mi
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes pod affinity
+affinity: {}
