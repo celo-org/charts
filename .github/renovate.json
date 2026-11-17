@@ -15,5 +15,7 @@
   "vulnerabilityAlerts": {
     "minimumReleaseAge": null
   },
-  "dependencyDashboardOSVVulnerabilitySummary": "unresolved"
+  "dependencyDashboard": {
+    "osvVulnerabilitySummary": "unresolved"
+  }
 }
