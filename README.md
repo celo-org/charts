@@ -40,6 +40,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [odis-combiner](./charts/odis-combiner/README.md) - Helm chart for deploying Celo ODIS signer in AKS
 - [odis-loadtest](./charts/odis-loadtest/README.md) - Helm chart for deploying Celo ODIS load tests in GKE
 - [odis-signer](./charts/odis-signer/README.md) - Helm chart for deploying Celo ODIS signer
+- [odis-signer-rs](./charts/odis-signer-rs/README.md) - Helm chart for deploying the Rust port of the Celo ODIS signer (phone number privacy endpoints)
 - [op-batcher](./charts/op-batcher/README.md) - Celo implementation for op-batcher client (Optimism Rollup)
 - [op-bootnode](./charts/op-bootnode/README.md) - Celo implementation for op-bootnode (Optimism Rollup)
 - [op-challenger](./charts/op-challenger/README.md) - A Helm chart for Fault Proof Monitoring

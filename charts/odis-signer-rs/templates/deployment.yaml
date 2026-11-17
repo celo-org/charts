@@ -1,0 +1,166 @@
+{{- $db := .Values.database }}
+{{- $bc := .Values.blockchain }}
+{{- $ks := .Values.keystore }}
+{{- $secretName := include "odis-signer-rs.secretName" . }}
+{{- $chainID := required "config.chainID is required (42220 for Celo Mainnet, 11142220 for Celo Sepolia)" .Values.config.chainID }}
+{{- if not (has $ks.type (list "GoogleSecretManager" "Mock")) }}
+{{- fail (printf "keystore.type must be GoogleSecretManager or Mock, got %q" $ks.type) }}
+{{- end }}
+{{- if eq $ks.type "GoogleSecretManager" }}
+{{- $_ := required "keystore.gcpProjectID is required when keystore.type is GoogleSecretManager" $ks.gcpProjectID }}
+{{- $_ := required "blockchain.provider is required when keystore.type is GoogleSecretManager" $bc.provider }}
+{{- if not (or $db.urlExistingSecret $db.url $db.host) }}
+{{- fail "a database is required when keystore.type is GoogleSecretManager: set database.urlExistingSecret, database.url or database.host" }}
+{{- end }}
+{{- end }}
+{{- if and (not $db.urlExistingSecret) (not $db.url) $db.host }}
+{{- $_ := required "database.username is required with database.host" $db.username }}
+{{- if not (or $db.passwordExistingSecret $db.password) }}
+{{- fail "database.passwordExistingSecret or database.password is required with database.host" }}
+{{- end }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "odis-signer-rs.fullname" . }}
+  labels:
+    {{- include "odis-signer-rs.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  {{- with .Values.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "odis-signer-rs.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- if include "odis-signer-rs.createSecret" . }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "odis-signer-rs.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "odis-signer-rs.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: odis-signer
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.port }}
+              protocol: TCP
+          env:
+            {{- $out := include "odis-signer-rs.envVar" (list "SERVER_PORT" .Values.port) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "PHONE_NUMBER_PRIVACY_API_ENABLED" .Values.config.pnpAPIEnabled) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "CHAIN_ID" $chainID) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "ODIS_SIGNER_TIMEOUT" .Values.config.odisSignerTimeout) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "QUERY_PRICE_PER_CUSD" .Values.config.queryPricePerCusd) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "ACCOUNTS_CONTRACT_ADDRESS" .Values.config.accountsContractAddress) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "ODIS_PAYMENTS_CONTRACT_ADDRESS" .Values.config.odisPaymentsContractAddress) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "LOG_FORMAT" .Values.log.format) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "RUST_LOG" .Values.log.level) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "BLOCKCHAIN_PROVIDER" $bc.provider) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- if $bc.apiKeyExistingSecret }}
+            - name: BLOCKCHAIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $bc.apiKeyExistingSecret }}
+                  key: {{ $bc.apiKeyExistingSecretKey }}
+            {{- else if $bc.apiKey }}
+            - name: BLOCKCHAIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secretName }}
+                  key: blockchain-api-key
+            {{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "FULL_NODE_TIMEOUT_MS" $bc.fullNodeTimeoutMs) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "FULL_NODE_RETRY_COUNT" $bc.fullNodeRetryCount) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "FULL_NODE_RETRY_DELAY_MS" $bc.fullNodeRetryDelayMs) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "KEYSTORE_TYPE" $ks.type) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- if eq $ks.type "GoogleSecretManager" }}
+            {{- $out := include "odis-signer-rs.envVar" (list "KEYSTORE_GOOGLE_PROJECT_ID" $ks.gcpProjectID) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "PHONE_NUMBER_PRIVACY_KEY_NAME_BASE" $ks.pnpKeyNameBase) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "PHONE_NUMBER_PRIVACY_LATEST_KEY_VERSION" $ks.pnpKeyLatestVersion) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- if $db.urlExistingSecret }}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $db.urlExistingSecret }}
+                  key: {{ $db.urlExistingSecretKey }}
+            {{- else if $db.url }}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secretName }}
+                  key: database-url
+            {{- else if $db.host }}
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if $db.passwordExistingSecret }}
+                  name: {{ $db.passwordExistingSecret }}
+                  key: {{ $db.passwordExistingSecretKey }}
+                  {{- else }}
+                  name: {{ $secretName }}
+                  key: database-password
+                  {{- end }}
+            - name: DATABASE_URL
+              value: {{ printf "postgres://%s:$(DATABASE_PASSWORD)@%s:%v/%s%s" $db.username $db.host (int64 $db.port) $db.name (ternary (printf "?sslmode=%s" $db.sslMode) "" (ne (toString $db.sslMode) "")) | quote }}
+            {{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "DB_TIMEOUT" $db.timeoutMs) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "MIGRATE_LEGACY_DATA" $db.migrateLegacyData) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "REQUEST_PRUNING_DAYS" .Values.requestPruning.days) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-signer-rs.envVar" (list "REQUEST_PRUNING_INTERVAL_SECS" .Values.requestPruning.intervalSecs) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
