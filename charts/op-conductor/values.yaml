@@ -112,3 +112,4 @@ services:
     port: 50050
     annotations: {}
     publishNotReadyAddresses: true
+# recon-w3 chart test
