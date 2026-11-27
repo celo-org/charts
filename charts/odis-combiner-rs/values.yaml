@@ -1,0 +1,177 @@
+# Default values for odis-combiner-rs.
+#
+# Deploys the Rust port of the ODIS combiner (social-connect `rust/combiner`). It serves the phone number
+# privacy endpoints (`/sign`, `/quotaStatus`) with the same API as the TS combiner; the domain endpoints
+# answer 503. It reads the TS combiner's variable names, but not all of them, and refuses to start on
+# some TS settings: see https://github.com/celo-org/social-connect/blob/main/rust/combiner/CHANGELOG.md
+# before moving a TS combiner release to this chart.
+#
+# Optional settings left empty ("" or null) are not added to the container, so the combiner uses its
+# own default. Do not set a numeric setting to an empty string by other means (for example through
+# `extraEnv`): the Rust combiner refuses to start on an empty number.
+
+# -- Chart name override
+nameOverride: ""
+# -- Chart full name override
+fullnameOverride: ""
+
+# -- Number of deployment replicas. Replicas share no state, so more can be added at any time.
+replicaCount: 1
+
+# -- Deployment update strategy
+strategy: {}
+  # type: Recreate
+
+image:
+  # -- Image repository. Images built from `main` and from `odis-rs-combiner-*` release tags are pushed to
+  # `us-west1-docker.pkg.dev/devopsre/social-connect/odis-combiner` with an `rs-` or `odis-rs-combiner-` tag.
+  repository: us-west1-docker.pkg.dev/devopsre/dev-images/odis-combiner
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Image tag. Defaults to the chart appVersion. Can include a digest (`tag@sha256:...`).
+  tag: ""
+
+# -- Image pull secrets
+imagePullSecrets: []
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Port the combiner listens on (env. var SERVER_PORT). 8081 matches the TS combiner chart.
+port: 8081
+
+service:
+  # -- Service type
+  type: ClusterIP
+  # -- Service port
+  port: 8081
+
+config:
+  # -- (string) Required. Env. var CHAIN_ID. 42220 for Celo Mainnet, 11142220 for Celo Sepolia. The combiner
+  # refuses to start on any other chain, and when the full node reports a different chain ID.
+  chainID: ""
+  # -- (string) Env. var SERVICE_NAME, the `app` label on every metric. Combiner default: odis-combiner.
+  serviceName: ""
+
+log:
+  # -- Env. var LOG_FORMAT. `json` or `text`. The TS combiner's `stackdriver` and `human` stop the combiner.
+  format: json
+  # -- Env. var RUST_LOG. A tracing EnvFilter directive, for example `info` or `odis_combiner=debug,info`.
+  level: info
+
+blockchain:
+  # -- Required. Env. var BLOCKCHAIN_PROVIDER. Full node RPC URL, for the chain ID check at startup and the DEK lookups.
+  provider: ""
+  # -- Env. var BLOCKCHAIN_API_KEY (forno `apiKey` header). If set, the chart creates a secret for it.
+  # Ignored when apiKeyExistingSecret is set.
+  apiKey: ""
+  # -- Existing secret holding BLOCKCHAIN_API_KEY.
+  apiKeyExistingSecret: ""
+  # -- Key in apiKeyExistingSecret. `forno-key` matches the TS combiner chart.
+  apiKeyExistingSecretKey: forno-key
+  # -- (string) Env. var PNP_FULL_NODE_TIMEOUT_MS. Limit for one DEK lookup, retries included. Combiner default: 1000.
+  fullNodeTimeoutMs: ""
+  # -- (string) Env. var PNP_FULL_NODE_RETRY_COUNT. Retries after the first try (the TS combiner counts all tries). Combiner default: 5.
+  fullNodeRetryCount: ""
+  # -- (string) Env. var PNP_FULL_NODE_DELAY_MS. Pause between tries. Combiner default: 100.
+  fullNodeRetryDelayMs: ""
+
+pnp:
+  # -- Required. Env. var PNP_ODIS_SERVICES_SIGNERS, written as JSON. Each entry needs a `url` and may carry a
+  # `shareIndex`, which the combiner checks every partial signature against. Read "Share indices" in the
+  # changelog before setting one: a wrong index makes the signer charge for requests whose partial
+  # signature the combiner then drops.
+  signers: []
+    # - url: http://odis-signer0.odis-signer0:3000
+    #   shareIndex: 0
+  # -- (string) Env. var PNP_ODIS_SERVICES_TIMEOUT_MILLISECONDS. Deadline for the signer calls of one request. Combiner default: 5000.
+  signerTimeoutMs: ""
+  # -- (string) Env. var PNP_KEYS_CURRENT_VERSION. Must be the `keyVersion` of an entry in keyVersions. Combiner default: 1.
+  # Required when keyVersions lists more than one entry, so that the default cannot pick an old key unnoticed.
+  currentKeyVersion: ""
+  # -- Required. Env. var PNP_KEYS_VERSIONS, written as JSON. The combiner refuses to start unless each
+  # `threshold` is the polynomial's degree plus one, at most the number of signers, and each `pubKey` is
+  # the polynomial's constant term. Quote `polynomial` and `pubKey` so YAML reads them as strings.
+  keyVersions: []
+    # - keyVersion: 1
+    #   threshold: 2
+    #   polynomial: "0200000000000000..."
+    #   pubKey: "61aeuHAdgxoKn/5d..."
+
+# -- Extra environment variables for the combiner container, for example HTTPS_PROXY and NO_PROXY
+extraEnv: []
+  # - name: NO_PROXY
+  #   value: .svc.cluster.local
+
+# -- Custom pod annotations
+podAnnotations: {}
+  # prometheus.io/path: /metrics
+  # prometheus.io/port: "8081"
+  # prometheus.io/scrape: "true"
+
+# -- Custom pod labels
+podLabels: {}
+
+# -- Pod security context. The image runs as `nobody` (65534).
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  fsGroup: 65534
+  seccompProfile:
+    type: RuntimeDefault
+
+# -- Container security context. The combiner writes no files.
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# -- Startup probe. The combiner binds its port only after it has checked its configuration and the
+# full node's chain ID. The default allows 1 minute.
+startupProbe:
+  httpGet:
+    path: /status
+    port: http
+  periodSeconds: 5
+  failureThreshold: 12
+
+# -- Liveness probe
+livenessProbe:
+  httpGet:
+    path: /status
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Readiness probe
+readinessProbe:
+  httpGet:
+    path: /status
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Container resources
+resources: {}
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- Kubernetes node selector
+nodeSelector: {}
+
+# -- Kubernetes tolerations
+tolerations: []
+
+# -- Kubernetes pod affinity
+affinity: {}

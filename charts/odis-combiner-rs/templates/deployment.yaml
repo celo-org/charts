@@ -1,0 +1,111 @@
+{{- $bc := .Values.blockchain }}
+{{- $pnp := .Values.pnp }}
+{{- $chainID := required "config.chainID is required (42220 for Celo Mainnet, 11142220 for Celo Sepolia)" .Values.config.chainID }}
+{{- $provider := required "blockchain.provider is required: the combiner checks the chain ID and looks up DEKs on that full node" $bc.provider }}
+{{- $currentKeyVersionUnset := or (kindIs "invalid" $pnp.currentKeyVersion) (eq (toString $pnp.currentKeyVersion) "") }}
+{{- if and (kindIs "slice" $pnp.keyVersions) (gt (len $pnp.keyVersions) 1) $currentKeyVersionUnset }}
+{{- fail "pnp.currentKeyVersion is required when pnp.keyVersions lists more than one version: without it the combiner signs with version 1" }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "odis-combiner-rs.fullname" . }}
+  labels:
+    {{- include "odis-combiner-rs.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  {{- with .Values.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "odis-combiner-rs.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- if include "odis-combiner-rs.createSecret" . }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "odis-combiner-rs.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "odis-combiner-rs.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: odis-combiner
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.port }}
+              protocol: TCP
+          env:
+            {{- $out := include "odis-combiner-rs.envVar" (list "SERVER_PORT" .Values.port) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-combiner-rs.envVar" (list "SERVICE_NAME" .Values.config.serviceName) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-combiner-rs.envVar" (list "CHAIN_ID" $chainID) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-combiner-rs.envVar" (list "LOG_FORMAT" .Values.log.format) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-combiner-rs.envVar" (list "RUST_LOG" .Values.log.level) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-combiner-rs.envVar" (list "BLOCKCHAIN_PROVIDER" $provider) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- if $bc.apiKeyExistingSecret }}
+            - name: BLOCKCHAIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $bc.apiKeyExistingSecret }}
+                  key: {{ $bc.apiKeyExistingSecretKey }}
+            {{- else if $bc.apiKey }}
+            - name: BLOCKCHAIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "odis-combiner-rs.secretName" . }}
+                  key: blockchain-api-key
+            {{- end }}
+            {{- $out := include "odis-combiner-rs.envVar" (list "PNP_FULL_NODE_TIMEOUT_MS" $bc.fullNodeTimeoutMs) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-combiner-rs.envVar" (list "PNP_FULL_NODE_RETRY_COUNT" $bc.fullNodeRetryCount) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- $out := include "odis-combiner-rs.envVar" (list "PNP_FULL_NODE_DELAY_MS" $bc.fullNodeRetryDelayMs) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- include "odis-combiner-rs.jsonListEnvVar" (list "PNP_ODIS_SERVICES_SIGNERS" $pnp.signers "pnp.signers") | trim | nindent 12 }}
+            {{- $out := include "odis-combiner-rs.envVar" (list "PNP_ODIS_SERVICES_TIMEOUT_MILLISECONDS" $pnp.signerTimeoutMs) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- include "odis-combiner-rs.jsonListEnvVar" (list "PNP_KEYS_VERSIONS" $pnp.keyVersions "pnp.keyVersions") | trim | nindent 12 }}
+            {{- $out := include "odis-combiner-rs.envVar" (list "PNP_KEYS_CURRENT_VERSION" $pnp.currentKeyVersion) }}{{- if $out }}{{ $out | trim | nindent 12 }}{{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,20 @@
+---
+apiVersion: v2
+name: odis-combiner-rs
+description: Helm chart for deploying the Rust port of the Celo ODIS combiner (phone number privacy endpoints)
+type: application
+version: 0.1.0
+appVersion: "rs-dd24fdaf9d3129e74901aac43e06c7370cf78600"
+home: https://celo.org
+icon: https://pbs.twimg.com/profile_images/1613170131491848195/InjXBNx9_400x400.jpg
+sources:
+  - https://github.com/celo-org/social-connect/tree/main/rust/combiner
+  - https://github.com/celo-org/charts
+keywords:
+  - Celo
+  - ODIS
+  - Rust
+maintainers:
+  - name: cLabs
+    email: devops@clabs.co
+    url: https://clabs.co

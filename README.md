@@ -38,6 +38,7 @@ The charts are published to the OCI registry at `oci://us-west1-docker.pkg.dev/d
 - [mcp-server](./charts/mcp-server/README.md) - A Helm chart for MCP Server flux159/mcp-server-kubernetes
 - [nethermind](./charts/nethermind/README.md) - .NET Core Ethereum client
 - [odis-combiner](./charts/odis-combiner/README.md) - Helm chart for deploying Celo ODIS signer in AKS
+- [odis-combiner-rs](./charts/odis-combiner-rs/README.md) - Helm chart for deploying the Rust port of the Celo ODIS combiner (phone number privacy endpoints)
 - [odis-loadtest](./charts/odis-loadtest/README.md) - Helm chart for deploying Celo ODIS load tests in GKE
 - [odis-signer](./charts/odis-signer/README.md) - Helm chart for deploying Celo ODIS signer
 - [odis-signer-rs](./charts/odis-signer-rs/README.md) - Helm chart for deploying the Rust port of the Celo ODIS signer (phone number privacy endpoints)
