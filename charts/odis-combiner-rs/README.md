@@ -42,7 +42,7 @@ Helm chart for deploying the Rust port of the Celo ODIS combiner (phone number p
 | log.level | string | `"info"` | Env. var RUST_LOG. A tracing EnvFilter directive, for example `info` or `odis_combiner=debug,info`. |
 | nameOverride | string | `""` | Chart name override |
 | nodeSelector | object | `{}` | Kubernetes node selector |
-| pnp.currentKeyVersion | string | `""` | Env. var PNP_KEYS_CURRENT_VERSION. Must be the `keyVersion` of an entry in keyVersions. Combiner default: 1. |
+| pnp.currentKeyVersion | string | `""` | Env. var PNP_KEYS_CURRENT_VERSION. Must be the `keyVersion` of an entry in keyVersions. Combiner default: 1. Required when keyVersions lists more than one entry, so that the default cannot pick an old key unnoticed. |
 | pnp.keyVersions | list | `[]` | Required. Env. var PNP_KEYS_VERSIONS, written as JSON. The combiner refuses to start unless each `threshold` is the polynomial's degree plus one, at most the number of signers, and each `pubKey` is the polynomial's constant term. Quote `polynomial` and `pubKey` so YAML reads them as strings. |
 | pnp.signerTimeoutMs | string | `""` | Env. var PNP_ODIS_SERVICES_TIMEOUT_MILLISECONDS. Deadline for the signer calls of one request. Combiner default: 5000. |
 | pnp.signers | list | `[]` | Required. Env. var PNP_ODIS_SERVICES_SIGNERS, written as JSON. Each entry needs a `url` and may carry a `shareIndex`, which the combiner checks every partial signature against. Read "Share indices" in the changelog before setting one: a wrong index makes the signer charge for requests whose partial signature the combiner then drops. |

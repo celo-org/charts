@@ -2,6 +2,10 @@
 {{- $pnp := .Values.pnp }}
 {{- $chainID := required "config.chainID is required (42220 for Celo Mainnet, 11142220 for Celo Sepolia)" .Values.config.chainID }}
 {{- $provider := required "blockchain.provider is required: the combiner checks the chain ID and looks up DEKs on that full node" $bc.provider }}
+{{- $currentKeyVersionUnset := or (kindIs "invalid" $pnp.currentKeyVersion) (eq (toString $pnp.currentKeyVersion) "") }}
+{{- if and (kindIs "slice" $pnp.keyVersions) (gt (len $pnp.keyVersions) 1) $currentKeyVersionUnset }}
+{{- fail "pnp.currentKeyVersion is required when pnp.keyVersions lists more than one version: without it the combiner signs with version 1" }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

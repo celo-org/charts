@@ -92,6 +92,7 @@ pnp:
   # -- (string) Env. var PNP_ODIS_SERVICES_TIMEOUT_MILLISECONDS. Deadline for the signer calls of one request. Combiner default: 5000.
   signerTimeoutMs: ""
   # -- (string) Env. var PNP_KEYS_CURRENT_VERSION. Must be the `keyVersion` of an entry in keyVersions. Combiner default: 1.
+  # Required when keyVersions lists more than one entry, so that the default cannot pick an old key unnoticed.
   currentKeyVersion: ""
   # -- Required. Env. var PNP_KEYS_VERSIONS, written as JSON. The combiner refuses to start unless each
   # `threshold` is the polynomial's degree plus one, at most the number of signers, and each `pubKey` is
